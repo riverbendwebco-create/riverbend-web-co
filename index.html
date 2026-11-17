@@ -913,7 +913,9 @@ h1,h2,h3,h4{font-weight:700;letter-spacing:-.025em}
 .fc-dir .up{color:#0052CC}
 
 /* ===== Hero: centered, Apple-style ===== */
-.hero .wrap{grid-template-columns:1fr;text-align:center;justify-items:center;padding-top:120px;padding-bottom:110px;gap:0}
+.hero>.wrap{grid-template-columns:1fr;text-align:center;justify-items:center;padding-top:120px;padding-bottom:110px;gap:0}
+.hero .trust .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-top:24px;padding-bottom:24px;text-align:left;justify-items:stretch}
+@media (max-width:880px){.hero .trust .wrap{grid-template-columns:1fr;gap:14px}}
 .hero h1{font-size:clamp(2.6rem,6.4vw,5rem);max-width:980px;margin:22px auto 22px}
 .hero p.lead{margin:0 auto 34px;max-width:640px;font-size:clamp(1.08rem,1.6vw,1.3rem);color:#C7D0DD}
 .hero-ctas{justify-content:center}
