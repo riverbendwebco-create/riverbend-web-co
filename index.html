@@ -1216,6 +1216,15 @@ footer{background:var(--ink-0)}
 .wt-ticks b{background:#CBD5E1}
 .wt-dot{background:#0052CC;box-shadow:0 0 0 5px rgba(0,82,204,.18),0 0 14px rgba(0,82,204,.45)}
 
+
+/* Demos: dimmed photo backdrop */
+#demos.band-dark{background:
+  linear-gradient(180deg,rgba(5,8,15,.92) 0%,rgba(5,8,15,.72) 30%,rgba(5,8,15,.78) 70%,rgba(5,8,15,.95) 100%),
+  radial-gradient(ellipse at 50% 0%,rgba(0,82,204,.35),transparent 60%),
+  url("https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=2000&q=70") center/cover no-repeat,
+  #070A12}
+#demos.band-dark::before{display:none}
+@media (min-width:900px) and (hover:hover){#demos.band-dark{background-attachment:scroll,scroll,fixed,scroll}}
 /* Demos: custom callout */
 .demo-custom{display:flex;align-items:center;gap:22px;margin-top:56px;padding:26px 30px;border:1px solid rgba(96,165,250,.28);border-radius:12px;background:linear-gradient(120deg,rgba(0,82,204,.18),rgba(15,23,42,.55) 60%);box-shadow:0 30px 60px -40px rgba(0,82,204,.7)}
 .demo-custom .dc-icon{flex:none;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:rgba(0,82,204,.22);border:1px solid rgba(96,165,250,.35);color:#60A5FA}
