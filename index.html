@@ -1046,6 +1046,131 @@ h1,h2,h3,h4{font-weight:700;letter-spacing:-.025em}
 }
 @media (prefers-reduced-motion:reduce){.mb-lid,.mac-stage,.mphone{transition:none}}
 
+/* ===== v9: studio look (dark, numbered, hairlines) ===== */
+:root{--ink-0:#050507;--ink-1:#0B0D10;--hair:rgba(15,23,42,.1);--mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace}
+.kicker,.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.74rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#64748B}
+.kicker b,.eyebrow b{font-weight:600;color:#0052CC}
+.kicker::after{content:"";width:36px;height:1px;background:currentColor;opacity:.5}
+.band-dark .kicker,.mac-copy .kicker,.contact .kicker,.work .kicker{color:#9CA3AF}
+.band-dark .kicker b,.contact .kicker b,.work .kicker b{color:#60A5FA}
+.section-head.center .kicker{justify-content:center}
+.band-dark{background:var(--ink-0)}
+.contact{background:var(--ink-1)}
+footer{background:var(--ink-0)}
+/* problem cards -> hairline columns */
+#why .cards-3{gap:0;border-top:1px solid var(--hair)}
+#why .pcard{border:0;border-radius:0;padding:34px 30px 10px;box-shadow:none!important;transform:none!important;border-right:1px solid var(--hair);background:transparent}
+#why .pcard:last-child{border-right:0}
+#why .pcard .ic{background:transparent;color:#0052CC;width:auto;height:auto;margin-bottom:16px}
+#why .pcard .ic svg{width:30px;height:30px}
+@media (max-width:880px){#why .pcard{border-right:0;border-bottom:1px solid var(--hair);padding:28px 4px}}
+
+/* Hero quote callout (replaces pill) */
+.hero-quote{margin:0 auto;max-width:620px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.hq-mark{color:#3B82F6;opacity:.9}
+.hero-quote blockquote{font-size:clamp(1.02rem,1.6vw,1.22rem);font-weight:500;color:#E2E8F0;line-height:1.5;letter-spacing:-.01em;font-style:normal}
+.hero-quote figcaption{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8}
+.hero-quote figcaption span{width:28px;height:1px;background:#3B82F6}
+.hero h1{margin-top:28px}
+
+/* Trust strip with duotone icons */
+.trust-item{gap:14px}
+.trust-item .ti{flex:none;width:46px;height:46px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(148,163,184,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.trust-item .ti svg{width:30px;height:30px;filter:drop-shadow(0 4px 10px rgba(0,82,204,.45))}
+
+/* Scroll-linked reveal (replaces one-time fade) */
+.reveal{opacity:calc(.08 + var(--rv,1)*.92);transform:translate3d(0,calc((1 - var(--rv,1))*56px),0) scale(calc(.97 + var(--rv,1)*.03));transition:none;will-change:transform,opacity}
+.reveal.in{opacity:calc(.08 + var(--rv,1)*.92)}
+
+/* ===== Horizontal work carousel ===== */
+.work{position:relative;background:var(--ink-0);color:#F5F5F7}
+.work-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,3.5vh,40px);padding-top:68px}
+.work-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;width:100%}
+.work-head h2{font-size:clamp(1.8rem,3.6vw,3rem);margin-top:12px;line-height:1.08}
+.work-head .muted{color:#6B7280}
+.work-head p{max-width:380px;color:#9CA3AF;font-size:.98rem}
+.work-track{display:flex;gap:clamp(20px,3vw,44px);padding:0 max(24px,calc((100vw - 1160px)/2 + 20px));will-change:transform;transform:translate3d(var(--wx,0px),0,0)}
+.wk-card{flex:none;width:min(820px,78vw);display:grid;grid-template-columns:1.45fr 1fr;gap:28px;align-items:center;opacity:calc(.35 + var(--fo,1)*.65);transform:scale(calc(.94 + var(--fo,1)*.06));transition:opacity .2s,transform .2s}
+.wk-shot{display:block;border-radius:12px;overflow:hidden;background:#111;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -30px rgba(0,0,0,.9);transition:transform .3s,box-shadow .3s}
+.wk-shot:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(96,165,250,.45),0 50px 90px -30px rgba(0,82,204,.55)}
+.wk-chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#1C1C1E;border-bottom:1px solid rgba(255,255,255,.06)}
+.wk-chrome i{width:9px;height:9px;border-radius:50%;background:#3A3A3C}
+.wk-chrome i:nth-child(1){background:#FF5F57}.wk-chrome i:nth-child(2){background:#FEBC2E}.wk-chrome i:nth-child(3){background:#28C840}
+.wk-chrome span{margin-left:10px;flex:1;text-align:center;font-family:var(--mono);font-size:.7rem;color:#8E8E93;background:#2C2C2E;border-radius:6px;padding:3px 0}
+.wk-img{position:relative;aspect-ratio:16/10;overflow:hidden}
+.wk-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.wk-fb{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(1.2rem,2.4vw,2rem);font-weight:700;color:rgba(255,255,255,.85);letter-spacing:-.02em}
+.wk-fb.lt{color:#111827}
+.wk-meta .wk-n{font-family:var(--mono);font-size:.72rem;color:#6B7280;letter-spacing:.1em}
+.wk-meta h3{font-size:clamp(1.3rem,2.2vw,1.8rem);margin:8px 0 4px;color:#fff}
+.wk-cat{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#60A5FA}
+.wk-meta p{color:#A1A1AA;font-size:.93rem;margin:12px 0}
+.wk-meta ul{list-style:none;display:flex;flex-wrap:wrap;gap:0;margin-bottom:16px;border-top:1px solid rgba(255,255,255,.08)}
+.wk-meta li{width:100%;font-size:.84rem;color:#D4D4D8;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.wk-link{display:inline-flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px}
+.wk-link:hover{border-color:#60A5FA;color:#93C5FD}
+.wk-end{flex:none;width:min(420px,70vw);display:flex;flex-direction:column;justify-content:center;gap:20px}
+.wk-end h3{font-size:clamp(1.6rem,3vw,2.4rem);color:#fff;line-height:1.1}
+.wk-end .btn{align-self:flex-start}
+/* center timeline under the carousel */
+.work-timeline{position:relative;width:min(560px,80vw);margin:0 auto;height:22px}
+.wt-line{position:absolute;left:0;right:0;top:10px;height:2px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden}
+.wt-fill{display:block;height:100%;width:calc(var(--wp,0)*100%);background:linear-gradient(90deg,#0052CC,#60A5FA)}
+.wt-dot{position:absolute;top:4px;left:calc(var(--wp,0)*100%);width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(0,82,204,.35),0 0 18px rgba(96,165,250,.8)}
+.wt-ticks{position:absolute;inset:0;display:flex;justify-content:space-between;pointer-events:none}
+.wt-ticks b{width:2px;height:10px;margin-top:6px;background:rgba(255,255,255,.25)}
+@media (max-width:820px){
+  .work-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .work-head p{font-size:.88rem}
+  .wk-card{grid-template-columns:1fr;width:82vw;gap:14px}
+  .wk-meta p{display:none}
+  .wk-meta ul{display:none}
+}
+
+/* ===== How It Works: center timeline ===== */
+.story{grid-template-columns:1fr 64px 1fr;gap:0 36px}
+.story-visual{grid-column:1;grid-row:1}
+.story-rail{grid-column:2;grid-row:1;position:relative;align-self:stretch}
+.story-rail::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:linear-gradient(transparent,#CBD5E1 8%,#CBD5E1 92%,transparent)}
+.story-rail .sr-fill{position:absolute;left:50%;top:0;width:2px;margin-left:-1px;height:var(--story-fill,0%);background:linear-gradient(#0052CC,#60A5FA)}
+.story-rail .sr-dot{position:sticky;top:50vh;display:block;width:18px;height:18px;margin:0 auto;transform:translateY(-50%);border-radius:50%;background:#0052CC;box-shadow:0 0 0 7px rgba(0,82,204,.16),0 0 24px rgba(0,82,204,.5);z-index:2}
+.story-steps{grid-column:3;grid-row:1;padding-left:0}
+.story-steps::before,.story-steps::after,.story-step::before{display:none}
+.ss-num{font-family:var(--mono);font-weight:500}
+@media (max-width:880px){
+  .story{grid-template-columns:22px 1fr;gap:0 16px}
+  .story-visual{grid-column:1/-1;grid-row:1}
+  .story-rail{grid-column:1;grid-row:2}
+  .story-steps{grid-column:2;grid-row:2}
+  .story-rail .sr-dot{top:62vh}
+  .story-visual{background:#F8FAFC;box-shadow:0 14px 18px -12px rgba(15,23,42,.12)}
+}
+@media (max-width:820px){.wk-link{display:flex;width:max-content;margin-top:10px}.wk-cat{display:block}}
+
+/* ===== FAQ: foldable, no boxes ===== */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start}
+.faq-side{position:sticky;top:110px}
+.faq-side h2{font-size:clamp(1.9rem,3.4vw,2.7rem);margin:14px 0;line-height:1.1}
+.faq-side p{color:var(--slate)}
+.faq-cta{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-weight:600;color:#0052CC;border-bottom:1px solid currentColor;padding-bottom:2px}
+.faq-list{border-top:1px solid var(--hair)}
+.fq{border-bottom:1px solid var(--hair)}
+.fq summary{list-style:none;display:grid;grid-template-columns:44px 1fr 24px;align-items:center;gap:12px;padding:24px 0;cursor:pointer}
+.fq summary::-webkit-details-marker{display:none}
+.fq-n{font-family:var(--mono);font-size:.78rem;color:#94A3B8}
+.fq-q{font-size:1.1rem;font-weight:600;letter-spacing:-.01em;color:var(--navy);transition:color .2s}
+.fq summary:hover .fq-q{color:#0052CC}
+.fq-ic{position:relative;width:18px;height:18px}
+.fq-ic::before,.fq-ic::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#0F172A;border-radius:2px;transition:transform .3s ease}
+.fq-ic::after{transform:rotate(90deg)}
+.fq[open] .fq-ic::after{transform:rotate(0deg)}
+.fq[open] .fq-q{color:#0052CC}
+.fq[open] .fq-a{animation:fqIn .35s ease}
+@keyframes fqIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.fq-a p{overflow:hidden;padding:0 30px 0 56px;color:#475569;line-height:1.7;max-width:640px}
+.fq[open] .fq-a p{padding-bottom:26px}
+@media (max-width:880px){.faq-grid{grid-template-columns:1fr;gap:28px}.faq-side{position:static}.fq summary{grid-template-columns:34px 1fr 20px}.fq-a p{padding-left:46px;padding-right:0}}
+
 /* Footer */
 footer{background:#18212C;color:#94A3B8;padding:56px 0 28px;font-size:.93rem}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:40px}
@@ -1064,8 +1189,6 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   footer{padding-bottom:90px}
 }
 
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}*{animation:none!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
@@ -1153,7 +1276,11 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   <div class="hero-glow two" aria-hidden="true"></div>
   <div class="wrap">
     <div>
-      <span class="pill"><span class="dot"></span>Now booking new Tri-State clients</span>
+      <figure class="hero-quote">
+        <svg class="hq-mark" width="34" height="26" viewBox="0 0 34 26" aria-hidden="true"><path d="M0 26V15.6C0 6.6 4.6 1.4 13 0l1.6 3.6C9.7 5 7.4 8 7.2 12.4H13V26H0zm20 0V15.6C20 6.6 24.6 1.4 33 0l1.6 3.6c-4.9 1.4-7.2 4.4-7.4 8.8H33V26H20z" fill="currentColor"/></svg>
+        <blockquote>Built in Dubuque for the bars, kitchens and crews that keep the Tri-State running.</blockquote>
+        <figcaption><span></span>Now taking new Tri-State clients</figcaption>
+      </figure>
       <h1>Your Customers Are Searching Online. <em>Make Sure They Find You.</em></h1>
       <p class="lead">We build fast, mobile-friendly websites for local bars and small businesses—completely done for you, with zero tech headaches.</p>
       <div class="hero-ctas">
@@ -1166,9 +1293,9 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   </div>
   <div class="trust">
     <div class="wrap">
-      <div class="trust-item"><span class="ic"><svg width="20" height="20"><use href="#pin"/></svg></span><div>Local to Dubuque & the Tri-State<small>Real people you can meet for coffee</small></div></div>
-      <div class="trust-item"><span class="ic"><svg width="20" height="20"><use href="#bolt"/></svg></span><div>Live in 7 days<small>Fast launch, no months-long projects</small></div></div>
-      <div class="trust-item"><span class="ic"><svg width="20" height="20"><use href="#map"/></svg></span><div>Google Business Profile setup included<small>Show up right on Google Maps</small></div></div>
+      <div class="trust-item"><span class="ti"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="tg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#0052CC"/></linearGradient></defs><ellipse cx="24" cy="40" rx="11" ry="3.2" fill="#60A5FA" opacity=".25"/><ellipse cx="24" cy="40" rx="6" ry="1.8" fill="#60A5FA" opacity=".45"/><path d="M24 4c-7.7 0-14 6.1-14 13.7C10 28 24 39 24 39s14-11 14-21.3C38 10.1 31.7 4 24 4z" fill="url(#tg1)"/><path d="M17.5 19.5l6.5-5.3 6.5 5.3v6.3h-4.3v-4h-4.4v4h-4.3z" fill="#fff"/></svg></span><div>Local to Dubuque &amp; the Tri-State<small>Real people you can meet for coffee</small></div></div>
+      <div class="trust-item"><span class="ti"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="tg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93C5FD"/><stop offset="1" stop-color="#0052CC"/></linearGradient></defs><circle cx="24" cy="26" r="16" fill="url(#tg2)"/><rect x="20" y="4" width="8" height="5" rx="2" fill="#60A5FA"/><path d="M36.5 12.5l2.5-2.5" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="26" r="11.5" fill="#0B1120" opacity=".35"/><path d="M26.5 15.5l-7 11.5h5l-2 9 7-12h-5z" fill="#fff"/></svg></span><div>Live in 7 days<small>Fast launch, no months-long projects</small></div></div>
+      <div class="trust-item"><span class="ti"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="tg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#0052CC"/></linearGradient></defs><rect x="4" y="9" width="40" height="30" rx="6" fill="url(#tg3)"/><path d="M4 30l12-9 9 7 7-5 12 9v1a6 6 0 01-6 6H10a6 6 0 01-6-6z" fill="#fff" opacity=".22"/><path d="M33 7c-4.4 0-8 3.5-8 7.9C25 21 33 28 33 28s8-7 8-13.1C41 10.5 37.4 7 33 7z" fill="#fff"/><path d="M33 11.3l1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.5-2.5 1.5.6-2.8-2.1-1.9 2.8-.3z" fill="#F59E0B"/></svg></span><div>Google Business Profile setup included<small>Show up right on Google Maps</small></div></div>
     </div>
   </div>
 </section>
@@ -1177,7 +1304,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="mac-scroll" id="showcase" aria-label="Demo websites shown on a laptop and phone">
   <div class="mac-sticky">
     <div class="mac-copy">
-      <span class="eyebrow">See it in action</span>
+      <span class="kicker">See it in action</span>
       <h2 class="mac-title"><span class="mt" data-i="0">A Neighborhood Pub, open tonight.</span><span class="mt" data-i="1">A Modern Lounge, booked solid.</span><span class="mt" data-i="2">A Trade Pro, ringing off the hook.</span></h2>
       <div class="mac-tabs" role="tablist" aria-label="Demo styles">
         <button data-go="0" class="on">Pub &amp; Sports Bar</button><button data-go="1">Lounge &amp; Eatery</button><button data-go="2">Service &amp; Trade</button>
@@ -1297,7 +1424,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section" id="why">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="eyebrow">Why it matters</span>
+      <span class="kicker"><b>01</b>Why it matters</span>
       <h2>What Missing a Website Costs You</h2>
       <p>If people can't find your hours, menu, or phone number in ten seconds, they go somewhere else. Here's where the money slips away.</p>
     </div>
@@ -1328,7 +1455,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section bg-soft" id="compare">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="eyebrow">Side by side</span>
+      <span class="kicker"><b>02</b>Side by side</span>
       <h2>Only Facebook vs. A Riverbend Website</h2>
       <p>Facebook is great for posting photos. It's a terrible place to keep the info that brings people through your door.</p>
     </div>
@@ -1366,7 +1493,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section demos band-dark" id="demos">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="eyebrow">Live demo styles</span>
+      <span class="kicker"><b>03</b>Live demo styles</span>
       <h2>Pick a Look. Click to Try It.</h2>
       <p>Three signature styles built for how your customers actually use their phones. Tap any card to open a working preview.</p>
     </div>
@@ -1405,11 +1532,78 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   </div>
 </section>
 
+<!-- RECENT WORK: horizontal scroll -->
+<section class="work" id="work" aria-label="Recent work">
+  <div class="work-sticky">
+    <div class="wrap work-head">
+      <div><span class="kicker"><b>04</b>Recent work</span><h2>Real sites we’ve built.<br><span class="muted">Scroll to look around.</span></h2></div>
+      <p>From defense contractors to restaurant software, every site gets the same care: fast, clear and built to bring in business.</p>
+    </div>
+    <div class="work-track" id="workTrack">
+        <article class="wk-card">
+          <a class="wk-shot" href="https://cypher-llc.com/" target="_blank" rel="noopener" aria-label="Open Cypher, LLC in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>cypher-llc.com</span></div>
+            <div class="wk-img" style="background:#15181b"><span class="wk-fb">Cypher, LLC</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcypher-llc.com%2F?w=1440&h=900" alt="Screenshot of the Cypher, LLC website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">01 / 04</span>
+            <h3>Cypher, LLC</h3>
+            <span class="wk-cat">Defense &amp; Government</span>
+            <p>Cyber, intelligence and engineering services for a Service-Disabled Veteran-Owned Small Business. Dark, enterprise-grade layout built to earn trust with federal buyers.</p>
+            <ul><li>Credentials row</li><li>Capability cards</li><li>Logo carousel</li></ul>
+            <a class="wk-link" href="https://cypher-llc.com/" target="_blank" rel="noopener">Visit cypher-llc.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article><article class="wk-card">
+          <a class="wk-shot" href="https://ghostplatform.ai/" target="_blank" rel="noopener" aria-label="Open G.H.O.S.T. in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>ghostplatform.ai</span></div>
+            <div class="wk-img" style="background:#050507"><span class="wk-fb">G.H.O.S.T.</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fghostplatform.ai%2F?w=1440&h=900" alt="Screenshot of the G.H.O.S.T. website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">02 / 04</span>
+            <h3>G.H.O.S.T.</h3>
+            <span class="wk-cat">AI Platform</span>
+            <p>Product site for a self-hosted AI platform of specialist agents. Interactive capability console, live status badges and device-framed product shots.</p>
+            <ul><li>Interactive console</li><li>Stats row</li><li>Contact form</li></ul>
+            <a class="wk-link" href="https://ghostplatform.ai/" target="_blank" rel="noopener">Visit ghostplatform.ai <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article><article class="wk-card">
+          <a class="wk-shot" href="https://chefnerdai.com/" target="_blank" rel="noopener" aria-label="Open Chef Nerd AI in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>chefnerdai.com</span></div>
+            <div class="wk-img" style="background:#0f172a"><span class="wk-fb">Chef Nerd AI</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchefnerdai.com%2F?w=1440&h=900" alt="Screenshot of the Chef Nerd AI website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">03 / 04</span>
+            <h3>Chef Nerd AI</h3>
+            <span class="wk-cat">Restaurant Software</span>
+            <p>Restaurant back-office platform covering accounting, inventory, payroll, scheduling and HR. Friendly mascot, MacBook and iPhone screenshots, demo request flow.</p>
+            <ul><li>Feature tour</li><li>Demo request</li><li>Staff sign-in</li></ul>
+            <a class="wk-link" href="https://chefnerdai.com/" target="_blank" rel="noopener">Visit chefnerdai.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article><article class="wk-card">
+          <a class="wk-shot" href="https://tinyappcode.com/" target="_blank" rel="noopener" aria-label="Open TinyAppCode in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>tinyappcode.com</span></div>
+            <div class="wk-img" style="background:#F4F5F7"><span class="wk-fb lt">TinyAppCode</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Ftinyappcode.com%2F?w=1440&h=900" alt="Screenshot of the TinyAppCode website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">04 / 04</span>
+            <h3>TinyAppCode</h3>
+            <span class="wk-cat">Online Course</span>
+            <p>A free course that teaches anyone to vibe code: build real apps by talking to AI. Clean, light, mobile-first layout that works like an app.</p>
+            <ul><li>Course lessons</li><li>Mobile web app</li><li>Social previews</li></ul>
+            <a class="wk-link" href="https://tinyappcode.com/" target="_blank" rel="noopener">Visit tinyappcode.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article>
+      <div class="wk-end"><h3>Your business could be next.</h3><a href="#contact" class="btn btn-amber">Get a Free Mockup <svg width="18" height="18"><use href="#arrow"/></svg></a></div>
+    </div>
+    <div class="work-timeline" aria-hidden="true"><span class="wt-line"><i class="wt-fill"></i></span><span class="wt-dot"></span><div class="wt-ticks"><b></b><b></b><b></b><b></b></div></div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section class="section" id="pricing">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="eyebrow">Simple, transparent pricing</span>
+      <span class="kicker"><b>05</b>Simple, transparent pricing</span>
       <h2>Two Plans. No Surprises.</h2>
       <p>Hosting, security, and updates are always included. You run your business—we'll handle the website.</p>
     </div>
@@ -1462,7 +1656,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section bg-soft" id="how">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="eyebrow">How it works</span>
+      <span class="kicker"><b>06</b>How it works</span>
       <h2>Live in 3 Simple Steps</h2>
       <p>No meetings that drag on. No tech homework. You talk, we build. Scroll to watch it happen.</p>
     </div>
@@ -1526,6 +1720,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       </div>
 
       <!-- Scrolling steps -->
+      <div class="story-rail" aria-hidden="true"><span class="sr-fill"></span><span class="sr-dot"></span></div>
       <ol class="story-steps">
         <li class="story-step on" data-step="1">
           <span class="ss-num">01</span>
@@ -1568,7 +1763,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <div class="center"><svg class="rw" viewBox="0 0 1115 562" aria-hidden="true"><use href="#rw-light"/></svg></div>
     </div>
     <div class="local-copy reveal">
-      <span class="eyebrow">Locally owned</span>
+      <span class="kicker"><b>07</b>Locally owned</span>
       <h2>Built Right Here in Dubuque</h2>
       <p>We're not an out-of-state agency or a do-it-yourself website app. We're your neighbors, and we'll keep your site working long after it's live.</p>
       <div class="guarantees">
@@ -1581,20 +1776,23 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 </section>
 
 <!-- FAQ -->
-<section class="section bg-soft" id="faq">
-  <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow">Straight answers</span>
-      <h2>Common Questions</h2>
-      <p>Still on the fence? Here's what local owners usually ask us first.</p>
+<section class="section" id="faq">
+  <div class="wrap faq-grid">
+    <div class="faq-side reveal">
+      <span class="kicker"><b>08</b>Questions</span>
+      <h2>Straight answers, no fine print.</h2>
+      <p>The questions local owners ask us most. Still wondering about something? Text or email us and a real person in Dubuque will answer.</p>
+      <a href="#contact" class="faq-cta">Ask us anything <svg width="16" height="16"><use href="#arrow"/></svg></a>
     </div>
-    <div class="faq reveal" id="faqList">
-      <div class="faq-item open"><button class="faq-q" aria-expanded="true">Do I need to know anything about websites?<span class="pm">+</span></button><div class="faq-a"><div><p>Nope. If you can send a text, you can work with us. Text or email us a new special or holiday hours, and we update it for you.</p></div></div></div>
-      <div class="faq-item"><button class="faq-q" aria-expanded="false">I already have a Facebook page. Why do I need a website?<span class="pm">+</span></button><div class="faq-a"><div><p>Keep Facebook and we'll link to it. But your website is what Google shows when people search for you, and anyone can see it without logging in.</p></div></div></div>
-      <div class="faq-item"><button class="faq-q" aria-expanded="false">Is there a contract?<span class="pm">+</span></button><div class="faq-a"><div><p>No long-term lock-in. Monthly plans are month to month. We earn your business by keeping your site working.</p></div></div></div>
-      <div class="faq-item"><button class="faq-q" aria-expanded="false">Who owns the domain and the website?<span class="pm">+</span></button><div class="faq-a"><div><p>You own your domain. It's registered in your name, so your web address is always yours, even if you stop working with us.</p></div></div></div>
-      <div class="faq-item"><button class="faq-q" aria-expanded="false">How fast do updates happen?<span class="pm">+</span></button><div class="faq-a"><div><p>Most text, hours and menu changes go live the same day. Full Growth Partner clients get priority updates within 24 hours.</p></div></div></div>
-      <div class="faq-item"><button class="faq-q" aria-expanded="false">What if I don't have good photos?<span class="pm">+</span></button><div class="faq-a"><div><p>We can work with phone pictures, or schedule a quick local photo session to make your place look its best.</p></div></div></div>
+    <div class="faq-list reveal">
+      <details class="fq" open><summary><span class="fq-n">01</span><span class="fq-q">Do I need to know anything about websites?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>Nope. If you can send a text, you can work with us. We handle the design, the writing, the hosting, the security and the Google setup. When something changes, like a new special, holiday hours or a menu price, you text or email us and we update the site for you, usually the same day.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">02</span><span class="fq-q">I already have a Facebook page. Why do I need a website?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>Keep Facebook, and we’ll link to it. But Facebook hides most posts behind its algorithm and asks visitors to log in just to see your hours. Your website is what Google shows when someone searches for you or “bar near me,” it loads instantly for everyone, and it can take party bookings and quote requests while you’re busy.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">03</span><span class="fq-q">How much does it cost, and what’s included?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>Two plans. The Starter Launch is $499 up front plus $99/month. The Full Growth Partner is $0 down and $149/month, with the first payment due the day your site goes live. Both include your custom mobile-friendly site, hosting, SSL security, Google Business Profile optimization and unlimited small updates. Growth Partner adds priority updates, monthly promo banners and local SEO tune-ups.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">04</span><span class="fq-q">Is there a contract?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>Starter Launch is month to month after launch: cancel anytime with 14 days’ notice. Full Growth Partner has a 6-month minimum because there’s no setup fee; after 6 months it’s month to month. Canceling before 6 months carries a one-time $299 early-exit fee. Every term is spelled out in plain English in the service agreement before you sign.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">05</span><span class="fq-q">Who owns my domain and my website?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>You own your domain from day one. It’s registered in your name and you can move it anytime. On the Starter plan you own the full site files once the $499 is paid. On the Growth Partner plan, ownership of the site files transfers to you after 12 consecutive monthly payments.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">06</span><span class="fq-q">How fast can my site go live?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>Our target is 7 business days. Send us your logo, hours and menu or services within 5 days of signing, and you’ll see a live preview with your real name and info within 3 to 5 business days. Once you approve it, we connect your domain and launch.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">07</span><span class="fq-q">How fast do updates happen?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>Hours, prices, menu items, specials and event changes are handled within 24 to 48 business hours, and most go live the same day. Growth Partner clients get priority within 24 hours. Bigger changes, like a full redesign or a custom feature, are quoted separately before any work starts.</p></div></details>
+      <details class="fq"><summary><span class="fq-n">08</span><span class="fq-q">What if I don’t have good photos or a logo?</span><span class="fq-ic" aria-hidden="true"></span></summary><div class="fq-a"><p>We can work with phone pictures and clean them up, use quality stock photos where it makes sense, or set up a quick local photo session. No logo yet? We can put together a simple, clean wordmark so your site looks professional on day one.</p></div></details>
     </div>
   </div>
 </section>
@@ -1603,7 +1801,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section contact" id="contact">
   <div class="wrap">
     <div class="reveal">
-      <span class="eyebrow">Free preview</span>
+      <span class="kicker"><b>09</b>Free preview</span>
       <h2>See Your Website Before You Spend a Dime.</h2>
       <p class="lead">Tell us a little about your business. We'll put together a free custom preview with your name and info on it—so you can see exactly what you'd get.</p>
       <div class="promise">
@@ -2108,9 +2306,37 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     if(id==='#contact') setTimeout(()=>{ const f=$('#biz'); if(f && $('#leadForm').style.display!=='none') f.focus({preventScroll:true}); },650);
   });
 
-  /* Reveal on scroll */
-  const io='IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}}),{threshold:.12}) : null;
-  $$('.reveal').forEach(el=> io ? io.observe(el) : el.classList.add('in'));
+  /* Scroll-linked reveal: every section animates with the scroll wheel */
+  const rvEls=$$('.reveal'); const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function rvUpdate(){
+    const vh=innerHeight;
+    rvEls.forEach(el=>{
+      if(reduce){el.style.setProperty('--rv',1);return;}
+      const r=el.getBoundingClientRect();
+      const t=Math.max(0,Math.min(1,(vh-r.top)/(vh*0.45)));
+      el.style.setProperty('--rv',t.toFixed(3));
+    });
+  }
+  let rvTick=false;
+  addEventListener('scroll',()=>{ if(!rvTick){rvTick=true;requestAnimationFrame(()=>{rvUpdate();rvTick=false;});} },{passive:true});
+  addEventListener('resize',rvUpdate); rvUpdate();
+
+  /* Horizontal work carousel driven by vertical scroll */
+  (function(){
+    const sec=$('#work'), track=$('#workTrack'); if(!sec||!track) return;
+    const cards=$$('.wk-card',track);
+    function size(){ const extra=Math.max(0,track.scrollWidth-innerWidth); sec.style.height=(innerHeight+extra)+'px'; sec.dataset.extra=extra; upd(); }
+    function upd(){
+      const extra=+sec.dataset.extra||0; const r=sec.getBoundingClientRect();
+      const p=extra?Math.max(0,Math.min(1,-r.top/extra)):0;
+      track.style.setProperty('--wx',(-p*extra).toFixed(1)+'px');
+      sec.style.setProperty('--wp',p.toFixed(4));
+      const cx=innerWidth/2;
+      cards.forEach(c=>{ const b=c.getBoundingClientRect(); const d=Math.abs(b.left+b.width/2-cx)/(innerWidth*0.6); c.style.setProperty('--fo',Math.max(0,1-d).toFixed(3)); });
+    }
+    addEventListener('scroll',()=>requestAnimationFrame(upd),{passive:true});
+    addEventListener('resize',size); addEventListener('load',size); size();
+  })();
 
   /* Sticky mobile CTA */
   const mcta=$('#mobileCta'), hero=$('.hero'), contact=$('#contact');
@@ -2329,7 +2555,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       setStep(best);
       const lr=list.getBoundingClientRect();
       const prog=Math.max(0,Math.min(1,(mid-lr.top)/(lr.height)));
-      list.style.setProperty('--story-fill',(prog*100).toFixed(1)+'%');
+      list.parentElement.style.setProperty('--story-fill',(prog*100).toFixed(1)+'%');
     }
     window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
   })();
