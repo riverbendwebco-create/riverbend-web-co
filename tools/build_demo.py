@@ -325,6 +325,8 @@ body.t-western{background:#fff}
 .wx-lb button{height:38px;padding:0 14px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;font-weight:700;cursor:pointer}
 .wx-lb img{display:block;width:100%;max-height:70vh;object-fit:contain;background:#111}
 .wx-lb .nav{display:flex;justify-content:space-between;padding:12px 16px}
+.wx-spicy{white-space:nowrap;font-weight:700;color:#9A3412}
+.wx-heat{width:15px;height:15px;color:#C2410C;vertical-align:-2px;margin-left:3px}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 
