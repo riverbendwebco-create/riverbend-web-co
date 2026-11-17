@@ -464,6 +464,7 @@ function normalizeDemo_(s) {
     specials: arr(s.specials).slice(0, 12).map(function (i) { return { title: t(i.title, 80), when: t(i.when, 60), detail: t(i.detail, 240) }; }).filter(function (i) { return i.title; }),
     colors: { primary: color((s.colors || {}).primary, ''), accent: color((s.colors || {}).accent, '') },
     heroPreset: /^[0-9a-f-]{8,40}$/.test(String(s.heroPreset || '')) ? String(s.heroPreset) : '',
+    photos: arr(s.photos).slice(0, 12).map(function (u) { u = t(u, 400); return /^https:\/\/[^\s"'<>]+\.(png|jpe?g|webp)(\?[^\s"'<>]*)?$/i.test(u) ? u : ''; }).filter(Boolean),
     social: { facebook: url((s.social || {}).facebook), instagram: url((s.social || {}).instagram) },
     private: {
       contact: t(p.contact, 80),
