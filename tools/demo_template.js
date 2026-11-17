@@ -81,7 +81,8 @@ function build(d){
   C.today=C.hours[todayIx()]||'';
   C.daysOpen=C.hours.filter(x=>x&&!/closed/i.test(x)).length;
   const own=(d.photos||[]).map(okUrl).filter(Boolean);
-  const hero=okImg(d.hero)||okUrl(d.heroUrl)||own[0]||U(/^[0-9a-f-]{8,40}$/.test(d.heroPreset||'')?d.heroPreset:STOCK[style].hero);
+  const preset=/^[0-9a-f-]{8,40}$/.test(d.heroPreset||'')?d.heroPreset:'';
+  const hero=okImg(d.hero)||okUrl(d.heroUrl)||(style==='western'&&preset?U(preset):'')||own[0]||U(preset||STOCK[style].hero);
   const pool=own.filter(u=>u!==hero).concat(STOCK[style].pool.map(U));
   C.own=own; C.hero=hero; C.pic=i=>pool.length?pool[i%pool.length]:hero;
 

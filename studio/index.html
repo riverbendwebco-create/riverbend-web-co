@@ -588,7 +588,7 @@ function rowTools(row,list){
 function addItem(it){
   it=it||{}; const list=$('#items'); const trade=cur.style==='trade';
   const last=list.lastElementChild; const group=it.group!==undefined?it.group:(last?last.querySelector('.r-group').value:'');
-  const row=el('div',{class:'row'});
+  const row=el('div',{class:'row'}); if(it.photo) row.dataset.photo=it.photo;
   row.append(
     el('input',{class:'i r-group',maxlength:'40',placeholder:trade?'Category':'Section',value:group||'','aria-label':'Section'}),
     el('input',{class:'i r-name',maxlength:'80',placeholder:trade?'Service name':'Item name',value:it.name||'','aria-label':'Name'}),
@@ -707,7 +707,7 @@ function collect(){
     name:v('name'),style:cur.style,category:v('category'),tagline:v('tagline'),about:$('#about').value.trim(),
     address:v('address'),city:v('city'),phone:v('phone'),email:v('email'),website:v('website'),
     hours:DAYS.map((_,i)=>$('[data-day="'+i+'"]').value.trim()),
-    items:[...document.querySelectorAll('#items .row')].map(r=>({group:r.querySelector('.r-group').value.trim(),name:r.querySelector('.r-name').value.trim(),price:r.querySelector('.r-price').value.trim(),desc:r.querySelector('.r-desc').value.trim()})).filter(i=>i.name),
+    items:[...document.querySelectorAll('#items .row')].map(r=>({group:r.querySelector('.r-group').value.trim(),name:r.querySelector('.r-name').value.trim(),price:r.querySelector('.r-price').value.trim(),desc:r.querySelector('.r-desc').value.trim(),photo:r.dataset.photo||''})).filter(i=>i.name),
     specials:[...document.querySelectorAll('#specials .row')].map(r=>({title:r.querySelector('.s-title').value.trim(),when:r.querySelector('.s-when').value.trim(),detail:r.querySelector('.s-detail').value.trim()})).filter(i=>i.title),
     colors:colorsCustom?{primary:$('#cPrimary').value,accent:$('#cAccent').value}:{primary:'',accent:''},
     heroPreset:cur.heroPreset||'',
