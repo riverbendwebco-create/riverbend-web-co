@@ -570,6 +570,19 @@ h1,h2,h3,h4{font-family:var(--font-h);line-height:1.1;letter-spacing:-.01em}
 .field input{width:100%;border:1.5px solid #CBD5E1;border-radius:10px;padding:13px 14px;font-size:1rem;background:#fff;transition:border-color .15s,box-shadow .15s}
 .field input:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 4px rgba(0,82,204,.15)}
 .field input.err{border-color:#DC2626}
+.field .opt{font-weight:500;color:var(--slate)}
+.upload{position:relative;display:flex!important;align-items:center;gap:14px;margin:0!important;border:1.5px dashed #94A3B8;border-radius:10px;padding:14px 16px;background:#F8FAFC;cursor:pointer;color:#0052CC;transition:border-color .15s,background .15s}
+.upload:hover,.upload.drag{border-color:#0052CC;background:#EFF6FF}
+.upload:focus-within{border-color:#0052CC;box-shadow:0 0 0 4px rgba(0,82,204,.15)}
+.upload input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.upload svg{flex:none}
+.upload .up-txt{display:flex;flex-direction:column;min-width:0;color:#0F172A}
+.upload .up-txt strong{font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upload .up-txt small{font-size:.8rem;color:var(--slate);font-weight:500}
+.upload.has-file{border-style:solid;border-color:#16A34A;background:#F0FDF4;color:#16A34A}
+.upload .up-clear{margin-left:auto;flex:none;border:0;background:none;color:#DC2626;font-weight:700;font-size:.85rem;cursor:pointer;padding:6px}
+.upload.err{border-color:#DC2626}
+
 .err-msg{color:#DC2626;font-size:.82rem;margin-top:5px;display:none}
 .err-msg.show{display:block}
 .types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -1490,7 +1503,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <a href="#how">How It Works</a>
       <a href="#demos">Demo Styles</a>
       <a href="#pricing">Pricing</a>
-      <a href="#contact" class="btn btn-amber btn-sm">Book a Free 10-Min Chat</a>
+      <a href="#contact" class="btn btn-amber btn-sm">Request Free Web Preview</a>
     </nav>
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
       <svg width="26" height="26" viewBox="0 0 24 24"><path id="menuIcon" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
@@ -1500,7 +1513,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     <a href="#how">How It Works</a>
     <a href="#demos">Demo Styles</a>
     <a href="#pricing">Pricing</a>
-    <a href="#contact" class="btn btn-amber">Book a Free 10-Min Chat</a>
+    <a href="#contact" class="btn btn-amber">Request Free Web Preview</a>
   </div>
 </header>
 
@@ -2162,7 +2175,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       </div>
     </div>
     <div class="form-card reveal" id="formCard">
-      <form id="leadForm" name="free-preview" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <form id="leadForm" name="free-preview" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" novalidate>
         <input type="hidden" name="form-name" value="free-preview">
         <p hidden><label>Leave this empty: <input name="bot-field"></label></p>
         <h3>Request Your Free Preview</h3>
@@ -2192,8 +2205,18 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
           </div>
           <div class="err-msg" id="type-err">Please pick one.</div>
         </div>
+        <div class="field">
+          <label for="logoFile">Your Logo <span class="opt">(optional)</span></label>
+          <label class="upload" id="logoDrop" for="logoFile">
+            <input id="logoFile" name="logo" type="file" accept=".png,.jpg,.jpeg,.svg,.webp,.pdf,image/png,image/jpeg,image/svg+xml,image/webp,application/pdf">
+            <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0l-4.5 4.5M12 4l4.5 4.5M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="up-txt"><strong id="logoName">Upload your logo</strong><small id="logoHint">PNG, JPG, SVG, WEBP or PDF, up to 5 MB. No logo? No problem.</small></span>
+            <button type="button" class="up-clear" id="logoClear" aria-label="Remove logo" hidden>Remove</button>
+          </label>
+          <div class="err-msg" id="logo-err">Please upload a PNG, JPG, SVG, WEBP or PDF under 5 MB.</div>
+        </div>
         <input type="hidden" name="plan" id="planField">
-        <p id="leadSendErr" role="alert" style="display:none;color:#DC2626;font-size:.88rem;margin-bottom:10px">Sorry, that didn’t send. Please email us at <a href="mailto:riverbendwebco@gmail.com" style="font-weight:700;text-decoration:underline">riverbendwebco@gmail.com</a> or try again.</p>
+        <p id="leadSendErr" role="alert" style="display:none;color:#DC2626;font-size:.88rem;margin-bottom:10px">Sorry, that didn’t send. Please email us at <a href="mailto:riverbendwebco@gmail.com" style="font-weight:700;text-decoration:underline">riverbendwebco@gmail.com</a> with your logo attached, or try again.</p>
         <button type="submit" class="btn btn-amber">Send Me My Free Preview <svg width="18" height="18"><use href="#arrow"/></svg></button>
       </form>
       <div class="success" id="success" role="status" aria-live="polite">
@@ -2232,7 +2255,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         <ul>
           <li>Dubuque, IA</li>
           <li><a href="mailto:riverbendwebco@gmail.com">riverbendwebco@gmail.com</a></li>
-          <li><a href="#contact">Book a Free 10-Min Chat</a></li>
+          <li><a href="#contact">Request Free Web Preview</a></li>
         </ul>
       </div>
     </div>
@@ -3161,6 +3184,22 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     return email || (digits.length>=10 && digits.length<=11 && /^[\d\s()+.\-]+$/.test(v));
   }
   ['biz','name','reach'].forEach(id=>$('#'+id).addEventListener('input',()=>setErr(id,false)));
+  const logo=$('#logoFile'), drop=$('#logoDrop'), LOGO_MAX=5*1024*1024, LOGO_OK=/\.(png|jpe?g|svg|webp|pdf)$/i;
+  function logoValid(f){ return !f || (f.size>0 && f.size<=LOGO_MAX && LOGO_OK.test(f.name)); }
+  function showLogo(){
+    const f=logo.files[0], ok=logoValid(f);
+    drop.classList.toggle('has-file',!!f&&ok); drop.classList.toggle('err',!ok);
+    $('#logo-err').classList.toggle('show',!ok);
+    $('#logoName').textContent=f&&ok?f.name:'Upload your logo';
+    $('#logoHint').textContent=f&&ok?(Math.max(1,Math.round(f.size/1024))+' KB, ready to send'):'PNG, JPG, SVG, WEBP or PDF, up to 5 MB. No logo? No problem.';
+    $('#logoClear').hidden=!(f&&ok);
+    if(f&&!ok) logo.value='';
+  }
+  logo.addEventListener('change',showLogo);
+  $('#logoClear').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();logo.value='';showLogo();});
+  ['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('drag');}));
+  ['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('drag');}));
+  drop.addEventListener('drop',e=>{ const fl=e.dataTransfer&&e.dataTransfer.files; if(fl&&fl.length){ try{ const dt=new DataTransfer(); dt.items.add(fl[0]); logo.files=dt.files; }catch(_){} showLogo(); } });
   $$('input[name="type"]').forEach(r=>r.addEventListener('change',()=>$('#type-err').classList.remove('show')));
   form.addEventListener('submit',e=>{
     e.preventDefault();
@@ -3171,12 +3210,13 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     setErr('name',!name); if(!name) ok=false;
     const rOk=validReach(reach); setErr('reach',!rOk); if(!rOk) ok=false;
     $('#type-err').classList.toggle('show',!type); if(!type) ok=false;
+    if(!logoValid(logo.files[0])){ showLogo(); ok=false; }
     if(!ok){ const firstErr=$('.field input.err')||$('input[name="type"]'); firstErr && firstErr.focus(); return; }
     const btn=form.querySelector('button[type=submit]');
     const resetBtn=()=>{btn.disabled=false; btn.innerHTML='Send Me My Free Preview <svg width="18" height="18"><use href="#arrow"/></svg>';};
     btn.disabled=true; btn.textContent='Sending…';
     $('#leadSendErr').style.display='none';
-    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()})
+    fetch('/',{method:'POST',body:new FormData(form)})
       .then(r=>{ if(!r.ok) throw new Error(r.status);
         $('#sName').textContent=name.split(' ')[0];
         $('#sBiz').textContent=biz;
@@ -3188,7 +3228,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       .catch(()=>{ $('#leadSendErr').style.display='block'; resetBtn(); });
   });
   $('#resetForm').addEventListener('click',()=>{
-    form.reset(); success.style.display='none'; form.style.display='block'; $('#biz').focus();
+    form.reset(); showLogo(); success.style.display='none'; form.style.display='block'; $('#biz').focus();
   });
 })();
 </script>
