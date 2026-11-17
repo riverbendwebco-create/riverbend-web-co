@@ -297,6 +297,24 @@ body.t-western{background:#fff}
 .v-americana .wx-band{border:0!important}
 .v-americana .wx-stars{color:var(--wa)}
 .v-americana .wx-foot{background:#1B1A1F!important;border-top:2px solid var(--wb)!important}
+/* Reviews */
+.wx-hrev{margin-top:30px;max-width:540px;background:rgba(20,16,14,.55);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:18px 20px;backdrop-filter:blur(6px);transition:opacity .35s}
+.wx-hrev.fade{opacity:.15}
+.wx-hrev .row{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.wx-hrev .row small{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.wx-hrev .wx-stars{color:var(--wa2)!important}
+.wx-hrev blockquote{margin:10px 0;font-family:var(--ws);font-size:1.02rem;line-height:1.55;color:#fff}
+.wx-hrev .row span{font-weight:700;color:rgba(255,255,255,.85);font-size:.9rem}
+.wx-hrev button{background:none;border:0;color:var(--wa2);font-weight:700;cursor:pointer;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;padding:0}
+.v-ranch .wx-hrev{margin:30px auto 0;text-align:left}
+.wx-revs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.wx-rev{margin:0;background:#fff;border:1px solid var(--wline);border-radius:12px;padding:22px}
+.wx-rev.more{display:none}
+.wx-rev .st .wx-stars{color:var(--wa)!important}
+.wx-rev blockquote{margin:10px 0 12px;font-family:var(--ws);line-height:1.6;color:var(--wink)}
+.wx-rev figcaption{font-weight:700;color:var(--wb);font-size:.9rem}
+.wx-center{justify-content:center;margin-top:24px}
+@media (max-width:900px){.wx-revs{grid-template-columns:1fr}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 
