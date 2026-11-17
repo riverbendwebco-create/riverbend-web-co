@@ -133,7 +133,7 @@ These rules come from building and launching riverbendwebco.com. Follow them on 
 | Growth (most popular) | $149/mo, $0 down, first payment due at launch | 6-month minimum, then month-to-month | After 6 consecutive payments |
 | Partner | $299/mo, $0 down, first payment due at launch | 6-month minimum, then month-to-month | After 6 consecutive payments |
 
-**Payment methods:** credit and debit cards through Square, ACH bank transfer, Venmo and PayPal. Listed in the pricing note, FAQ 09, agreement section 5 and the chat assistant `paymethod` answer.
+**Payment methods:** credit and debit cards through Square, ACH bank transfer, Venmo and PayPal. Listed in the pricing note, FAQ 08, agreement section 5 and the chat assistant `paymethod` answer.
 
 **Main call to action:** "Request Free Web Preview" (no "10-minute chat" wording anywhere).
 
