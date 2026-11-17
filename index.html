@@ -423,7 +423,7 @@ h1,h2,h3,h4{font-family:var(--font-h);line-height:1.1;letter-spacing:-.01em}
 .events-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:28px;align-items:start;max-width:920px;margin:0 auto}
 .events-wrap .ph{min-height:360px;border-radius:6px}
 .ev-perks{list-style:none;margin:14px 0 0;display:flex;flex-direction:column;gap:8px;color:#D6D3D1;font-size:.92rem}
-.ev-perks li::before{content:"✦ ";color:var(--brass)}
+.ev-perks li{display:flex;gap:8px;align-items:center}.ev-perks li::before{content:"";flex:none;width:11px;height:11px;background:var(--brass);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z%27/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z%27/%3E%3C/svg%3E") center/contain no-repeat}
 .lg-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .lg-form .full{grid-column:1/-1}
 .lg-form label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#A8A29E;display:block;margin-bottom:5px}
@@ -486,7 +486,7 @@ h1,h2,h3,h4{font-family:var(--font-h);line-height:1.1;letter-spacing:-.01em}
 .tr-svc .ic{width:42px;height:42px;border-radius:10px;background:#EFF6FF;color:var(--tb);display:grid;place-items:center;margin-bottom:10px}
 .tr-svc b{display:block;margin-bottom:4px}
 .tr-svc ul{list-style:none;color:#475569;font-size:.86rem;display:flex;flex-direction:column;gap:3px}
-.tr-svc li::before{content:"✓ ";color:var(--tg);font-weight:800}
+.tr-svc li{position:relative;padding-left:18px}.tr-svc li::before{content:"";position:absolute;left:0;top:.35em;width:12px;height:12px;background:var(--tg);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M5 12.5l4.5 4.5L19 7.5%27 fill=%27none%27 stroke=%27black%27 stroke-width=%273%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath d=%27M5 12.5l4.5 4.5L19 7.5%27 fill=%27none%27 stroke=%27black%27 stroke-width=%273%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center/contain no-repeat}
 .projects{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .proj{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#fff}
 .proj .ph{height:200px;position:relative}
@@ -773,6 +773,144 @@ h1,h2,h3,h4{font-family:var(--font-h);line-height:1.1;letter-spacing:-.01em}
   .print-sigline{border-top:1px solid #0F172A;margin-top:4px;padding-top:4px;font-size:.8rem}
 }
 
+/* Sticky scroll story (How It Works) */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-top:8px}
+.story-visual{position:sticky;top:96px;height:calc(100vh - 128px);max-height:680px;min-height:520px;display:flex;align-items:center;justify-content:center}
+.story-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px}
+.story-stage::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,82,204,.22),transparent);top:50%;left:50%;transform:translate(-50%,-55%);z-index:0}
+.story-phone{position:relative;z-index:1;width:270px;aspect-ratio:9/19;border-radius:46px;padding:9px;background:linear-gradient(145deg,#3b4252,#0b0f17 40%,#1f2937);box-shadow:0 0 0 1.5px #475569,0 40px 80px -24px rgba(15,23,42,.55)}
+.sp-screen{position:relative;width:100%;height:100%;border-radius:38px;overflow:hidden;background:#fff;color:#0F172A}
+.sp-island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:86px;height:24px;border-radius:14px;background:#000;z-index:5}
+.sp-status{position:relative;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:12px 24px 0;height:40px;font-size:.72rem;font-weight:700}
+.sp-sys{display:flex;gap:4px;align-items:center}
+.sp-scr{position:absolute;inset:40px 0 0;padding:10px 14px 16px;display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(18px) scale(.98);transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+.sp-scr.on{opacity:1;transform:none}
+/* screen 1 */
+.sp-chat-head{display:flex;align-items:center;gap:9px;padding-bottom:10px;border-bottom:1px solid #EEF2F7}
+.sp-av{width:34px;height:34px;border-radius:50%;background:#0F172A;display:grid;place-items:center;flex:none}
+.sp-av svg{width:24px;height:auto}
+.sp-chat-head b{display:block;font-size:.78rem}
+.sp-chat-head small{display:flex;align-items:center;gap:5px;font-size:.66rem;color:#16A34A;font-weight:600}
+.sp-call{margin-left:auto;color:#16A34A}
+.sp-dot{width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.sp-chat{display:flex;flex-direction:column;gap:7px}
+.bub{max-width:82%;font-size:.72rem;line-height:1.35;padding:8px 11px;border-radius:16px;opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+.bub.them{background:#F1F5F9;align-self:flex-start;border-bottom-left-radius:5px}
+.bub.me{background:#0052CC;color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.sp-scr.on .bub{opacity:1;transform:none}
+.sp-scr.on .bub:nth-child(2){transition-delay:.15s}.sp-scr.on .bub:nth-child(3){transition-delay:.3s}.sp-scr.on .bub:nth-child(4){transition-delay:.45s}.sp-scr.on .bub:nth-child(5){transition-delay:.6s}.sp-scr.on .bub:nth-child(6){transition-delay:.75s}.sp-scr.on .bub:nth-child(7){transition-delay:.9s}
+.bub.typing{display:flex;gap:4px;padding:10px 12px}
+.bub.typing i{width:6px;height:6px;border-radius:50%;background:#94A3B8;animation:blink 1.2s infinite}
+.bub.typing i:nth-child(2){animation-delay:.2s}.bub.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+/* screen 2 */
+.sp-build-head{font-size:.66rem;color:#64748B;background:#F1F5F9;border-radius:999px;padding:6px 10px;display:flex;justify-content:center}
+.sp-build-head span{display:flex;align-items:center;gap:5px}
+.sp-prog small{display:flex;justify-content:space-between;font-size:.66rem;color:#64748B;margin-top:5px}
+.sp-bar{height:7px;border-radius:999px;background:#E2E8F0;overflow:hidden}
+.sp-bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#0052CC,#60A5FA);transition:width 1.6s cubic-bezier(.3,.7,.3,1)}
+.sp-scr.on .sp-bar i{width:100%}
+.sp-site{display:flex;flex-direction:column;gap:7px}
+.sk{border-radius:12px;background:linear-gradient(90deg,#EEF2F7 0%,#F8FAFC 50%,#EEF2F7 100%);background-size:200% 100%;animation:shimmer 1.6s infinite linear}
+@keyframes shimmer{to{background-position:-200% 0}}
+.sk-hero{height:96px;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;background:linear-gradient(135deg,#1E293B,#0052CC);animation:none}
+.sk-t{color:#fff;font-family:var(--font-h);font-weight:800;font-size:.8rem;letter-spacing:.04em}
+.sk-b{align-self:flex-start;background:#FBBF24;color:#1a1205;font-size:.58rem;font-weight:800;padding:3px 7px;border-radius:999px}
+.sk-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sk-card{height:44px}
+.sk-line{height:9px}.w80{width:80%}.w60{width:60%}
+.sp-checks{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:2px}
+.sp-checks li{display:flex;align-items:center;gap:5px;font-size:.64rem;font-weight:600;color:#334155;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:999px;padding:5px 8px;opacity:0;transform:scale(.9);transition:all .3s ease}
+.sp-checks li svg{color:#16A34A;flex:none}
+.sp-scr.on .sp-checks li{opacity:1;transform:none}
+.sp-scr.on .sp-checks li:nth-child(1){transition-delay:.4s}.sp-scr.on .sp-checks li:nth-child(2){transition-delay:.7s}.sp-scr.on .sp-checks li:nth-child(3){transition-delay:1s}.sp-scr.on .sp-checks li:nth-child(4){transition-delay:1.3s}
+/* screen 3 */
+.sp-search{display:flex;align-items:center;gap:7px;font-size:.72rem;color:#334155;border:1px solid #E2E8F0;border-radius:999px;padding:8px 12px;box-shadow:0 2px 6px rgba(15,23,42,.06)}
+.sp-search svg{color:#64748B}
+.sp-gcard{border:1px solid #E2E8F0;border-radius:20px;overflow:hidden;padding:0 0 12px;box-shadow:0 12px 24px -16px rgba(15,23,42,.4)}
+.sp-gmap{position:relative;height:84px}
+.sp-gmap svg{width:100%;height:100%;display:block}
+.sp-pin{position:absolute;left:46%;top:18px;color:#DC2626}
+.sp-gcard>b,.sp-gcard .sp-rate,.sp-gcard .open{padding:0 12px}
+.sp-gcard>b{display:block;margin-top:9px;font-size:.86rem}
+.sp-rate{display:flex;align-items:center;gap:5px;font-size:.66rem;color:#475569;margin-top:2px}
+.sp-gcard .open{display:block;font-size:.66rem;color:#16A34A;font-weight:600;margin-top:2px}
+.sp-gbtns{display:flex;gap:6px;padding:10px 12px 0}
+.sp-gbtns span{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;font-size:.6rem;font-weight:700;color:#0052CC;border:1px solid #BFDBFE;border-radius:999px;padding:6px 0}
+.sp-gbtns span:first-child{background:#0052CC;color:#fff;border-color:#0052CC}
+.sp-live{display:flex;gap:9px;align-items:center;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:18px;padding:10px 12px;opacity:0;transform:translateY(10px);transition:all .4s ease .35s}
+.sp-scr.on .sp-live{opacity:1;transform:none}
+.sp-live b{display:block;font-size:.72rem;color:#14532D}
+.sp-live small{font-size:.62rem;color:#15803D}
+.story-dots{position:relative;z-index:1;display:flex;gap:8px}
+.story-dots i{width:8px;height:8px;border-radius:999px;background:#CBD5E1;transition:all .3s}
+.story-dots i.on{width:28px;background:#0052CC}
+/* steps */
+.story-steps{list-style:none;position:relative;padding-left:34px}
+.story-steps::before{content:"";position:absolute;left:8px;top:8vh;bottom:8vh;width:3px;border-radius:3px;background:#E2E8F0}
+.story-steps::after{content:"";position:absolute;left:8px;top:8vh;width:3px;border-radius:3px;background:linear-gradient(#0052CC,#60A5FA);height:var(--story-fill,0%);max-height:calc(100% - 16vh);transition:height .2s linear}
+.story-step{position:relative;min-height:72vh;display:flex;flex-direction:column;justify-content:center;opacity:.35;transition:opacity .4s ease}
+.story-step.on{opacity:1}
+.story-step::before{content:"";position:absolute;left:-32px;top:50%;width:17px;height:17px;border-radius:50%;background:#fff;border:3px solid #CBD5E1;transform:translateY(-50%);transition:all .3s}
+.story-step.on::before{border-color:#0052CC;background:#0052CC;box-shadow:0 0 0 6px rgba(0,82,204,.15)}
+.ss-num{font-family:var(--font-h);font-weight:800;font-size:.85rem;letter-spacing:.14em;color:#0052CC}
+.story-step h3{font-size:clamp(1.6rem,3vw,2.2rem);margin:8px 0 12px}
+.story-step p{color:var(--slate);font-size:1.06rem;max-width:440px}
+.ss-list{list-style:none;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.ss-list li{display:flex;align-items:center;gap:9px;font-weight:600;font-size:.95rem}
+.ss-list svg{color:#16A34A;flex:none}
+.story-step .time{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--amber);background:var(--amber-soft);padding:6px 12px;border-radius:999px}
+@media (max-width:880px){
+  .story{grid-template-columns:1fr;gap:0}
+  .story-visual{top:68px;height:auto;min-height:0;max-height:none;padding:12px 0 14px;z-index:3;background:linear-gradient(#F8FAFC 85%,rgba(248,250,252,0));margin:0 -20px}
+  .story-phone{transform:scale(.44);transform-origin:top center;margin-bottom:-319px}
+  .story-stage{gap:10px}
+  .story-stage::before{width:240px;height:240px}
+  .story-step{min-height:58vh;justify-content:flex-start;padding-top:20px}
+  .story-step h3{margin:4px 0 8px}
+  .story-steps{padding-bottom:22vh}
+  .story-step::before{top:34px;transform:none}
+  .story-steps::before,.story-steps::after{top:0}
+}
+@media (prefers-reduced-motion:reduce){.sp-scr,.bub,.sp-checks li,.sp-live,.sp-bar i{transition:none!important}}
+
+/* Super-rounded boxes */
+:root{--radius:28px}
+.pcard,.dcard,.plan,.vs-card,.form-card,.terms-strip,.faq-item,.guar{border-radius:28px}
+.term-badge,.term-cta{border-radius:22px}
+.pcard .ic,.guar .ic,.term-badge .ic,.trust-item .ic{border-radius:16px}
+.btn{border-radius:999px}
+.pill,.sig-tabs,.sig-tabs button{border-radius:999px}
+.field input,.ag-fields input,.types span{border-radius:16px}
+.types span{border-radius:18px}
+.form-card .note{border-radius:16px}
+.browser{border-radius:22px}
+.float-card{border-radius:20px}
+.dthumb{border-radius:0}
+.modal-box,.agree-box{border-radius:28px}
+.plan-pick .pc{border-radius:22px}
+.pay-sum div{border-radius:16px}
+.terms-sec{border-radius:22px}
+.sig-pad{border-radius:20px}
+.signed-stamp{border-radius:18px}
+.success .next{border-radius:18px}
+.pcard .stat{border-radius:999px}
+.dbody li{border-radius:999px}
+.plan .ribbon,.vs-rw .tagline{border-radius:999px}
+@media (max-width:640px){.modal-box,.agree-box{border-radius:0}}
+
+/* SVG icon helpers */
+.ico{width:1em;height:1em;display:inline-block;vertical-align:-.14em;flex:none}
+.stars-svg{display:inline-flex;gap:2px;color:#F59E0B;vertical-align:-.1em}
+.stars-svg svg{width:.95em;height:.95em}
+.stars-svg.sm svg{width:10px;height:10px}
+.mk svg{width:13px;height:13px}
+.socials .ico{width:17px;height:17px}
+.tr-badges .ico,.tr-top .ico,.tr-phone .ico{width:15px;height:15px}
+.sig-tabs .ico,#agPrint .ico{width:16px;height:16px}
+.pub-hh .ico{width:17px;height:17px;vertical-align:-.25em}
+.hero-proof .ico{width:14px;height:14px;color:#4ADE80}
+
 /* Footer */
 footer{background:#18212C;color:#94A3B8;padding:56px 0 28px;font-size:.93rem}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:40px}
@@ -808,6 +946,25 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     <path d="M2 30 C 12 30, 12 18, 21 18 S 30 26, 38 20" fill="none" stroke="#0052CC" stroke-width="3.4" stroke-linecap="round"/>
   </symbol>
   <symbol id="rw-light" viewBox="0 0 1115 562"><path fill="#1E293B" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#0052CC" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol><symbol id="rw-dark" viewBox="0 0 1115 562"><path fill="#FFFFFF" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#3B82F6" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol>
+
+  <symbol id="i-signal" viewBox="0 0 16 10"><rect x="0" y="7" width="3" height="3" rx="1" fill="currentColor"/><rect x="4.3" y="5" width="3" height="5" rx="1" fill="currentColor"/><rect x="8.6" y="2.5" width="3" height="7.5" rx="1" fill="currentColor"/><rect x="13" y="0" width="3" height="10" rx="1" fill="currentColor"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 20 10"><rect x=".5" y=".5" width="16" height="9" rx="2.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="11" height="6" rx="1.4" fill="currentColor"/><rect x="17.6" y="3.3" width="1.6" height="3.4" rx=".8" fill="currentColor"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H5a2 2 0 01-2-2v-4a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4zM14 6l3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-beer" viewBox="0 0 24 24"><path d="M5 8h10v12a1 1 0 01-1 1H6a1 1 0 01-1-1V8zM15 11h2a2 2 0 012 2v3a2 2 0 01-2 2h-2M5 8a3 3 0 013-3 3.5 3.5 0 016.5 0A2.5 2.5 0 0115 8M9 12v5M12 12v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-badge" viewBox="0 0 24 24"><path d="M12 2l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 22l-2.4-1.8-3 .2-.9-2.9-2.5-1.7 1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2L12 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-6.8 0-4-3-6.5-4.5-9.2-.5 2.3-1.8 3.6-3 4.2C11.8 7 10.6 4.3 8 2c.2 3.4-3 6.2-3 10.6C5 18.6 8 22 12 22z" fill="currentColor"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v7h4v-7h3l.5-4h-3.5V9c0-.6.4-1 1-1z" fill="currentColor"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-xsocial" viewBox="0 0 24 24"><path d="M4 3h4.6l4 5.6L17.4 3H20l-6.2 7.2L21 21h-4.6l-4.4-6.1L6.6 21H4l6.8-7.8L4 3z" fill="currentColor"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="currentColor"/></symbol>
   <symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="pin" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
@@ -868,7 +1025,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         <a href="#demos" class="btn btn-amber">See Live Demo Styles <svg width="18" height="18"><use href="#arrow"/></svg></a>
         <a href="#contact" class="btn btn-ghost">Get a Free Mockup for Your Business</a>
       </div>
-      <div class="hero-proof"><span>✓ <b>Free custom preview</b></span><span>✓ <b>No long-term contracts</b></span><span>✓ <b>You own your domain</b></span></div>
+      <div class="hero-proof"><span><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> <b>Free custom preview</b></span><span><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> <b>No long-term contracts</b></span><span><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> <b>You own your domain</b></span></div>
     </div>
 
     <div class="hero-visual" aria-label="Example: The Lock & Dam Tap website on desktop and phone" role="img">
@@ -902,8 +1059,8 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
           <div class="i-screen">
             <div class="i-island"></div>
             <div class="i-head ph" data-img="1567696911980-2eed69a46042" data-ov="linear-gradient(0deg,rgba(13,13,15,1) 0%,rgba(13,13,15,.35) 70%)" data-fb="radial-gradient(circle at 60% 30%,#a16207,#1c1305 60%,#0d0d0f)">
-              <div class="i-status" style="position:absolute;top:0;left:0;right:0"><span>9:41</span><span>●●● ▮</span></div>
-              <b>Lock &amp; Dam Tap</b><small>● Open · Kitchen ’til 11</small>
+              <div class="i-status" style="position:absolute;top:0;left:0;right:0"><span>9:41</span><span style="display:flex;gap:3px;align-items:center"><svg width="14" height="9"><use href="#i-signal"/></svg><svg width="18" height="9"><use href="#i-battery"/></svg></span></div>
+              <b>Lock &amp; Dam Tap</b><small><i class="sp-dot" style="width:5px;height:5px;box-shadow:none"></i> Open · Kitchen ’til 11</small>
             </div>
             <div class="i-tabs"><span class="on">Menu</span><span>Tap List</span><span>Events</span></div>
             <div class="i-list">
@@ -916,12 +1073,12 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
                 <div class="i-tap"><i style="background:#2B1408;outline:1px solid #555"></i><span>Mississippi Mud</span><em>$6</em></div>
               </div>
             </div>
-            <div class="i-bar"><span>📞 Call</span><span>📍 Directions</span></div>
+            <div class="i-bar"><span><svg class="ico" width="10" height="10" aria-hidden="true"><use href="#phone"/></svg> Call</span><span><svg class="ico" width="10" height="10" aria-hidden="true"><use href="#map"/></svg> Directions</span></div>
           </div>
         </div>
 
         <!-- Floating proof cards -->
-        <div class="float-card fc-rating"><span class="ic"><svg width="18" height="18"><use href="#star"/></svg></span><div><b>★ 4.9 Google Business Profile</b><small><span class="stars">★★★★★</span> 212 reviews</small></div></div>
+        <div class="float-card fc-rating"><span class="ic"><svg width="18" height="18"><use href="#star"/></svg></span><div><b>4.9 Google Business Profile</b><small><span class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></span> 212 reviews</small></div></div>
         <div class="float-card fc-dir"><span class="ic"><svg width="18" height="18"><use href="#map"/></svg></span><div><b><span class="up">+38</span> Direction Taps This Week</b><small>From Google Maps</small></div></div>
       </div>
     </div>
@@ -976,14 +1133,14 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     </div>
     <div class="vs-grid">
       <div class="vs-card vs-fb reveal">
-        <h3><span class="logo-fb">f</span>Only a Facebook Page</h3>
+        <h3><span class="logo-fb"><svg width="20" height="20" aria-hidden="true"><use href="#i-fb"/></svg></span>Only a Facebook Page</h3>
         <p class="sub">Renting space on someone else's platform</p>
         <ul>
-          <li><span class="mk">✕</span>Customers get a login pop-up just to check your hours</li>
-          <li><span class="mk">✕</span>The algorithm decides who sees tonight's special, usually almost nobody</li>
-          <li><span class="mk">✕</span>Hard to find on Google when someone searches "bar near me"</li>
-          <li><span class="mk">✕</span>No real menu, booking form or estimate request</li>
-          <li><span class="mk">✕</span>Facebook owns the page and can change the rules anytime</li>
+          <li><span class="mk"><svg><use href="#i-x"/></svg></span>Customers get a login pop-up just to check your hours</li>
+          <li><span class="mk"><svg><use href="#i-x"/></svg></span>The algorithm decides who sees tonight's special, usually almost nobody</li>
+          <li><span class="mk"><svg><use href="#i-x"/></svg></span>Hard to find on Google when someone searches "bar near me"</li>
+          <li><span class="mk"><svg><use href="#i-x"/></svg></span>No real menu, booking form or estimate request</li>
+          <li><span class="mk"><svg><use href="#i-x"/></svg></span>Facebook owns the page and can change the rules anytime</li>
         </ul>
       </div>
       <div class="vs-mid" aria-hidden="true"><span>VS</span></div>
@@ -992,11 +1149,11 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         <h3><span class="logo-rw"><svg class="rw" viewBox="0 0 1115 562" aria-hidden="true"><use href="#rw-light"/></svg></span>A Riverbend Website</h3>
         <p class="sub">Your own home on the internet</p>
         <ul>
-          <li><span class="mk">✓</span>Hours, menu and specials load in seconds, no login needed</li>
-          <li><span class="mk">✓</span>Everyone who visits sees your specials, every time</li>
-          <li><span class="mk">✓</span>Set up to show on Google Search &amp; Google Maps</li>
-          <li><span class="mk">✓</span>Party booking &amp; quote forms that work 24/7</li>
-          <li><span class="mk">✓</span>Your domain, your site. Keep posting on Facebook and we'll link the two</li>
+          <li><span class="mk"><svg><use href="#check"/></svg></span>Hours, menu and specials load in seconds, no login needed</li>
+          <li><span class="mk"><svg><use href="#check"/></svg></span>Everyone who visits sees your specials, every time</li>
+          <li><span class="mk"><svg><use href="#check"/></svg></span>Set up to show on Google Search &amp; Google Maps</li>
+          <li><span class="mk"><svg><use href="#check"/></svg></span>Party booking &amp; quote forms that work 24/7</li>
+          <li><span class="mk"><svg><use href="#check"/></svg></span>Your domain, your site. Keep posting on Facebook and we'll link the two</li>
         </ul>
       </div>
     </div>
@@ -1034,7 +1191,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         </div>
       </button>
       <button class="dcard reveal" data-demo="trade" aria-haspopup="dialog">
-        <div class="dthumb th-trade"><div class="hd"><span class="lg">Bluff City Pro</span><span class="cta">Free Estimate</span></div><h4>Trusted local service since 1998</h4><span class="stars">★★★★★</span><div class="svc"><span></span><span></span><span></span></div></div>
+        <div class="dthumb th-trade"><div class="hd"><span class="lg">Bluff City Pro</span><span class="cta">Free Estimate</span></div><h4>Trusted local service since 1998</h4><span class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></span><div class="svc"><span></span><span></span><span></span></div></div>
         <div class="dbody">
           <span class="tag">Contractors · Auto · Retail</span>
           <h3>The Local Service & Trade Pro</h3>
@@ -1106,12 +1263,91 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     <div class="section-head center reveal">
       <span class="eyebrow">How it works</span>
       <h2>Live in 3 Simple Steps</h2>
-      <p>No meetings that drag on. No tech homework. You talk, we build.</p>
+      <p>No meetings that drag on. No tech homework. You talk, we build. Scroll to watch it happen.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal"><div class="num">1</div><h3>10-Minute Chat</h3><p>Tell us your hours, your vibe, and what you want more of—busier weekends, more parties, more calls.</p><span class="time">10 minutes</span></div>
-      <div class="step reveal"><div class="num">2</div><h3>We Build Your Preview</h3><p>See your actual business name, photos, and info on a live demo site within days. Tweak anything you want.</p><span class="time">A few days</span></div>
-      <div class="step reveal"><div class="num">3</div><h3>Go Live</h3><p>We connect your domain, optimize your Google Maps listing, and handle all ongoing updates from there.</p><span class="time">Launch in 7 days</span></div>
+
+    <div class="story" id="story">
+      <!-- Pinned phone -->
+      <div class="story-visual">
+        <div class="story-stage">
+          <div class="story-phone" aria-hidden="true">
+            <div class="sp-screen">
+              <div class="sp-island"></div>
+              <div class="sp-status"><span>9:41</span><span class="sp-sys"><svg width="16" height="10"><use href="#i-signal"/></svg><svg width="20" height="10"><use href="#i-battery"/></svg></span></div>
+
+              <!-- Screen 1: chat -->
+              <div class="sp-scr on" data-scr="1">
+                <div class="sp-chat-head"><span class="sp-av"><svg viewBox="0 0 1115 562"><use href="#rw-dark"/></svg></span><div><b>Riverbend Web Co.</b><small><i class="sp-dot"></i>On a call · 10 min</small></div><svg class="sp-call" width="18" height="18"><use href="#phone"/></svg></div>
+                <div class="sp-chat">
+                  <div class="bub them">Hey! What are your hours?</div>
+                  <div class="bub me">Mon–Sat 3 PM to 2 AM. Kitchen ’til 11.</div>
+                  <div class="bub them">What’s the vibe? Who’s your crowd?</div>
+                  <div class="bub me">Sports bar. Big on wings &amp; game days.</div>
+                  <div class="bub them">What do you want more of?</div>
+                  <div class="bub me">Private parties and Friday traffic.</div>
+                  <div class="bub them typing"><i></i><i></i><i></i></div>
+                </div>
+              </div>
+
+              <!-- Screen 2: building preview -->
+              <div class="sp-scr" data-scr="2">
+                <div class="sp-build-head"><span><svg width="12" height="12"><use href="#lock"/></svg> preview.yourbusiness.com</span></div>
+                <div class="sp-prog"><div class="sp-bar"><i></i></div><small>Building your preview… <b class="sp-pct">0%</b></small></div>
+                <div class="sp-site">
+                  <div class="sk sk-hero"><span class="sk-t">YOUR BAR NAME</span><span class="sk-b">Happy Hour 3–6</span></div>
+                  <div class="sk-row"><div class="sk sk-card"></div><div class="sk sk-card"></div><div class="sk sk-card"></div></div>
+                  <div class="sk sk-line w80"></div><div class="sk sk-line w60"></div>
+                </div>
+                <ul class="sp-checks">
+                  <li><svg width="14" height="14"><use href="#check"/></svg>Logo &amp; colors</li>
+                  <li><svg width="14" height="14"><use href="#check"/></svg>Hours &amp; location</li>
+                  <li><svg width="14" height="14"><use href="#check"/></svg>Menu &amp; specials</li>
+                  <li><svg width="14" height="14"><use href="#check"/></svg>Photos &amp; reviews</li>
+                </ul>
+              </div>
+
+              <!-- Screen 3: live on Google -->
+              <div class="sp-scr" data-scr="3">
+                <div class="sp-search"><svg width="14" height="14"><use href="#i-search"/></svg>bars near me</div>
+                <div class="sp-gcard">
+                  <div class="sp-gmap"><svg viewBox="0 0 220 90" preserveAspectRatio="none"><rect width="220" height="90" fill="#E8EEF4"/><path d="M0 30h220M0 62h220M50 0v90M120 0v90M180 0v90" stroke="#fff" stroke-width="6"/><path d="M196 0c-14 30 18 50 0 90h24V0z" fill="#BFD6EE"/></svg><span class="sp-pin"><svg width="22" height="22"><use href="#pin"/></svg></span></div>
+                  <b>Your Business Name</b>
+                  <div class="sp-rate"><span class="stars-svg sm"><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg></span>4.9 · Sports bar</div>
+                  <small class="open">Open · Closes 2 AM</small>
+                  <div class="sp-gbtns"><span><svg width="13" height="13"><use href="#i-globe"/></svg>Website</span><span><svg width="13" height="13"><use href="#map"/></svg>Directions</span><span><svg width="13" height="13"><use href="#phone"/></svg>Call</span></div>
+                </div>
+                <div class="sp-live"><span class="sp-dot"></span><div><b>yourbusiness.com is live</b><small>Updates handled by Riverbend</small></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="story-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+        </div>
+      </div>
+
+      <!-- Scrolling steps -->
+      <ol class="story-steps">
+        <li class="story-step on" data-step="1">
+          <span class="ss-num">01</span>
+          <h3>10-Minute Chat</h3>
+          <p>Tell us your hours, your vibe, and what you want more of: busier weekends, more parties, more calls. That’s the whole meeting.</p>
+          <ul class="ss-list"><li><svg width="16" height="16"><use href="#check"/></svg>Phone, text or coffee in Dubuque</li><li><svg width="16" height="16"><use href="#check"/></svg>No forms or tech homework</li></ul>
+          <span class="time"><svg width="14" height="14"><use href="#i-clock"/></svg>10 minutes</span>
+        </li>
+        <li class="story-step" data-step="2">
+          <span class="ss-num">02</span>
+          <h3>We Build Your Preview</h3>
+          <p>See your actual business name, photos and info on a live preview site within days. Tweak anything you want before it goes public.</p>
+          <ul class="ss-list"><li><svg width="16" height="16"><use href="#check"/></svg>Your logo, menu &amp; photos</li><li><svg width="16" height="16"><use href="#check"/></svg>Unlimited changes before launch</li></ul>
+          <span class="time"><svg width="14" height="14"><use href="#i-clock"/></svg>3–5 business days</span>
+        </li>
+        <li class="story-step" data-step="3">
+          <span class="ss-num">03</span>
+          <h3>Go Live</h3>
+          <p>We connect your domain, optimize your Google Maps listing and handle every update from there. You just text us when something changes.</p>
+          <ul class="ss-list"><li><svg width="16" height="16"><use href="#check"/></svg>Shows up on Google Search &amp; Maps</li><li><svg width="16" height="16"><use href="#check"/></svg>Text us anytime for updates</li></ul>
+          <span class="time"><svg width="14" height="14"><use href="#i-clock"/></svg>Launch in 7 days</span>
+        </li>
+      </ol>
     </div>
   </div>
 </section>
@@ -1126,7 +1362,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         <circle cx="150" cy="150" r="138" fill="none" stroke="#0052CC" stroke-width="3"/>
         <circle cx="150" cy="150" r="98" fill="none" stroke="rgba(96,165,250,.35)" stroke-width="1.5" stroke-dasharray="3 5"/>
         <text font-family="Lexend, sans-serif" font-size="17" font-weight="700" letter-spacing="5" fill="#fff"><textPath href="#circ" startOffset="0">BUILT RIGHT HERE IN DUBUQUE · IOWA ·</textPath></text>
-        <text font-family="Lexend, sans-serif" font-size="13" font-weight="600" letter-spacing="4" fill="#60A5FA"><textPath href="#circ" startOffset="74%">★ LOCAL ★</textPath></text>
+        <text font-family="Lexend, sans-serif" font-size="13" font-weight="600" letter-spacing="4" fill="#60A5FA"><textPath href="#circ" startOffset="74%">• LOCAL •</textPath></text>
       </svg>
       <div class="center"><svg class="rw" viewBox="0 0 1115 562" aria-hidden="true"><use href="#rw-light"/></svg></div>
     </div>
@@ -1330,12 +1566,12 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       </div>
 
       <div class="ag-h">4 · Signature</div>
-      <div class="sig-tabs no-print" role="tablist"><button class="on" data-sig="draw" type="button">✍️ Draw</button><button data-sig="type" type="button">⌨️ Type</button></div>
+      <div class="sig-tabs no-print" role="tablist"><button class="on" data-sig="draw" type="button"><svg class="ico" width="15" height="15" aria-hidden="true"><use href="#i-pen"/></svg> Draw</button><button data-sig="type" type="button"><svg class="ico" width="15" height="15" aria-hidden="true"><use href="#i-keyboard"/></svg> Type</button></div>
       <div class="sig-pad" id="sigPad">
         <div id="sigDrawWrap" style="height:100%"><canvas id="sigCanvas" aria-label="Draw your signature"></canvas><span class="hint">Sign with your finger, stylus or mouse</span></div>
         <div id="sigTypeWrap" class="sig-type" style="display:none"><input id="sigTyped" placeholder="Type your full name" aria-label="Typed signature"></div>
         <img class="sig-img" id="sigImg" alt="Client signature">
-        <span class="x">✕</span><span class="line"></span>
+        <span class="x"><svg width="12" height="12"><use href="#i-x"/></svg></span><span class="line"></span>
         <button class="sig-clear" id="sigClear" type="button">Clear</button>
       </div>
       <div class="print-sigline print-only">Client Signature · <span id="printSigMeta">Date: ____________</span></div>
@@ -1347,7 +1583,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     <div class="ag-foot">
       <div class="left">When you sign, a copy goes to Riverbend Web Co. Save a PDF for your records. Questions? riverbendwebco@gmail.com</div>
       <div class="right">
-        <button class="btn btn-outline btn-sm" id="agPrint" type="button">🖨 Print / Save as PDF</button>
+        <button class="btn btn-outline btn-sm" id="agPrint" type="button"><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-print"/></svg> Print / Save as PDF</button>
         <button class="btn btn-amber btn-sm" id="agSign" type="button">Agree &amp; Sign</button>
       </div>
       <div class="ag-print-msg" id="agPrintMsg">Printing is blocked in this preview window. Open the site in your own browser (or on your live domain) and the Print / Save as PDF button will work.</div>
@@ -1380,7 +1616,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
           </div>
           <span class="live"><i></i>Open Tonight • Kitchen ’til 11 PM</span>
         </div>
-        <div class="pub-hh">🍺 Happy Hour Mon–Fri 3–6 PM · $3 Domestics · $5 Crafts · Half-Price Apps</div>
+        <div class="pub-hh"><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-beer"/></svg> Happy Hour Mon–Fri 3–6 PM · $3 Domestics · $5 Crafts · Half-Price Apps</div>
 
         <section class="pub-hero ph" data-img="1535958636474-b021ee887b13" data-ov="linear-gradient(90deg,rgba(8,8,10,.94) 0%,rgba(8,8,10,.72) 45%,rgba(8,8,10,.25) 100%)" data-fb="radial-gradient(circle at 75% 40%,#8a4b0f,#2a1405 45%,#0d0d0f 75%)">
           <div class="in">
@@ -1388,11 +1624,11 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
             <h2>Cold Beer.<br>Big Screens.<br><span>Good People.</span></h2>
             <p>24 taps, 16 HD screens, the best wings on Central Ave, and live music every Friday night.</p>
             <div class="pub-actions">
-              <button class="pub-call" data-toast="📞 On a phone, this dials (563) 555-0142 instantly."><svg width="18" height="18"><use href="#phone"/></svg>Tap to Call</button>
-              <button class="pub-dir" data-toast="📍 On a phone, this opens Google Maps with turn-by-turn directions."><svg width="18" height="18"><use href="#map"/></svg>Get Directions</button>
+              <button class="pub-call" data-toast="On a phone, this dials (563) 555-0142 instantly."><svg width="18" height="18"><use href="#phone"/></svg>Tap to Call</button>
+              <button class="pub-dir" data-toast="On a phone, this opens Google Maps with turn-by-turn directions."><svg width="18" height="18"><use href="#map"/></svg>Get Directions</button>
             </div>
             <div class="pub-toast" id="pubToast" aria-live="polite"></div>
-            <div class="pub-stats"><div><b>24</b>Taps</div><div><b>16</b>HD Screens</div><div><b>4.7★</b>Google</div><div><b>Patio</b>Heated</div></div>
+            <div class="pub-stats"><div><b>24</b>Taps</div><div><b>16</b>HD Screens</div><div><b>4.7<svg class="ico" width="15" height="15" aria-hidden="true"><use href="#star"/></svg></b>Google</div><div><b>Patio</b>Heated</div></div>
           </div>
         </section>
 
@@ -1400,13 +1636,13 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
           <div class="pub-h"><h3>This Week’s Spotlight</h3><p>Don’t miss these. Seats fill up fast.</p></div>
           <div class="spot">
             <div class="spot-card ph" data-img="1711130953835-7bcb75b163db" data-ov="linear-gradient(0deg,rgba(0,0,0,.92) 10%,rgba(0,0,0,.25) 70%)" data-fb="radial-gradient(circle at 60% 30%,#14532d,#0b1f14 55%,#050505)">
-              <span class="tag">● Game Day</span>
+              <span class="tag"><i class="sp-dot" style="background:#fff;box-shadow:none;width:6px;height:6px;margin-right:4px"></i>Game Day</span>
               <h4>Hawkeyes vs. Badgers</h4>
               <p>Saturday · 2:30 PM kickoff · Sound on every screen</p>
               <div class="deal"><span>50¢ Wings</span><span>$12 Buckets</span><span>Free Pool During Halftime</span></div>
             </div>
             <div class="spot-card ph" data-img="1713973724182-0fe31a59b445" data-ov="linear-gradient(0deg,rgba(0,0,0,.92) 10%,rgba(0,0,0,.3) 75%)" data-fb="radial-gradient(circle at 40% 30%,#78350f,#1c0f05 55%,#050505)">
-              <span class="tag gold">♪ Live Music</span>
+              <span class="tag gold"><svg class="ico" width="12" height="12" aria-hidden="true"><use href="#i-music"/></svg> Live Music</span>
               <h4>The Bluff Boys</h4>
               <p>Friday · 9 PM · Classic rock &amp; country covers</p>
               <div class="deal"><span>No Cover</span><span>$4 Fireball</span></div>
@@ -1456,7 +1692,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
           <div>
             <h5>Find Us</h5>
             <address><strong style="color:#fff">The Lock &amp; Dam Tap</strong><br>1187 Central Ave<br>Dubuque, IA 52001<br><span style="color:var(--gold-2);font-weight:700">(563) 555-0142</span></address>
-            <div class="socials" aria-label="Social links"><span>f</span><span>ig</span><span>X</span><span>♪</span></div>
+            <div class="socials" aria-label="Social links"><span title="Facebook"><svg class="ico" width="17" height="17" aria-hidden="true"><use href="#i-fb"/></svg></span><span title="Instagram"><svg class="ico" width="17" height="17" aria-hidden="true"><use href="#i-ig"/></svg></span><span title="X"><svg class="ico" width="15" height="15" aria-hidden="true"><use href="#i-xsocial"/></svg></span><span title="TikTok"><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-music"/></svg></span></div>
           </div>
           <div>
             <h5>Map</h5>
@@ -1471,7 +1707,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
                 <circle cx="130" cy="95" r="18" fill="rgba(232,163,61,.2)"/>
                 <path d="M130 72c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z" fill="#E8A33D"/><circle cx="130" cy="86" r="5" fill="#1a1205"/>
               </svg>
-              <button data-toast="📍 Opens Google Maps directions on a phone.">Directions →</button>
+              <button data-toast="Opens Google Maps directions on a phone.">Directions →</button>
             </div>
           </div>
           <div class="pub-legal"><span>© The Lock &amp; Dam Tap · Must be 21+ after 9 PM · Please drink responsibly</span><span>Site by Riverbend Web Co.</span></div>
@@ -1562,16 +1798,16 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 
       <!-- ================= TRADE ================= -->
       <div class="demo trade" data-demo-panel="trade">
-        <div class="tr-top"><span>⏱ Same-week service · Licensed in IA, IL &amp; WI</span><span>Emergency line: <b>(563) 555-0188</b></span></div>
+        <div class="tr-top"><span><svg class="ico" width="13" height="13" aria-hidden="true"><use href="#i-clock"/></svg> Same-week service · Licensed in IA, IL &amp; WI</span><span>Emergency line: <b>(563) 555-0188</b></span></div>
         <div class="tr-nav">
           <span class="tr-logo"><svg width="22" height="22"><use href="#roof"/></svg>Bluff City Pro Services</span>
-          <div class="r"><span class="tr-phone">📞 (563) 555-0188</span><button class="tr-cta" data-jump="t-form">Free Estimate</button></div>
+          <div class="r"><span class="tr-phone"><svg class="ico" width="15" height="15" aria-hidden="true"><use href="#phone"/></svg> (563) 555-0188</span><button class="tr-cta" data-jump="t-form">Free Estimate</button></div>
         </div>
         <section class="tr-hero ph" data-img="1632759145351-1d592919f522" data-ov="linear-gradient(90deg,rgba(15,23,42,.92) 0%,rgba(15,23,42,.75) 55%,rgba(30,64,175,.45) 100%)" data-fb="linear-gradient(135deg,#1e3a8a,#0f172a)">
           <div>
             <h2>Dubuque’s Trusted Home Repair Crew Since 1998</h2>
             <p>Roofing, plumbing and electrical done right the first time, with upfront pricing and no surprise bills.</p>
-            <div class="tr-badges"><span>✔ Licensed &amp; Insured</span><span><em>★</em> 4.9 on Google (212)</span><span>🛡 5-Year Workmanship Warranty</span></div>
+            <div class="tr-badges"><span><svg class="ico" width="15" height="15" aria-hidden="true"><use href="#i-badge"/></svg> Licensed &amp; Insured</span><span><em><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#star"/></svg></em> 4.9 on Google (212)</span><span><svg class="ico" width="15" height="15" aria-hidden="true"><use href="#i-shield"/></svg> 5-Year Workmanship Warranty</span></div>
           </div>
           <div class="tr-form" id="t-form">
             <form id="trForm">
@@ -1587,7 +1823,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
             <div class="tr-ok" id="trOk"><div class="chk"><svg width="28" height="28"><use href="#check"/></svg></div><strong style="font-size:1.1rem">Request received!</strong><p style="color:#64748B;font-size:.9rem;margin-top:4px">A Bluff City Pro will call you within 2 business hours to schedule your free estimate.</p></div>
           </div>
         </section>
-        <div class="tr-stats"><div><b>25+</b><small>Years in Dubuque</small></div><div><b>1,800+</b><small>Local jobs done</small></div><div><b>4.9★</b><small>212 Google reviews</small></div><div><b>24/7</b><small>Emergency service</small></div></div>
+        <div class="tr-stats"><div><b>25+</b><small>Years in Dubuque</small></div><div><b>1,800+</b><small>Local jobs done</small></div><div><b>4.9<svg class="ico" width="18" height="18" aria-hidden="true"><use href="#star"/></svg></b><small>212 Google reviews</small></div><div><b>24/7</b><small>Emergency service</small></div></div>
 
         <section class="tr-sec">
           <div class="area">
@@ -1617,11 +1853,11 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         </section>
 
         <section class="tr-sec tr-revs-wrap">
-          <div class="rev-head"><span class="rev-score">4.9</span><div><div class="stars">★★★★★</div><small style="color:#64748B">212 reviews on Google</small></div></div>
+          <div class="rev-head"><span class="rev-score">4.9</span><div><div class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></div><small style="color:#64748B">212 reviews on Google</small></div></div>
           <div class="tr-revs">
-            <div class="tr-rev"><div class="stars">★★★★★</div><p>“Showed up when they said, found the leak behind our water heater in twenty minutes, and the price matched the quote exactly. Calling them first from now on.”</p><div class="who"><span class="av" style="background:#1D4ED8">MT</span><div><b>Mike T.</b><small>Dubuque, IA</small></div></div></div>
-            <div class="tr-rev"><div class="stars">★★★★★</div><p>“Got three quotes after the hailstorm. Bluff City walked the roof with me, explained everything, and came in under the others. Crew cleaned up every nail.”</p><div class="who"><span class="av" style="background:#16A34A">JR</span><div><b>Jen R.</b><small>Asbury, IA</small></div></div></div>
-            <div class="tr-rev"><div class="stars">★★★★★</div><p>“Booked online Sunday night, panel upgrade done by Wednesday. Text updates the whole way. That’s how it should work.”</p><div class="who"><span class="av" style="background:#B45309">DK</span><div><b>Dave K.</b><small>Galena, IL</small></div></div></div>
+            <div class="tr-rev"><div class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></div><p>“Showed up when they said, found the leak behind our water heater in twenty minutes, and the price matched the quote exactly. Calling them first from now on.”</p><div class="who"><span class="av" style="background:#1D4ED8">MT</span><div><b>Mike T.</b><small>Dubuque, IA</small></div></div></div>
+            <div class="tr-rev"><div class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></div><p>“Got three quotes after the hailstorm. Bluff City walked the roof with me, explained everything, and came in under the others. Crew cleaned up every nail.”</p><div class="who"><span class="av" style="background:#16A34A">JR</span><div><b>Jen R.</b><small>Asbury, IA</small></div></div></div>
+            <div class="tr-rev"><div class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></div><p>“Booked online Sunday night, panel upgrade done by Wednesday. Text updates the whole way. That’s how it should work.”</p><div class="who"><span class="av" style="background:#B45309">DK</span><div><b>Dave K.</b><small>Galena, IL</small></div></div></div>
           </div>
         </section>
         <div class="tr-foot">
@@ -1696,7 +1932,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     current=key;
     $$('[data-demo-panel]').forEach(p=>p.classList.toggle('on',p.dataset.demoPanel===key));
     $$('.modal-tabs button').forEach(b=>{const on=b.dataset.switch===key;b.classList.toggle('on',on);b.setAttribute('aria-selected',on);});
-    $('#modalUrl').textContent='🔒 '+meta[key].url;
+    $('#modalUrl').innerHTML='<svg class="ico" width="11" height="11"><use href="#lock"/></svg> '+meta[key].url;
     $('#modalCta').textContent=meta[key].cta;
     body.scrollTop=0;
   }
@@ -1775,7 +2011,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       ['Bone-In Wings (8 / 16)','Brined 24 hrs, fried crispy, tossed in any sauce','$12 / $21'],
       ['Boneless Wings (10)','All white meat, same sauces, less mess','$11'],
       ['Wing Platter for the Game','30 wings, three sauces, celery, carrots, ranch & bleu','$36','Serves 4'],
-      ['Ghost Pepper Challenge','10 wings in 5 minutes, win your photo on the wall','$15','🔥 Dare']],
+      ['Ghost Pepper Challenge','10 wings in 5 minutes, win your photo on the wall','$15','Dare']],
       sauces:[['Buffalo Classic','#F97316'],['Garlic Parm','#FDE68A'],['Honey BBQ','#92400E'],['Mango Habanero','#F59E0B'],['Nashville Hot','#DC2626'],['Dry Rub Cajun','#B45309'],['Ghost Pepper','#7F1D1D']]},
     late:{img:'1586793783658-261cddf883ef',cap:'Late-night apps, served ’til close',items:[
       ['Loaded Tater Tots','Queso, bacon, jalapeños, green onion, sour cream','$10'],
@@ -1844,6 +2080,33 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   }));
   $('#lgForm').addEventListener('submit',e=>{e.preventDefault(); e.target.style.display='none'; $('#lgOk').style.display='block';});
   $('#trForm').addEventListener('submit',e=>{e.preventDefault(); e.target.style.display='none'; $('#trOk').style.display='block';});
+
+  /* ---------- Sticky scroll story ---------- */
+  (function(){
+    const steps=$$('.story-step'), scrs=$$('.sp-scr'), dots=$$('.story-dots i'), list=$('.story-steps');
+    if(!steps.length) return;
+    let cur=0, pctTimer=null;
+    function setStep(n){
+      if(n===cur) return; cur=n;
+      steps.forEach(s=>s.classList.toggle('on',+s.dataset.step===n));
+      scrs.forEach(s=>s.classList.toggle('on',+s.dataset.scr===n));
+      dots.forEach((d,i)=>d.classList.toggle('on',i===n-1));
+      clearInterval(pctTimer);
+      const pct=$('.sp-pct');
+      if(n===2&&pct){ let v=0; pct.textContent='0%'; pctTimer=setInterval(()=>{ v=Math.min(100,v+4); pct.textContent=v+'%'; if(v>=100){clearInterval(pctTimer); pct.textContent='Ready!';} },60); }
+    }
+    cur=0; setStep(1);
+    function onScroll(){
+      const mid=window.innerHeight*0.5;
+      let best=1;
+      steps.forEach(s=>{ const r=s.getBoundingClientRect(); if(r.top<mid) best=+s.dataset.step; });
+      setStep(best);
+      const lr=list.getBoundingClientRect();
+      const prog=Math.max(0,Math.min(1,(mid-lr.top)/(lr.height)));
+      list.style.setProperty('--story-fill',(prog*100).toFixed(1)+'%');
+    }
+    window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
+  })();
 
   /* FAQ accordion: one open at a time */
   $$('#faqList .faq-q').forEach(q=>q.addEventListener('click',()=>{
@@ -1935,7 +2198,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     const when=new Date().toLocaleString('en-US',{month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
     const plan=$('input[name="agPlan"]:checked').value==='growth'?'The Full Growth Partner ($0 Down + $149/mo, first payment due at launch)':'The Starter Launch ($499 Setup + $99/mo)';
     const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    $('#signedStamp').innerHTML=`<b>✓ Signed by ${esc(f.owner.value.trim())} for ${esc(f.biz.value.trim())}</b>${esc(plan)} · ${when}<br><span class="no-print">Tap <strong>Print / Save as PDF</strong> to keep a copy for your records.</span>`;
+    $('#signedStamp').innerHTML=`<b><svg class='ico' width='16' height='16' aria-hidden='true'><use href='#check'/></svg> Signed by ${esc(f.owner.value.trim())} for ${esc(f.biz.value.trim())}</b>${esc(plan)} · ${when}<br><span class="no-print">Tap <strong>Print / Save as PDF</strong> to keep a copy for your records.</span>`;
     $('#signedStamp').style.display='block';
     $('#printSigMeta').textContent=`${f.owner.value.trim()} · Signed ${when}`;
     agBox.classList.add('is-signed');
@@ -1949,7 +2212,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     const note=document.createElement('span'); note.className='no-print'; note.style.display='block'; note.style.marginTop='6px';
     $('#signedStamp').appendChild(note); note.textContent='Sending a copy to Riverbend…';
     fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(nf)).toString()})
-      .then(r=>{ if(!r.ok) throw 0; note.textContent='✓ A copy was sent to Riverbend Web Co.'; })
+      .then(r=>{ if(!r.ok) throw 0; note.innerHTML='<svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> A copy was sent to Riverbend Web Co.'; })
       .catch(()=>{ note.textContent='Couldn’t send a copy automatically. Please save it as a PDF and email it to riverbendwebco@gmail.com.'; });
   });
 
