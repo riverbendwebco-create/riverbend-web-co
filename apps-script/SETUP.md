@@ -44,3 +44,12 @@ The same script powers the Demo Studio. To turn it on:
 Demos are saved in the **Demos** tab of the Riverbend Leads sheet (don't edit the Data column by hand). Logos and photos go in **Riverbend Leads > Demo Images** in Drive.
 
 To change the password, edit `ADMIN_PASSWORD` in Script Properties. Anyone logged in gets signed out within 6 hours. After 8 wrong passwords, logins lock for 15 minutes.
+
+## Website Assistant (Studio chat)
+
+The chat in the Studio reads a business website and fills in the demo. After pasting a new `Code.gs`:
+
+1. In the function dropdown next to Debug, pick **authorizeWebsiteReader** and click **Run**, then **Allow** (this lets the script visit websites). Only needed once.
+2. **Deploy > Manage deployments > pencil > New version > Deploy**.
+
+It reads the main page plus Menu, About and Contact pages. It can't read Facebook or Instagram (they block it), or menus that are only pictures or PDFs.

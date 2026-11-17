@@ -302,6 +302,7 @@ function studio_(d) {
     case 'get': return getDemo_(String(d.slug || ''), true);
     case 'save': return saveDemo_(d);
     case 'delete': return deleteDemo_(String(d.slug || ''));
+    case 'scan': return scanSite_(String(d.url || ''));
     case 'logout': CacheService.getScriptCache().remove('tok_' + d.token); return { ok: true };
   }
   return { ok: false, error: 'unknown' };
@@ -522,3 +523,260 @@ function ensurePassword_() {
 
 /* Optional: run this once from the editor to get the password emailed right away. */
 function setupStudio() { ensurePassword_(); Logger.log('Password emailed to ' + OWNER_EMAIL); }
+
+/* =====================================================================
+ * WEBSITE READER (Studio chat assistant)
+ * Reads a business website and pulls out what it can: name, phone,
+ * email, address, hours, menu or services with prices, about text and
+ * social links. Uses structured data first, then page text.
+ * ===================================================================== */
+
+var DAY_KEYS = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'];
+
+function scanSite_(raw) {
+  var url = normUrl_(raw);
+  if (!url) return { ok: false, error: 'badurl' };
+  var first = fetchPage_(url);
+  if (!first) return { ok: false, error: 'unreachable' };
+  var pages = [first];
+  var host = hostOf_(first.url);
+  var extra = navLinks_(first.html, first.url, host).slice(0, 4);
+  extra.forEach(function (u) { var p = fetchPage_(u); if (p) pages.push(p); });
+
+  var out = { name: '', category: '', tagline: '', about: '', address: '', city: '', phone: '', email: '',
+    hours: ['', '', '', '', '', '', ''], items: [], social: { facebook: '', instagram: '' }, style: '', website: first.url };
+  var types = [];
+  pages.forEach(function (pg) { fromJsonLd_(pg.html, out, types); });
+  pages.forEach(function (pg) { fromHtml_(pg, out); });
+  if (out.items.length < 5) pages.forEach(function (pg) { if (out.items.length < 60) menuFromText_(pg.html, out); });
+  if (!out.hours.some(String)) pages.forEach(function (pg) { if (!out.hours.some(String)) hoursFromText_(textOf_(pg.html), out); });
+  out.phone = fmtPhone_(out.phone);
+  out.style = styleFromTypes_(types) || guessStyle_(out.name + ' ' + out.category + ' ' + out.about + ' ' + pages.map(function (p) { return p.title; }).join(' '));
+  out.items = out.items.slice(0, 60);
+  var count = ['name', 'phone', 'email', 'address', 'about'].filter(function (k) { return out[k]; }).length + (out.hours.some(String) ? 1 : 0) + (out.items.length ? 1 : 0);
+  return { ok: true, found: out, pages: pages.map(function (p) { return p.url; }), score: count };
+}
+
+function normUrl_(u) {
+  u = String(u || '').trim();
+  if (!u) return '';
+  if (!/^https?:\/\//i.test(u)) u = 'https://' + u.replace(/^\/+/, '');
+  if (!/^https?:\/\/[a-z0-9.-]+\.[a-z]{2,}(:\d+)?(\/[^\s"'<>]*)?$/i.test(u)) return '';
+  if (/^https?:\/\/(localhost|127\.|10\.|192\.168\.|169\.254\.|0\.)/i.test(u)) return '';
+  if (/^https?:\/\/[^\/]+$/i.test(u)) u += '/';
+  return u;
+}
+function hostOf_(u) { var m = String(u).match(/^https?:\/\/([^\/:?#]+)/i); return m ? m[1].toLowerCase().replace(/^www\./, '') : ''; }
+
+function fetchPage_(url) {
+  try {
+    var r = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: true,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RiverbendDemoStudio/1.0; +https://riverbendwebco.com)' } });
+    if (r.getResponseCode() >= 400) return null;
+    var ct = String((r.getHeaders() || {})['Content-Type'] || (r.getHeaders() || {})['content-type'] || '');
+    if (ct && !/html|xml|text/i.test(ct)) return null;
+    var html = r.getContentText().slice(0, 1500000);
+    var t = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '';
+    return { url: url, html: html, title: decode_(t).trim() };
+  } catch (e) { return null; }
+}
+
+function navLinks_(html, base, host) {
+  var want = /(menu|food|drink|about|contact|hours|location|visit|services|our-story|find-us)/i;
+  var seen = {}, out = [];
+  var re = /<a\b[^>]*href\s*=\s*["']([^"'#]+)["'][^>]*>/gi, m;
+  while ((m = re.exec(html)) && out.length < 12) {
+    var abs = absUrl_(m[1], base);
+    if (!abs || hostOf_(abs) !== host) continue;
+    var path = abs.replace(/^https?:\/\/[^\/]+/i, '');
+    if (!want.test(path) || /\.(pdf|jpe?g|png|gif|zip)$/i.test(path)) continue;
+    var key = abs.replace(/\/$/, '');
+    if (seen[key] || key === base.replace(/\/$/, '')) continue;
+    seen[key] = 1; out.push(abs);
+  }
+  return out;
+}
+function absUrl_(h, base) {
+  h = decode_(h).trim();
+  if (/^(mailto|tel|javascript|data):/i.test(h)) return '';
+  if (/^https?:\/\//i.test(h)) return h;
+  var origin = (base.match(/^https?:\/\/[^\/]+/i) || [''])[0];
+  if (h.indexOf('//') === 0) return 'https:' + h;
+  if (h.charAt(0) === '/') return origin + h;
+  return base.replace(/[^\/]*$/, '') + h;
+}
+
+function fromJsonLd_(html, out, types) {
+  var re = /<script[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi, m;
+  while ((m = re.exec(html))) {
+    var data; try { data = JSON.parse(m[1].trim()); } catch (e) { continue; }
+    walkLd_(data, function (o) {
+      var t = [].concat(o['@type'] || []).join(' ');
+      var biz = /(LocalBusiness|Restaurant|BarOrPub|FoodEstablishment|CafeOrCoffeeShop|Bakery|Winery|Brewery|Store|Contractor|Service|Plumber|Electrician|Roofing|HVAC|Locksmith|AutoRepair|Organization)/i.test(t) || o.telephone || o.address;
+      if (!biz || /WebSite|WebPage|BreadcrumbList|ImageObject/i.test(t)) return;
+      types.push(t);
+      if (!out.name && o.name) out.name = clip_(o.name, 80);
+      if (!out.phone && o.telephone) out.phone = clip_(o.telephone, 30);
+      if (!out.email && o.email) out.email = clip_(String(o.email).replace(/^mailto:/i, ''), 100);
+      if (!out.about && o.description) out.about = clip_(o.description, 1200);
+      if (!out.category && t) out.category = humanType_(t);
+      var a = [].concat(o.address || [])[0];
+      if (a && typeof a === 'object' && !out.address) {
+        out.address = clip_(a.streetAddress || '', 120);
+        out.city = clip_([a.addressLocality, a.addressRegion].filter(Boolean).join(', '), 60);
+      } else if (typeof a === 'string' && !out.address) splitAddr_(a, out);
+      [].concat(o.sameAs || []).forEach(function (u) { socialOf_(String(u), out); });
+      ldHours_(o, out);
+      ldMenu_(o.hasMenu, out);
+    });
+  }
+}
+function walkLd_(d, fn) {
+  if (!d || typeof d !== 'object') return;
+  if (Array.isArray(d)) { d.forEach(function (x) { walkLd_(x, fn); }); return; }
+  fn(d);
+  if (d['@graph']) walkLd_(d['@graph'], fn);
+}
+function ldHours_(o, out) {
+  if (out.hours.some(String)) return;
+  [].concat(o.openingHoursSpecification || []).forEach(function (s) {
+    if (!s || !s.dayOfWeek) return;
+    var range = s.opens && s.closes ? fmtTime_(s.opens) + ' - ' + fmtTime_(s.closes) : 'Closed';
+    if (s.opens === '00:00' && s.closes === '00:00') range = 'Closed';
+    [].concat(s.dayOfWeek).forEach(function (d) { var i = dayIx_(String(d).replace(/^.*\//, '')); if (i >= 0) out.hours[i] = range; });
+  });
+  [].concat(o.openingHours || []).forEach(function (s) { hoursFromText_(String(s).replace(/(\d\d:\d\d)-(\d\d:\d\d)/g, function (_, a, b) { return fmtTime_(a) + ' - ' + fmtTime_(b); }), out); });
+}
+function ldMenu_(m, out) {
+  if (!m || typeof m !== 'object') return;
+  [].concat(m).forEach(function (menu) {
+    [].concat(menu.hasMenuSection || []).forEach(function (sec) {
+      [].concat(sec.hasMenuItem || []).forEach(function (it) { pushItem_(out, sec.name, it.name, priceOf_(it.offers), it.description); });
+    });
+    [].concat(menu.hasMenuItem || []).forEach(function (it) { pushItem_(out, '', it.name, priceOf_(it.offers), it.description); });
+  });
+}
+function priceOf_(o) { o = [].concat(o || [])[0]; if (!o || o.price == null) return ''; var p = String(o.price); return /^\d/.test(p) ? '$' + p.replace(/\.00$/, '') : p; }
+
+function fromHtml_(pg, out) {
+  var h = pg.html, meta = function (n) { var r = new RegExp('<meta[^>]+(?:property|name)\\s*=\\s*["\']' + n + '["\'][^>]*content\\s*=\\s*["\']([^"\']*)["\']', 'i'); var m = h.match(r) || h.match(new RegExp('<meta[^>]+content\\s*=\\s*["\']([^"\']*)["\'][^>]*(?:property|name)\\s*=\\s*["\']' + n + '["\']', 'i')); return m ? decode_(m[1]).trim() : ''; };
+  if (!out.name) out.name = clip_(meta('og:site_name') || String(pg.title || '').split(/\s[|\u2013\u2014-]\s/)[0], 80);
+  var desc = meta('description') || meta('og:description');
+  if (!out.about && desc.length > 40) out.about = clip_(desc, 1200);
+  if (!out.tagline && desc) { var first = desc.split(/(?<=[.!])\s/)[0]; if (first.length <= 110) out.tagline = first; }
+  var m, re = /href\s*=\s*["']([^"']+)["']/gi;
+  while ((m = re.exec(h))) {
+    var u = decode_(m[1]);
+    if (!out.phone && /^tel:/i.test(u)) out.phone = clip_(u.replace(/^tel:/i, '').replace(/^\+?1(?=\d{10}$)/, ''), 30);
+    else if (!out.email && /^mailto:/i.test(u)) out.email = clip_(u.replace(/^mailto:/i, '').split('?')[0], 100);
+    else socialOf_(u, out);
+  }
+  var text = textOf_(h);
+  if (!out.phone) { var ph = text.match(/\(?\b\d{3}\)?[\s.\-]\d{3}[\s.\-]\d{4}\b/); if (ph) out.phone = ph[0]; }
+  if (!out.email) { var em = text.match(/[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}/); if (em && !/(example|sentry|wix|squarespace)\./i.test(em[0])) out.email = em[0]; }
+  if (!out.address) {
+    var ad = text.match(/\b\d{1,5}\s+(?:[NSEW]\.?\s+)?[A-Z0-9][\w.'\- ]{1,40}?\s(?:St|Street|Ave|Avenue|Rd|Road|Blvd|Boulevard|Dr|Drive|Ln|Lane|Way|Hwy|Highway|Ct|Court|Pl|Place|Pkwy|Parkway|Sq|Square)\b\.?(?:,?\s*(?:Suite|Ste|Unit|#)\s*[\w\-]+)?(?:,?\s*[A-Z][a-zA-Z .]+,\s*[A-Z]{2}(?:\s+\d{5})?)?/);
+    if (ad) splitAddr_(ad[0], out);
+  }
+  if (!out.about) {
+    var ps = h.match(/<p[^>]*>([\s\S]*?)<\/p>/gi) || [];
+    for (var i = 0; i < ps.length; i++) { var t = textOf_(ps[i]).replace(/\s+/g, ' ').trim(); if (t.length > 120 && !/cookie|javascript|copyright/i.test(t)) { out.about = clip_(t, 1200); break; } }
+  }
+}
+function splitAddr_(a, out) {
+  a = String(a).replace(/\s+/g, ' ').trim();
+  var m = a.match(/^(.*?),\s*([A-Za-z .]+,\s*[A-Z]{2})(?:\s+\d{5})?$/);
+  if (m) { out.address = clip_(m[1], 120); if (!out.city) out.city = clip_(m[2], 60); }
+  else out.address = clip_(a, 120);
+}
+function socialOf_(u, out) {
+  if (!out.social.facebook && /^https?:\/\/(www\.|m\.)?facebook\.com\/(?!sharer|share|dialog|plugins|tr\b)[^\s"'?#]+/i.test(u)) out.social.facebook = u.split('?')[0];
+  if (!out.social.instagram && /^https?:\/\/(www\.)?instagram\.com\/(?!p\/|explore)[^\s"'?#]+/i.test(u)) out.social.instagram = u.split('?')[0];
+}
+
+function textOf_(html) {
+  return decode_(String(html)
+    .replace(/<(script|style|noscript|svg|template)[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<(h[1-4])[^>]*>/gi, '\n\u00A7H ')
+    .replace(/<(br|\/p|\/div|\/li|\/h[1-6]|\/tr|\/td|\/th|\/section|\/article|\/dd|\/dt|li|p|div|tr)\b[^>]*>/gi, '\n')
+    .replace(/<[^>]+>/g, ' '))
+    .replace(/[ \t\u00A0]+/g, ' ').replace(/ *\n */g, '\n').replace(/\n{2,}/g, '\n').trim();
+}
+function decode_(s) {
+  return String(s || '').replace(/&#(\d+);/g, function (_, n) { return String.fromCharCode(+n); }).replace(/&#x([0-9a-f]+);/gi, function (_, n) { return String.fromCharCode(parseInt(n, 16)); })
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&apos;|&rsquo;/g, "'").replace(/&ndash;|&mdash;/g, '-');
+}
+function clip_(s, n) { return String(s == null ? '' : s).replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n); }
+
+function menuFromText_(html, out) {
+  var lines = textOf_(html).split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+  var group = '', price = /(?:^|\s)\$\s?(\d{1,3}(?:\.\d{2})?)(?:\s*\/\s*\$?\d{1,3}(?:\.\d{2})?)?\s*$/;
+  for (var i = 0; i < lines.length && out.items.length < 60; i++) {
+    var l = lines[i];
+    if (l.indexOf('\u00A7H ') === 0) { var g = l.slice(3).trim(); if (g.length <= 40 && !price.test(g)) group = g; continue; }
+    var m = l.match(price);
+    if (!m) continue;
+    var name = l.slice(0, m.index).replace(/[\s.\u2026\-|:]+$/, '').trim(), desc = '';
+    if (!name || /^\$/.test(name)) { var prev = (lines[i - 1] || '').replace(/^\u00A7H /, ''); if (prev && prev.length <= 80 && !price.test(prev)) name = prev; }
+    if (!name || name.length > 80 || /total|subtotal|tax|shipping|cart|gift card/i.test(name)) continue;
+    var next = lines[i + 1] || '';
+    if (next && next.indexOf('\u00A7H ') !== 0 && !price.test(next) && next.length > 15 && next.length <= 240) desc = next;
+    pushItem_(out, group, name, '$' + m[1].replace(/\.00$/, ''), desc);
+  }
+}
+function pushItem_(out, group, name, price, desc) {
+  name = clip_(name, 80); if (!name) return;
+  if (out.items.some(function (x) { return x.name.toLowerCase() === name.toLowerCase(); })) return;
+  out.items.push({ group: clip_(group, 40), name: name, price: clip_(price, 20), desc: clip_(desc, 240) });
+}
+
+function hoursFromText_(text, out) {
+  var D = '(mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)';
+  var T = '(\\d{1,2}(?::\\d{2})?\\s*(?:a\\.?m\\.?|p\\.?m\\.?)?|noon|midnight)';
+  var re = new RegExp(D + '(?:\\s*(?:-|\u2013|\u2014|&|and|to|thru|through)\\s*' + D + ')?\\s*[:.]?\\s*(?:' + T + '\\s*(?:-|\u2013|\u2014|to)\\s*' + T + '|(closed))', 'gi');
+  var m, hit = false;
+  while ((m = re.exec(text))) {
+    var a = dayIx_(m[1]), b = m[2] ? dayIx_(m[2]) : a;
+    if (a < 0 || b < 0) continue;
+    var val = m[5] ? 'Closed' : cleanTime_(m[3]) + ' - ' + cleanTime_(m[4]);
+    for (var i = a, n = 0; n < 7; i = (i + 1) % 7, n++) { if (!out.hours[i]) out.hours[i] = val; if (i === b) break; }
+    hit = true;
+  }
+  return hit;
+}
+function dayIx_(d) { return DAY_KEYS.indexOf(String(d || '').toLowerCase().slice(0, 2)); }
+function cleanTime_(t) { t = String(t).toLowerCase().replace(/\./g, '').replace(/\s+/g, ''); return t.replace(/:00(?=[ap]m|$)/, ''); }
+function fmtTime_(hhmm) {
+  var m = String(hhmm).match(/^(\d{1,2}):(\d{2})/); if (!m) return String(hhmm);
+  var h = +m[1], mm = m[2], ap = h >= 12 && h < 24 ? 'pm' : 'am'; h = h % 12 || 12;
+  return h + (mm === '00' ? '' : ':' + mm) + ap;
+}
+function humanType_(t) {
+  var x = String(t).split(/\s+/).filter(function (w) { return !/^(LocalBusiness|Organization|Thing|Place)$/.test(w); })[0] || '';
+  var named = { BarOrPub: 'Bar & Grill', CafeOrCoffeeShop: 'Coffee Shop', FoodEstablishment: 'Restaurant', HomeAndConstructionBusiness: 'Home Services', AutoRepair: 'Auto Repair', HVACBusiness: 'Heating & Cooling', RoofingContractor: 'Roofing' };
+  return named[x] || x.replace(/([a-z])([A-Z])/g, '$1 $2').trim();
+}
+function styleFromTypes_(types) {
+  var t = types.join(' ');
+  if (/(Contractor|Plumber|Electrician|Roofing|HVAC|Locksmith|AutoRepair|HomeAndConstruction|MovingCompany|HousePainter|GeneralContractor)/.test(t)) return 'trade';
+  if (/(BarOrPub|Brewery|SportsActivityLocation)/.test(t)) return 'pub';
+  if (/(Winery|NightClub)/.test(t)) return 'lounge';
+  return '';
+}
+function fmtPhone_(p) {
+  var d = String(p || '').replace(/\D/g, '');
+  if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+  return d.length === 10 ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6) : String(p || '');
+}
+function guessStyle_(s) {
+  s = String(s).toLowerCase();
+  if (/(roof|plumb|hvac|heating|cooling|electric|contract|construct|landscap|lawn|repair|auto|mechanic|clean|paint|remodel|concrete|garage door|pest|tree service|towing|handyman|install)/.test(s)) return 'trade';
+  if (/(lounge|cocktail|supper|bistro|fine dining|wine bar|steakhouse|tasting|speakeasy|chophouse)/.test(s)) return 'lounge';
+  return 'pub';
+}
+
+/* Run once from the editor after updating, to allow website reading. */
+function authorizeWebsiteReader() {
+  var r = UrlFetchApp.fetch('https://riverbendwebco.com/', { muteHttpExceptions: true });
+  Logger.log('Website reader ready (' + r.getResponseCode() + ')');
+}
