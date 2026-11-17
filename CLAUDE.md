@@ -22,3 +22,4 @@ Key reminders:
 ## Owen's pull requests (auto-merge)
 - `.github/workflows/auto-merge-demos.yml` auto-approves and merges PRs from `oseffrood9681-web` when every changed file is under `demo/`, `tools/demo_template.js` or `tools/build_demo.py`. Draft PRs are skipped.
 - PRs that touch anything else (index.html, studio/, apps-script/, .github/) still need Kruz's approval. Keep it that way: backend.js runs as Kruz's Google account.
+- Demo data updates go in `demo/data/seeds.json` (fetched by backend.js, cached 5 min, each key runs once). New per-demo fields go under `x`. See DESIGN_TEAM.md. Do not put seed data back into backend.js.
