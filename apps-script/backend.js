@@ -289,7 +289,7 @@ function sendTestEmail() {
  *   Property ADMIN_PASSWORD = your password
  * ===================================================================== */
 
-var DEMO_STYLES = ['pub', 'lounge', 'trade'];
+var DEMO_STYLES = ['pub', 'lounge', 'trade', 'western'];
 var DEMO_STATUS = ['Draft', 'Ready', 'Pitched', 'Won', 'Lost'];
 var DEMO_IMG_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
 var DEMO_MAX_IMG = 2 * 1024 * 1024;

@@ -104,7 +104,7 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 80px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:18px;scroll-margin-top:84px}
 .panel h2{margin:0 0 4px;font-size:1.1rem;letter-spacing:-.01em}
 .panel .sub{margin:0 0 18px;color:var(--mut);font-size:.88rem}
-.styles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.styles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .style-opt{position:relative;border:1.5px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;background:#fff;text-align:left}
 .style-opt b{display:block;font-size:.95rem}
 .style-opt small{color:var(--mut);font-size:.8rem}
@@ -296,6 +296,7 @@ body.editing .as{bottom:86px;height:min(620px,calc(100vh - 170px))}
               <button type="button" class="style-opt" data-style="pub"><div class="sw"><i style="background:#0B0B0D"></i><i style="background:#F59E0B"></i><i style="background:#DC2626"></i></div><b>Pub &amp; Sports Bar</b><small>Bold, loud, open tonight</small></button>
               <button type="button" class="style-opt" data-style="lounge"><div class="sw"><i style="background:#14110F"></i><i style="background:#C9A15A"></i><i style="background:#F5EFE6"></i></div><b>Lounge &amp; Eatery</b><small>Moody, upscale, experience</small></button>
               <button type="button" class="style-opt" data-style="trade"><div class="sw"><i style="background:#F8FAFC"></i><i style="background:#0052CC"></i><i style="background:#16A34A"></i></div><b>Service &amp; Trade</b><small>Clean, trust-first, estimates</small></button>
+              <button type="button" class="style-opt" data-style="western"><div class="sw"><i style="background:#FFFFFF;border:1px solid #CBD5E1"></i><i style="background:#1D2B53"></i><i style="background:#B22234"></i></div><b>Western Saloon</b><small>Light, country, smokehouse</small></button>
             </div>
             <div class="grid2">
               <div class="fg"><label class="f" for="name">Business name</label><input class="i" id="name" maxlength="80" required></div>
@@ -422,10 +423,11 @@ body.editing .as{bottom:86px;height:min(620px,calc(100vh - 170px))}
 'use strict';
 const API='https://script.google.com/macros/s/AKfycbwkosfcFSHGXy8EUaAFZ7Q-SFDFllV_k4n8qBABRxoj2hv59RspTU9APLQabwP_ohaW/exec';
 const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-const STYLE_COLORS={pub:['#F59E0B','#DC2626'],lounge:['#C9A15A','#7C2D12'],trade:['#0052CC','#16A34A']};
+const STYLE_COLORS={pub:['#F59E0B','#DC2626'],lounge:['#C9A15A','#7C2D12'],trade:['#0052CC','#16A34A'],western:['#1D2B53','#B22234']};
 const PRESETS={
   pub:['1535958636474-b021ee887b13','1567696911980-2eed69a46042','1514362545857-3bc16c4c7d1b','1624855600799-ac8e8bddd1da'],
   lounge:['1551632436-cbf8dd35adfa','1414235077428-338989a2e8c0','1514362545857-3bc16c4c7d1b','1467003909585-2f8a72700288'],
+  western:['1759373247456-49cc5f02b408','1786206570633-c0907e1003a6','1759373203258-fb412835de5a','1761712826031-6456b87bd811'],
   trade:['1632759145351-1d592919f522','1635424824849-1b09bdcc55b1','1576446470246-499c738d1c8e','1594233078955-e1f73a02ebb2']
 };
 const $=s=>document.querySelector(s);
@@ -486,7 +488,7 @@ function renderCards(){
   if(!list.length){ c.replaceChildren(el('div',{class:'empty',style:'grid-column:1/-1'},el('h3',{text:'No matches'}),el('p',{text:'Try a different search or status.'}))); return; }
   c.replaceChildren(...list.map(d=>{
     const when=d.updated?new Date(d.updated).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'';
-    const styleName={pub:'Pub & Sports Bar',lounge:'Lounge & Eatery',trade:'Service & Trade'}[d.style]||'';
+    const styleName={pub:'Pub & Sports Bar',lounge:'Lounge & Eatery',trade:'Service & Trade',western:'Western Saloon'}[d.style]||'';
     return el('article',{class:'dc'},
       el('div',{class:'dc-top'},
         el('div',{class:'dc-mark '+(d.style||'pub'),text:(d.name||'?').trim().charAt(0).toUpperCase()}),
@@ -782,7 +784,7 @@ function showFound(r){
     ['About',f.about?f.about.slice(0,60)+(f.about.length>60?'…':''):''],['Photos',(f.photos||[]).length?(f.photos.length+' found'):''],['Facebook',f.social.facebook?'Found':''],['Instagram',f.social.instagram?'Found':'']
   ];
   const list=el('ul',{class:'as-found'},rows.map(([k,v])=>el('li',{class:v?'y':'n'},el('i',{text:v?'✓':'–'}),el('span',{text:k+(v?': '+v:': not found')}))));
-  const style={pub:'Pub & Sports Bar',lounge:'Lounge & Eatery',trade:'Service & Trade'}[f.style];
+  const style={pub:'Pub & Sports Bar',lounge:'Lounge & Eatery',trade:'Service & Trade',western:'Western Saloon'}[f.style];
   const inEditor=!$('#editView').classList.contains('hidden');
   const acts=el('div',{class:'as-acts'});
   if(inEditor){

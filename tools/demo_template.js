@@ -8,6 +8,20 @@ const STOCK={
   lounge:{hero:'1551632436-cbf8dd35adfa',pool:['1414235077428-338989a2e8c0','1514362545857-3bc16c4c7d1b','1663530761401-15eefb544889','1560053608-13721e0d69e8','1609951651556-5334e2706168','1467003909585-2f8a72700288','1500217052183-bc01eee1a74e','1657313666513-70770d329ef4','1774989423979-6a7bf5add3f0']},
   trade:{hero:'1632759145351-1d592919f522',pool:['1635424824849-1b09bdcc55b1','1576446470246-499c738d1c8e','1594233078955-e1f73a02ebb2']}
 };
+STOCK.western={hero:'1759373247456-49cc5f02b408',pool:['1786206570633-c0907e1003a6','1759373203258-fb412835de5a','1759373247456-49cc5f02b408']};
+/* Food photos matched to menu words, so an item never shows the wrong dish */
+const FOOD=[
+  [/onion ring/i,'1639024471283-03518883512d'],
+  [/wing/i,'1567620832903-9fc6debc209f'],
+  [/nacho|salsa|quesadilla|tortilla/i,'1768252688649-13d169feadc0'],
+  [/\bcod\b|fish|walleye|shrimp|seafood/i,'1764397557799-258db31fe6a4'],
+  [/chicken (strip|tender|sandwich|finger)|strips|tenders|dixon chicken/i,'1760533536289-9e4106eaf62e'],
+  [/\bribs?\b|\brack\b|brisket|bbq|barbe?cue|smoked/i,'1761712826031-6456b87bd811'],
+  [/burger|patty melt/i,'1508736793122-f516e3ba5569'],
+  [/pulled pork|cuban|pork|sandwich|reuben|b\.?l\.?t|club|grilled cheese|melt|sub\b|hoagie/i,'1761712826051-b873907fb5d3'],
+  [/fries|tots|potato|basket/i,'1565708409704-dd6416e94c20']
+];
+const foodPic=t=>{ for(const [re,id] of FOOD) if(re.test(t||'')) return id; return ''; };
 const root=document.getElementById('root');
 const U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1400&q=70';
 
@@ -36,20 +50,25 @@ const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
 const slug=new URLSearchParams(location.search).get('d')||'';
 if(!/^[a-z0-9-]{3,80}$/.test(slug)){ fail('Preview not found','Check the link and try again.'); return; }
-fetch(API+'?action=demo&slug='+encodeURIComponent(slug)).then(r=>r.json()).then(r=>{
-  if(!r||!r.ok){ fail('Preview not found','This preview may have been removed.'); return; }
-  build(r.demo);
+const fromApi=s=>fetch(API+'?action=demo&slug='+encodeURIComponent(s)).then(r=>r.json()).then(r=>r&&r.ok?r.demo:null);
+fetch('data/'+slug+'.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(local=>{
+  if(!local) return fromApi(slug);
+  if(!local.base||!/^[a-z0-9-]{3,80}$/.test(local.base)) return local;
+  return fromApi(local.base).then(b=>Object.assign({},b||{},local));
+}).then(d=>{
+  if(!d){ fail('Preview not found','This preview may have been removed.'); return; }
+  build(d);
 }).catch(()=>fail('Couldn’t load this preview','Check your connection and refresh.'));
 
 function build(d){
-  const style=['pub','lounge','trade'].includes(d.style)?d.style:'pub';
+  const style=['pub','lounge','trade','western'].includes(d.style)?d.style:'pub';
   document.title=(d.name||'Preview')+' | Website preview';
   document.body.classList.add('t-'+style);
   const C={
     name:d.name||'', cat:d.category||'', city:d.city||'', addr:d.address||'', about:d.about||'', tag:d.tagline||'',
     phone:d.phone||'', email:/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email||'')?d.email:'',
     logo:okImg(d.logo), hours:(d.hours||[]).slice(0,7),
-    items:(d.items||[]).filter(i=>i&&i.name), specials:(d.specials||[]).filter(i=>i&&i.title),
+    items:(d.items||[]).filter(i=>i&&i.name).map(i=>Object.assign({},i,{photo:okUrl(i.photo)})), specials:(d.specials||[]).filter(i=>i&&i.title),
     fb:okUrl(String((d.social||{}).facebook||'').replace(/^http:\/\//i,'https://')), ig:okUrl(String((d.social||{}).instagram||'').replace(/^http:\/\//i,'https://'))
   };
   C.items=cleanItems(C.items,C);
@@ -62,12 +81,16 @@ function build(d){
   C.today=C.hours[todayIx()]||'';
   C.daysOpen=C.hours.filter(x=>x&&!/closed/i.test(x)).length;
   const own=(d.photos||[]).map(okUrl).filter(Boolean);
-  const hero=okImg(d.hero)||own[0]||U(/^[0-9a-f-]{8,40}$/.test(d.heroPreset||'')?d.heroPreset:STOCK[style].hero);
+  const hero=okImg(d.hero)||okUrl(d.heroUrl)||own[0]||U(/^[0-9a-f-]{8,40}$/.test(d.heroPreset||'')?d.heroPreset:STOCK[style].hero);
   const pool=own.filter(u=>u!==hero).concat(STOCK[style].pool.map(U));
   C.own=own; C.hero=hero; C.pic=i=>pool.length?pool[i%pool.length]:hero;
 
   const p=hex((d.colors||{}).primary,''), a=hex((d.colors||{}).accent,'');
-  const page=style==='pub'?pub(C):style==='lounge'?lounge(C):trade(C);
+  C.itemPic=i=>i.photo||(foodPic(i.name)?U(foodPic(i.name)):'')||(foodPic(i.group)?U(foodPic(i.group)):'');
+  C.groupPic=(g,its)=>{ const own=its.find(i=>i.photo); if(own) return own.photo; const k=foodPic(g)||foodPic((its.find(i=>foodPic(i.name))||{}).name); return k?U(k):''; };
+  C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
+  if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
+  const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
   if(style==='pub'&&p&&readableOnDark(p)) page.style.setProperty('--gold',p),page.style.setProperty('--gold-2',p);
   if(style==='lounge'&&p&&readableOnDark(p)) page.style.setProperty('--brass',p);
   if(style==='trade'){ if(p) page.style.setProperty('--tb',p); if(a) page.style.setProperty('--tg',a); }
@@ -91,6 +114,7 @@ function cleanItems(items,C){
 /* Colors that are too dark to read on a dark page fall back to the design default */
 function lum(hx){ const n=parseInt(hx.slice(1),16); const f=c=>{c/=255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4);}; return .2126*f(n>>16&255)+.7152*f(n>>8&255)+.0722*f(n&255); }
 function readableOnDark(hx){ return hx&&((lum(hx)+.05)/(.0045+.05))>=5.5?hx:''; }
+function hexOnLight(hx){ return hx&&((1.05)/(lum(hx)+.05))>=4.5?hx:''; }
 function dayRange(hours){ const open=hours.map(x=>!!x&&!/closed/i.test(x)); const n=open.filter(Boolean).length; if(!n) return ''; if(n===7) return '7 days'; const S=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const first=open.indexOf(true), last=open.lastIndexOf(true); if(open.slice(first,last+1).every(Boolean)) return first===last?S[first]:S[first]+' to '+S[last]; return n+' days'; }
 /* Scroll-linked fade and slide for each section */
@@ -106,6 +130,14 @@ function socials(C){ return (C.fb||C.ig)?h('div',{class:'socials','aria-label':'
 function dayOf(w){ const m=String(w||'').toLowerCase().match(/(mon|tue|wed|thu|fri|sat|sun)/); return m?['mon','tue','wed','thu','fri','sat','sun'].indexOf(m[1]):-1; }
 
 /* ===================== PUB (Lock & Dam Tap design) ===================== */
+/* Three standout items, from different sections where possible, preferring ones with a matching photo */
+function pickFavs(C){
+  const cand=C.items.filter(i=>i.desc&&i.desc.length>30).sort((x,y)=>(!!C.itemPic(y)-!!C.itemPic(x))||(y.desc.length-x.desc.length));
+  const out=[], seen=new Set();
+  cand.forEach(i=>{ if(out.length<3&&!seen.has(i.group)){ out.push(i); seen.add(i.group); } });
+  cand.forEach(i=>{ if(out.length<3&&out.indexOf(i)<0) out.push(i); });
+  return out;
+}
 function splitAbout(about,max){ const ss=sentences(about); if(ss.length<3) return ['',about]; let o='',k=0; for(const x of ss){ if((o+' '+x).trim().length>max) break; o=(o+' '+x).trim(); k++; } if(!k||k>=ss.length) return ['',about]; return [o,ss.slice(k).join(' ')]; }
 function pub(C){
   const G=groups(C.items,'Menu');
@@ -139,18 +171,18 @@ function pub(C){
       C.pic(i),'linear-gradient(0deg,rgba(8,8,10,.94) 10%,rgba(8,8,10,.3) 72%)')))):null;
 
   /* House favorites: the items with the best descriptions, shown big with photos */
-  const favs=C.items.filter(i=>i.desc&&i.desc.length>30).sort((x,y)=>y.desc.length-x.desc.length).slice(0,3);
+  const favs=pickFavs(C);
   const favEl=favs.length===3?h('section',{class:'pub-wrap rv',id:'p-favs'},
     h('div',{class:'pub-h'},h('h3',null,'House Favorites'),h('p',null,'What regulars order.')),
     h('div',{class:'favs'},favs.map((i,ix)=>h('article',{class:'fav'},
-      bg(h('div',{class:'fav-ph ph'},i.price?h('span',{class:'fav-pr'},i.price):null),C.pic(ix+3),'linear-gradient(0deg,rgba(13,13,15,.55),rgba(13,13,15,0) 55%)'),
+      bg(h('div',{class:'fav-ph ph'},i.price?h('span',{class:'fav-pr'},i.price):null),C.itemPic(i)||C.venue(ix),'linear-gradient(0deg,rgba(13,13,15,.55),rgba(13,13,15,0) 55%)'),
       h('div',{class:'fav-b'},i.group&&i.group!=='Menu'?h('small',null,i.group):null,h('h4',null,i.name),h('p',null,short(i.desc,120))))))):null;
 
   let menu=null;
   if(C.items.length){
     const photo=h('div',{class:'menu-photo ph',id:'pubMenuPhoto'},h('span',{id:'pubMenuCap'}));
     const list=h('div',{class:'menu-list',id:'pubMenuList'});
-    const show=(k,ix)=>{ const its=G.map[k]; bg(photo,C.pic(ix+2),'linear-gradient(0deg,rgba(13,13,15,.85) 5%,rgba(13,13,15,.15) 60%)'); photo.firstChild.textContent=k!=='Menu'?k:its[0].name;
+    const show=(k,ix)=>{ const its=G.map[k]; bg(photo,C.groupPic(k,its)||C.venue(ix),'linear-gradient(0deg,rgba(13,13,15,.85) 5%,rgba(13,13,15,.15) 60%)'); photo.firstChild.textContent=k!=='Menu'?k:its[0].name;
       list.replaceChildren(...its.map(i=>h('div',{class:'mi'},h('div',null,h('b',null,i.name),i.desc?h('small',null,i.desc):null),i.price?h('span',{class:'p'},i.price):null))); };
     const tabs=G.names.length>1?h('div',{class:'menu-tabs',role:'tablist'},G.names.slice(0,8).map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k,ix); }); return b; })):null;
     show(G.names[0],0);
@@ -180,6 +212,87 @@ function pub(C){
     h('div',{class:'pub-legal'},h('span',null,'© '+new Date().getFullYear()+' '+C.name),h('span',null,'Site by Riverbend Web Co.')));
   return h('div',{class:'demo pub on'},nav,hh,heroEl,spot,favEl,menu,strip,lineup,storyEl,foot);
 }
+/* ===================== WESTERN (saloon, light) ===================== */
+function stars(n,cls){ return h('span',{class:cls||'wx-stars','aria-hidden':'true'},Array.from({length:n||3},()=>ico('star',14,''))); }
+function western(C){
+  const G=groups(C.items,'Menu');
+  const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
+  const [heroTxt,storyTxt]=splitAbout(C.about,170);
+  const range=dayRange(C.hours);
+  const nextOpen=(()=>{ for(let k=1;k<=7;k++){ const ix=(todayIx()+k)%7, v=C.hours[ix]; if(v&&!/closed/i.test(v)) return [k===1?'Tomorrow':DAYS[ix],'Opens '+String(v).split(/\s*(?:-|to|–)\s*/)[0]]; } return null; })();
+  const openNow=C.today&&!/closed/i.test(C.today);
+  const first=C.specials[0];
+  const city=C.city.split(',')[0];
+
+  const top=first?h('div',{class:'wx-top'},stars(1),h('span',null,[first.title,first.when].filter(Boolean).join(' · ')),stars(1)):null;
+  const nav=h('header',{class:'wx-nav'},
+    h('a',{class:'wx-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');}},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name)),
+    h('nav',{class:'wx-links'},C.items.length?jump('w-menu','Menu'):null,C.specials.length?jump('w-events','Specials'):null,C.about?jump('w-story','Our Story'):null,jump('w-visit','Hours & Location')),
+    C.tel?h('a',{class:'wx-btn wx-red wx-sm',href:C.tel},ico('phone',16,''),'Call'):null);
+
+  const heroEl=bg(h('section',{class:'wx-hero ph',id:'w-top'},h('div',{class:'in'},
+    h('div',{class:'wx-kick'},stars(3),h('span',null,[C.cat,city].filter(Boolean).join(' · '))),
+    h('h1',null,head.map((l,i)=>h('span',{class:i===head.length-1&&head.length>1?'last':null},l))),
+    heroTxt?h('p',null,heroTxt):null,
+    h('div',{class:'wx-acts'},
+      C.tel?h('a',{class:'wx-btn wx-red',href:C.tel},ico('phone',18,''),C.phoneTxt||'Call'):null,
+      C.items.length?h('button',{type:'button',class:'wx-btn wx-ghost',onclick:()=>scrollTo('w-menu')},'See the Menu'):null,
+      C.maps?h('a',{class:'wx-btn wx-ghost',href:C.maps,target:'_blank',rel:'noopener'},ico('map',18,''),'Directions'):null),
+    h('div',{class:'wx-ticket'},
+      range?h('div',null,h('small',null,'Open'),h('b',null,range)):null,
+      C.hasHours?h('div',null,h('small',null,openNow?'Open today':(nextOpen?nextOpen[0]:'Today')),h('b',null,openNow?C.today:(nextOpen?nextOpen[1]:'Closed'))):null,
+      C.addr?h('div',null,h('small',null,city||'Find us'),h('b',null,C.addr)):null))),
+    C.hero,'linear-gradient(90deg,'+rgba(C.navy,.95)+' 0%,'+rgba(C.navy,.82)+' 42%,'+rgba(C.navy,.25)+' 100%)');
+
+  const head2=(id,kick,title,sub)=>h('div',{class:'wx-h'},h('div',{class:'wx-orn'},h('i'),stars(3),h('i')),kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null);
+
+  const spot=C.specials.length?h('section',{class:'wx-sec rv',id:'w-events'},head2('w-events','This week',(C.specials.length>1?'Specials & Events':C.specials[0].title)),
+    h('div',{class:'wx-specials'},C.specials.slice(0,4).map(s=>{ const di=dayOf(s.when); return h('article',{class:'wx-sp'},
+      h('div',{class:'wx-stamp'},h('b',null,di>=0?SHORT[di]:ico('star',20,'')),h('small',null,s.when||'Special')),
+      h('div',null,h('h3',null,s.title),s.detail?h('p',null,s.detail):null)); }))):null;
+
+  const favs=pickFavs(C);
+  const favEl=favs.length===3?h('section',{class:'wx-sec rv',id:'w-favs'},head2('','Off the menu','House Favorites','What regulars order.'),
+    h('div',{class:'wx-favs'},favs.map((i,ix)=>h('article',{class:'wx-fav'},
+      bg(h('div',{class:'ph'},i.price?h('span',{class:'wx-pr'},i.price):null),C.itemPic(i)||C.venue(ix)),
+      h('div',{class:'b'},i.group&&i.group!=='Menu'?h('small',null,i.group):null,h('h3',null,i.name),h('p',null,short(i.desc,120))))))):null;
+
+  let menu=null;
+  if(C.items.length){
+    const photo=h('div',{class:'wx-mphoto ph'},h('span'));
+    const list=h('div',{class:'wx-mlist'});
+    const show=(k,ix)=>{ const its=G.map[k]; bg(photo,C.groupPic(k,its)||C.venue(ix),'linear-gradient(0deg,'+rgba(C.navy,.75)+' 0%,rgba(0,0,0,0) 45%)'); photo.firstChild.textContent=k!=='Menu'?k:C.name;
+      list.replaceChildren(...its.map(i=>h('div',{class:'wx-mi'},h('div',{class:'t'},h('b',null,i.name),h('i'),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null))); };
+    const tabs=G.names.length>1?h('div',{class:'wx-tabs',role:'tablist'},G.names.slice(0,8).map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k,ix); }); return b; })):null;
+    show(G.names[0],0);
+    menu=h('section',{class:'wx-sec wx-soft rv',id:'w-menu'},head2('','Food & drinks','The Menu',openNow?'Kitchen and bar open today '+C.today:null),tabs,h('div',{class:'wx-mgrid'},photo,list));
+  }
+
+  const strip=C.own.length>=2?h('div',{class:'wx-strip rv','aria-hidden':'true'},C.own.slice(0,4).map(u=>bg(h('div',{class:'ph'}),u))):null;
+
+  const storyEl=C.about?h('section',{class:'wx-band rv',id:'w-story'},h('div',{class:'wx-story'},
+    bg(h('div',{class:'ph'}),C.own[0]||C.venue(1)),
+    h('div',{class:'b'},h('div',{class:'wx-kick'},stars(3),h('span',null,'Our Story')),h('h2',null,'Welcome to '+C.name),h('p',null,storyTxt||C.about),
+      h('div',{class:'wx-acts'},C.tel?h('a',{class:'wx-btn wx-red',href:C.tel},ico('phone',18,''),C.phoneTxt):null,C.email?h('a',{class:'wx-btn wx-ghost',href:'mailto:'+C.email},'Email us'):null)))):null;
+
+  const street=(C.addr.match(/\d+\s+(.+)/)||[])[1]||'MAIN ST';
+  const visit=h('section',{class:'wx-sec rv',id:'w-visit'},head2('','Come on in','Hours & Location'),
+    h('div',{class:'wx-visit'},
+      h('div',{class:'wx-card'},h('h3',null,'Hours'),C.hasHours?h('div',{class:'wx-hours'},DAYS.map((day,i)=>h('div',{class:i===todayIx()?'today':null},h('span',null,day),h('span',null,C.hours[i]||'Closed')))):h('p',null,'Call for hours')),
+      h('div',{class:'wx-card'},h('h3',null,'Find Us'),h('address',null,h('b',null,C.name),C.addr?[h('br'),C.addr]:null,C.city?[h('br'),C.city]:null),
+        h('div',{class:'wx-acts'},C.tel?h('a',{class:'wx-btn wx-red wx-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null,C.maps?h('a',{class:'wx-btn wx-line wx-sm',href:C.maps,target:'_blank',rel:'noopener'},ico('map',16,''),'Directions'):null),
+        socials(C)),
+      h('div',{class:'wx-card wx-map'},mapBox(street.toUpperCase().slice(0,22),C.maps))));
+
+  const foot=h('footer',{class:'wx-foot'},h('div',{class:'in'},
+    C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name),
+    h('span',null,'© '+new Date().getFullYear()+' '+C.name+(C.addr?' · '+[C.addr,C.city].filter(Boolean).join(', '):'')),
+    h('span',null,'Site by Riverbend Web Co.')));
+  const page=h('div',{class:'demo western on'},top,nav,heroEl,spot,favEl,menu,strip,storyEl,visit,foot);
+  page.style.setProperty('--wn',C.navy); page.style.setProperty('--wr',C.red);
+  return page;
+}
+function rgba(hx,a){ const n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')'; }
 function mapBox(label,href){
   const NS='http://www.w3.org/2000/svg', s=document.createElementNS(NS,'svg'); s.setAttribute('viewBox','0 0 320 170'); s.setAttribute('aria-hidden','true');
   s.innerHTML='<rect width="320" height="170" fill="#1a1a1e"/><g stroke="#2c2c32" stroke-width="7"><path d="M0 40h250M0 95h240M0 145h230M60 0v170M130 0v170M200 0v170"/></g><g stroke="#3a3a42" stroke-width="2"><path d="M0 68h245M0 120h235M95 0v170M165 0v170"/></g><path d="M262 0 C 240 50, 290 90, 262 170 L320 170 L320 0Z" fill="#1e3a5f"/><circle cx="130" cy="95" r="18" fill="rgba(232,163,61,.2)"/><path d="M130 72c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z" fill="var(--gold)"/><circle cx="130" cy="86" r="5" fill="#1a1205"/>';
