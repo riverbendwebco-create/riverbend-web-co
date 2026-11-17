@@ -58,6 +58,7 @@ function doPost(e) {
 function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.action === 'demo') {
+    try { applySeeds_(); } catch (e0) { console.error(e0); }
     try { return json_(publicDemo_(String(p.slug || ''))); } catch (err) { console.error(err); return json_({ ok: false, error: 'server' }); }
   }
   return ContentService.createTextOutput('Riverbend form handler is running.');
@@ -295,7 +296,40 @@ var DEMO_IMG_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
 var DEMO_MAX_IMG = 2 * 1024 * 1024;
 var TOKEN_TTL = 6 * 60 * 60; // 6 hours
 
+/* One-time demo updates made outside the Studio. Each runs once, keeps the logo,
+   status and notes, and then the Studio owns the demo again. */
+var DEMO_SEEDS = [
+  { key: 'mason-western-1', slug: 'mason-dixon-saloon-b801e', dropHero: true, data: {"style": "western", "name": "Mason Dixon Saloon", "category": "Country Western Bar & Smokehouse", "tagline": "Good Food. Cold Drinks. Great Times.", "about": "If you're a meat connoisseur, you know the difference an in-house smoker can make. You won't be disappointed when you visit Mason Dixon Saloon for delicious smoked meats. We smoke our pork baby back ribs and slow cook the meat for our Reubens. We even have a special dry rub for wings, burgers, pork baby back ribs, pork loins and beef loins.", "address": "163 Main Street", "city": "Dubuque, IA", "phone": "(563) 582-3445", "email": "masondixondbq@gmail.com", "hours": ["", "", "", "3pm - 2am", "3pm - 2am", "11am - 2am", "11am - 2am"], "items": [{"group": "Appetizers", "name": "Onion Rings", "price": "$8.99", "desc": ""}, {"group": "Appetizers", "name": "Dixon Dice", "price": "$9.99", "desc": "Pepperjack cheese curds. A customer favorite!"}, {"group": "Appetizers", "name": "Cheese Curds", "price": "$8.99", "desc": ""}, {"group": "Appetizers", "name": "Breaded Portobellos", "price": "$10.99", "desc": ""}, {"group": "Appetizers", "name": "Chips & Salsa", "price": "$9.99", "desc": ""}, {"group": "Appetizers", "name": "French Fries", "price": "$6.99", "desc": ""}, {"group": "Appetizers", "name": "Cheese Fries", "price": "$8.99", "desc": ""}, {"group": "Appetizers", "name": "Loaded Nachos", "price": "$14.99", "desc": "Choose chicken, steak or beef. BBQ pulled pork when available"}, {"group": "Wings", "name": "Kickin' Chicken Wings", "price": "$14.99", "desc": "10 jumbo wings served naked with our Mason Dixon seasoning rub. Want them tossed in a sauce? Just ask!"}, {"group": "Ribs", "name": "Half Rack", "price": "$24", "desc": "Baby back ribs with our secret dry rub and your choice of 2 sides. Thursday and Sunday from 4:30pm"}, {"group": "Ribs", "name": "Full Rack", "price": "$30", "desc": "Baby back ribs with our secret dry rub and your choice of 2 sides. Thursday and Sunday from 4:30pm"}, {"group": "Burgers", "name": "Mason Burger", "price": "$14.99", "desc": "Our juicy 1/2 lb. burger with Applewood bacon and Pepperjack cheese on a toasted bun"}, {"group": "Burgers", "name": "Western Burger", "price": "$14.99", "desc": "Angus patty topped with bacon, onion ring, BBQ sauce, jalapeno and Pepperjack cheese"}, {"group": "Burgers", "name": "Patty Melt", "price": "$14.99", "desc": "Angus patty between sauteed onions, Swiss and American cheese on marble rye"}, {"group": "Burgers", "name": "Angus Burger", "price": "$13.99", "desc": "Our 1/2 lb. patty served your way with American, Pepperjack or Swiss"}, {"group": "Baskets", "name": "Pulled Pork", "price": "$11.99", "desc": "8oz of our rib meat pulled off the bone. Pair it with our Linda Mae BBQ sauce!", "photo": "https://masondixondbq.com/files/2024/10/Pork_sandwich.JPG"}, {"group": "Baskets", "name": "Chicken Strips", "price": "$12.99", "desc": ""}, {"group": "Baskets", "name": "Cod Planks", "price": "$15.99", "desc": "Two seasoned battered cod planks with your choice of 2 sides"}, {"group": "Sandwiches", "name": "Dixon Chicken", "price": "$13.99", "desc": "Seasoned 6oz. grilled chicken breast topped with two strips of bacon and Swiss. Ask for Linda Mae BBQ sauce on the side!"}, {"group": "Sandwiches", "name": "Reuben", "price": "$15.99", "desc": "Slow-roasted corned beef brisket, sauerkraut, Swiss and Thousand Island on marble rye or Texas toast"}, {"group": "Sandwiches", "name": "Ribeye Steak", "price": "$16.99", "desc": "6oz. choice ribeye grilled to order with mushrooms, roasted peppers, onions and Pepperjack on Texas toast"}, {"group": "Sandwiches", "name": "Cuban", "price": "$14.99", "desc": "Our famous pulled pork piled high with honey ham, dill pickles, mustard and American cheese on marble rye"}, {"group": "Sandwiches", "name": "B.L.T.", "price": "$11.99", "desc": "4 slices of Applewood bacon, tomato and lettuce on toasted Texas toast"}, {"group": "Sandwiches", "name": "Grilled Cheese", "price": "$9.99", "desc": "Classic grilled cheese on Texas toast. Add jalapenos, tomato or bacon for $1.50"}], "specials": [{"title": "Rib Night", "when": "Thursday & Sunday, 4:30pm", "detail": "Baby back ribs smoked in-house with our secret dry rub. Half rack $24, full rack $30."}, {"title": "Private Parties", "when": "Book anytime", "detail": "Rent our lower level for up to 99 guests, with your own bar, bartender and media center. Catering available."}], "colors": {"primary": "#1D2B53", "accent": "#B22234"}, "photos": ["https://masondixondbq.com/files/2020/11/bar_feature_pic.jpeg", "https://masondixondbq.com/files/2020/11/IMG_3202.jpg", "https://masondixondbq.com/files/2024/10/Pork_sandwich.JPG", "https://masondixondbq.com/files/2020/11/IMG_0485.jpg"], "social": {"facebook": "https://www.facebook.com/mason.dixon.904", "instagram": "https://instagram.com/masondixondbq/"}, "heroPreset": "1759373247456-49cc5f02b408", "website": "https://masondixondbq.com/"} }
+];
+function applySeeds_() {
+  var props = PropertiesService.getScriptProperties();
+  DEMO_SEEDS.forEach(function (sd) {
+    if (props.getProperty('seed_' + sd.key)) return;
+    var lock = LockService.getScriptLock();
+    if (!lock.tryLock(10000)) return;
+    try {
+      if (props.getProperty('seed_' + sd.key)) return;
+      var sh = demoSheet_();
+      var row = findRow_(sh, sd.slug);
+      if (row) {
+        var prev = JSON.parse(sh.getRange(row, 7).getValue() || '{}');
+        var src = JSON.parse(JSON.stringify(sd.data));
+        src.private = prev.private || {};
+        var demo = normalizeDemo_(src);
+        demo.logoId = prev.logoId || '';
+        demo.heroId = prev.heroId || '';
+        if (sd.dropHero && demo.heroId) { trash_(demo.heroId); demo.heroId = ''; }
+        demo.updated = new Date().toISOString();
+        var safe = function (v) { v = String(v || ''); return /^[=+\-@]/.test(v) ? "'" + v : v; };
+        sh.getRange(row, 1, 1, 7).setValues([[sd.slug, safe(demo.name), demo.style, safe(demo.city), demo.private.status, new Date(), JSON.stringify(demo)]]);
+      }
+      props.setProperty('seed_' + sd.key, new Date().toISOString());
+    } catch (e) { console.error(e); } finally { lock.releaseLock(); }
+  });
+}
+
 function studio_(d) {
+  try { applySeeds_(); } catch (e) { console.error(e); }
   if (d.action === 'login') return login_(String(d.password || ''));
   if (!authed_(d.token)) return { ok: false, error: 'auth' };
   switch (d.action) {
@@ -460,7 +494,7 @@ function normalizeDemo_(s) {
     email: t(s.email, 100),
     website: url(s.website),
     hours: hours,
-    items: arr(s.items).slice(0, 60).map(function (i) { return { group: t(i.group, 40), name: t(i.name, 80), price: t(i.price, 20), desc: t(i.desc, 240) }; }).filter(function (i) { return i.name; }),
+    items: arr(s.items).slice(0, 60).map(function (i) { var o = { group: t(i.group, 40), name: t(i.name, 80), price: t(i.price, 20), desc: t(i.desc, 240) }; var ph = t(i.photo, 400); if (/^https:\/\/[^\s"'<>]+$/i.test(ph)) o.photo = ph; return o; }).filter(function (i) { return i.name; }),
     specials: arr(s.specials).slice(0, 12).map(function (i) { return { title: t(i.title, 80), when: t(i.when, 60), detail: t(i.detail, 240) }; }).filter(function (i) { return i.title; }),
     colors: { primary: color((s.colors || {}).primary, ''), accent: color((s.colors || {}).accent, '') },
     heroPreset: /^[0-9a-f-]{8,40}$/.test(String(s.heroPreset || '')) ? String(s.heroPreset) : '',
