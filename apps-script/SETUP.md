@@ -1,3 +1,18 @@
+# Riverbend backend: how updates work now
+
+The Apps Script project holds only a small loader (`Code.gs`). It loads the real code from
+https://riverbendwebco.com/apps-script/backend.js, so changes pushed to GitHub go live
+automatically within about 5 minutes. Nothing to paste or redeploy.
+
+One-time switch to the loader:
+1. Open the Apps Script project, Ctrl+A, Delete, paste `Code.gs`, Ctrl+S.
+2. Pick **authorize** in the function dropdown, click **Run**, then **Allow**.
+3. **Deploy > Manage deployments > pencil > New version > Deploy**.
+
+To force an update right away, run **refreshBackend** in the editor.
+
+---
+
 # Riverbend form emails: one-time setup (about 10 minutes)
 
 This replaces the FormSubmit emails with a clean Riverbend-branded email sent from your own Gmail. No ads. It also saves logos to Google Drive and logs every lead in a Google Sheet.

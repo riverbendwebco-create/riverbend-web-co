@@ -9,3 +9,8 @@ Key reminders:
 - Screenshot desktop and phone before every push.
 - No em dashes, no emoji in the interface, no pill shapes, no beige.
 - When pricing or terms change, update every place they appear, including the service agreement and the chat assistant.
+
+## Backend (Google Apps Script)
+- The live Apps Script project only holds a small loader (`apps-script/Code.gs`). The real backend is `apps-script/backend.js`, served from riverbendwebco.com and cached by the loader for 5 minutes.
+- To change forms, emails, the Demo Studio or the Website Assistant: edit `apps-script/backend.js`, keep the `RIVERBEND_BACKEND` marker in its first line, and push. It goes live within 5 minutes. The user never needs to paste or redeploy.
+- Only touch `apps-script/Code.gs` if a NEW Google service is needed (add it to `scopes_()`); that one change does require the user to paste and Allow once.
