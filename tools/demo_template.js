@@ -247,7 +247,8 @@ function western(C){
   const spot=C.specials.length?h('section',{class:'wx-sec rv',id:'w-events'},head2('w-events','This week',(C.specials.length>1?'Specials & Events':C.specials[0].title)),
     h('div',{class:'wx-specials'},C.specials.slice(0,4).map(s=>{ const di=dayOf(s.when); return h('article',{class:'wx-sp'},
       h('div',{class:'wx-stamp'},h('b',null,di>=0?SHORT[di]:ico('star',20,'')),h('small',null,s.when||'Special')),
-      h('div',null,h('h3',null,s.title),s.detail?h('p',null,s.detail):null)); }))):null;
+      h('div',null,h('h3',null,s.title),s.detail?h('p',null,s.detail):null,
+        (C.tel&&/private|party|parties|event|book|reserv|rent|catering/i.test(s.title+' '+(s.when||'')))?h('a',{class:'wx-btn wx-red wx-sm wx-book',href:C.tel},ico('phone',16,''),'Call to book: '+C.phoneTxt):null)); }))):null;
 
   const favs=pickFavs(C);
   const favEl=favs.length===3?h('section',{class:'wx-sec rv',id:'w-favs'},head2('','Off the menu','House Favorites','What regulars order.'),

@@ -315,6 +315,7 @@ body.t-western{background:#fff}
 .wx-rev figcaption{font-weight:700;color:var(--wb);font-size:.9rem}
 .wx-center{justify-content:center;margin-top:24px}
 @media (max-width:900px){.wx-revs{grid-template-columns:1fr}}
+.wx-book{margin-top:14px}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 
