@@ -243,7 +243,7 @@ function western(C){
       range?h('div',null,h('small',null,'Open'),h('b',null,range)):null,
       C.hasHours?h('div',null,h('small',null,openNow?'Open today':(nextOpen?nextOpen[0]:'Today')),h('b',null,openNow?C.today:(nextOpen?nextOpen[1]:'Closed'))):null,
       C.addr?h('div',null,h('small',null,city||'Find us'),h('b',null,C.addr)):null))),
-    C.hero,'linear-gradient(90deg,'+rgba(C.navy,.95)+' 0%,'+rgba(C.navy,.82)+' 42%,'+rgba(C.navy,.25)+' 100%)');
+    C.hero,'linear-gradient(90deg,'+rgba(C.navy,.93)+' 0%,rgba(52,30,18,.78) 46%,rgba(52,30,18,.18) 100%),radial-gradient(circle at 78% 30%,rgba(232,160,72,.28),rgba(0,0,0,0) 55%)');
 
   const head2=(id,kick,title,sub)=>h('div',{class:'wx-h'},h('div',{class:'wx-orn'},h('i'),stars(3),h('i')),kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null);
 
@@ -262,7 +262,7 @@ function western(C){
   if(C.items.length){
     const photo=h('div',{class:'wx-mphoto ph'},h('span'));
     const list=h('div',{class:'wx-mlist'});
-    const show=(k,ix)=>{ const its=G.map[k]; bg(photo,C.groupPic(k,its)||C.venue(ix),'linear-gradient(0deg,'+rgba(C.navy,.75)+' 0%,rgba(0,0,0,0) 45%)'); photo.firstChild.textContent=k!=='Menu'?k:C.name;
+    const show=(k,ix)=>{ const its=G.map[k]; bg(photo,C.groupPic(k,its)||C.venue(ix),'linear-gradient(0deg,rgba(40,24,14,.8) 0%,rgba(0,0,0,0) 50%)'); photo.firstChild.textContent=k!=='Menu'?k:C.name;
       list.replaceChildren(...its.map(i=>h('div',{class:'wx-mi'},h('div',{class:'t'},h('b',null,i.name),h('i'),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null))); };
     const tabs=G.names.length>1?h('div',{class:'wx-tabs',role:'tablist'},G.names.slice(0,8).map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k,ix); }); return b; })):null;
     show(G.names[0],0);
