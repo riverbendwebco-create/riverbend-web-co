@@ -65,7 +65,7 @@ function build(d){
   document.title=(d.name||'Preview')+' | Website preview';
   document.body.classList.add('t-'+style);
   const C={
-    name:d.name||'', cat:d.category||'', city:d.city||'', addr:d.address||'', about:d.about||'', tag:d.tagline||'',
+    variant:d.variant||'', name:d.name||'', cat:d.category||'', city:d.city||'', addr:d.address||'', about:d.about||'', tag:d.tagline||'',
     phone:d.phone||'', email:/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email||'')?d.email:'',
     logo:okImg(d.logo), hours:(d.hours||[]).slice(0,7),
     items:(d.items||[]).filter(i=>i&&i.name).map(i=>Object.assign({},i,{photo:okUrl(i.photo)})), specials:(d.specials||[]).filter(i=>i&&i.title),
@@ -243,7 +243,7 @@ function western(C){
       range?h('div',null,h('small',null,'Open'),h('b',null,range)):null,
       C.hasHours?h('div',null,h('small',null,openNow?'Open today':(nextOpen?nextOpen[0]:'Today')),h('b',null,openNow?C.today:(nextOpen?nextOpen[1]:'Closed'))):null,
       C.addr?h('div',null,h('small',null,city||'Find us'),h('b',null,C.addr)):null))),
-    C.hero,'linear-gradient(90deg,'+rgba(C.navy,.93)+' 0%,rgba(52,30,18,.78) 46%,rgba(52,30,18,.18) 100%),radial-gradient(circle at 78% 30%,rgba(232,160,72,.28),rgba(0,0,0,0) 55%)');
+    C.hero,C.variant==='ranch'?'linear-gradient(0deg,rgba(30,18,10,.92) 0%,rgba(30,18,10,.55) 45%,rgba(30,18,10,.15) 100%)':C.variant==='americana'?'linear-gradient(90deg,'+rgba(C.navy,.96)+' 0%,'+rgba(C.navy,.85)+' 50%,'+rgba(C.navy,.3)+' 100%)':'linear-gradient(90deg,'+rgba(C.navy,.93)+' 0%,rgba(52,30,18,.78) 46%,rgba(52,30,18,.18) 100%),radial-gradient(circle at 78% 30%,rgba(232,160,72,.28),rgba(0,0,0,0) 55%)');
 
   const head2=(id,kick,title,sub)=>h('div',{class:'wx-h'},h('div',{class:'wx-orn'},h('i'),stars(3),h('i')),kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null);
 
@@ -291,6 +291,7 @@ function western(C){
     h('span',null,'Site by Riverbend Web Co.')));
   const page=h('div',{class:'demo western on'},top,nav,heroEl,spot,favEl,menu,strip,storyEl,visit,foot);
   page.style.setProperty('--wn',C.navy); page.style.setProperty('--wr',C.red);
+  if(/^[a-z]{3,20}$/.test(C.variant||'')) page.classList.add('v-'+C.variant);
   return page;
 }
 function rgba(hx,a){ const n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')'; }
