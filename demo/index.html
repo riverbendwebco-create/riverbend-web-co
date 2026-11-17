@@ -861,7 +861,7 @@ function western(C){
     first.photos.length?h('button',{type:'button',class:'wx-toplink',onclick:()=>gallery(first.photos,first.title)},'See the '+(/rib/i.test(first.title)?'ribs':'photos')):null,stars(1)):null;
   const nav=h('header',{class:'wx-nav'},
     h('a',{class:'wx-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');}},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name)),
-    h('nav',{class:'wx-links'},C.items.length?jump('w-menu','Menu'):null,C.specials.length?jump('w-events','Specials'):null,C.reviews.length?jump('w-reviews','Reviews'):null,C.about?jump('w-story','Our Story'):null,jump('w-visit','Hours & Location')),
+    h('nav',{class:'wx-links'},C.items.length?jump('w-menu','Menu'):null,C.specials.length?jump('w-events','Specials'):null,C.about?jump('w-story','Our Story'):null,C.reviews.length?jump('w-reviews','Reviews'):null,jump('w-visit','Hours & Location')),
     C.tel?h('a',{class:'wx-btn wx-red wx-sm',href:C.tel},ico('phone',16,''),'Call'):null);
 
   const heroEl=bg(h('section',{class:'wx-hero ph',id:'w-top'},h('div',{class:'in'},
@@ -926,7 +926,7 @@ function western(C){
     C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name),
     h('span',null,'© '+new Date().getFullYear()+' '+C.name+(C.addr?' · '+[C.addr,C.city].filter(Boolean).join(', '):'')),
     h('span',null,'Site by Riverbend Web Co.')));
-  const page=h('div',{class:'demo western on'},top,nav,heroEl,spot,favEl,revEl,menu,strip,storyEl,visit,foot);
+  const page=h('div',{class:'demo western on'},top,nav,heroEl,menu,spot,favEl,strip,storyEl,revEl,visit,foot);
   page.style.setProperty('--wn',C.navy); page.style.setProperty('--wr',C.red);
   if(/^[a-z]{3,20}$/.test(C.variant||'')) page.classList.add('v-'+C.variant);
   return page;
