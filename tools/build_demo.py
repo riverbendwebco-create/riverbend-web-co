@@ -266,6 +266,37 @@ body.t-western{background:#fff}
 .v-ranch .wx-card{border-top:1px solid var(--wline)!important}
 .v-ranch .wx-foot{background:var(--wn)!important;border-top:0!important}
 .v-ranch .wx-hero{background-position:center 60%}
+/* ----- Calm tone for all western styles: dim-bar mood, colors kept but muted ----- */
+.western{--wa:#B98A55;--wa2:#D9B48A;--wb:#5A4234;--wbd:#2A211C}
+.western .ph{filter:saturate(.88) sepia(.12) brightness(.96)}
+.western .wx-red{box-shadow:none!important}
+.western .wx-btn:hover{transform:none}
+.wx-top{background:var(--wn)!important;font-weight:600;letter-spacing:.12em;opacity:.97}
+.wx-top .wx-stars{color:var(--wa2)!important}
+.wx-nav{border-bottom:1px solid var(--wline)!important;box-shadow:none!important}
+.wx-hero{border-bottom:3px solid var(--wb)!important}
+.wx-hero h1 .last{border-bottom-width:3px!important}
+.wx-sp{border:1px solid var(--wline)!important;box-shadow:0 16px 36px -28px rgba(42,33,28,.6)!important}
+.wx-stamp{background:var(--wr)!important}
+.wx-fav{box-shadow:0 16px 36px -30px rgba(42,33,28,.55)!important}
+.wx-fav .b{border-top:2px solid var(--wa)!important}
+.wx-fav:hover{transform:none}
+.wx-band{background:linear-gradient(135deg,#252B3A 0%,var(--wbd) 100%)!important;border:0!important}
+.wx-story .ph{border:0!important;box-shadow:none!important}
+.wx-card{border-top:2px solid var(--wb)!important}
+.wx-map{border-top:2px solid var(--wa)!important}
+.wx-foot{background:#1B1A1F!important;border-top:2px solid var(--wb)!important}
+/* Americana layout without the flag look */
+.v-americana .wx-top{background:var(--wn)!important;padding:9px 16px}
+.v-americana .wx-top span{background:none;padding:0}
+.v-americana .wx-hero{box-shadow:none;border-bottom:3px solid var(--wb)!important}
+.v-americana .wx-hero h1 .last{background:rgba(255,255,255,.08);color:var(--wa2);border:1px solid rgba(217,180,138,.35)!important;padding:2px 14px 6px}
+.v-americana .wx-sp{border:1px solid var(--wline)!important;box-shadow:0 16px 36px -28px rgba(42,33,28,.6)!important}
+.v-americana .wx-fav .b{border-top:2px solid var(--wa)!important}
+.v-americana .wx-tabs button.on{background:var(--wbd)!important;border-color:var(--wbd)!important}
+.v-americana .wx-band{border:0!important}
+.v-americana .wx-stars{color:var(--wa)}
+.v-americana .wx-foot{background:#1B1A1F!important;border-top:2px solid var(--wb)!important}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 

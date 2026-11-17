@@ -243,7 +243,7 @@ function western(C){
       range?h('div',null,h('small',null,'Open'),h('b',null,range)):null,
       C.hasHours?h('div',null,h('small',null,openNow?'Open today':(nextOpen?nextOpen[0]:'Today')),h('b',null,openNow?C.today:(nextOpen?nextOpen[1]:'Closed'))):null,
       C.addr?h('div',null,h('small',null,city||'Find us'),h('b',null,C.addr)):null))),
-    C.hero,C.variant==='ranch'?'linear-gradient(0deg,rgba(30,18,10,.92) 0%,rgba(30,18,10,.55) 45%,rgba(30,18,10,.15) 100%)':C.variant==='americana'?'linear-gradient(90deg,'+rgba(C.navy,.96)+' 0%,'+rgba(C.navy,.85)+' 50%,'+rgba(C.navy,.3)+' 100%)':'linear-gradient(90deg,'+rgba(C.navy,.93)+' 0%,rgba(52,30,18,.78) 46%,rgba(52,30,18,.18) 100%),radial-gradient(circle at 78% 30%,rgba(232,160,72,.28),rgba(0,0,0,0) 55%)');
+    C.hero,C.variant==='ranch'?'linear-gradient(0deg,rgba(24,18,14,.94) 0%,rgba(24,18,14,.62) 50%,rgba(24,18,14,.3) 100%)':C.variant==='americana'?'linear-gradient(90deg,'+rgba(C.navy,.94)+' 0%,rgba(30,24,20,.78) 50%,rgba(30,24,20,.35) 100%)':'linear-gradient(90deg,'+rgba(C.navy,.92)+' 0%,rgba(36,26,20,.78) 46%,rgba(36,26,20,.32) 100%),radial-gradient(circle at 78% 30%,rgba(217,160,100,.14),rgba(0,0,0,0) 55%)');
 
   const head2=(id,kick,title,sub)=>h('div',{class:'wx-h'},h('div',{class:'wx-orn'},h('i'),stars(3),h('i')),kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null);
 
