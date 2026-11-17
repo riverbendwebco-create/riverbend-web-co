@@ -1,0 +1,74 @@
+# Auto-merges Owen's demo pull requests so they go live without waiting on Kruz.
+#
+# A pull request from oseffrood9681-web is approved and merged automatically when
+# EVERY changed file is demo work:
+#   demo/**                 (generated demo page and demo data)
+#   tools/demo_template.js  (demo layouts)
+#   tools/build_demo.py     (demo builder)
+# Anything else (index.html, studio/, apps-script/, this workflow) still needs
+# Kruz's approval, because apps-script/backend.js runs as Kruz's Google account.
+#
+# Draft pull requests are skipped: open as a draft while working, mark
+# "Ready for review" when done, and it merges and deploys (Render, ~1 minute).
+#
+# This runs from main's copy of this file (pull_request_target) and never
+# checks out or runs code from the pull request.
+#
+# One-time setting required: Settings > Actions > General > Workflow permissions >
+# "Read and write permissions" and "Allow GitHub Actions to create and approve
+# pull requests".
+
+name: Auto-merge demo work
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    if: >-
+      github.event.pull_request.user.login == 'oseffrood9681-web' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      ACTION: ${{ github.event.action }}
+    steps:
+      - name: Check that only demo files changed
+        id: check
+        run: |
+          files=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
+          echo "Changed files:"
+          echo "$files"
+          other=$(printf '%s\n' "$files" | grep -Ev '^(demo/.+|tools/demo_template\.js|tools/build_demo\.py)$' || true)
+          if [ -n "$other" ]; then
+            echo "Not auto-merging. These need Kruz's approval:"
+            echo "$other"
+            if [ "$ACTION" = "opened" ] || [ "$ACTION" = "ready_for_review" ]; then
+              body=$(printf 'Not auto-merged: this pull request changes files outside the demo folders, so it needs Kruz to approve it.\n\n%s' "$(printf '%s\n' "$other" | sed 's/^/- `/; s/$/`/')")
+              gh pr comment "$PR" --repo "$REPO" --body "$body"
+            fi
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Approve
+        if: steps.check.outputs.ok == 'true'
+        run: gh pr review "$PR" --repo "$REPO" --approve --body "Demo-only changes. Auto-approved and merging; live on riverbendwebco.com in about a minute."
+
+      - name: Merge
+        if: steps.check.outputs.ok == 'true'
+        run: gh pr merge "$PR" --repo "$REPO" --merge --delete-branch

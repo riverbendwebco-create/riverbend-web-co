@@ -18,3 +18,7 @@ Key reminders:
 ## Demo pages (/demo)
 - `demo/index.html` is GENERATED. Edit `tools/demo_template.js` (layout and data) and run `python3 tools/build_demo.py`; it pulls the demo CSS and icons straight from `index.html` so prospect demos always match the Lock & Dam Tap, Ember & Oak and Bluff City Pro designs.
 - Never invent facts on a prospect demo (no review counts, years in business, licenses, taps). Leave a section out if there is no real data for it.
+
+## Owen's pull requests (auto-merge)
+- `.github/workflows/auto-merge-demos.yml` auto-approves and merges PRs from `oseffrood9681-web` when every changed file is under `demo/`, `tools/demo_template.js` or `tools/build_demo.py`. Draft PRs are skipped.
+- PRs that touch anything else (index.html, studio/, apps-script/, .github/) still need Kruz's approval. Keep it that way: backend.js runs as Kruz's Google account.
