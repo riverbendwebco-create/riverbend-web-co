@@ -332,6 +332,10 @@ body.t-western{background:#fff}
 .wx-jump:hover{border-color:var(--wb)}
 .wx-jump span{font-size:1rem;line-height:1}
 @media (max-width:640px){.wx-jump{top:14px;right:14px;height:32px;padding:0 10px;font-size:.78rem}}
+.wx-strip{position:relative}
+.wx-strip button.ph{border:0;padding:0;cursor:zoom-in;transition:filter .2s}
+.wx-strip button.ph:hover{filter:brightness(1.12)}
+.wx-more{position:absolute;right:16px;bottom:16px;height:38px;padding:0 14px;border-radius:8px;border:0;background:rgba(20,16,14,.78);color:#fff;font-weight:700;font-size:.88rem;cursor:pointer}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 
