@@ -203,3 +203,10 @@ These rules come from building and launching riverbendwebco.com. Follow them on 
 - [ ] Prices and terms match in every section.
 - [ ] No em dashes, no emoji in the interface, no placeholder text.
 - [ ] Pushed to `main`, Render shows the deploy as Live, live site checked after a hard refresh.
+
+## Demo Studio
+
+- **/studio/** is the password-protected admin for building prospect demos. **/demo/?d=slug** renders a demo in the Pub, Lounge or Trade style. Both are `noindex` and blocked in robots.txt.
+- Data lives in the Apps Script backend (`apps-script/Code.gs`, Demo Studio section): Demos tab in the Riverbend Leads sheet, images in Drive. Password is the `ADMIN_PASSWORD` script property, compared server-side; sessions are 6-hour tokens.
+- Private fields (contact, notes, status) never leave the admin. Demo pages render all text with `textContent`, never `innerHTML`.
+- Demo pages must not invent facts: no fake reviews, awards, years in business or licenses. Only show what was entered.

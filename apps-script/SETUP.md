@@ -28,3 +28,19 @@ Click **Deploy**, then **Manage deployments**, then the pencil icon. Set Version
 - Google Sheets (to log leads in the "Riverbend Leads" sheet)
 
 It only ever emails riverbendwebco@gmail.com. It never emails customers.
+
+## Demo Studio (riverbendwebco.com/studio)
+
+The same script powers the Demo Studio. To turn it on:
+
+1. Open the **Riverbend Forms** Apps Script project. Replace all the code with the latest `Code.gs` and press **Ctrl+S**.
+2. Click the **gear icon (Project Settings)** on the left. Scroll to **Script Properties** and click **Add script property**.
+   - Property: `ADMIN_PASSWORD`
+   - Value: the password you want for the Studio (use a long one)
+   - Click **Save script properties**.
+3. Click **Deploy > Manage deployments**, click the **pencil icon**, set **Version** to **New version**, and click **Deploy**. The URL stays the same.
+4. Go to **riverbendwebco.com/studio** and log in.
+
+Demos are saved in the **Demos** tab of the Riverbend Leads sheet (don't edit the Data column by hand). Logos and photos go in **Riverbend Leads > Demo Images** in Drive.
+
+To change the password, edit `ADMIN_PASSWORD` in Script Properties. Anyone logged in gets signed out within 6 hours. After 8 wrong passwords, logins lock for 15 minutes.
