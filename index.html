@@ -1215,6 +1215,16 @@ footer{background:var(--ink-0)}
 .wt-line{background:#E2E8F0}
 .wt-ticks b{background:#CBD5E1}
 .wt-dot{background:#0052CC;box-shadow:0 0 0 5px rgba(0,82,204,.18),0 0 14px rgba(0,82,204,.45)}
+
+/* Demos: custom callout */
+.demo-custom{display:flex;align-items:center;gap:22px;margin-top:56px;padding:26px 30px;border:1px solid rgba(96,165,250,.28);border-radius:12px;background:linear-gradient(120deg,rgba(0,82,204,.18),rgba(15,23,42,.55) 60%);box-shadow:0 30px 60px -40px rgba(0,82,204,.7)}
+.demo-custom .dc-icon{flex:none;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:rgba(0,82,204,.22);border:1px solid rgba(96,165,250,.35);color:#60A5FA}
+.demo-custom .dc-icon svg{width:26px;height:26px}
+.demo-custom .dc-copy{flex:1;min-width:0}
+.demo-custom h3{margin:0 0 4px;font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:-.015em}
+.demo-custom p{margin:0;color:#CBD5E1;font-size:1rem;line-height:1.55}
+.demo-custom .dc-btn{flex:none;white-space:nowrap}
+@media (max-width:760px){.demo-custom{flex-direction:column;align-items:flex-start;text-align:left;padding:22px;margin-top:40px}.demo-custom .dc-btn{width:100%;justify-content:center}}
 /* Pick a Look cards */
 .lk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
 .lk{display:flex;flex-direction:column;text-align:left;background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer}
@@ -1921,7 +1931,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     <div class="section-head center reveal">
       <span class="kicker"><b>04</b>Live demo styles</span>
       <h2>Pick a Look. Click to Try It.</h2>
-      <p>Three signature styles built for how your customers actually use their phones. Tap any card to open a working preview.</p>
+      <p>Three sample styles to spark ideas. Tap any card to open a working preview. Your site is designed from scratch around your business.</p>
     </div>
     <div class="lk-grid">
       <button class="lk reveal" data-demo="pub" aria-haspopup="dialog">
@@ -1954,6 +1964,14 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
           <ul><li>Clear service list</li><li>Project gallery &amp; reviews</li><li>Instant estimate form</li></ul>
         </div>
       </button>
+    </div>
+    <div class="demo-custom reveal">
+      <div class="dc-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z" fill="currentColor"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" fill="currentColor" opacity=".7"/></svg></div>
+      <div class="dc-copy">
+        <h3>These are just starting points.</h3>
+        <p>Every Riverbend site is custom-built. Your colors, your photos, your layout, your features. If you can imagine it, we can build it.</p>
+      </div>
+      <a href="#contact" class="btn btn-amber dc-btn">Tell Us Your Idea <svg width="18" height="18"><use href="#arrow"/></svg></a>
     </div>
   </div>
 </section>
