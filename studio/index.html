@@ -390,7 +390,7 @@ $('#loginForm').addEventListener('submit',async e=>{
   b.disabled=false; b.textContent='Log In';
   if(r.ok){ token=r.token; try{sessionStorage.setItem('rbStudio',token);}catch(_){} $('#pw').value=''; showApp(); return; }
   m.className='msg err';
-  m.textContent={badpassword:'That password is not right.',locked:'Too many tries. Wait 15 minutes and try again.',nopassword:'No password set yet. Add ADMIN_PASSWORD in Apps Script settings.',network:'Can’t reach the server. Check your connection.'}[r.error]||'Something went wrong. Try again.';
+  m.textContent={badpassword:'That password is not right.',locked:'Too many tries. Wait 15 minutes and try again.',nopassword:'Your password was just emailed to riverbendwebco@gmail.com. Check your inbox, then log in.',network:'Can’t reach the server. Check your connection.'}[r.error]||'Something went wrong. Try again.';
 });
 function signOut(expired){
   if(!expired && token) api({action:'logout'});

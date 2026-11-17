@@ -312,7 +312,7 @@ function login_(pw) {
   var fails = Number(cache.get('rb_fail') || 0);
   if (fails >= 8) return { ok: false, error: 'locked' };
   var real = PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
-  if (!real) return { ok: false, error: 'nopassword' };
+  if (!real) { ensurePassword_(); return { ok: false, error: 'nopassword' }; }
   if (!pw || !sameHash_(pw, real)) {
     cache.put('rb_fail', String(fails + 1), 900); // lock for 15 min after 8 misses
     Utilities.sleep(600);
@@ -496,3 +496,29 @@ function trash_(id) { if (id) { try { DriveApp.getFileById(id).setTrashed(true);
 function slugify_(s) {
   return String(s || 'demo').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'demo';
 }
+
+/* First run: create a strong Studio password and email it to the owner.
+   Change it anytime in Project Settings > Script Properties > ADMIN_PASSWORD. */
+function ensurePassword_() {
+  var props = PropertiesService.getScriptProperties();
+  var lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    if (props.getProperty('ADMIN_PASSWORD')) return;
+    var words = ['River', 'Bluff', 'Lock', 'Dam', 'Main', 'Shot', 'Tower', 'Bridge', 'Harbor', 'Cable', 'Eagle', 'Point', 'Oak', 'Ember', 'Tap', 'Crew'];
+    var pick = function () { return words[Math.floor(Math.random() * words.length)]; };
+    var pw = pick() + '-' + pick() + '-' + pick() + '-' + (1000 + Math.floor(Math.random() * 9000));
+    props.setProperty('ADMIN_PASSWORD', pw);
+    MailApp.sendEmail({
+      to: OWNER_EMAIL, name: 'Riverbend Website', subject: 'Your Demo Studio password',
+      htmlBody: '<div style="font-family:Arial,sans-serif;font-size:15px;color:#0F172A">' +
+        '<p>Your Riverbend Demo Studio is ready.</p>' +
+        '<p><b>Link:</b> <a href="https://riverbendwebco.com/studio/">riverbendwebco.com/studio</a><br>' +
+        '<b>Password:</b> <span style="font-family:monospace;font-size:17px;background:#F1F5F9;padding:3px 6px;border-radius:4px">' + pw + '</span></p>' +
+        '<p>Share both with your design team. To change the password, open the script in Apps Script, go to Project Settings, Script Properties, ADMIN_PASSWORD.</p></div>'
+    });
+  } finally { lock.releaseLock(); }
+}
+
+/* Optional: run this once from the editor to get the password emailed right away. */
+function setupStudio() { ensurePassword_(); Logger.log('Password emailed to ' + OWNER_EMAIL); }
