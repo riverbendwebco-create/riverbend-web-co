@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'">
 <title>Demo Studio | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -122,6 +122,7 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 80px}
 .presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
 .preset{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:#E2E8F0 center/cover no-repeat;padding:0}
 .preset.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,82,204,.2)}
+.preset.busy{opacity:.55;cursor:progress}
 .preset.none{display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--mut);background:var(--soft)}
 .upload{display:flex;align-items:center;gap:14px;border:1.5px dashed #94A3B8;border-radius:10px;padding:14px;background:var(--soft)}
 .upload .thumb{width:96px;height:64px;border-radius:8px;background:#fff center/contain no-repeat;border:1px solid var(--line);flex:none}
@@ -346,8 +347,12 @@ body.editing .as{bottom:86px;height:min(620px,calc(100vh - 170px))}
                 <button type="button" class="btn btn-danger btn-sm hidden" id="logoRemove">Remove</button>
               </div>
             </div>
+            <div class="fg hidden" id="siteBox">
+              <label class="f">Main photo <small>(from their website, click one to use it)</small></label>
+              <div class="presets" id="sitePhotos"></div>
+            </div>
             <div class="fg">
-              <label class="f">Main photo</label>
+              <label class="f" id="stockLbl">Main photo</label>
               <div class="presets" id="presets"></div>
             </div>
             <div class="fg">
@@ -514,6 +519,7 @@ function loadEditor(d){
   setColors((d.colors||{}).primary,(d.colors||{}).accent);
   setThumb('logo',d.logo); setThumb('hero',d.hero);
   renderPresets(d.heroPreset||'');
+  renderSitePhotos(d._sitePhotos||[]);
   $('#delBtn').classList.toggle('hidden',!d.slug);
   $('#copyBtn').disabled=$('#viewBtn').disabled=!d.slug;
   setDirty(false); $('#saveState').textContent=d.slug?'All changes saved':'Not saved yet';
@@ -552,7 +558,7 @@ function renderPresets(sel){
   PRESETS[cur.style||'pub'].forEach(id=>{
     const b=el('button',{type:'button',class:'preset'+(id===sel?' on':''),'aria-label':'Use this photo'});
     b.style.backgroundImage='url(https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=360&q=60)';
-    b.addEventListener('click',()=>{renderPresets(id);setDirty(true);});
+    b.addEventListener('click',()=>{renderPresets(id); if(pending.hero||$('#heroThumb').style.backgroundImage){ pending.hero=null; pending.removeHero=true; setThumb('hero',''); } document.querySelectorAll('#sitePhotos .preset').forEach(x=>x.classList.remove('on')); setDirty(true);});
     box.append(b);
   });
 }
@@ -596,6 +602,32 @@ function setThumb(kind,src){
   $('#'+kind+'Lbl').textContent=src?(kind==='logo'?'Logo ready':'Their photo is in use'):(kind==='logo'?'No logo yet':'Or upload their own photo');
 }
 function readAsDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
+function b64Blob(b64,type){const bin=atob(b64);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type});}
+async function useSitePhoto(p,btn,quiet){
+  if(btn) btn.classList.add('busy');
+  const r=await api({action:'image',url:p.url});
+  if(btn) btn.classList.remove('busy');
+  if(!r.ok){ if(r.error!=='auth'&&!quiet) toast('Couldn\u2019t grab that photo. Try another one.',true); return false; }
+  try{
+    const img=await shrink(b64Blob(r.data,r.type),1800,'image/jpeg',.82);
+    pending.hero=img; pending.removeHero=false; setThumb('hero',img.data); setDirty(true);
+    document.querySelectorAll('#sitePhotos .preset').forEach(b=>b.classList.toggle('on',b===btn));
+    document.querySelectorAll('#presets .preset').forEach(b=>b.classList.remove('on'));
+    $('#heroLbl').textContent='Using a photo from their website';
+    return true;
+  }catch(_){ if(!quiet) toast('Couldn\u2019t read that photo. Try another one.',true); return false; }
+}
+function renderSitePhotos(list){
+  const box=$('#sitePhotos'); box.replaceChildren();
+  $('#siteBox').classList.toggle('hidden',!(list&&list.length));
+  $('#stockLbl').textContent=(list&&list.length)?'Or a stock photo':'Main photo';
+  (list||[]).forEach(p=>{
+    const b=el('button',{type:'button',class:'preset','aria-label':'Use this photo from their website'});
+    b.style.backgroundImage='url("'+String(p.thumb||p.url).replace(/["\\]/g,'')+'")';
+    b.addEventListener('click',()=>useSitePhoto(p,b));
+    box.append(b);
+  });
+}
 async function shrink(file,maxW,type,q){
   if(file.type==='image/svg+xml') return {type:file.type,data:await readAsDataURL(file)};
   const bmp=await createImageBitmap(file);
@@ -699,7 +731,7 @@ function showFound(r){
   const rows=[
     ['Name',f.name],['Phone',f.phone],['Email',f.email],['Address',[f.address,f.city].filter(Boolean).join(', ')],
     ['Hours',hrs?hrs+' of 7 days':''],[f.style==='trade'?'Services':'Menu',f.items.length?f.items.length+' item'+(f.items.length>1?'s':''):''],
-    ['About',f.about?f.about.slice(0,60)+(f.about.length>60?'…':''):''],['Facebook',f.social.facebook?'Found':''],['Instagram',f.social.instagram?'Found':'']
+    ['About',f.about?f.about.slice(0,60)+(f.about.length>60?'…':''):''],['Photos',(f.photos||[]).length?(f.photos.length+' found'):''],['Facebook',f.social.facebook?'Found':''],['Instagram',f.social.instagram?'Found':'']
   ];
   const list=el('ul',{class:'as-found'},rows.map(([k,v])=>el('li',{class:v?'y':'n'},el('i',{text:v?'✓':'–'}),el('span',{text:k+(v?': '+v:': not found')}))));
   const style={pub:'Pub & Sports Bar',lounge:'Lounge & Eatery',trade:'Service & Trade'}[f.style];
@@ -729,8 +761,12 @@ function applyFound(f,onlyEmpty){
   f.hours.forEach((h,i)=>{ const n=$('[data-day="'+i+'"]'); if(h&&!(onlyEmpty&&n.value.trim())) n.value=h; });
   const hasItems=document.querySelectorAll('#items .row').length>0;
   if(f.items.length&&!(onlyEmpty&&hasItems)){ $('#items').replaceChildren(); f.items.forEach(addItem); }
+  if((f.photos||[]).length){ cur._sitePhotos=f.photos; renderSitePhotos(f.photos); }
   setDirty(true);
   if(!$('#edTitle').textContent||$('#edTitle').textContent==='New demo') $('#edTitle').textContent=f.name||'New demo';
+  if((f.photos||[]).length&&!pending.hero&&!(onlyEmpty&&$('#heroThumb').style.backgroundImage)){
+    (async()=>{ const btns=[...document.querySelectorAll('#sitePhotos .preset')]; for(let i=0;i<Math.min(3,f.photos.length);i++){ if(await useSitePhoto(f.photos[i],btns[i],true)){ asMsg('bot','I set one of their photos as the main photo. Pick a different one under Logo, photo & colors anytime.'); break; } } })();
+  }
   asMsg('bot','Done. I filled in what I found. Look it over, upload their logo under Logo, photo & colors, then hit Save demo.');
   toast('Filled from their website. Review, then save.');
   if(window.innerWidth<640) setTimeout(asClose,900);

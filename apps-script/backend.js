@@ -304,6 +304,7 @@ function studio_(d) {
     case 'save': return saveDemo_(d);
     case 'delete': return deleteDemo_(String(d.slug || ''));
     case 'scan': return scanSite_(String(d.url || ''));
+    case 'image': return grabImage_(String(d.url || ''));
     case 'logout': CacheService.getScriptCache().remove('tok_' + d.token); return { ok: true };
   }
   return { ok: false, error: 'unknown' };
@@ -544,7 +545,9 @@ function scanSite_(raw) {
   var origin = (first.url.match(/^https?:\/\/[^\/]+/i) || [''])[0];
   var home = origin + '/';
   if (first.url.replace(/[?#].*$/, '') !== home) { var hp = fetchPage_(home); if (hp) pages.push(hp); }
-  var extra = navLinks_(first.html + ' ' + (pages[1] ? pages[1].html : ''), first.url, host).filter(function (u) { return u.replace(/\/$/, '') !== first.url.replace(/\/$/, '') && u !== home; }).slice(0, 4);
+  var links = navLinks_(first.html + ' ' + (pages[1] ? pages[1].html : ''), first.url, host).filter(function (u) { return u.replace(/\/$/, '') !== first.url.replace(/\/$/, '') && u !== home; });
+  var gal = links.filter(function (u) { return /gallery|photos|pictures/i.test(u); }).slice(0, 1);
+  var extra = gal.concat(links.filter(function (u) { return gal.indexOf(u) < 0; })).slice(0, 5);
   extra.forEach(function (u) { var p = fetchPage_(u); if (p) pages.push(p); });
 
   var out = { name: '', category: '', tagline: '', about: '', address: '', city: '', phone: '', email: '',
@@ -557,6 +560,9 @@ function scanSite_(raw) {
   pages.forEach(function (pg) { menuMedia_(pg.html, pg.url, media); });
   var pics = media.filter(function (m) { return !/\.pdf(\?|$)/i.test(m); }), pdfs = media.filter(function (m) { return /\.pdf(\?|$)/i.test(m); });
   out.menuFiles = media.slice(0, 6);
+  var photos = [];
+  pages.forEach(function (pg) { sitePhotos_(pg.html, pg.url, photos, media); });
+  out.photos = photos.slice(0, 30);
   out.menuRead = 0;
   if (out.items.length < 5 && media.length) {
     var queue = (pics.length ? pics : pdfs).slice(0, 3), before = out.items.length;
@@ -597,7 +603,7 @@ function fetchPage_(url) {
 }
 
 function navLinks_(html, base, host) {
-  var want = /(menu|food|drink|about|contact|hours|location|visit|services|our-story|find-us)/i;
+  var want = /(menu|food|drink|about|contact|hours|location|visit|services|our-story|find-us|gallery|photos|pictures)/i;
   var seen = {}, out = [];
   var re = /<a\b[^>]*href\s*=\s*["']([^"'#]+)["'][^>]*>/gi, m;
   while ((m = re.exec(html)) && out.length < 12) {
@@ -910,7 +916,7 @@ function menuFromLines_(rawLines, out) {
 }
 
 function bizFromTitle_(t) {
-  var parts = String(t || '').split(/\s[|–—\-:]\s/).map(function (x) { return x.trim(); }).filter(Boolean);
+  var parts = String(t || '').split(/\s[|\u2013\u2014\-:]\s/).map(function (x) { return x.trim(); }).filter(Boolean);
   var generic = /^(home|homepage|welcome|food|menu|menus|our menu|drinks|bar|about|about us|contact|contact us|events|hours|gallery|testimonials|services|location|locations|order online)$/i;
   var good = parts.filter(function (x) { return !generic.test(x); });
   return (good[0] || parts[0] || '');
@@ -930,4 +936,45 @@ function embeddedText_(html) {
     }
   }
   return out.join('\n');
+}
+
+/* ---------- Photos from their website ---------- */
+
+function sitePhotos_(html, base, list, skip) {
+  var re = /[^\s"'()<>,;]+\.(?:png|jpe?g|webp)(?:\?[^\s"'()<>]*)?/gi, m;
+  var bad = /(logo|icon|favicon|sprite|placeholder|lazy|badge|avatar|emoji|spinner|loader|pixel|blank|spacer|arrow|button|menu|social|facebook|instagram|twitter|google|yelp|tripadvisor|payment|visa|mastercard|cms_websites\/img|wp-includes|\/plugins\/)/i;
+  while ((m = re.exec(html)) && list.length < 40) {
+    var raw = m[0].replace(/\\\//g, '/').replace(/&amp;/g, '&').replace(/^[^h\/]*(?=https?:|\/)/i, '');
+    var u = absUrl_(raw, base);
+    if (!u || bad.test(u.replace(/\?.*$/, ''))) continue;
+    if (/[-_](\d{2,3})x(\d{2,3})\.(png|jpe?g|webp)$/i.test(u)) continue; // tiny WordPress thumbnails
+    var path = u.replace(/\?.*$/, '');
+    if ((skip || []).some(function (x) { return x.replace(/\?.*$/, '') === path; })) continue;
+    var hit = null;
+    for (var i = 0; i < list.length; i++) if (list[i].url === path) { hit = list[i]; break; }
+    var isThumb = /[?&](w|width|h|height)=\d{2,3}\b/i.test(u);
+    if (hit) { if (isThumb && hit.thumb === hit.url) hit.thumb = u; continue; }
+    list.push({ url: path, thumb: isThumb ? u : path });
+  }
+}
+
+function grabImage_(raw) {
+  var url = normUrl_(raw);
+  if (!url) return { ok: false, error: 'badurl' };
+  try {
+    var r = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RiverbendDemoStudio/1.0; +https://riverbendwebco.com)' } });
+    if (r.getResponseCode() >= 400) return { ok: false, error: 'unreachable' };
+    var blob = r.getBlob();
+    var type = String(blob.getContentType() || '').toLowerCase().split(';')[0];
+    if (!/^image\/(png|jpeg|webp)$/.test(type)) {
+      if (/\.png(\?|$)/i.test(url)) type = 'image/png';
+      else if (/\.webp(\?|$)/i.test(url)) type = 'image/webp';
+      else if (/\.jpe?g(\?|$)/i.test(url)) type = 'image/jpeg';
+      else return { ok: false, error: 'notimage' };
+    }
+    var bytes = blob.getBytes();
+    if (!bytes.length || bytes.length > 12 * 1024 * 1024) return { ok: false, error: 'toobig' };
+    return { ok: true, type: type, data: Utilities.base64Encode(bytes) };
+  } catch (e) { return { ok: false, error: 'unreachable' }; }
 }
