@@ -683,7 +683,7 @@ $('#asForm').addEventListener('submit',async e=>{
   if(!url){ asMsg('bot','Send me a website link, like thegoosedbq.com, and I’ll pull their info.'); return; }
   if(/facebook\.com|instagram\.com/i.test(url[0])){ asMsg('bot','Facebook and Instagram block automatic reading, so I can’t pull from them. Try their own website, or type the info in from their page.'); return; }
   asBusy=true;
-  const t=asMsg('bot typing',[el('div',{class:'spin'}),'Reading '+url[0].replace(/^https?:\/\//,'').replace(/\/$/,'')+'…']);
+  const t=asMsg('bot typing',[el('div',{class:'spin'}),'Reading '+url[0].replace(/^https?:\/\//,'').replace(/\/$/,'')+'… Menus posted as pictures can take up to a minute.']);
   const r=await api({action:'scan',url:url[0]});
   t.remove(); asBusy=false;
   if(!r.ok){
@@ -713,7 +713,9 @@ function showFound(r){
   }
   const low=r.score<3;
   asMsg('bot',['Here’s what I found on '+r.pages.length+' page'+(r.pages.length>1?'s':'')+'. Suggested style: '+style+'.',list,
-    low?el('div',{style:'margin-top:8px;color:#B45309;font-size:.84rem',text:'Not much text on this site. Menus posted as pictures or PDFs can’t be read, so you may need to type those in.'}):null,acts].filter(Boolean));
+    f.menuFromPictures>0?el('div',{style:'margin-top:8px;color:#166534;font-size:.84rem',text:'Their menu was posted as '+(f.menuRead>1?f.menuRead+' pictures':'a picture')+'. I read '+f.menuFromPictures+' item'+(f.menuFromPictures>1?'s':'')+' from it. Double-check prices before you show it.'}):null,
+    ((f.menuFiles||[]).length&&!f.menuFromPictures&&f.items.length<5)?el('div',{style:'margin-top:8px;color:#B45309;font-size:.84rem',text:'Their menu is a picture or PDF and I couldn’t read it clearly, so you may need to type those items in.'}):null,
+    (low&&!(f.menuFiles||[]).length)?el('div',{style:'margin-top:8px;color:#B45309;font-size:.84rem',text:'Not much text on this site, so some details may need to be typed in.'}):null,acts].filter(Boolean));
 }
 
 function applyFound(f,onlyEmpty){

@@ -541,7 +541,10 @@ function scanSite_(raw) {
   if (!first) return { ok: false, error: 'unreachable' };
   var pages = [first];
   var host = hostOf_(first.url);
-  var extra = navLinks_(first.html, first.url, host).slice(0, 4);
+  var origin = (first.url.match(/^https?:\/\/[^\/]+/i) || [''])[0];
+  var home = origin + '/';
+  if (first.url.replace(/[?#].*$/, '') !== home) { var hp = fetchPage_(home); if (hp) pages.push(hp); }
+  var extra = navLinks_(first.html + ' ' + (pages[1] ? pages[1].html : ''), first.url, host).filter(function (u) { return u.replace(/\/$/, '') !== first.url.replace(/\/$/, '') && u !== home; }).slice(0, 4);
   extra.forEach(function (u) { var p = fetchPage_(u); if (p) pages.push(p); });
 
   var out = { name: '', category: '', tagline: '', about: '', address: '', city: '', phone: '', email: '',
@@ -550,6 +553,16 @@ function scanSite_(raw) {
   pages.forEach(function (pg) { fromJsonLd_(pg.html, out, types); });
   pages.forEach(function (pg) { fromHtml_(pg, out); });
   if (out.items.length < 5) pages.forEach(function (pg) { if (out.items.length < 60) menuFromText_(pg.html, out); });
+  var media = [];
+  pages.forEach(function (pg) { menuMedia_(pg.html, pg.url, media); });
+  var pics = media.filter(function (m) { return !/\.pdf(\?|$)/i.test(m); }), pdfs = media.filter(function (m) { return /\.pdf(\?|$)/i.test(m); });
+  out.menuFiles = media.slice(0, 6);
+  out.menuRead = 0;
+  if (out.items.length < 5 && media.length) {
+    var queue = (pics.length ? pics : pdfs).slice(0, 3), before = out.items.length;
+    queue.forEach(function (u) { var txt = ocr_(u); if (txt) { out.menuRead++; menuFromLines_(txt.split(/\r?\n/), out); } });
+    out.menuFromPictures = out.items.length - before;
+  }
   if (!out.hours.some(String)) pages.forEach(function (pg) { if (!out.hours.some(String)) hoursFromText_(textOf_(pg.html), out); });
   out.phone = fmtPhone_(out.phone);
   out.style = styleFromTypes_(types) || guessStyle_(out.name + ' ' + out.category + ' ' + out.about + ' ' + pages.map(function (p) { return p.title; }).join(' '));
@@ -661,7 +674,7 @@ function priceOf_(o) { o = [].concat(o || [])[0]; if (!o || o.price == null) ret
 
 function fromHtml_(pg, out) {
   var h = pg.html, meta = function (n) { var r = new RegExp('<meta[^>]+(?:property|name)\\s*=\\s*["\']' + n + '["\'][^>]*content\\s*=\\s*["\']([^"\']*)["\']', 'i'); var m = h.match(r) || h.match(new RegExp('<meta[^>]+content\\s*=\\s*["\']([^"\']*)["\'][^>]*(?:property|name)\\s*=\\s*["\']' + n + '["\']', 'i')); return m ? decode_(m[1]).trim() : ''; };
-  if (!out.name) out.name = clip_(meta('og:site_name') || String(pg.title || '').split(/\s[|\u2013\u2014-]\s/)[0], 80);
+  if (!out.name) out.name = clip_(meta('og:site_name') || bizFromTitle_(pg.title), 80);
   var desc = meta('description') || meta('og:description');
   if (!out.about && desc.length > 40) out.about = clip_(desc, 1200);
   if (!out.tagline && desc) { var first = desc.split(/(?<=[.!])\s/)[0]; if (first.length <= 110) out.tagline = first; }
@@ -734,7 +747,7 @@ function pushItem_(out, group, name, price, desc) {
 function hoursFromText_(text, out) {
   var D = '(mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:r|rs|rsday|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)';
   var T = '(\\d{1,2}(?::\\d{2})?\\s*(?:a\\.?m\\.?|p\\.?m\\.?)?|noon|midnight)';
-  var re = new RegExp(D + '(?:\\s*(?:-|\u2013|\u2014|&|and|to|thru|through)\\s*' + D + ')?\\s*[:.]?\\s*(?:' + T + '\\s*(?:-|\u2013|\u2014|to)\\s*' + T + '|(closed))', 'gi');
+  var re = new RegExp(D + '(?:\\s*(?:-|\u2013|\u2014|&|and|to|thru|through)\\s*' + D + ')?\\s*(?:[:.,]|from)?\\s*(?:' + T + '\\s*(?:-|\u2013|\u2014|to|until|till)\\s*' + T + '|(closed))', 'gi');
   var m, hit = false;
   while ((m = re.exec(text))) {
     var a = dayIx_(m[1]), b = m[2] ? dayIx_(m[2]) : a;
@@ -780,4 +793,115 @@ function guessStyle_(s) {
 function authorizeWebsiteReader() {
   var r = UrlFetchApp.fetch('https://riverbendwebco.com/', { muteHttpExceptions: true });
   Logger.log('Website reader ready (' + r.getResponseCode() + ')');
+}
+
+/* ---------- Menus posted as pictures or PDFs ---------- */
+
+function menuMedia_(html, base, list) {
+  var re = /<(a|img)\b[^>]*>/gi, m;
+  while ((m = re.exec(html)) && list.length < 8) {
+    var tag = m[0];
+    var src = (tag.match(/\b(?:href|data-src|data-lazy-src|src)\s*=\s*["']([^"']+)["']/i) || [])[1] || '';
+    var hrefs = [];
+    ['href', 'data-src', 'data-lazy-src', 'src', 'data-full'].forEach(function (a) { var x = tag.match(new RegExp('\\b' + a + '\\s*=\\s*["\']([^"\']+)["\']', 'i')); if (x) hrefs.push(x[1]); });
+    var alt = (tag.match(/\balt\s*=\s*["']([^"']*)["']/i) || [])[1] || '';
+    hrefs.forEach(function (h) {
+      var u = absUrl_(h, base);
+      if (!u || !/\.(png|jpe?g|webp|pdf)(\?|$)/i.test(u)) return;
+      if (!/menu/i.test(u) && !/menu/i.test(alt)) return;
+      if (/lazy-load-placeholder|logo/i.test(u)) return;
+      if (list.indexOf(u) < 0) list.push(u);
+    });
+  }
+}
+
+/* Uses Google Drive's built-in text recognition (OCR): uploads the file as a
+   temporary Google Doc, reads the text, then deletes it. */
+function ocr_(url) {
+  var id = '';
+  try {
+    var r = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
+    if (r.getResponseCode() >= 400) return '';
+    var blob = r.getBlob();
+    var type = String(blob.getContentType() || '').toLowerCase();
+    if (!/^(image\/(png|jpe?g|webp)|application\/pdf)/.test(type)) {
+      type = /\.pdf(\?|$)/i.test(url) ? 'application/pdf' : /\.png(\?|$)/i.test(url) ? 'image/png' : 'image/jpeg';
+    }
+    var bytes = blob.getBytes();
+    if (!bytes.length || bytes.length > 10 * 1024 * 1024) return '';
+    var token = ScriptApp.getOAuthToken();
+    var boundary = 'rb' + Utilities.getUuid().replace(/-/g, '');
+    var meta = JSON.stringify({ name: 'riverbend-ocr-temp', mimeType: 'application/vnd.google-apps.document' });
+    var head = '--' + boundary + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + meta + '\r\n--' + boundary + '\r\nContent-Type: ' + type + '\r\n\r\n';
+    var tail = '\r\n--' + boundary + '--';
+    var payload = Utilities.newBlob(head).getBytes().concat(bytes).concat(Utilities.newBlob(tail).getBytes());
+    var up = UrlFetchApp.fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&ocrLanguage=en&fields=id', {
+      method: 'post', contentType: 'multipart/related; boundary=' + boundary, payload: payload,
+      headers: { Authorization: 'Bearer ' + token }, muteHttpExceptions: true });
+    if (up.getResponseCode() >= 300) { console.error('OCR upload failed: ' + up.getContentText().slice(0, 300)); return ''; }
+    id = JSON.parse(up.getContentText()).id;
+    var ex = UrlFetchApp.fetch('https://www.googleapis.com/drive/v3/files/' + id + '/export?mimeType=text/plain', {
+      headers: { Authorization: 'Bearer ' + token }, muteHttpExceptions: true });
+    return ex.getResponseCode() < 300 ? ex.getContentText() : '';
+  } catch (e) {
+    console.error(e);
+    return '';
+  } finally {
+    if (id) { try { UrlFetchApp.fetch('https://www.googleapis.com/drive/v3/files/' + id, { method: 'delete', headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true }); } catch (e2) {} }
+  }
+}
+
+/* Turns recognized menu text into items. Handles prices on the same line,
+   prices on the next line, and columns where names and prices come out as
+   separate lists. */
+function menuFromLines_(rawLines, out) {
+  var P = /\$\s?\d{1,3}(?:[.,]\d{2})?/;
+  var PONLY = /^\s*\$?\s?\d{1,3}[.,]\d{2}\s*$|^\s*\$\s?\d{1,3}\s*$/;
+  var lines = rawLines.map(function (l) { return clip_(l.replace(/[\u2022\u00B7|]+/g, ' '), 200); }).filter(function (l) { return l && l.length > 1; });
+  var group = '', pendingNames = [], pendingDesc = {};
+  var isHeading = function (l) { return l.length >= 3 && l.length <= 32 && !P.test(l) && /[A-Z]/.test(l) && l === l.toUpperCase() && !/^\d/.test(l) && !/(ST\.|IA\b|DUBUQUE|SALOON|CONSUMING|WWW|HTTP)/.test(l); };
+  var looksName = function (l) { return l.length >= 3 && l.length <= 48 && !P.test(l) && /^[A-Z0-9'"(]/.test(l) && l.split(' ').length <= 7 && !/[.!?]$/.test(l) && !/^(served|choose|our|your|enjoy|add|homemade|other|with|on|and|topped|includes|comes)\b/i.test(l); };
+  var fmt = function (p) { p = p.replace(/\s/g, '').replace(',', '.'); if (p.charAt(0) !== '$') p = '$' + p; return p.replace(/\.00$/, ''); };
+  var flush = function () { pendingNames = []; };
+  var last = null;
+  var push = function (g, n, pr, d) {
+    n = n.replace(/\s*\*+\s*$/, '').trim();
+    if (n.split(' ').length > 5 && /[.!]$/.test(n)) { d = (n + ' ' + (d || '')).trim(); n = g || n; }
+    var before = out.items.length;
+    pushItem_(out, g, n, pr, d);
+    if (out.items.length > before) last = out.items[out.items.length - 1];
+  };
+  for (var i = 0; i < lines.length && out.items.length < 60; i++) {
+    var l = lines[i];
+    if (isHeading(l)) { group = l.replace(/[*\s]+$/, '').toLowerCase().replace(/(^|[\s(\-\/])(\w)/g, function (_, a, c) { return a + c.toUpperCase(); }); flush(); continue; }
+    if (PONLY.test(l)) {
+      if (pendingNames.length) { var nm = pendingNames.shift(); push(nm.g, nm.n, fmt(l), nm.d || ''); }
+      continue;
+    }
+    var m = l.match(P);
+    if (m) {
+      var name = l.slice(0, m.index).replace(/[\s.\u2026\-:]+$/, '').trim();
+      var after = l.slice(m.index + m[0].length).trim();
+      if (!name && pendingNames.length) { var pn = pendingNames.shift(); push(pn.g, pn.n, fmt(m[0]), pn.d || ''); continue; }
+      if (!name || name.length > 60) continue;
+      var desc = '';
+      var nx = lines[i + 1] || '';
+      if (nx && !P.test(nx) && !isHeading(nx) && (nx.length > 24 || /^[a-z(]/.test(nx) || /,/.test(nx))) { desc = nx; i++; }
+      if (after && after.length > 10) desc = (after + ' ' + desc).trim();
+      push(group, name, fmt(m[0]), desc);
+      flush();
+      continue;
+    }
+    var descLike = l.length > 24 || /^[a-z(]/.test(l) || /,/.test(l);
+    if (looksName(l) && !(descLike && last && !last.desc && !pendingNames.length)) { pendingNames.push({ g: group, n: l, d: '' }); continue; }
+    if (pendingNames.length && l.length > 10) pendingNames[pendingNames.length - 1].d = clip_((pendingNames[pendingNames.length - 1].d + ' ' + l).trim(), 240);
+    else if (last && !last.desc && l.length > 10) last.desc = clip_(l, 240);
+  }
+}
+
+function bizFromTitle_(t) {
+  var parts = String(t || '').split(/\s[|–—\-:]\s/).map(function (x) { return x.trim(); }).filter(Boolean);
+  var generic = /^(home|homepage|welcome|food|menu|menus|our menu|drinks|bar|about|about us|contact|contact us|events|hours|gallery|testimonials|services|location|locations|order online)$/i;
+  var good = parts.filter(function (x) { return !generic.test(x); });
+  return (good[0] || parts[0] || '');
 }
