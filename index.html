@@ -1225,6 +1225,111 @@ footer{background:var(--ink-0)}
 .lk-meta ul{list-style:none;border-top:1px solid rgba(255,255,255,.1)}
 .lk-meta li{font-size:.86rem;color:#D4D4D8;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1)}
 @media (max-width:900px){.lk-grid{grid-template-columns:1fr;gap:44px}.lk-img{aspect-ratio:16/11}}
+/* ===== v11 ===== */
+/* Recent work: compact, auto-scrolling, clickable */
+.work{padding:64px 0 56px}
+.work-sticky{position:static;height:auto;overflow:hidden;padding-top:0;gap:30px}
+.work-track{display:flex;width:max-content;gap:0;padding:0;transform:none;animation:marquee 60s linear infinite}
+.work:hover .work-track,.work:focus-within .work-track{animation-play-state:paused}
+.work-row{display:flex;gap:40px;padding-right:40px}
+@keyframes marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.wk-card{opacity:1;transform:none;width:min(720px,78vw)}
+.wk-meta p{margin-bottom:16px}
+@media (prefers-reduced-motion:reduce){.work-track{animation:none}.work-sticky{overflow-x:auto}}
+@media (max-width:820px){.work{padding:48px 0 40px}.wk-card{width:80vw}.work-row{gap:22px;padding-right:22px}}
+
+/* MacBook showcase: white */
+.mac-scroll{background:#fff;color:var(--navy)}
+.mac-sticky::before{background:radial-gradient(closest-side,rgba(0,82,204,.12),transparent)}
+.mac-copy .kicker{color:#64748B}
+.mac-tabs{background:#F1F5F9;border-color:#E2E8F0}
+.mac-tabs button{color:#64748B}
+.mac-tabs button.on{background:#0F172A;color:#fff}
+.mac-progress i{background:#CBD5E1}
+.mac-progress i.on{background:#0F172A}
+.mb-base{box-shadow:0 30px 50px -18px rgba(15,23,42,.35)}
+.mb-bezel{box-shadow:0 0 0 1.5px #b8bbc1,0 0 0 3px #d9dbde,0 30px 60px -30px rgba(15,23,42,.45)}
+.mphone{box-shadow:0 0 0 1.5px #9ca3af,0 30px 60px -20px rgba(15,23,42,.5)}
+.mac-stage .float-card{box-shadow:0 18px 40px -14px rgba(15,23,42,.3),0 0 0 1px rgba(15,23,42,.06)}
+
+/* iPhone overlay: screen fills the frame */
+.mphone{padding:1.4%;border-radius:15% / 7%}
+.mp-screen{border-radius:13.5% / 6.4%}
+.mps{display:flex;flex-direction:column}
+.mp-head{height:34%;padding:24% 8% 7%}
+.mp-list{flex:1;justify-content:space-evenly;padding:3% 6%}
+.mp-item{padding:6px}
+.mp-item>span{width:28%}
+.mp-bar{padding:4% 6% 10%}
+.mp-bar span{padding:9px 0}
+.mps.mp-lg .mp-list{justify-content:flex-start;gap:4px}
+.mps.mp-lg .mp-row{padding:9px 0}
+.mp-rev{display:flex;flex-direction:column;justify-content:center}
+.mp-tform{gap:7px}
+.mp-tform i{height:18px}
+
+/* What missing a website costs you */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--hair)}
+.wy{padding:36px 30px 28px;border-right:1px solid var(--hair);display:flex;flex-direction:column}
+.wy:last-child{border-right:0}
+.wy-vis{position:relative;height:150px;border-radius:12px;background:#F8FAFC;border:1px solid #EEF2F7;margin-bottom:26px;overflow:hidden}
+.wy-stat{display:flex;align-items:baseline;gap:2px;color:#0052CC;line-height:1}
+.wy-num{font-size:clamp(3rem,5vw,4.2rem);font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.wy-pct{font-size:1.8rem;font-weight:600}
+.wy h3{font-size:1.3rem;margin:14px 0 4px}
+.wy-lead{color:#334155;font-size:.98rem}
+.wy-vs{margin:20px 0 16px;border-top:1px solid var(--hair)}
+.wy-vs p{font-size:.92rem;color:#475569;padding:12px 0 12px 22px;border-bottom:1px solid var(--hair);position:relative}
+.wy-vs p span{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.wy-vs p::before{content:"";position:absolute;left:0;top:16px;width:10px;height:10px;border-radius:50%}
+.wy-vs .bad span{color:#DC2626}.wy-vs .bad::before{background:#FCA5A5}
+.wy-vs .good span{color:#0052CC}.wy-vs .good::before{background:#0052CC}
+.wy-src{margin-top:auto;font-family:var(--mono);font-size:.66rem;color:#94A3B8;line-height:1.5}
+@media (max-width:900px){.why-grid{grid-template-columns:1fr}.wy{border-right:0;border-bottom:1px solid var(--hair);padding:30px 4px}}
+/* vis 1: search */
+.wv-search{padding:16px}
+.wv-bar{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:9px 12px;font-size:.82rem;color:#0F172A;box-shadow:0 4px 12px -6px rgba(15,23,42,.15)}
+.wv-bar svg{color:#64748B}
+.wv-typed{overflow:hidden;white-space:nowrap;width:0;animation:type 3.2s steps(16) infinite}
+.wv-caret{width:1.5px;height:14px;background:#0052CC;animation:blink 1s infinite}
+@keyframes type{0%{width:0}40%,85%{width:16ch}100%{width:0}}
+.wv-res{display:flex;align-items:center;gap:8px;margin-top:9px;padding:0 4px;opacity:0;animation:resIn 3.2s infinite}
+.wv-res b{width:38%;height:8px;border-radius:4px;background:#BFDBFE}
+.wv-res i{width:22%;height:8px;border-radius:4px;background:#E2E8F0}
+.wv-res:nth-of-type(2){animation-delay:.15s}.wv-res:nth-of-type(3){animation-delay:.3s}
+.wv-res.ghost b{background:#E2E8F0}
+.wv-res.ghost em{font-style:normal;font-size:.68rem;font-weight:600;color:#DC2626}
+@keyframes resIn{0%,40%{opacity:0;transform:translateY(4px)}50%,90%{opacity:1;transform:none}100%{opacity:0}}
+/* vis 2: social */
+.wv-social{display:flex;align-items:center;justify-content:center}
+.so{position:absolute;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;box-shadow:0 10px 20px -8px rgba(15,23,42,.4);animation:bob 4s ease-in-out infinite}
+.so-fb{background:#1877F2;left:8%;top:14%}
+.so-ig{background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);left:6%;bottom:10%;animation-delay:-1s}
+.so-x{background:#0F172A;right:9%;top:16%;animation-delay:-2s}
+.so-tk{background:#111;right:6%;bottom:10%;animation-delay:-3s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.wv-feed{position:relative;width:42%;display:flex;flex-direction:column;gap:6px}
+.wv-post{display:flex;gap:6px;align-items:center;background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:6px}
+.wv-post i{width:16px;height:16px;border-radius:50%;background:#BFDBFE;flex:none}
+.wv-post b{flex:1;height:7px;border-radius:4px;background:#E2E8F0}
+.wv-post.dim{filter:blur(2px);opacity:.6}
+.wv-lock{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:.68rem;font-weight:600;color:#fff;background:#0F172A;padding:5px 9px;border-radius:6px;animation:pulseLock 2.4s ease-in-out infinite}
+@keyframes pulseLock{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.05)}}
+/* vis 3: ringing phone */
+.wv-call{display:flex;align-items:center;justify-content:center;gap:22px}
+.wv-phone{position:relative;width:58px;height:58px;border-radius:50%;background:#DC2626;color:#fff;display:grid;place-items:center;animation:shake 1.8s ease-in-out infinite}
+.wv-phone svg{position:relative;z-index:1}
+.wv-ring{position:absolute;inset:0;border-radius:50%;border:2px solid #DC2626;animation:ring 1.8s ease-out infinite}
+.wv-ring.r2{animation-delay:.6s}
+@keyframes ring{from{transform:scale(1);opacity:.7}to{transform:scale(2.1);opacity:0}}
+@keyframes shake{0%,40%,100%{transform:rotate(0)}5%,15%,25%{transform:rotate(-12deg)}10%,20%,30%{transform:rotate(12deg)}}
+.wv-missed{display:flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #FECACA;border-radius:10px;padding:8px 14px}
+.wv-missed b{font-size:.68rem;color:#64748B;font-weight:600}
+.wv-count{font-size:1.6rem;font-weight:700;color:#DC2626;font-variant-numeric:tabular-nums;line-height:1.1}
+.wv-toast{position:absolute;left:50%;bottom:12px;transform:translate(-50%,40px);display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:.7rem;font-weight:600;color:#14532D;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:6px 10px;animation:toast 5s ease-in-out infinite}
+.wv-toast svg{color:#16A34A}
+@keyframes toast{0%,45%{transform:translate(-50%,44px);opacity:0}55%,90%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,44px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.wv-typed{width:16ch}.wv-res{opacity:1}.wv-toast{opacity:1;transform:translate(-50%,0)}}
 /* Footer */
 footer{background:#18212C;color:#94A3B8;padding:56px 0 28px;font-size:.93rem}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:40px}
@@ -1473,45 +1578,14 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="section" id="why">
-  <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="kicker"><b>01</b>Why it matters</span>
-      <h2>What Missing a Website Costs You</h2>
-      <p>If people can't find your hours, menu, or phone number in ten seconds, they go somewhere else. Here's where the money slips away.</p>
-    </div>
-    <div class="cards-3">
-      <article class="pcard reveal">
-        <div class="ic"><svg width="26" height="26"><use href="#walk"/></svg></div>
-        <h3>Lost Foot Traffic</h3>
-        <p>Before they head out, most customers pull up your hours, menu, or tonight's specials. No website means they pick the place that had the answer.</p>
-        <span class="stat">80%+ check online before visiting</span>
-      </article>
-      <article class="pcard reveal">
-        <div class="ic"><svg width="26" height="26"><use href="#lock"/></svg></div>
-        <h3>Rented Social Media</h3>
-        <p>Facebook hides your posts behind its algorithm and makes people log in just to see your hours. You're building on land you don't own.</p>
-        <span class="stat">Your page, your rules</span>
-      </article>
-      <article class="pcard reveal">
-        <div class="ic"><svg width="26" height="26"><use href="#phone"/></svg></div>
-        <h3>Missed Bookings & Calls</h3>
-        <p>Stop answering "When do you close?" ten times a shift. Start capturing private party and quote requests 24/7—even while you're slammed.</p>
-        <span class="stat">Leads come in after hours</span>
-      </article>
-    </div>
-  </div>
-</section>
-
 <!-- RECENT WORK: horizontal scroll -->
 <section class="work" id="work" aria-label="Recent work">
   <div class="work-sticky">
     <div class="wrap work-head">
-      <div><span class="kicker"><b>02</b>Recent work</span><h2>Real sites we’ve built.<br><span class="muted">Scroll to look around.</span></h2></div>
+      <div><span class="kicker"><b>01</b>Recent work</span><h2>Real sites we’ve built.<br><span class="muted">Click any site to visit it.</span></h2></div>
       <p>From defense contractors to restaurant software, every site gets the same care: fast, clear and built to bring in business.</p>
     </div>
-    <div class="work-track" id="workTrack">
+    <div class="work-track" id="workTrack"><div class="work-row">
         <article class="wk-card">
           <a class="wk-shot" href="https://cypher-llc.com/" target="_blank" rel="noopener" aria-label="Open Cypher, LLC in a new tab">
             <div class="wk-chrome"><i></i><i></i><i></i><span>cypher-llc.com</span></div>
@@ -1522,7 +1596,6 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
             <h3>Cypher, LLC</h3>
             <span class="wk-cat">Defense &amp; Government</span>
             <p>Cyber, intelligence and engineering services for a Service-Disabled Veteran-Owned Small Business. Dark, enterprise-grade layout built to earn trust with federal buyers.</p>
-            <ul><li>Credentials row</li><li>Capability cards</li><li>Logo carousel</li></ul>
             <a class="wk-link" href="https://cypher-llc.com/" target="_blank" rel="noopener">Visit cypher-llc.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article><article class="wk-card">
@@ -1535,7 +1608,6 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
             <h3>G.H.O.S.T.</h3>
             <span class="wk-cat">AI Platform</span>
             <p>Product site for a self-hosted AI platform of specialist agents. Interactive capability console, live status badges and device-framed product shots.</p>
-            <ul><li>Interactive console</li><li>Stats row</li><li>Contact form</li></ul>
             <a class="wk-link" href="https://ghostplatform.ai/" target="_blank" rel="noopener">Visit ghostplatform.ai <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article><article class="wk-card">
@@ -1548,7 +1620,6 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
             <h3>Chef Nerd AI</h3>
             <span class="wk-cat">Restaurant Software</span>
             <p>Restaurant back-office platform covering accounting, inventory, payroll, scheduling and HR. Friendly mascot, MacBook and iPhone screenshots, demo request flow.</p>
-            <ul><li>Feature tour</li><li>Demo request</li><li>Staff sign-in</li></ul>
             <a class="wk-link" href="https://chefnerdai.com/" target="_blank" rel="noopener">Visit chefnerdai.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article><article class="wk-card">
@@ -1561,13 +1632,124 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
             <h3>TinyAppCode</h3>
             <span class="wk-cat">Online Course</span>
             <p>A free course that teaches anyone to vibe code: build real apps by talking to AI. Clean, light, mobile-first layout that works like an app.</p>
-            <ul><li>Course lessons</li><li>Mobile web app</li><li>Social previews</li></ul>
             <a class="wk-link" href="https://tinyappcode.com/" target="_blank" rel="noopener">Visit tinyappcode.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article>
-      <div class="wk-end"><h3>Your business could be next.</h3><a href="#contact" class="btn btn-amber">Get a Free Mockup <svg width="18" height="18"><use href="#arrow"/></svg></a></div>
+      </div><div class="work-row" aria-hidden="true">
+        <article class="wk-card" aria-hidden="true">
+          <a tabindex="-1" class="wk-shot" href="https://cypher-llc.com/" target="_blank" rel="noopener" aria-label="Open Cypher, LLC in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>cypher-llc.com</span></div>
+            <div class="wk-img" style="background:#15181b"><span class="wk-fb">Cypher, LLC</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcypher-llc.com%2F?w=1440&h=900" alt="Screenshot of the Cypher, LLC website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">01 / 04</span>
+            <h3>Cypher, LLC</h3>
+            <span class="wk-cat">Defense &amp; Government</span>
+            <p>Cyber, intelligence and engineering services for a Service-Disabled Veteran-Owned Small Business. Dark, enterprise-grade layout built to earn trust with federal buyers.</p>
+            <a tabindex="-1" class="wk-link" href="https://cypher-llc.com/" target="_blank" rel="noopener">Visit cypher-llc.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article><article class="wk-card" aria-hidden="true">
+          <a tabindex="-1" class="wk-shot" href="https://ghostplatform.ai/" target="_blank" rel="noopener" aria-label="Open G.H.O.S.T. in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>ghostplatform.ai</span></div>
+            <div class="wk-img" style="background:#050507"><span class="wk-fb">G.H.O.S.T.</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fghostplatform.ai%2F?w=1440&h=900" alt="Screenshot of the G.H.O.S.T. website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">02 / 04</span>
+            <h3>G.H.O.S.T.</h3>
+            <span class="wk-cat">AI Platform</span>
+            <p>Product site for a self-hosted AI platform of specialist agents. Interactive capability console, live status badges and device-framed product shots.</p>
+            <a tabindex="-1" class="wk-link" href="https://ghostplatform.ai/" target="_blank" rel="noopener">Visit ghostplatform.ai <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article><article class="wk-card" aria-hidden="true">
+          <a tabindex="-1" class="wk-shot" href="https://chefnerdai.com/" target="_blank" rel="noopener" aria-label="Open Chef Nerd AI in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>chefnerdai.com</span></div>
+            <div class="wk-img" style="background:#0f172a"><span class="wk-fb">Chef Nerd AI</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchefnerdai.com%2F?w=1440&h=900" alt="Screenshot of the Chef Nerd AI website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">03 / 04</span>
+            <h3>Chef Nerd AI</h3>
+            <span class="wk-cat">Restaurant Software</span>
+            <p>Restaurant back-office platform covering accounting, inventory, payroll, scheduling and HR. Friendly mascot, MacBook and iPhone screenshots, demo request flow.</p>
+            <a tabindex="-1" class="wk-link" href="https://chefnerdai.com/" target="_blank" rel="noopener">Visit chefnerdai.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article><article class="wk-card" aria-hidden="true">
+          <a tabindex="-1" class="wk-shot" href="https://tinyappcode.com/" target="_blank" rel="noopener" aria-label="Open TinyAppCode in a new tab">
+            <div class="wk-chrome"><i></i><i></i><i></i><span>tinyappcode.com</span></div>
+            <div class="wk-img" style="background:#F4F5F7"><span class="wk-fb lt">TinyAppCode</span><img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Ftinyappcode.com%2F?w=1440&h=900" alt="Screenshot of the TinyAppCode website" loading="lazy" onerror="this.remove()"></div>
+          </a>
+          <div class="wk-meta">
+            <span class="wk-n">04 / 04</span>
+            <h3>TinyAppCode</h3>
+            <span class="wk-cat">Online Course</span>
+            <p>A free course that teaches anyone to vibe code: build real apps by talking to AI. Clean, light, mobile-first layout that works like an app.</p>
+            <a tabindex="-1" class="wk-link" href="https://tinyappcode.com/" target="_blank" rel="noopener">Visit tinyappcode.com <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article>
+      </div>
     </div>
-    <div class="work-timeline" aria-hidden="true"><span class="wt-line"><i class="wt-fill"></i></span><span class="wt-dot"></span><div class="wt-ticks"><b></b><b></b><b></b><b></b></div></div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section why2" id="why">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="kicker"><b>02</b>Why it matters</span>
+      <h2>What Missing a Website Costs You</h2>
+      <p>Your customers decide before they leave the house. Here’s what the research says happens when you’re not there to answer, and what changes when you are.</p>
+    </div>
+    <div class="why-grid">
+
+      <article class="wy reveal">
+        <div class="wy-vis wv-search" aria-hidden="true">
+          <div class="wv-bar"><svg width="14" height="14"><use href="#i-search"/></svg><span class="wv-typed">bar open near me</span><i class="wv-caret"></i></div>
+          <div class="wv-res"><b></b><i></i></div><div class="wv-res"><b></b><i></i></div><div class="wv-res ghost"><b></b><i></i><em>No website found</em></div>
+        </div>
+        <div class="wy-stat"><span class="wy-num" data-count="91">0</span><span class="wy-pct">%</span></div>
+        <h3>Lost Foot Traffic</h3>
+        <p class="wy-lead">of consumers search online before visiting a local business.</p>
+        <div class="wy-vs">
+          <p class="bad"><span>Without a site</span>They can’t confirm your hours or menu, so they pick the place that had the answer.</p>
+          <p class="good"><span>With Riverbend</span>Hours, menu and tonight’s specials show up in seconds, on Google and on your own site.</p>
+        </div>
+        <small class="wy-src">Source: Uberall consumer survey (2,000+ consumers in the US, UK, France &amp; Germany)</small>
+      </article>
+
+      <article class="wy reveal">
+        <div class="wy-vis wv-social" aria-hidden="true">
+          <span class="so so-fb"><svg width="22" height="22"><use href="#i-fb"/></svg></span>
+          <span class="so so-ig"><svg width="22" height="22"><use href="#i-ig"/></svg></span>
+          <span class="so so-x"><svg width="18" height="18"><use href="#i-xsocial"/></svg></span>
+          <span class="so so-tk"><svg width="20" height="20"><use href="#i-music"/></svg></span>
+          <div class="wv-feed"><div class="wv-post"><i></i><b></b></div><div class="wv-post dim"><i></i><b></b></div><div class="wv-post dim"><i></i><b></b></div><span class="wv-lock"><svg width="14" height="14"><use href="#lock"/></svg>Log in to see more</span></div>
+        </div>
+        <div class="wy-stat"><span class="wy-num" data-count="1.65" data-dec="2">0</span><span class="wy-pct">%</span></div>
+        <h3>Rented Social Media</h3>
+        <p class="wy-lead">average organic reach of a Facebook Page post. That’s about 1 in 60 followers.</p>
+        <div class="wy-vs">
+          <p class="bad"><span>Without a site</span>The algorithm decides who sees your special, and visitors hit a login wall just to check your hours.</p>
+          <p class="good"><span>With Riverbend</span>Everyone who visits sees everything, no login, on an address you own. Keep posting; we’ll link it all.</p>
+        </div>
+        <small class="wy-src">Source: Socialinsider 2025 Facebook benchmarks</small>
+      </article>
+
+      <article class="wy reveal">
+        <div class="wy-vis wv-call" aria-hidden="true">
+          <div class="wv-phone"><svg width="26" height="26"><use href="#phone"/></svg><span class="wv-ring r1"></span><span class="wv-ring r2"></span></div>
+          <div class="wv-missed"><b>Missed calls</b><span class="wv-count">0</span></div>
+          <div class="wv-toast"><svg width="14" height="14"><use href="#check"/></svg>New party request · 40 guests · 11:42 PM</div>
+        </div>
+        <div class="wy-stat"><span class="wy-num" data-count="78">0</span><span class="wy-pct">%</span></div>
+        <h3>Missed Bookings &amp; Calls</h3>
+        <p class="wy-lead">of consumers say they’ve given up on a business after an unanswered call.</p>
+        <div class="wy-vs">
+          <p class="bad"><span>Without a site</span>You’re slammed on a Friday, the phone rings out, and that party of 40 books somewhere else.</p>
+          <p class="good"><span>With Riverbend</span>Booking and quote forms take requests 24/7 and send them straight to you, even at midnight.</p>
+        </div>
+        <small class="wy-src">Source: CallRail 2025 consumer survey</small>
+      </article>
+
+    </div>
   </div>
 </section>
 
@@ -2374,21 +2556,20 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   addEventListener('scroll',()=>{ if(!rvTick){rvTick=true;requestAnimationFrame(()=>{rvUpdate();rvTick=false;});} },{passive:true});
   addEventListener('resize',rvUpdate); rvUpdate();
 
-  /* Horizontal work carousel driven by vertical scroll */
+
+
+
+  /* Count-up stats + missed-call counter when the why section scrolls in */
   (function(){
-    const sec=$('#work'), track=$('#workTrack'); if(!sec||!track) return;
-    const cards=$$('.wk-card',track);
-    function size(){ const extra=Math.max(0,track.scrollWidth-innerWidth); sec.style.height=(innerHeight+extra)+'px'; sec.dataset.extra=extra; upd(); }
-    function upd(){
-      const extra=+sec.dataset.extra||0; const r=sec.getBoundingClientRect();
-      const p=extra?Math.max(0,Math.min(1,-r.top/extra)):0;
-      track.style.setProperty('--wx',(-p*extra).toFixed(1)+'px');
-      sec.style.setProperty('--wp',p.toFixed(4));
-      const cx=innerWidth/2;
-      cards.forEach(c=>{ const b=c.getBoundingClientRect(); const d=Math.abs(b.left+b.width/2-cx)/(innerWidth*0.6); c.style.setProperty('--fo',Math.max(0,1-d).toFixed(3)); });
-    }
-    addEventListener('scroll',()=>requestAnimationFrame(upd),{passive:true});
-    addEventListener('resize',size); addEventListener('load',size); size();
+    const nums=$$('.wy-num'); const cnt=$('.wv-count'); let done=false;
+    const go=()=>{
+      if(done) return; done=true;
+      nums.forEach(n=>{ const to=+n.dataset.count, dec=+(n.dataset.dec||0); const t0=performance.now();
+        (function step(t){ const k=Math.min(1,(t-t0)/1400), e=1-Math.pow(1-k,3); n.textContent=(to*e).toFixed(dec); if(k<1) requestAnimationFrame(step); })(t0); });
+      if(cnt){ let c=0; const iv=setInterval(()=>{ c++; cnt.textContent=c; if(c>=7) clearInterval(iv); },700); }
+    };
+    const sec=$('#why'); if(!sec) return;
+    if('IntersectionObserver' in window){ const o=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ go(); o.disconnect(); } },{threshold:.25}); o.observe(sec); } else go();
   })();
 
   /* Sticky mobile CTA */
