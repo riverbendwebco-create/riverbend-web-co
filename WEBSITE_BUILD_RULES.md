@@ -133,6 +133,10 @@ These rules come from building and launching riverbendwebco.com. Follow them on 
 | Growth (most popular) | $149/mo, $0 down, first payment due at launch | 6-month minimum, then month-to-month | After 6 consecutive payments |
 | Partner | $299/mo, $0 down, first payment due at launch | 6-month minimum, then month-to-month | After 6 consecutive payments |
 
+**Payment methods:** credit and debit cards through Square, ACH bank transfer, Venmo and PayPal. Listed in the pricing note, FAQ 09, agreement section 5 and the chat assistant `paymethod` answer.
+
+**Main call to action:** "Request Free Web Preview" (no "10-minute chat" wording anywhere).
+
 - Early exit on $0-down plans before 6 months: one-time $299 fee.
 - Add-ons: photo shoot $150 to $300, logo $150 to $250, QR menu and table tents $75, online ordering or reservations setup $150, extra page $100 each, email or text club $49/mo, Google Business Profile management only $99/mo.
 - Market context: $0-down managed website plans commonly run about $149 to $599/mo; Google Business Profile management alone commonly runs $125 to $400/mo. Riverbend sits at the friendly low end on purpose. Do not compete with Wix on price; sell "done for you."
