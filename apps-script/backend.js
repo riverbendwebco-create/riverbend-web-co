@@ -563,7 +563,8 @@ function scanSite_(raw) {
     queue.forEach(function (u) { var txt = ocr_(u); if (txt) { out.menuRead++; menuFromLines_(txt.split(/\r?\n/), out); } });
     out.menuFromPictures = out.items.length - before;
   }
-  if (!out.hours.some(String)) pages.forEach(function (pg) { if (!out.hours.some(String)) hoursFromText_(textOf_(pg.html), out); });
+  if (!out.hours.some(String)) pages.forEach(function (pg) { hoursFromText_(embeddedText_(pg.html), out); });
+  if (out.hours.filter(String).length < 7) pages.forEach(function (pg) { hoursFromText_(textOf_(pg.html), out); });
   out.phone = fmtPhone_(out.phone);
   out.style = styleFromTypes_(types) || guessStyle_(out.name + ' ' + out.category + ' ' + out.about + ' ' + pages.map(function (p) { return p.title; }).join(' '));
   out.items = out.items.slice(0, 60);
@@ -798,6 +799,15 @@ function authorizeWebsiteReader() {
 /* ---------- Menus posted as pictures or PDFs ---------- */
 
 function menuMedia_(html, base, list) {
+  // Any URL in the page source (tags, meta tags, scripts, JSON) that looks like a menu file.
+  var any = /(?:https?:)?[^\s"'()<>,;]*menu[^\s"'()<>,;]*\.(?:png|jpe?g|webp|pdf)(?:\?[^\s"'()<>]*)?/gi, mm;
+  while ((mm = any.exec(html)) && list.length < 8) {
+    var raw = mm[0].replace(/\\\//g, '/').replace(/^[^h\/]*(?=https?:|\/)/i, '');
+    var u0 = absUrl_(raw, base);
+    if (!u0 || /lazy-load-placeholder|logo|thumb|-\d+x\d+\./i.test(u0)) continue;
+    var key = u0.replace(/\?.*$/, '');
+    if (!list.some(function (x) { return x.replace(/\?.*$/, '') === key; })) list.push(u0);
+  }
   var re = /<(a|img)\b[^>]*>/gi, m;
   while ((m = re.exec(html)) && list.length < 8) {
     var tag = m[0];
@@ -904,4 +914,20 @@ function bizFromTitle_(t) {
   var generic = /^(home|homepage|welcome|food|menu|menus|our menu|drinks|bar|about|about us|contact|contact us|events|hours|gallery|testimonials|services|location|locations|order online)$/i;
   var good = parts.filter(function (x) { return !generic.test(x); });
   return (good[0] || parts[0] || '');
+}
+
+/* Text that a site injects with JavaScript (HTML inside script strings),
+   e.g. hours added by jQuery after the page loads. */
+function embeddedText_(html) {
+  var out = [], sre = /<script\b[^>]*>([\s\S]*?)<\/script>/gi, m;
+  while ((m = sre.exec(html))) {
+    var js = m[1];
+    if (!/(mon|tues|wednes|thurs|fri|satur|sun)day/i.test(js) || js.indexOf('<') < 0) continue;
+    var str = /(["'])((?:\\.|(?!\1).){10,4000}?)\1/g, q;
+    while ((q = str.exec(js))) {
+      var v = q[2];
+      if (/</.test(v) && /(mon|tues|wednes|thurs|fri|satur|sun)day/i.test(v)) out.push(textOf_(v.replace(/\\(["'\/])/g, '$1')));
+    }
+  }
+  return out.join('\n');
 }
