@@ -253,7 +253,9 @@ function western(C){
         (C.tel&&/private|party|parties|event|book|reserv|rent|catering/i.test(s.title+' '+(s.when||'')))?h('a',{class:'wx-btn wx-red wx-sm wx-book',href:C.tel},ico('phone',16,''),'Call to book: '+C.phoneTxt):null)); }))):null;
 
   const favs=pickFavs(C);
-  const favEl=favs.length===3?h('section',{class:'wx-sec rv',id:'w-favs'},head2('','Off the menu','House Favorites','What regulars order.'),
+  const favEl=favs.length===3?h('section',{class:'wx-sec rv wx-favsec',id:'w-favs'},
+    C.items.length?h('button',{type:'button',class:'wx-jump',onclick:()=>scrollTo('w-menu')},'Full menu',h('span',{'aria-hidden':'true'},'↓')):null,
+    head2('','Off the menu','House Favorites','What regulars order.'),
     h('div',{class:'wx-favs'},favs.map((i,ix)=>h('article',{class:'wx-fav'},
       bg(h('div',{class:'ph'},i.price?h('span',{class:'wx-pr'},i.price):null),C.itemPic(i)||C.venue(ix)),
       h('div',{class:'b'},i.group&&i.group!=='Menu'?h('small',null,i.group):null,h('h3',null,i.name),h('p',null,heat(short(i.desc,220)))))))):null;
@@ -294,7 +296,7 @@ function western(C){
     C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name),
     h('span',null,'© '+new Date().getFullYear()+' '+C.name+(C.addr?' · '+[C.addr,C.city].filter(Boolean).join(', '):'')),
     h('span',null,'Site by Riverbend Web Co.')));
-  const page=h('div',{class:'demo western on'},top,nav,heroEl,menu,favEl,spot,strip,storyEl,revEl,visit,foot);
+  const page=h('div',{class:'demo western on'},top,nav,heroEl,favEl,menu,spot,strip,storyEl,revEl,visit,foot);
   page.style.setProperty('--wn',C.navy); page.style.setProperty('--wr',C.red);
   if(/^[a-z]{3,20}$/.test(C.variant||'')) page.classList.add('v-'+C.variant);
   return page;

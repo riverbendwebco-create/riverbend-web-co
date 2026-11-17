@@ -574,6 +574,11 @@ body.t-western{background:#fff}
 .wx-lb .nav{display:flex;justify-content:space-between;padding:12px 16px}
 .wx-spicy{white-space:nowrap;font-weight:700;color:#9A3412}
 .wx-heat{width:15px;height:15px;color:#C2410C;vertical-align:-2px;margin-left:3px}
+.wx-favsec{position:relative}
+.wx-jump{position:absolute;top:28px;right:max(24px,calc((100vw - 1180px)/2));display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--wline);background:#fff;color:var(--wbd);font-family:var(--ws);font-weight:700;font-size:.85rem;cursor:pointer;box-shadow:0 8px 20px -14px rgba(42,33,28,.5)}
+.wx-jump:hover{border-color:var(--wb)}
+.wx-jump span{font-size:1rem;line-height:1}
+@media (max-width:640px){.wx-jump{top:14px;right:14px;height:32px;padding:0 10px;font-size:.78rem}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 
 </style>
@@ -885,7 +890,9 @@ function western(C){
         (C.tel&&/private|party|parties|event|book|reserv|rent|catering/i.test(s.title+' '+(s.when||'')))?h('a',{class:'wx-btn wx-red wx-sm wx-book',href:C.tel},ico('phone',16,''),'Call to book: '+C.phoneTxt):null)); }))):null;
 
   const favs=pickFavs(C);
-  const favEl=favs.length===3?h('section',{class:'wx-sec rv',id:'w-favs'},head2('','Off the menu','House Favorites','What regulars order.'),
+  const favEl=favs.length===3?h('section',{class:'wx-sec rv wx-favsec',id:'w-favs'},
+    C.items.length?h('button',{type:'button',class:'wx-jump',onclick:()=>scrollTo('w-menu')},'Full menu',h('span',{'aria-hidden':'true'},'↓')):null,
+    head2('','Off the menu','House Favorites','What regulars order.'),
     h('div',{class:'wx-favs'},favs.map((i,ix)=>h('article',{class:'wx-fav'},
       bg(h('div',{class:'ph'},i.price?h('span',{class:'wx-pr'},i.price):null),C.itemPic(i)||C.venue(ix)),
       h('div',{class:'b'},i.group&&i.group!=='Menu'?h('small',null,i.group):null,h('h3',null,i.name),h('p',null,heat(short(i.desc,220)))))))):null;
@@ -926,7 +933,7 @@ function western(C){
     C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name),
     h('span',null,'© '+new Date().getFullYear()+' '+C.name+(C.addr?' · '+[C.addr,C.city].filter(Boolean).join(', '):'')),
     h('span',null,'Site by Riverbend Web Co.')));
-  const page=h('div',{class:'demo western on'},top,nav,heroEl,menu,favEl,spot,strip,storyEl,revEl,visit,foot);
+  const page=h('div',{class:'demo western on'},top,nav,heroEl,favEl,menu,spot,strip,storyEl,revEl,visit,foot);
   page.style.setProperty('--wn',C.navy); page.style.setProperty('--wr',C.red);
   if(/^[a-z]{3,20}$/.test(C.variant||'')) page.classList.add('v-'+C.variant);
   return page;

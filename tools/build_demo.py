@@ -327,6 +327,11 @@ body.t-western{background:#fff}
 .wx-lb .nav{display:flex;justify-content:space-between;padding:12px 16px}
 .wx-spicy{white-space:nowrap;font-weight:700;color:#9A3412}
 .wx-heat{width:15px;height:15px;color:#C2410C;vertical-align:-2px;margin-left:3px}
+.wx-favsec{position:relative}
+.wx-jump{position:absolute;top:28px;right:max(24px,calc((100vw - 1180px)/2));display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--wline);background:#fff;color:var(--wbd);font-family:var(--ws);font-weight:700;font-size:.85rem;cursor:pointer;box-shadow:0 8px 20px -14px rgba(42,33,28,.5)}
+.wx-jump:hover{border-color:var(--wb)}
+.wx-jump span{font-size:1rem;line-height:1}
+@media (max-width:640px){.wx-jump{top:14px;right:14px;height:32px;padding:0 10px;font-size:.78rem}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 
