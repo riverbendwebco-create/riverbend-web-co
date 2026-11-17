@@ -2683,7 +2683,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <script>
 /* Form delivery: set RB_FORM_URL to the Google Apps Script web app URL to send branded emails.
    Leave empty to fall back to FormSubmit. */
-const RB_FORM_URL='';
+const RB_FORM_URL='https://script.google.com/macros/s/AKfycbwkosfcFSHGXy8EUaAFZ7Q-SFDFllV_k4n8qBABRxoj2hv59RspTU9APLQabwP_ohaW/exec';
 function rbSend(kind,fields,file){
   return fetch(RB_FORM_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind,fields,file})})
     .then(r=>r.ok?r.json():Promise.reject()).then(j=>{ if(!j||!j.ok) throw 0; return j; });
