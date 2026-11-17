@@ -579,6 +579,10 @@ body.t-western{background:#fff}
 .wx-jump:hover{border-color:var(--wb)}
 .wx-jump span{font-size:1rem;line-height:1}
 @media (max-width:640px){.wx-jump{top:14px;right:14px;height:32px;padding:0 10px;font-size:.78rem}}
+.wx-strip{position:relative}
+.wx-strip button.ph{border:0;padding:0;cursor:zoom-in;transition:filter .2s}
+.wx-strip button.ph:hover{filter:brightness(1.12)}
+.wx-more{position:absolute;right:16px;bottom:16px;height:38px;padding:0 14px;border-radius:8px;border:0;background:rgba(20,16,14,.78);color:#fff;font-weight:700;font-size:.88rem;cursor:pointer}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 
 </style>
@@ -913,10 +917,11 @@ function western(C){
     menu=h('section',{class:'wx-sec wx-soft rv',id:'w-menu'},head2('','Food & drinks','The Menu',openNow?'Kitchen and bar open today '+C.today:null),tabs,h('div',{class:'wx-mgrid'},photo,list));
   }
 
-  const strip=C.own.length>=2?h('div',{class:'wx-strip rv','aria-hidden':'true'},C.own.slice(0,4).map(u=>bg(h('div',{class:'ph'}),u))):null;
+  const strip=C.own.length>=2?h('div',{class:'wx-strip rv'},C.own.slice(0,4).map((u,ix)=>bg(h('button',{type:'button',class:'ph','aria-label':'Open photo gallery',onclick:()=>gallery(C.own,'Inside '+C.name,ix)}),u)),
+    C.own.length>4?h('button',{type:'button',class:'wx-more',onclick:()=>gallery(C.own,'Inside '+C.name,4)},'See all '+C.own.length+' photos'):null):null;
 
   const storyEl=C.about?h('section',{class:'wx-band rv',id:'w-story'},h('div',{class:'wx-story'},
-    bg(h('div',{class:'ph'}),C.own[0]||C.venue(1)),
+    bg(h('div',{class:'ph'}),C.own[4]||C.own[0]||C.venue(1)),
     h('div',{class:'b'},h('div',{class:'wx-kick'},stars(3),h('span',null,'Our Story')),h('h2',null,'Welcome to '+C.name),h('p',null,storyTxt||C.about),
       h('div',{class:'wx-acts'},C.tel?h('a',{class:'wx-btn wx-red',href:C.tel},ico('phone',18,''),C.phoneTxt):null,C.email?h('a',{class:'wx-btn wx-ghost',href:'mailto:'+C.email},'Email us'):null)))):null;
 
@@ -947,10 +952,10 @@ function heroReview(C){
   return card;
 }
 /* Simple photo viewer for a special's pictures */
-function gallery(list,title){
-  let i=0; const im=h('img',{alt:title,src:list[0]});
+function gallery(list,title,start){
+  let i=start||0; const im=h('img',{alt:title,src:list[i]});
   const go=d=>{ i=(i+d+list.length)%list.length; im.src=list[i]; cnt.textContent=(i+1)+' / '+list.length; };
-  const cnt=h('span',null,'1 / '+list.length);
+  const cnt=h('span',null,(i+1)+' / '+list.length);
   const close=()=>{ box.remove(); document.removeEventListener('keydown',key); };
   const key=e=>{ if(e.key==='Escape') close(); if(e.key==='ArrowRight') go(1); if(e.key==='ArrowLeft') go(-1); };
   const box=h('div',{class:'wx-lb',role:'dialog','aria-label':title,onclick:e=>{ if(e.target===box) close(); }},
