@@ -446,7 +446,7 @@ body.t-western{background:#fff}
 @media (max-width:640px){.wx-hero{padding:52px 18px;min-height:0}.wx-sec,.wx-band{padding:56px 18px}.wx-ticket{flex-direction:column}.wx-ticket div{border-left:0;border-top:2px dashed var(--wline)}.wx-ticket div:first-child{border-top:0}.wx-acts .wx-btn{flex:1 1 auto}.wx-brand img{height:46px}.wx-top{font-size:.74rem}.wx-sp{flex-direction:column}.wx-foot span:last-child{margin-left:0}}
 /* ===== Western warmth (amber, leather, firelight) ===== */
 .western{--wa:#D9963A;--wa2:#F2C27A;--wb:#6B3F26;--wbd:#2E1C12}
-.western .ph{filter:saturate(1.08) sepia(.1)}
+.western .ph:not(.wx-hero){filter:saturate(1.08) sepia(.1)}
 .western .wx-stars{color:var(--wa)}
 .wx-top{background:linear-gradient(90deg,var(--wr),#C2412D 50%,var(--wr))}
 .wx-top .wx-stars,.wx-hero .wx-kick .wx-stars,.wx-story .wx-stars{color:var(--wa2)!important}
@@ -515,7 +515,7 @@ body.t-western{background:#fff}
 .v-ranch .wx-hero{background-position:center 60%}
 /* ----- Calm tone for all western styles: dim-bar mood, colors kept but muted ----- */
 .western{--wa:#B98A55;--wa2:#D9B48A;--wb:#5A4234;--wbd:#2A211C}
-.western .ph{filter:saturate(.88) sepia(.12) brightness(.96)}
+.western .ph:not(.wx-hero){filter:saturate(.88) sepia(.12) brightness(.96)}
 .western .wx-red{box-shadow:none!important}
 .western .wx-btn:hover{transform:none}
 .wx-top{background:var(--wn)!important;font-weight:600;letter-spacing:.12em;opacity:.97}
