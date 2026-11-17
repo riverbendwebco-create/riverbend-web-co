@@ -116,6 +116,12 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 80px}
 .rows{display:flex;flex-direction:column;gap:10px}
 .row{display:grid;grid-template-columns:130px 1fr 100px auto;gap:8px;align-items:start;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px}
 .row textarea.i{min-height:42px;grid-column:1/-1}
+.add-tools{display:flex;gap:8px;flex-wrap:wrap}
+.paste{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:10px;background:#F8FAFC}
+.paste .hint{font-size:.82rem;color:#64748B;margin:0 0 10px}
+.paste textarea.i{min-height:200px;font-size:.88rem}
+.paste-acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.paste-msg{font-size:.84rem;color:#64748B}
 .row.sp-row{grid-template-columns:1fr 160px auto}
 .row-tools{display:flex;gap:6px}
 .add-row{margin-top:10px}
@@ -324,7 +330,14 @@ body.editing .as{bottom:86px;height:min(620px,calc(100vh - 170px))}
             <h2 id="itemsTitle">Menu</h2>
             <p class="sub" id="itemsSub">Group items by section, like Burgers or Drinks. Price is optional.</p>
             <div class="rows" id="items"></div>
-            <button type="button" class="btn btn-ghost btn-sm add-row" id="addItem"><svg width="14" height="14"><use href="#i-plus"/></svg><span>Add item</span></button>
+            <div class="add-tools"><button type="button" class="btn btn-ghost btn-sm add-row" id="addItem"><svg width="14" height="14"><use href="#i-plus"/></svg><span>Add item</span></button>
+            <button type="button" class="btn btn-ghost btn-sm add-row" id="pasteToggle">Paste a whole menu</button></div>
+            <div class="paste hidden" id="pasteBox">
+              <label class="f" for="pasteIn">Paste the menu as text</label>
+              <p class="hint">One item per line with its price. A line without a price, like BURGERS, starts a new section. Put a description after a dash, or on the next line.</p>
+              <textarea class="i" id="pasteIn" rows="9" placeholder="BURGERS&#10;Mason Burger $14.99 - Half-pound burger with Applewood bacon and Pepperjack&#10;Angus Burger $13.99&#10;&#10;SANDWICHES&#10;Reuben $15.99&#10;Slow-roasted corned beef, sauerkraut and Swiss on marble rye"></textarea>
+              <div class="paste-acts"><button type="button" class="btn btn-primary btn-sm" id="pasteReplace">Replace the menu</button><button type="button" class="btn btn-ghost btn-sm" id="pasteAdd">Add to the menu</button><span class="paste-msg" id="pasteMsg"></span></div>
+            </div>
           </div>
 
           <div class="panel" id="p-specials">
@@ -593,6 +606,39 @@ function addSpecial(it){
   list.append(row); return row;
 }
 $('#addItem').addEventListener('click',()=>{addItem().querySelector('.r-name').focus();setDirty(true);});
+/* Paste a whole menu as text */
+function parseMenuText(txt){
+  const P=/\$?\s?\d{1,3}(?:[.,]\d{2})(?!\d)|\$\s?\d{1,3}(?![\d.,])/;
+  const items=[]; let group='', last=null;
+  const tidy=t=>t.replace(/[\s.\u2026:\-\u2013\u2014|]+$/,'').replace(/^[\s\-\u2013\u2014\u2022*]+/,'').trim();
+  const cap=t=>t===t.toUpperCase()&&/[A-Z]/.test(t)?t.toLowerCase().replace(/(^|[\s(\/-])([a-z])/g,(_,a,c)=>a+c.toUpperCase()).replace(/\b([a-z])\.([a-z])\.([a-z])\.?/gi,(m)=>m.toUpperCase()):t;
+  String(txt||'').split(/\r?\n/).map(l=>l.trim()).forEach(l=>{
+    if(!l){ last=null; return; }
+    const m=l.match(P);
+    if(m&&/[a-z]/i.test(l.slice(0,m.index))){
+      let name=tidy(l.slice(0,m.index)); if(/^([a-z]\.)+[a-z]$/i.test(name)) name+='.'; let price=m[0].replace(/\s/g,'').replace(',','.'); if(price[0]!=='$') price='$'+price;
+      const desc=tidy(l.slice(m.index+m[0].length).replace(/^[\s\-\u2013\u2014:|]+/,''));
+      last={group:group,name:name.slice(0,80),price:price.replace(/\.00$/,''),desc:desc.slice(0,240)}; items.push(last); return;
+    }
+    const heading=!m&&l.length<=40&&(l===l.toUpperCase()||/:$/.test(l))&&/[a-z]/i.test(l);
+    if(heading){ group=cap(tidy(l)).slice(0,40); last=null; return; }
+    if(last){ last.desc=(last.desc?last.desc+' ':'')+l; last.desc=last.desc.slice(0,240); return; }
+    if(!m&&l.length<=60){ last={group:group,name:tidy(l).slice(0,80),price:'',desc:''}; items.push(last); }
+  });
+  return items.filter(i=>i.name);
+}
+$('#pasteToggle').addEventListener('click',()=>{ const b=$('#pasteBox'); b.classList.toggle('hidden'); if(!b.classList.contains('hidden')) $('#pasteIn').focus(); });
+function usePaste(replace){
+  const items=parseMenuText($('#pasteIn').value);
+  if(!items.length){ $('#pasteMsg').textContent='I couldn’t find any items. Put each item on its own line with a price.'; return; }
+  if(replace) $('#items').replaceChildren();
+  items.forEach(addItem); setDirty(true);
+  const groups=new Set(items.map(i=>i.group).filter(Boolean)).size;
+  $('#pasteIn').value=''; $('#pasteBox').classList.add('hidden'); $('#pasteMsg').textContent='';
+  toast('Added '+items.length+' item'+(items.length>1?'s':'')+(groups?' in '+groups+' section'+(groups>1?'s':''):'')+'. Check them, then save.');
+}
+$('#pasteReplace').addEventListener('click',()=>usePaste(true));
+$('#pasteAdd').addEventListener('click',()=>usePaste(false));
 $('#addSpecial').addEventListener('click',()=>{addSpecial().querySelector('.s-title').focus();setDirty(true);});
 $('#copyHours').addEventListener('click',()=>{const m=$('[data-day="0"]').value;for(let i=1;i<5;i++)$('[data-day="'+i+'"]').value=m;setDirty(true);});
 

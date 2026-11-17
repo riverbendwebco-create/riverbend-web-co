@@ -876,7 +876,17 @@ function menuFromLines_(rawLines, out) {
   var PONLY = /^\s*\$?\s?\d{1,3}[.,]\d{2}\s*$|^\s*\$\s?\d{1,3}\s*$/;
   var lines = rawLines.map(function (l) { return clip_(l.replace(/[\u2022\u00B7|]+/g, ' '), 200); }).filter(function (l) { return l && l.length > 1; });
   var group = '', pendingNames = [], pendingDesc = {};
-  var isHeading = function (l) { return l.length >= 3 && l.length <= 32 && !P.test(l) && /[A-Z]/.test(l) && l === l.toUpperCase() && !/^\d/.test(l) && !/(ST\.|IA\b|DUBUQUE|SALOON|CONSUMING|WWW|HTTP)/.test(l); };
+  // Lines that are the business name, its address or fine print (common on menu pictures), never menu items
+  var bizWords = String(out.name || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(function (w) { return w.length > 2; });
+  var isNoise = function (l) {
+    var t = l.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!t) return true;
+    if (/^\d{1,5} [a-z0-9 ]*\b(st|street|ave|avenue|rd|road|blvd|dr|drive|hwy|highway|ln|lane|way|ct|court|pl|place)\b/.test(t)) return true;
+    if (/\b(ia|iowa|il|wi)\b \d{5}\b/.test(t) || /\b(www|http|consuming raw|foodborne|gratuity|prices subject)\b/.test(t)) return true;
+    if (bizWords.length && t.split(' ').every(function (w) { return bizWords.indexOf(w) >= 0; })) return true;
+    return false;
+  };
+  var isHeading = function (l) { return l.length >= 3 && l.length <= 32 && !P.test(l) && /[A-Z]/.test(l) && l === l.toUpperCase() && !/^\d/.test(l) && !isNoise(l); };
   var looksName = function (l) { return l.length >= 3 && l.length <= 48 && !P.test(l) && /^[A-Z0-9'"(]/.test(l) && l.split(' ').length <= 7 && !/[.!?]$/.test(l) && !/^(served|choose|our|your|enjoy|add|homemade|other|with|on|and|topped|includes|comes)\b/i.test(l); };
   var fmt = function (p) { p = p.replace(/\s/g, '').replace(',', '.'); if (p.charAt(0) !== '$') p = '$' + p; return p.replace(/\.00$/, ''); };
   var flush = function () { pendingNames = []; };
@@ -890,6 +900,7 @@ function menuFromLines_(rawLines, out) {
   };
   for (var i = 0; i < lines.length && out.items.length < 60; i++) {
     var l = lines[i];
+    if (/[a-z]{2}/i.test(l) && isNoise(l.replace(P, ''))) continue;
     if (isHeading(l)) { group = l.replace(/[*\s]+$/, '').toLowerCase().replace(/(^|[\s(\-\/])(\w)/g, function (_, a, c) { return a + c.toUpperCase(); }); flush(); continue; }
     if (PONLY.test(l)) {
       if (pendingNames.length) { var nm = pendingNames.shift(); push(nm.g, nm.n, fmt(l), nm.d || ''); }
