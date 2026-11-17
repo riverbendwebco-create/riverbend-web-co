@@ -25,7 +25,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 <style>
 :root{
   --navy:#0F172A; --navy-2:#1E293B; --ink:#1E293B; --slate:#64748B; --slate-2:#94A3B8; --line:#E2E8F0;
@@ -889,6 +889,161 @@ h1,h2,h3,h4{font-family:var(--font-h);line-height:1.1;letter-spacing:-.01em}
 .pub-hh .ico{width:17px;height:17px;vertical-align:-.25em}
 .hero-proof .ico{width:14px;height:14px;color:#4ADE80}
 
+/* ===== Apple-style typography & shape system ===== */
+:root{--font-h:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Segoe UI",system-ui,sans-serif;--font-b:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",system-ui,sans-serif;--radius:12px}
+body{letter-spacing:-.006em}
+h1,h2,h3,h4{font-weight:700;letter-spacing:-.025em}
+.hero h1{font-weight:700;letter-spacing:-.035em;line-height:1.04}
+.section-head h2,.local-copy h2,.contact h2{letter-spacing:-.03em;font-weight:700}
+.eyebrow{letter-spacing:.06em;font-weight:600}
+.section{padding:110px 0}
+/* tighter corners on boxes */
+.pcard,.plan,.vs-card,.form-card,.terms-strip,.faq-item,.guar,.dcard,.term-badge,.term-cta,.tr-svc,.proj,.tr-rev,.spot-card,.panel,.menu-list,.menu-photo,.note-card,.chef,.terms-sec,.plan-pick .pc,.sig-pad,.signed-stamp,.success .next,.area{border-radius:12px}
+.modal-box,.agree-box{border-radius:16px}
+.btn{border-radius:10px}
+.field input,.ag-fields input,.types span,.form-card .note,.pay-sum div{border-radius:10px}
+.pcard .ic,.guar .ic,.term-badge .ic,.trust-item .ic,.vs-fb .logo-fb,.vs-rw .logo-rw{border-radius:10px}
+/* no pills: square-ish tags */
+.pill,.pcard .stat,.dbody li,.plan .ribbon,.vs-rw .tagline,.terms-strip h4 span,.ag-title span,.story-step .time,.sp-checks li,.sp-gbtns span,.time,.mac-tabs button,.sig-tabs,.sig-tabs button,.hero .pill{border-radius:6px}
+.faq-q .pm{border-radius:8px}
+/* Google bubbles: no beige */
+.float-card{background:rgba(255,255,255,.97);border-radius:14px}
+.fc-rating .ic{background:#EAF1FF;color:#0052CC}
+.fc-dir .ic{background:#EAF1FF;color:#0052CC}
+.fc-dir .up{color:#0052CC}
+
+/* ===== Hero: centered, Apple-style ===== */
+.hero .wrap{grid-template-columns:1fr;text-align:center;justify-items:center;padding-top:120px;padding-bottom:110px;gap:0}
+.hero h1{font-size:clamp(2.6rem,6.4vw,5rem);max-width:980px;margin:22px auto 22px}
+.hero p.lead{margin:0 auto 34px;max-width:640px;font-size:clamp(1.08rem,1.6vw,1.3rem);color:#C7D0DD}
+.hero-ctas{justify-content:center}
+.hero-proof{justify-content:center}
+
+/* ===== MacBook scroll showcase ===== */
+.mac-scroll{position:relative;height:340vh;background:#000;color:#F5F5F7}
+.mac-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,34px);overflow:hidden;padding-top:68px}
+.mac-sticky::before{content:"";position:absolute;width:1100px;height:700px;left:50%;top:58%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(0,82,204,.32),transparent);pointer-events:none}
+.mac-copy{position:relative;text-align:center;opacity:calc(.25 + var(--open,0)*.75)}
+.mac-copy .eyebrow{color:#60A5FA}
+.mac-title{position:relative;height:1.2em;font-size:clamp(1.5rem,3.4vw,2.6rem);margin:8px 0 14px;font-weight:700;letter-spacing:-.03em}
+.mac-title .mt{position:absolute;left:50%;top:0;transform:translate(-50%,10px);white-space:nowrap;opacity:0;transition:opacity .45s,transform .45s}
+.mac-title .mt.on{opacity:1;transform:translate(-50%,0)}
+.mac-tabs{display:inline-flex;gap:4px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:4px;border-radius:10px}
+.mac-tabs button{background:none;border:0;color:#A1A1A6;font:inherit;font-size:.86rem;font-weight:600;padding:8px 14px;cursor:pointer;transition:all .2s}
+.mac-tabs button.on{background:#fff;color:#000}
+.mac-stage{position:relative;width:min(900px,88vw);transform:scale(calc(.82 + var(--open,0)*.18));transform-origin:center bottom;transition:transform .1s linear}
+/* laptop */
+.mb{position:relative;width:100%;perspective:2200px}
+.mb-lid{position:relative;width:82%;margin:0 auto;transform-origin:center bottom;transform:rotateX(calc((1 - var(--open,0)) * -88deg));transition:transform .1s linear;transform-style:preserve-3d}
+.mb-bezel{position:relative;aspect-ratio:16/10.4;background:#0b0b0c;border-radius:18px 18px 4px 4px;padding:2.1% 2.1% 3.2%;box-shadow:0 0 0 1.5px #b8bbc1,0 0 0 3px #2b2d31,0 -1px 30px rgba(0,0,0,.4)}
+.mb-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:11%;height:3.4%;background:#0b0b0c;border-radius:0 0 8px 8px;z-index:3;display:flex;align-items:center;justify-content:center}
+.mb-notch i{width:5px;height:5px;border-radius:50%;background:#1d2733;box-shadow:inset 0 0 1px 1px #33475f}
+.mb-screen{position:relative;width:100%;height:100%;overflow:hidden;border-radius:6px;background:#111}
+.mb-base{position:relative;height:clamp(10px,1.7vw,18px);margin:0 auto;width:100%;background:linear-gradient(#e2e4e7 0%,#c9ccd1 35%,#9fa3a9 100%);border-radius:2px 2px 16px 16px / 2px 2px 100% 100%;box-shadow:0 30px 60px -12px rgba(0,0,0,.8)}
+.mb-base::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#8e9297,#eef0f2 8%,#f5f6f7 50%,#eef0f2 92%,#8e9297)}
+.mb-groove{position:absolute;top:0;left:50%;transform:translateX(-50%);width:16%;height:42%;background:linear-gradient(#a6aab0,#c9ccd1);border-radius:0 0 10px 10px}
+/* screen content (demo "screenshots") */
+.mbs{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;font-family:var(--font-b)}
+.mbs.on{opacity:1}
+.mbs>div{position:absolute;inset:0}
+.w-nav{display:flex;align-items:center;gap:2.2%;padding:2.2% 3.5%;font-size:clamp(5px,.95vw,10px);font-weight:600}
+.w-nav span{opacity:.8}
+.w-nav .w-logo,.w-nav .w-serif,.w-nav .w-trade{margin-right:auto}
+.w-nav em,.w-btns em{font-style:normal;font-weight:800;padding:.6em 1.1em;border-radius:5px;white-space:nowrap}
+.w-nav.w-dk{color:#E7E5E4}
+.w-logo{font-weight:800;letter-spacing:.08em;line-height:1;font-size:1.25em}
+.w-logo small{display:block;color:#E8A33D;font-size:.55em;letter-spacing:.3em;margin-top:2px}
+.gold{background:#E8A33D;color:#1a1205}
+.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.brass{background:#D6B97B;color:#0C0A09}
+.green{background:#16A34A;color:#fff}
+.w-body{padding:3% 6% 0;max-width:62%;color:#fff}
+.w-badge{display:inline-flex;align-items:center;gap:6px;font-size:clamp(5px,.9vw,10px);font-weight:700;color:#BBF7D0;background:rgba(22,101,52,.45);border:1px solid rgba(74,222,128,.55);padding:.45em 1em;border-radius:6px;box-shadow:0 0 18px rgba(74,222,128,.35)}
+.w-badge i{width:6px;height:6px;border-radius:50%;background:#4ADE80;box-shadow:0 0 8px #4ADE80}
+.w-h{font-weight:800;line-height:.98;margin:3% 0 2%;font-size:clamp(14px,3.3vw,36px);letter-spacing:-.01em}
+.w-h.w-pub{text-transform:uppercase}
+.w-h.w-pub span{color:#F2B455}
+.w-p{font-size:clamp(6px,1vw,11px);color:#E7E5E4;max-width:80%;line-height:1.5}
+.w-btns{display:flex;gap:6px;margin-top:3%;font-size:clamp(5px,.9vw,10px)}
+.w-strip{position:absolute;left:4%;right:4%;bottom:4%;display:grid;grid-template-columns:repeat(4,1fr);gap:1.2%}
+.w-strip div{aspect-ratio:16/8;border-radius:6px;position:relative;border:1px solid rgba(255,255,255,.15)}
+.w-strip span,.w-proj span{position:absolute;left:6%;bottom:7%;font-size:clamp(5px,.85vw,10px);font-weight:700;color:#fff;text-shadow:0 1px 6px #000}
+.mbs-lounge{background:#0C0A09;color:#E7E5E4}
+.w-nav.w-lg{border-bottom:1px solid #292524;color:#A8A29E;letter-spacing:.14em}
+.w-serif{font-family:Georgia,serif;font-style:italic;font-weight:400;letter-spacing:0;color:#D6B97B;font-size:1.5em}
+.lg-split{display:grid;grid-template-columns:1fr 1.15fr;gap:3%;padding:4% 4% 0;height:82%}
+.lg-left{align-self:center}
+.w-eyebrow{font-size:clamp(4px,.75vw,8px);letter-spacing:.24em;color:#D6B97B}
+.w-h.w-ser{font-family:Georgia,serif;font-weight:400;font-size:clamp(14px,3vw,32px);line-height:1.1;color:#FAFAF9;margin:4% 0}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px}
+.lg-grid .big{grid-row:1/3}
+.lg-grid div{border-radius:4px}
+.mbs-trade{background:#fff;color:#0F172A}
+.w-nav.w-lt{border-bottom:1px solid #E2E8F0;color:#334155}
+.w-trade{display:flex;align-items:center;gap:4px;color:#1D4ED8;font-weight:800;font-size:1.2em}
+.tr-hero2{display:grid;grid-template-columns:1.2fr .8fr;gap:5%;align-items:center;padding:5% 5%;height:58%}
+.w-h.w-tr{color:#fff;font-size:clamp(12px,2.6vw,28px);line-height:1.08;font-weight:800}
+.w-chips{display:flex;gap:4px;flex-wrap:wrap}
+.w-chips span{background:#fff;color:#0F172A;font-size:clamp(4px,.8vw,9px);font-weight:700;padding:.4em .8em;border-radius:4px}
+.w-form{background:#fff;border-radius:8px;padding:6%;display:flex;flex-direction:column;gap:6px;border-top:3px solid #16A34A;font-size:clamp(5px,.95vw,11px)}
+.w-form i{height:clamp(8px,1.6vw,18px);border:1px solid #CBD5E1;border-radius:4px}
+.w-form em{font-style:normal;text-align:center;padding:.6em;border-radius:5px;background:#16A34A;color:#fff;font-weight:800}
+.w-proj{display:grid;grid-template-columns:repeat(3,1fr);gap:2%;padding:3% 5%}
+.w-proj div{aspect-ratio:16/8.5;border-radius:6px;position:relative}
+/* iPhone overlay */
+.mphone{position:absolute;right:-2%;bottom:-3%;width:22%;min-width:120px;aspect-ratio:9/19.3;border-radius:16% / 7.5%;padding:2.2%;background:linear-gradient(145deg,#4b5563,#0b0f17 40%,#1f2937);box-shadow:0 0 0 1.5px #6b7280,0 40px 80px -20px rgba(0,0,0,.9);transform:translateY(calc((1 - var(--phone,0)) * 60%)) ;opacity:var(--phone,0);transition:transform .1s linear,opacity .1s linear;z-index:4}
+.mp-screen{position:relative;width:100%;height:100%;border-radius:13% / 6.2%;overflow:hidden;background:#0d0d0f;color:#F4F1EA;font-family:var(--font-b);font-size:clamp(6px,.8vw,9px)}
+.mp-island{position:absolute;top:2.2%;left:50%;transform:translateX(-50%);width:32%;height:3.4%;border-radius:999px;background:#000;z-index:3}
+.mps{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .5s}
+.mps.on{opacity:1}
+.mp-head{height:30%;padding:20% 8% 6%;display:flex;flex-direction:column;justify-content:flex-end}
+.mp-head b{font-weight:800;letter-spacing:.04em;font-size:1.2em}
+.mp-head .serif{font-family:Georgia,serif;font-style:italic;font-weight:400;color:#D6B97B;font-size:1.5em;letter-spacing:0}
+.mp-head small.g{color:#86EFAC;font-weight:700}
+.mp-head small.br{color:#A8A29E}
+.mp-list{flex:1;padding:4% 6%;display:flex;flex-direction:column;gap:5px}
+.mp-item{display:flex;gap:6px;align-items:center;background:#151518;border:1px solid #2a2a2f;border-radius:6px;padding:4px}
+.mp-item>span{flex:none;width:24%;aspect-ratio:1;border-radius:4px}
+.mp-item div{flex:1;min-width:0}
+.mp-item b{display:block;font-size:.95em}
+.mp-item small{color:#A8A29E;font-size:.8em}
+.mp-item em,.mp-row em{font-style:normal;color:#E8A33D;font-weight:800}
+.mps.mp-lg{background:#0C0A09}
+.mp-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted #44403C;color:#E7E5E4}
+.mp-list.mp-lgl .mp-row em{color:#D6B97B}
+.mp-bar{display:flex;gap:5px;padding:5% 6% 9%}
+.mp-bar span{flex:1;text-align:center;font-weight:800;padding:7px 0;border-radius:6px}
+.mp-bar .white{background:#fff;color:#111}
+.mps.mp-tr{background:#F8FAFC;color:#0F172A}
+.mp-thead{padding:22% 8% 6%;background:linear-gradient(135deg,#1E3A8A,#0F172A);color:#fff}
+.mp-thead b{display:block;font-size:1.2em;font-weight:800}
+.mp-thead small{color:#BFDBFE}
+.mp-tform{margin:6%;background:#fff;border-radius:8px;padding:7%;display:flex;flex-direction:column;gap:5px;border-top:3px solid #16A34A;box-shadow:0 8px 20px -10px rgba(15,23,42,.4)}
+.mp-tform i{height:14px;border:1px solid #CBD5E1;border-radius:4px}
+.mp-tform em{font-style:normal;background:#16A34A;color:#fff;text-align:center;font-weight:800;padding:6px;border-radius:5px}
+.mp-rev{margin:0 6%;flex:1;font-size:.9em;color:#334155}
+.mp-rev small{display:block;margin-top:3px}
+.mac-stage .fc-rating{top:-4%;left:-9%}
+.mac-stage .fc-dir{bottom:14%;left:-6%}
+.mac-stage .float-card{opacity:var(--phone,0);transition:opacity .2s}
+.mac-progress{display:flex;gap:6px;position:relative}
+.mac-progress i{width:8px;height:8px;border-radius:4px;background:#3a3a3c;transition:all .3s}
+.mac-progress i.on{width:26px;background:#fff}
+@media (max-width:760px){
+  .mac-scroll{height:300vh}
+  .mac-stage{width:94vw}
+  .mac-title{font-size:1.25rem}
+  .mac-title .mt{white-space:normal;width:92vw}
+  .mac-title{height:2.6em}
+  .mac-tabs button{padding:7px 9px;font-size:.74rem}
+  .mphone{width:27%;min-width:0;right:-1%;bottom:-6%;border-radius:18px;padding:4px}
+  .mp-screen{border-radius:15px;font-size:5px}
+  .mac-tabs{max-width:94vw}
+  .mac-tabs button{padding:7px 8px;font-size:.7rem;white-space:nowrap}
+  .mac-stage .float-card{display:none}
+}
+@media (prefers-reduced-motion:reduce){.mb-lid,.mac-stage,.mphone{transition:none}}
+
 /* Footer */
 footer{background:#18212C;color:#94A3B8;padding:56px 0 28px;font-size:.93rem}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:40px}
@@ -1006,60 +1161,6 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <div class="hero-proof"><span><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> <b>Free custom preview</b></span><span><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> <b>No long-term contracts</b></span><span><svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> <b>You own your domain</b></span></div>
     </div>
 
-    <div class="hero-visual" aria-label="Example: The Lock & Dam Tap website on desktop and phone" role="img">
-      <div class="showcase">
-        <!-- Desktop browser -->
-        <div class="browser">
-          <div class="b-chrome">
-            <div class="b-dots"><i></i><i></i><i></i></div>
-            <div class="b-url"><svg width="10" height="10"><use href="#lock"/></svg><b>lockanddamtap.com</b></div>
-          </div>
-          <div class="b-view">
-            <div class="bv-hero ph" data-img="1535958636474-b021ee887b13" data-ov="linear-gradient(90deg,rgba(8,8,10,.92) 0%,rgba(8,8,10,.62) 50%,rgba(8,8,10,.15) 100%),linear-gradient(0deg,rgba(8,8,10,.85) 0%,transparent 40%)" data-fb="radial-gradient(circle at 75% 35%,#b45309,#3b1d07 40%,#0d0d0f 75%)">
-              <div class="bv-nav"><span class="bv-logo">Lock &amp; Dam Tap<small>Dubuque · Est. 1987</small></span><span class="lnk">Menu</span><span class="lnk">Events</span><span class="lnk">Tap List</span><span class="cta">Call Now</span></div>
-              <div class="bv-body">
-                <span class="bv-badge"><i></i>Open Tonight • Happy Hour 3–6 PM</span>
-                <div class="bv-h">Cold Beer.<br>Big Screens.<br><span>Good People.</span></div>
-                <div class="bv-p">24 taps, 16 HD screens and the best wings on Central Ave. Live music every Friday.</div>
-                <div class="bv-btns"><span>Get Directions</span><span>View Menu</span></div>
-              </div>
-              <div class="bv-strip">
-                <div class="ph" data-img="1624855600799-ac8e8bddd1da" data-ov="linear-gradient(0deg,rgba(0,0,0,.6),transparent 60%)" data-fb="radial-gradient(circle,#b45309,#1c1917 70%)"><span>Lock Burger</span></div>
-                <div class="ph" data-img="1734987942068-a1a459d65d3d" data-ov="linear-gradient(0deg,rgba(0,0,0,.6),transparent 60%)" data-fb="radial-gradient(circle,#c2410c,#1c1917 70%)"><span>House Wings</span></div>
-                <div class="ph" data-img="1711130953835-7bcb75b163db" data-ov="linear-gradient(0deg,rgba(0,0,0,.6),transparent 60%)" data-fb="radial-gradient(circle,#166534,#1c1917 70%)"><span>Game Day</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- iPhone -->
-        <div class="iphone">
-          <div class="i-screen">
-            <div class="i-island"></div>
-            <div class="i-head ph" data-img="1567696911980-2eed69a46042" data-ov="linear-gradient(0deg,rgba(13,13,15,1) 0%,rgba(13,13,15,.35) 70%)" data-fb="radial-gradient(circle at 60% 30%,#a16207,#1c1305 60%,#0d0d0f)">
-              <div class="i-status" style="position:absolute;top:0;left:0;right:0"><span>9:41</span><span style="display:flex;gap:3px;align-items:center"><svg width="14" height="9"><use href="#i-signal"/></svg><svg width="18" height="9"><use href="#i-battery"/></svg></span></div>
-              <b>Lock &amp; Dam Tap</b><small><i class="sp-dot" style="width:5px;height:5px;box-shadow:none"></i> Open · Kitchen ’til 11</small>
-            </div>
-            <div class="i-tabs"><span class="on">Menu</span><span>Tap List</span><span>Events</span></div>
-            <div class="i-list">
-              <div class="i-item"><span class="t ph" data-img="1624855600799-ac8e8bddd1da" data-fb="radial-gradient(circle,#b45309,#292524)"></span><div><b>The Lock Burger</b><small>½ lb, cheddar, bacon</small></div><em>$14</em></div>
-              <div class="i-item"><span class="t ph" data-img="1608039755401-742074f0548d" data-fb="radial-gradient(circle,#c2410c,#292524)"></span><div><b>House Wings</b><small>7 sauces, crispy</small></div><em>$12</em></div>
-              <div class="i-item"><span class="t ph" data-img="1586793783658-261cddf883ef" data-fb="radial-gradient(circle,#ca8a04,#292524)"></span><div><b>Cheese Curds</b><small>Beer-battered</small></div><em>$9</em></div>
-              <div style="padding:2px 2px 0">
-                <div class="i-tap"><i style="background:#F5C542"></i><span>Dubuque Star</span><em>$4</em></div>
-                <div class="i-tap"><i style="background:#F0B429"></i><span>River City Haze</span><em>$6</em></div>
-                <div class="i-tap"><i style="background:#2B1408;outline:1px solid #555"></i><span>Mississippi Mud</span><em>$6</em></div>
-              </div>
-            </div>
-            <div class="i-bar"><span><svg class="ico" width="10" height="10" aria-hidden="true"><use href="#phone"/></svg> Call</span><span><svg class="ico" width="10" height="10" aria-hidden="true"><use href="#map"/></svg> Directions</span></div>
-          </div>
-        </div>
-
-        <!-- Floating proof cards -->
-        <div class="float-card fc-rating"><span class="ic"><svg width="18" height="18"><use href="#star"/></svg></span><div><b>4.9 Google Business Profile</b><small><span class="stars"><span class="stars-svg" role="img" aria-label="5 stars"><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg><svg aria-hidden="true"><use href="#star"/></svg></span></span> 212 reviews</small></div></div>
-        <div class="float-card fc-dir"><span class="ic"><svg width="18" height="18"><use href="#map"/></svg></span><div><b><span class="up">+38</span> Direction Taps This Week</b><small>From Google Maps</small></div></div>
-      </div>
-    </div>
   </div>
   <div class="trust">
     <div class="wrap">
@@ -1067,6 +1168,126 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <div class="trust-item"><span class="ic"><svg width="20" height="20"><use href="#bolt"/></svg></span><div>Live in 7 days<small>Fast launch, no months-long projects</small></div></div>
       <div class="trust-item"><span class="ic"><svg width="20" height="20"><use href="#map"/></svg></span><div>Google Business Profile setup included<small>Show up right on Google Maps</small></div></div>
     </div>
+  </div>
+</section>
+
+<!-- MACBOOK SCROLL SHOWCASE -->
+<section class="mac-scroll" id="showcase" aria-label="Demo websites shown on a laptop and phone">
+  <div class="mac-sticky">
+    <div class="mac-copy">
+      <span class="eyebrow">See it in action</span>
+      <h2 class="mac-title"><span class="mt" data-i="0">A Neighborhood Pub, open tonight.</span><span class="mt" data-i="1">A Modern Lounge, booked solid.</span><span class="mt" data-i="2">A Trade Pro, ringing off the hook.</span></h2>
+      <div class="mac-tabs" role="tablist" aria-label="Demo styles">
+        <button data-go="0" class="on">Pub &amp; Sports Bar</button><button data-go="1">Lounge &amp; Eatery</button><button data-go="2">Service &amp; Trade</button>
+      </div>
+    </div>
+
+    <div class="mac-stage">
+      <!-- MacBook-style laptop (built in code, no logo) -->
+      <div class="mb">
+        <div class="mb-lid">
+          <div class="mb-bezel">
+            <span class="mb-notch"><i></i></span>
+            <div class="mb-screen">
+              <!-- Screen 0: Pub -->
+              <div class="mbs on" data-s="0">
+                <div class="mbs-pub ph" data-img="1535958636474-b021ee887b13" data-ov="linear-gradient(90deg,rgba(8,8,10,.94) 0%,rgba(8,8,10,.6) 55%,rgba(8,8,10,.1) 100%),linear-gradient(0deg,rgba(8,8,10,.9),transparent 45%)" data-fb="radial-gradient(circle at 75% 35%,#b45309,#3b1d07 40%,#0d0d0f 75%)">
+                  <div class="w-nav w-dk"><b class="w-logo">LOCK &amp; DAM TAP<small>DUBUQUE · EST. 1987</small></b><span>Menu</span><span>Events</span><span>Tap List</span><span>Hours</span><em class="gold">Call Now</em></div>
+                  <div class="w-body">
+                    <span class="w-badge"><i></i>Open Tonight · Happy Hour 3–6 PM</span>
+                    <div class="w-h w-pub">Cold Beer.<br>Big Screens.<br><span>Good People.</span></div>
+                    <p class="w-p">24 taps, 16 HD screens and the best wings on Central Ave.</p>
+                    <div class="w-btns"><em class="gold">Get Directions</em><em class="ghost">View Menu</em></div>
+                  </div>
+                  <div class="w-strip">
+                    <div class="ph" data-img="1624855600799-ac8e8bddd1da" data-fb="radial-gradient(circle,#b45309,#1c1917 70%)"><span>Lock Burger</span></div>
+                    <div class="ph" data-img="1734987942068-a1a459d65d3d" data-fb="radial-gradient(circle,#c2410c,#1c1917 70%)"><span>House Wings</span></div>
+                    <div class="ph" data-img="1711130953835-7bcb75b163db" data-fb="radial-gradient(circle,#166534,#1c1917 70%)"><span>Game Day</span></div>
+                    <div class="ph" data-img="1567696911980-2eed69a46042" data-fb="radial-gradient(circle,#a16207,#1c1917 70%)"><span>24 Taps</span></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Screen 1: Lounge -->
+              <div class="mbs" data-s="1">
+                <div class="mbs-lounge">
+                  <div class="w-nav w-lg"><b class="w-serif">Ember &amp; Oak</b><span>MENU</span><span>BAR</span><span>EVENTS</span><em class="brass">BOOK AN EVENT</em></div>
+                  <div class="lg-split">
+                    <div class="lg-left">
+                      <span class="w-eyebrow">WOOD-FIRED KITCHEN · CRAFT COCKTAILS</span>
+                      <div class="w-h w-ser">An evening worth dressing up for.</div>
+                      <p class="w-p">Seasonal plates from our oak-fired hearth in the Millwork District.</p>
+                      <div class="w-btns"><em class="brass">Reserve the Oak Room</em></div>
+                    </div>
+                    <div class="lg-grid">
+                      <div class="ph big" data-img="1551632436-cbf8dd35adfa" data-fb="radial-gradient(circle,#78350f,#1c1917 70%)"></div>
+                      <div class="ph" data-img="1514362545857-3bc16c4c7d1b" data-fb="radial-gradient(circle,#a16207,#1c1917 70%)"></div>
+                      <div class="ph" data-img="1663530761401-15eefb544889" data-fb="radial-gradient(circle,#7f1d1d,#1c1917 70%)"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Screen 2: Trade -->
+              <div class="mbs" data-s="2">
+                <div class="mbs-trade">
+                  <div class="w-nav w-lt"><b class="w-trade"><svg width="13" height="13"><use href="#roof"/></svg>Bluff City Pro Services</b><span>Services</span><span>Projects</span><span>Reviews</span><em class="green">Free Estimate</em></div>
+                  <div class="tr-hero2 ph" data-img="1632759145351-1d592919f522" data-ov="linear-gradient(90deg,rgba(15,23,42,.92),rgba(15,23,42,.6) 60%,rgba(30,64,175,.35))" data-fb="linear-gradient(135deg,#1e3a8a,#0f172a)">
+                    <div>
+                      <div class="w-h w-tr">Dubuque’s Trusted Home Repair Crew Since 1998</div>
+                      <div class="w-chips"><span>Licensed &amp; Insured</span><span>4.9 on Google</span><span>5-Year Warranty</span></div>
+                    </div>
+                    <div class="w-form"><b>Request a Free Estimate</b><i></i><i></i><i></i><em class="green">Get My Free Estimate</em></div>
+                  </div>
+                  <div class="w-proj">
+                    <div class="ph" data-img="1635424824849-1b09bdcc55b1" data-fb="linear-gradient(135deg,#475569,#1e293b)"><span>Roof Replacement · Asbury</span></div>
+                    <div class="ph" data-img="1576446470246-499c738d1c8e" data-fb="linear-gradient(135deg,#94a3b8,#334155)"><span>Panel Upgrade · Dubuque</span></div>
+                    <div class="ph" data-img="1594233078955-e1f73a02ebb2" data-fb="linear-gradient(135deg,#cbd5e1,#64748b)"><span>Water Heater · E. Dubuque</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-base"><span class="mb-groove"></span></div>
+      </div>
+
+      <!-- iPhone overlay -->
+      <div class="mphone" aria-hidden="true">
+        <div class="mp-screen">
+          <span class="mp-island"></span>
+          <div class="mps on" data-s="0">
+            <div class="mp-head ph" data-img="1535958636474-b021ee887b13" data-ov="linear-gradient(0deg,#0d0d0f 5%,rgba(13,13,15,.3) 70%)" data-fb="radial-gradient(circle at 60% 30%,#b45309,#0d0d0f 70%)"><b>LOCK &amp; DAM TAP</b><small class="g">Open · Kitchen ’til 11</small></div>
+            <div class="mp-list">
+              <div class="mp-item"><span class="ph" data-img="1624855600799-ac8e8bddd1da" data-fb="radial-gradient(circle,#b45309,#292524)"></span><div><b>The Lock Burger</b><small>½ lb, cheddar, bacon</small></div><em>$14</em></div>
+              <div class="mp-item"><span class="ph" data-img="1608039755401-742074f0548d" data-fb="radial-gradient(circle,#c2410c,#292524)"></span><div><b>House Wings</b><small>7 sauces</small></div><em>$12</em></div>
+              <div class="mp-item"><span class="ph" data-img="1586793783658-261cddf883ef" data-fb="radial-gradient(circle,#ca8a04,#292524)"></span><div><b>Cheese Curds</b><small>Beer-battered</small></div><em>$9</em></div>
+            </div>
+            <div class="mp-bar"><span class="gold">Call</span><span class="white">Directions</span></div>
+          </div>
+          <div class="mps mp-lg" data-s="1">
+            <div class="mp-head ph" data-img="1551632436-cbf8dd35adfa" data-ov="linear-gradient(0deg,#0C0A09 5%,rgba(12,10,9,.3) 70%)" data-fb="radial-gradient(circle at 60% 30%,#78350f,#0C0A09 70%)"><b class="serif">Ember &amp; Oak</b><small class="br">Tue–Sun · from 5 PM</small></div>
+            <div class="mp-list mp-lgl">
+              <div class="mp-row"><span>Wood-Fired Ribeye</span><em>$42</em></div>
+              <div class="mp-row"><span>Pan-Seared Walleye</span><em>$29</em></div>
+              <div class="mp-row"><span>Smoked Old Fashioned</span><em>$14</em></div>
+              <div class="mp-row"><span>Blood Orange Spritz</span><em>$12</em></div>
+            </div>
+            <div class="mp-bar"><span class="brass">Book the Oak Room</span></div>
+          </div>
+          <div class="mps mp-tr" data-s="2">
+            <div class="mp-thead"><b>Bluff City Pro</b><small>(563) 555-0188</small></div>
+            <div class="mp-tform"><b>Free Estimate</b><i></i><i></i><i></i><em>Get My Free Estimate</em></div>
+            <div class="mp-rev"><span class="stars-svg sm"><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg></span><small>“Found the leak in twenty minutes.” · Mike T.</small></div>
+            <div class="mp-bar"><span class="green">Call Now</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating proof cards -->
+      <div class="float-card fc-rating"><span class="ic"><svg width="18" height="18"><use href="#star"/></svg></span><div><b>4.9 Google Business Profile</b><small>212 reviews</small></div></div>
+      <div class="float-card fc-dir"><span class="ic"><svg width="18" height="18"><use href="#map"/></svg></span><div><b><span class="up">+38</span> Direction Taps This Week</b><small>From Google Maps</small></div></div>
+    </div>
+
+    <div class="mac-progress" aria-hidden="true"><i></i><i></i><i></i></div>
   </div>
 </section>
 
@@ -2058,6 +2279,31 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   }));
   $('#lgForm').addEventListener('submit',e=>{e.preventDefault(); e.target.style.display='none'; $('#lgOk').style.display='block';});
   $('#trForm').addEventListener('submit',e=>{e.preventDefault(); e.target.style.display='none'; $('#trOk').style.display='block';});
+
+  /* ---------- MacBook scroll showcase ---------- */
+  (function(){
+    const sec=$('#showcase'); if(!sec) return;
+    const scr=$$('.mbs',sec), ph=$$('.mps',sec), titles=$$('.mac-title .mt',sec), tabs=$$('.mac-tabs button',sec), dots=$$('.mac-progress i',sec);
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    let cur=-1;
+    const STOPS=[0.30,0.58,0.84];
+    function show(i){
+      if(i===cur) return; cur=i;
+      [scr,ph,titles,tabs,dots].forEach(list=>list.forEach((el,k)=>el.classList.toggle('on',k===i)));
+    }
+    function update(){
+      const r=sec.getBoundingClientRect(), total=sec.offsetHeight-innerHeight;
+      const p=clamp(-r.top/total,0,1);
+      sec.style.setProperty('--open',clamp(p/0.2,0,1).toFixed(3));
+      sec.style.setProperty('--phone',clamp((p-0.14)/0.12,0,1).toFixed(3));
+      show(p<0.45?0:p<0.72?1:2);
+    }
+    tabs.forEach((b,i)=>b.addEventListener('click',()=>{
+      const total=sec.offsetHeight-innerHeight;
+      window.scrollTo({top:sec.offsetTop+total*STOPS[i],behavior:'smooth'});
+    }));
+    addEventListener('scroll',update,{passive:true}); addEventListener('resize',update); update();
+  })();
 
   /* ---------- Sticky scroll story ---------- */
   (function(){
