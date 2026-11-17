@@ -197,6 +197,141 @@ body.t-western{background:#fff}
 .wx-foot span:last-child{margin-left:auto;color:#94A3B8}
 @media (max-width:900px){.wx-links{display:none}.wx-nav .wx-btn{margin-left:auto}.wx-favs,.wx-visit{grid-template-columns:1fr}.wx-mgrid,.wx-story{grid-template-columns:1fr}.wx-mphoto{min-height:220px}.wx-story .ph{min-height:240px}.wx-strip{grid-template-columns:1fr 1fr;height:auto}.wx-strip .ph{height:140px}}
 @media (max-width:640px){.wx-hero{padding:52px 18px;min-height:0}.wx-sec,.wx-band{padding:56px 18px}.wx-ticket{flex-direction:column}.wx-ticket div{border-left:0;border-top:2px dashed var(--wline)}.wx-ticket div:first-child{border-top:0}.wx-acts .wx-btn{flex:1 1 auto}.wx-brand img{height:46px}.wx-top{font-size:.74rem}.wx-sp{flex-direction:column}.wx-foot span:last-child{margin-left:0}}
+/* ===== Western warmth (amber, leather, firelight) ===== */
+.western{--wa:#D9963A;--wa2:#F2C27A;--wb:#6B3F26;--wbd:#2E1C12}
+.western .ph:not(.wx-hero){filter:saturate(1.08) sepia(.1)}
+.western .wx-stars{color:var(--wa)}
+.wx-top{background:linear-gradient(90deg,var(--wr),#C2412D 50%,var(--wr))}
+.wx-top .wx-stars,.wx-hero .wx-kick .wx-stars,.wx-story .wx-stars{color:var(--wa2)!important}
+.wx-nav{border-bottom:3px solid var(--wb);box-shadow:0 2px 0 var(--wa)}
+.wx-hero{border-bottom:6px solid var(--wa)}
+.wx-hero h1 .last{border-bottom-color:var(--wa)}
+.wx-ticket small{color:var(--wb)!important}
+.wx-orn i{background:var(--wa)!important;opacity:.7!important}
+.wx-h small{color:var(--wb)!important}
+.wx-soft{background:linear-gradient(180deg,#FFFFFF,#F8FAFC)}
+.wx-sp{box-shadow:6px 6px 0 var(--wb)!important;border-color:var(--wb)!important}
+.wx-stamp{background:linear-gradient(160deg,var(--wr),#8E1B26)!important}
+.wx-fav{box-shadow:0 22px 44px -30px rgba(107,63,38,.55)!important}
+.wx-fav .b{border-top:4px solid var(--wa)!important}
+.wx-fav small,.wx-mi .t span{color:var(--wr)}
+.wx-tabs button{border-color:var(--wb)!important;color:var(--wbd)!important}
+.wx-tabs button.on{background:var(--wb)!important;color:#fff!important}
+.wx-mi i{border-bottom-color:rgba(217,150,58,.55)!important}
+.wx-band{background:radial-gradient(circle at 15% 20%,rgba(232,160,72,.22),rgba(0,0,0,0) 45%),linear-gradient(135deg,var(--wn) 0%,#2B2236 55%,var(--wbd) 100%)!important}
+.wx-story .ph{box-shadow:12px 12px 0 var(--wa)!important}
+.wx-card{border-top-color:var(--wb)!important}
+.wx-map{border-top-color:var(--wa)!important}
+.wx-hours .today{color:var(--wb)!important}
+.wx-foot{background:linear-gradient(90deg,#1A1420,var(--wbd))!important;border-top:6px solid var(--wa)!important}
+.wx-red{box-shadow:0 12px 26px -12px rgba(194,65,45,.75)!important}
+/* ----- Variant: Americana (bold college bar) ----- */
+.v-americana{--wd:'Alfa Slab One',Georgia,serif}
+.v-americana .wx-top{background:repeating-linear-gradient(90deg,var(--wr) 0 26px,#fff 26px 34px,var(--wn) 34px 60px,#fff 60px 68px);padding:12px}
+.v-americana .wx-top span{background:var(--wn);color:#fff;padding:4px 12px;border-radius:6px}
+.v-americana .wx-hero h1,.v-americana .wx-h h2,.v-americana .wx-sp h3,.v-americana .wx-fav h3,.v-americana .wx-story h2,.v-americana .wx-card h3{text-transform:uppercase;letter-spacing:.01em}
+.v-americana .wx-hero{border-bottom:10px solid var(--wr);box-shadow:inset 0 -10px 0 #fff}
+.v-americana .wx-hero h1 .last{color:#fff;background:var(--wr);border:0;padding:2px 14px 6px;border-radius:8px;margin-top:10px}
+.v-americana .wx-sp{border:3px solid var(--wn)!important;box-shadow:8px 8px 0 var(--wr)!important}
+.v-americana .wx-fav .b{border-top:6px solid var(--wr)!important}
+.v-americana .wx-tabs button{border-color:var(--wn)!important;color:var(--wn)!important;text-transform:uppercase;font-size:.84rem}
+.v-americana .wx-tabs button.on{background:var(--wr)!important;border-color:var(--wr)!important;color:#fff!important}
+.v-americana .wx-band{background:linear-gradient(135deg,var(--wn),#13203F)!important;border-top:10px solid var(--wr);border-bottom:10px solid var(--wr)}
+.v-americana .wx-story .ph{box-shadow:12px 12px 0 var(--wr)!important}
+.v-americana .wx-stars{color:var(--wr)}.v-americana .wx-hero .wx-stars,.v-americana .wx-story .wx-stars{color:#fff!important}
+.v-americana .wx-orn i{background:var(--wn)!important}
+.v-americana .wx-foot{background:var(--wn)!important;border-top:8px solid var(--wr)!important}
+/* ----- Variant: Ranch (clean, modern, warm) ----- */
+.v-ranch{--wd:'Bitter',Georgia,serif}
+.v-ranch .wx-top{background:var(--wn)}
+.v-ranch .wx-nav{border-bottom:1px solid var(--wline);box-shadow:none}
+.v-ranch .wx-hero{justify-content:center;text-align:center;align-items:flex-end;min-height:min(88vh,760px);border-bottom:0;padding-bottom:90px}
+.v-ranch .wx-hero .in{max-width:760px;margin:0 auto}
+.v-ranch .wx-hero h1{font-weight:800;letter-spacing:-.02em;font-size:clamp(2.6rem,6vw,4.4rem)}
+.v-ranch .wx-hero h1 span{display:inline}.v-ranch .wx-hero h1 span+span{margin-left:.25em}
+.v-ranch .wx-hero h1 .last{border:0;color:var(--wa2);padding:0;margin:0 0 0 .25em}
+.v-ranch .wx-hero p{margin-left:auto;margin-right:auto}
+.v-ranch .wx-kick,.v-ranch .wx-acts{justify-content:center}
+.v-ranch .wx-ticket{margin:30px auto 0;text-align:left}
+.v-ranch .wx-h h2,.v-ranch .wx-sp h3,.v-ranch .wx-fav h3,.v-ranch .wx-story h2,.v-ranch .wx-card h3{font-weight:800;letter-spacing:-.02em}
+.v-ranch .wx-sp{border:1px solid var(--wline)!important;box-shadow:0 20px 44px -30px rgba(107,63,38,.5)!important}
+.v-ranch .wx-tabs button{border:1px solid var(--wline)!important;color:var(--wbd)!important;font-weight:700}
+.v-ranch .wx-tabs button.on{background:var(--wbd)!important;border-color:var(--wbd)!important;color:#fff!important}
+.v-ranch .wx-fav .b{border-top:0!important}
+.v-ranch .wx-band{background:#fff!important;color:var(--wink);border-top:1px solid var(--wline);border-bottom:1px solid var(--wline)}
+.v-ranch .wx-band h2{color:var(--wn)}.v-ranch .wx-band p{color:#475569}
+.v-ranch .wx-band .wx-kick{color:var(--wb)}
+.v-ranch .wx-band .wx-ghost{color:var(--wn);border-color:var(--wn)}
+.v-ranch .wx-story .ph{border:0;box-shadow:none!important;border-radius:12px}
+.v-ranch .wx-card{border-top:1px solid var(--wline)!important}
+.v-ranch .wx-foot{background:var(--wn)!important;border-top:0!important}
+.v-ranch .wx-hero{background-position:center 60%}
+/* ----- Calm tone for all western styles: dim-bar mood, colors kept but muted ----- */
+.western{--wa:#B98A55;--wa2:#D9B48A;--wb:#5A4234;--wbd:#2A211C}
+.western .ph:not(.wx-hero){filter:saturate(.88) sepia(.12) brightness(.96)}
+.western .wx-red{box-shadow:none!important}
+.western .wx-btn:hover{transform:none}
+.wx-top{background:var(--wn)!important;font-weight:600;letter-spacing:.12em;opacity:.97}
+.wx-top .wx-stars{color:var(--wa2)!important}
+.wx-nav{border-bottom:1px solid var(--wline)!important;box-shadow:none!important}
+.wx-hero{border-bottom:3px solid var(--wb)!important}
+.wx-hero h1 .last{border-bottom-width:3px!important}
+.wx-sp{border:1px solid var(--wline)!important;box-shadow:0 16px 36px -28px rgba(42,33,28,.6)!important}
+.wx-stamp{background:var(--wr)!important}
+.wx-fav{box-shadow:0 16px 36px -30px rgba(42,33,28,.55)!important}
+.wx-fav .b{border-top:2px solid var(--wa)!important}
+.wx-fav:hover{transform:none}
+.wx-band{background:linear-gradient(135deg,#252B3A 0%,var(--wbd) 100%)!important;border:0!important}
+.wx-story .ph{border:0!important;box-shadow:none!important}
+.wx-card{border-top:2px solid var(--wb)!important}
+.wx-map{border-top:2px solid var(--wa)!important}
+.wx-foot{background:#1B1A1F!important;border-top:2px solid var(--wb)!important}
+/* Americana layout without the flag look */
+.v-americana .wx-top{background:var(--wn)!important;padding:9px 16px}
+.v-americana .wx-top span{background:none;padding:0}
+.v-americana .wx-hero{box-shadow:none;border-bottom:3px solid var(--wb)!important}
+.v-americana .wx-hero h1 .last{background:rgba(255,255,255,.08);color:var(--wa2);border:1px solid rgba(217,180,138,.35)!important;padding:2px 14px 6px}
+.v-americana .wx-sp{border:1px solid var(--wline)!important;box-shadow:0 16px 36px -28px rgba(42,33,28,.6)!important}
+.v-americana .wx-fav .b{border-top:2px solid var(--wa)!important}
+.v-americana .wx-tabs button.on{background:var(--wbd)!important;border-color:var(--wbd)!important}
+.v-americana .wx-band{border:0!important}
+.v-americana .wx-stars{color:var(--wa)}
+.v-americana .wx-foot{background:#1B1A1F!important;border-top:2px solid var(--wb)!important}
+/* Reviews */
+.wx-hrev{margin-top:30px;max-width:540px;background:rgba(20,16,14,.55);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:18px 20px;backdrop-filter:blur(6px);transition:opacity .35s}
+.wx-hrev.fade{opacity:.15}
+.wx-hrev .row{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.wx-hrev .row small{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.wx-hrev .wx-stars{color:var(--wa2)!important}
+.wx-hrev blockquote{margin:10px 0;font-family:var(--ws);font-size:1.02rem;line-height:1.55;color:#fff}
+.wx-hrev .row span{font-weight:700;color:rgba(255,255,255,.85);font-size:.9rem}
+.wx-hrev button{background:none;border:0;color:var(--wa2);font-weight:700;cursor:pointer;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;padding:0}
+.v-ranch .wx-hrev{margin:30px auto 0;text-align:left}
+.wx-revs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.wx-rev{margin:0;background:#fff;border:1px solid var(--wline);border-radius:12px;padding:22px}
+.wx-rev.more{display:none}
+.wx-rev .st .wx-stars{color:var(--wa)!important}
+.wx-rev blockquote{margin:10px 0 12px;font-family:var(--ws);line-height:1.6;color:var(--wink)}
+.wx-rev figcaption{font-weight:700;color:var(--wb);font-size:.9rem}
+.wx-center{justify-content:center;margin-top:24px}
+@media (max-width:900px){.wx-revs{grid-template-columns:1fr}}
+.wx-book{margin-top:14px}
+.wx-toplink{background:none;border:0;color:#fff;font:inherit;font-size:.8rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;opacity:.9}
+.wx-book+.wx-book{margin-left:8px}
+.wx-lb{position:fixed;inset:0;z-index:100;background:rgba(15,12,10,.86);display:grid;place-items:center;padding:20px}
+.wx-lb .in{background:#fff;border-radius:12px;max-width:min(720px,100%);width:100%;overflow:hidden}
+.wx-lb .bar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #E2E8F0;font-family:Bitter,Georgia,serif}
+.wx-lb .bar span{color:#64748B;font-size:.85rem;margin-left:auto}
+.wx-lb button{height:38px;padding:0 14px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;font-weight:700;cursor:pointer}
+.wx-lb img{display:block;width:100%;max-height:70vh;object-fit:contain;background:#111}
+.wx-lb .nav{display:flex;justify-content:space-between;padding:12px 16px}
+.wx-spicy{white-space:nowrap;font-weight:700;color:#9A3412}
+.wx-heat{width:15px;height:15px;color:#C2410C;vertical-align:-2px;margin-left:3px}
+.wx-favsec{position:relative}
+.wx-jump{position:absolute;top:28px;right:max(24px,calc((100vw - 1180px)/2));display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--wline);background:#fff;color:var(--wbd);font-family:var(--ws);font-weight:700;font-size:.85rem;cursor:pointer;box-shadow:0 8px 20px -14px rgba(42,33,28,.5)}
+.wx-jump:hover{border-color:var(--wb)}
+.wx-jump span{font-size:1rem;line-height:1}
+@media (max-width:640px){.wx-jump{top:14px;right:14px;height:32px;padding:0 10px;font-size:.78rem}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
 
@@ -211,7 +346,7 @@ html = f'''<!DOCTYPE html>
 <title>Website Preview | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Rye&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bitter:wght@500;700;800&family=Rye&display=swap" rel="stylesheet">
 <!-- Generated by tools/build_demo.py from the demo designs in index.html. Do not edit by hand. -->
 <style>
 {demo_css}

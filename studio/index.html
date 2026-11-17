@@ -599,7 +599,7 @@ function addItem(it){
 }
 function addSpecial(it){
   it=it||{}; const list=$('#specials');
-  const row=el('div',{class:'row sp-row'});
+  const row=el('div',{class:'row sp-row'}); if((it.photos||[]).length) row.dataset.photos=JSON.stringify(it.photos);
   row.append(
     el('input',{class:'i s-title',maxlength:'80',placeholder:'Happy Hour',value:it.title||'','aria-label':'Title'}),
     el('input',{class:'i s-when',maxlength:'60',placeholder:'Mon - Fri, 3 - 6pm',value:it.when||'','aria-label':'When'}),
@@ -708,7 +708,7 @@ function collect(){
     address:v('address'),city:v('city'),phone:v('phone'),email:v('email'),website:v('website'),
     hours:DAYS.map((_,i)=>$('[data-day="'+i+'"]').value.trim()),
     items:[...document.querySelectorAll('#items .row')].map(r=>({group:r.querySelector('.r-group').value.trim(),name:r.querySelector('.r-name').value.trim(),price:r.querySelector('.r-price').value.trim(),desc:r.querySelector('.r-desc').value.trim(),photo:r.dataset.photo||''})).filter(i=>i.name),
-    specials:[...document.querySelectorAll('#specials .row')].map(r=>({title:r.querySelector('.s-title').value.trim(),when:r.querySelector('.s-when').value.trim(),detail:r.querySelector('.s-detail').value.trim()})).filter(i=>i.title),
+    specials:[...document.querySelectorAll('#specials .row')].map(r=>({title:r.querySelector('.s-title').value.trim(),when:r.querySelector('.s-when').value.trim(),detail:r.querySelector('.s-detail').value.trim(),photos:JSON.parse(r.dataset.photos||'[]')})).filter(i=>i.title),
     colors:colorsCustom?{primary:$('#cPrimary').value,accent:$('#cAccent').value}:{primary:'',accent:''},
     heroPreset:cur.heroPreset||'',
     photos:(cur._sitePhotos||[]).map(p=>p.url).slice(0,12),
