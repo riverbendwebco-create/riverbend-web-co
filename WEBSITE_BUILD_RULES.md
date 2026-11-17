@@ -38,6 +38,9 @@ These rules come from building and launching riverbendwebco.com. Follow them on 
 
 - **Render does not process form submissions.** Netlify Forms (`data-netlify="true"`) only work when hosted on Netlify.
 - On Render, use a form service (Formspree, or a Google Apps Script that writes to a Google Sheet and emails the owner).
+- **Render answers a POST to `/` with 200 OK**, so a `fetch('/')` form looks like it sent when nothing was delivered. Never treat a 200 from your own static host as proof of delivery.
+- Riverbend uses **FormSubmit** (free, no account, supports file attachments up to 10 MB): the preview form posts multipart to `https://formsubmit.co/<email>` with `_next` back to `/?sent=1#contact`; the agreement copy uses `https://formsubmit.co/ajax/<email>` and checks `success` in the JSON. Add `https://formsubmit.co` to CSP `form-action` and `connect-src`.
+- FormSubmit needs a one-time activation: submit the live form once, then click "Activate Form" in the email it sends. Until then nothing is delivered.
 - **Never show a success message unless the submission actually went through.** On failure, show an error with the business email.
 - Large fields (like a drawn signature image) can exceed a form service's size limit. Fall back to "save a PDF and email it."
 
