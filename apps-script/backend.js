@@ -368,6 +368,7 @@ function studio_(d) {
     case 'leads_save': return leadsSave_(d.lead || {});
     case 'leads_update': return leadsUpdate_(String(d.id || ''), d);
     case 'leads_demo': return leadsDemo_(d.lead || {});
+    case 'leads_probe': return leadsProbe_();
   }
   return { ok: false, error: 'unknown' };
 }
@@ -1532,4 +1533,18 @@ function siteFromResults_(html, name) {
     if (words.some(function (w) { return hostWord.indexOf(w) >= 0; })) return (u.match(/^https?:\/\/[^\/]+/i) || [u])[0] + '/';
   }
   return '';
+}
+
+function leadsProbe_() {
+  var q = encodeURIComponent('"Mason Dixon Saloon" Dubuque');
+  var urls = ['https://lite.duckduckgo.com/lite/?q=' + q, 'https://html.duckduckgo.com/html/?q=' + q, 'https://www.bing.com/search?q=' + q + '&setlang=en',
+    'https://www.mojeek.com/search?q=' + q, 'https://search.brave.com/search?q=' + q, 'https://search.yahoo.com/search?p=' + q, 'https://www.startpage.com/do/search?q=' + q];
+  var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
+  var t0 = Date.now();
+  var res = UrlFetchApp.fetchAll(urls.map(function (u) { return { url: u, muteHttpExceptions: true, followRedirects: true, headers: { 'User-Agent': ua, 'Accept-Language': 'en-US,en' } }; }));
+  return { ok: true, ms: Date.now() - t0, out: urls.map(function (u, i) {
+    var h = res[i].getContentText();
+    var hosts = (h.match(/https?:\/\/(?:www\.)?[a-z0-9-]+\.[a-z.]{2,}/gi) || []).map(function (x) { return x.replace(/^https?:\/\/(www\.)?/i, ''); });
+    return { u: u.slice(0, 40), code: res[i].getResponseCode(), len: h.length, mason: /masondixondbq/i.test(h), hosts: hosts.filter(function (x, j) { return hosts.indexOf(x) === j; }).slice(0, 12) };
+  }) };
 }
