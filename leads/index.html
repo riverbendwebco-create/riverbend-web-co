@@ -98,6 +98,7 @@ svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
 .pbar{height:4px;border-radius:2px;background:var(--line2);margin-top:9px;overflow:hidden}
 .pbar i{display:block;height:100%;background:var(--blue);box-shadow:0 0 10px var(--blue);transition:width .4s}
 .bar i.run{background:linear-gradient(90deg,var(--line2),var(--blue),var(--line2));background-size:200% 100%;animation:sh 1.2s infinite}
+.why{margin-top:6px;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 .badge{flex:none;font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:4px;border:1px solid;white-space:nowrap}
 .b-none{color:var(--red);border-color:rgba(255,90,99,.45);background:rgba(255,90,99,.08)}
 .b-social{color:var(--orange);border-color:rgba(255,138,61,.45);background:rgba(255,138,61,.08)}
@@ -355,7 +356,7 @@ function showResults(r,it,text,where){
     el('p',{class:'note'},'Chance is an estimate from the website check, phone and type of business, not a promise. '+(r.free?'From free public map data, so a few businesses may be missing. ':'')+'Open their site yourself before you pitch.'));
   const pend=leads.filter(l=>l.pending);
   if(!pend.length) return;
-  const batches=[]; for(let i=0;i<pend.length;i+=5) batches.push(pend.slice(i,i+5));
+  const batches=[]; for(let i=0;i<pend.length;i+=4) batches.push(pend.slice(i,i+4));
   let bi=0;
   function redraw(l){ const cd=cardOf[l.id]; if(cd&&cd.isConnected){ const n=leadCard(l); cardOf[l.id]=n; cd.replaceWith(n); } }
   async function worker(){
@@ -368,18 +369,42 @@ function showResults(r,it,text,where){
       update();
     }
   }
-  Promise.all([worker(),worker(),worker()]).then(()=>{ if(my===reqId&&window.scrollY<150) show(cur); });
+  Promise.all([worker(),worker(),worker(),worker(),worker()]).then(()=>{ if(my===reqId&&window.scrollY<150) show(cur); });
 }
 
-function chance(l){
-  let s={none:72,social:66,weak:38,site:10,chain:2}[l.kind]||20;
-  if(l.kind==='weak') s+=Math.min(4,(l.issues||[]).length)*7;
-  s+=tel(l.phone)?8:-12;
-  if(/bar|pub|tavern|restaurant|pizza|grill|cafe|coffee|bakery|salon|barber|nail|spa|repair|auto|contractor|roof|plumb|electric|hvac|landscap|clean|paint|concrete|handyman|tow|groom|tattoo|gym/i.test((l.type||'')+' '+(l.ptype||''))) s+=6;
-  if(l.reviews>=50) s+=4;
-  if(l.maps) s+=2;
-  return Math.max(1,Math.min(97,Math.round(s)));
+const YEAR=new Date().getFullYear();
+function chanceInfo(l){
+  const why=[]; let s;
+  const iss=(l.issues||[]).join(' | ');
+  const t=((l.type||'')+' '+(l.ptype||'')).toLowerCase();
+  if(l.kind==='chain'||l.brand) return {pc:2,why:['Chain, website run by head office']};
+  if(l.pending&&l.searchPending){ s=52; why.push('No website on the map (still checking)'); }
+  else if(l.kind==='none'){ if(/double check|busy|could not finish/i.test(iss)){ s=54; why.push('No website on the map'); } else { s=62; why.push('No website anywhere'); } }
+  else if(l.kind==='social'){ s=56; why.push('Only a social page'); }
+  else if(l.kind==='weak'){
+    s=22;
+    if(/down or broken/i.test(iss)){ s+=28; why.push('Website is broken'); }
+    if(/almost empty/i.test(iss)){ s+=16; why.push('Nearly empty site'); }
+    if(/not built for phones/i.test(iss)){ s+=12; why.push('Not phone friendly'); }
+    const y=(iss.match(/since (\d{4})/)||[])[1]; if(y){ const age=YEAR-Number(y); s+=Math.min(15,age*2); why.push('Not updated in '+age+' years'); }
+    if(/free builder/i.test(iss)){ s+=12; why.push('Free builder site'); }
+    if(/https/i.test(iss)){ s+=5; why.push('No secure link'); }
+  }
+  else { s=l.pending?14:7; why.push(l.pending?'Has a website (still checking)':'Already has a working site'); if(l.blocked) s+=3; }
+  if(tel(l.phone)){ s+=7; } else { s-=11; why.push('No phone listed'); }
+  if(l.address){ s+=3; } else { s-=4; }
+  if(l.oh){ s+=4; why.push('Hours listed, active'); }
+  if(l.em) s+=2;
+  if(l.so&&l.kind!=='social'){ s+=3; why.push('Active on social media'); }
+  if(/church|place of worship|school|college|bank|government|townhall|library|post office|hospital|clinic|pharmacy/.test(t)){ s-=18; why.push('Hard to sell to'); }
+  else if(/bar|pub|tavern|restaurant|pizza|grill|fast food|cafe|coffee|bakery|ice cream|brewery|winery|distillery/.test(t)){ s+=7; why.push('Food and drink, needs menu online'); }
+  else if(/contractor|roof|plumb|electric|hvac|landscap|clean|paint|concrete|handyman|tow|car repair|auto|tyre|tire|body/.test(t)){ s+=8; why.push('Trade, gets calls from Google'); }
+  else if(/salon|hairdresser|barber|beauty|nail|spa|massage|tattoo|groom|gym|fitness/.test(t)){ s+=6; why.push('Bookings business'); }
+  else if(/clothes|boutique|gift|florist|antique|furniture|shoe|jewel|hardware|shop|store/.test(t)){ s+=3; }
+  if(l.reviews>=100) s+=4; else if(l.reviews>=20) s+=2;
+  return {pc:Math.max(1,Math.min(95,Math.round(s))),why:why.slice(0,3)};
 }
+function chance(l){ return chanceInfo(l).pc; }
 function leadCard(l){
   const where=town(l.city)||town(l.address)||'Dubuque, IA';
   const saveBtn=el('button',{type:'button',class:'btn'+(l.saved?' saved-on':''),text:l.saved?'Saved':'Save'});
@@ -393,13 +418,14 @@ function leadCard(l){
   const demoBtn=el('button',{type:'button',class:'btn primary',text:'Build demo'});
   const card=el('div',{class:'card'});
   demoBtn.addEventListener('click',()=>buildDemo(l,demoBtn,card));
-  const pc=l.pending?0:chance(l);
+  const ci=chanceInfo(l), pc=ci.pc;
   const issues=(l.issues||[]).filter(Boolean);
   const desc=l.kind==='site'?'Has a working website'+(l.website?' ('+String(l.website).replace(/^https?:\/\/(www\.)?/,'').replace(/\/.*$/,'')+')':'')+'.':l.kind==='chain'?'Part of a chain, so the website is run by head office.':(issues.length?issues.join('. ')+'.':TAGS[l.kind]+'.');
   card.append(
-    el('div',{class:'top'},el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),el('div',{class:'rt'},el('span',{class:'badge b-'+(l.pending?'site':l.kind)},l.pending?'Checking':(TAGS[l.kind]||'Lead')),el('div',{class:'score',title:'Estimated chance of landing this lead'},el('b',{class:l.pending?'low':pc>=60?'hot':pc>=35?'mid':'low'},l.pending?'--':pc+'%'),el('small',null,'Chance')))),
-    el('div',{class:'bar'},el('i',{class:l.pending?'run':'',style:'width:'+(l.pending?100:pc)+'%;background:'+(pc>=60?'var(--green)':pc>=35?'var(--amber)':'var(--dim)')})),
+    el('div',{class:'top'},el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),el('div',{class:'rt'},el('span',{class:'badge b-'+(l.pending?'site':l.kind)},l.pending?'Checking':(TAGS[l.kind]||'Lead')),el('div',{class:'score',title:'Estimated chance of landing this lead'},el('b',{class:pc>=60?'hot':pc>=35?'mid':'low'},(l.pending?'~':'')+pc+'%'),el('small',null,l.pending?'Estimating':'Chance')))),
+    el('div',{class:'bar'},el('i',{class:l.pending?'run':'',style:'width:'+pc+'%;background:'+(pc>=60?'var(--green)':pc>=35?'var(--amber)':'var(--dim)')})),
     el('p',{class:'desc'},l.pending?(l.searchPending?'Checking for a website...':'Checking their website...'):desc.replace(/\.\.$/,'.')),
+    el('div',{class:'why'},ci.why.join(' · ')),
     el('div',{class:'foot'},
       el('div',{class:'tags'},el('span',{class:'tag hi'},where.split(',')[0]),
         tel(l.phone)?el('a',{class:'tag',href:tel(l.phone),title:l.phone},'Phone'):null,

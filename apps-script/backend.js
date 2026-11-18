@@ -1480,7 +1480,8 @@ function leadsFindFree_(d) {
       phone: fmtPhone_(tg.phone || tg['contact:phone'] || ''), website: clip_(web || fb, 300), address: clip_(addr, 160), city: city,
       full: [addr, city].filter(String).join(', '), rating: 0, reviews: 0, brand: !!(tg.brand || tg['brand:wikidata']),
       maps: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(tg.name + ' ' + (addr || '') + ' ' + city),
-      hours: [], kind: 'site', issues: [], source: 'free' };
+      hours: [], kind: 'site', issues: [], source: 'free',
+      oh: !!tg.opening_hours, em: !!(tg.email || tg['contact:email']), so: !!(fb || tg['contact:instagram'] || tg.instagram) };
   });
   var fast = !!d.fast;
   leadsVerifyFree_(leads, fast);
@@ -1516,7 +1517,7 @@ function leadsVerify_(d) {
     return { id: clip_(l.id, 200), name: clip_(l.name, 120), type: clip_(l.type, 60), ptype: clip_(l.ptype, 40), phone: clip_(l.phone, 40),
       website: l.searchPending ? '' : clip_(l.website, 300), address: clip_(l.address, 160), city: clip_(l.city, 60), full: clip_(l.full, 220),
       rating: Number(l.rating) || 0, reviews: Number(l.reviews) || 0, brand: !!l.brand, maps: clip_(l.maps, 400), hours: [],
-      found: !!l.found && !l.searchPending, kind: 'site', issues: [], source: 'free' };
+      found: !!l.found && !l.searchPending, kind: 'site', issues: [], source: 'free', oh: !!l.oh, em: !!l.em, so: !!l.so };
   }).filter(function (l) { return l.id && l.name; });
   leadsVerifyFree_(list, false, 22000);
   leadsCheckSites_(list, true);
