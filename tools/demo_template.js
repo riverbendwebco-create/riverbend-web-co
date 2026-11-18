@@ -548,7 +548,8 @@ function diner(C){
     h('nav',{class:'dn-links l'},[['d-special','Daily Special'],['d-favs','Favorites'],['d-menu','Menu']].map(lk)),
     h('a',{class:'dn-logo',href:'#',onclick:e=>{e.preventDefault();scrollTo('d-top');}},name),
     h('nav',{class:'dn-links r'},[['d-snaps','Snapshots'],['d-revs','Reviews'],['d-visit','Hours']].map(lk)),
-    C.tel?h('a',{class:'dn-mcall',href:C.tel,'aria-label':'Call '+C.phoneTxt},ico('phone',18,'')):null));
+    C.tel?h('a',{class:'dn-mcall',href:C.tel,'aria-label':'Call '+C.phoneTxt},ico('phone',18,'')):null),
+    h('nav',{class:'dn-mtabs','aria-label':'Sections'},[['d-special','Special'],['d-favs','Favorites'],['d-menu','Menu'],['d-snaps','Photos'],['d-revs','Reviews'],['d-visit','Hours']].map(lk)));
 
   const bell=h('span',{class:'dn-bellart','aria-hidden':'true'}); bell.innerHTML='<svg viewBox="0 0 120 90"><defs><linearGradient id="bchr" x1="0" x2="1"><stop offset="0" stop-color="#7B8188"/><stop offset=".4" stop-color="#FAFBFC"/><stop offset="1" stop-color="#6E747B"/></linearGradient></defs><rect x="54" y="4" width="12" height="8" rx="3" fill="url(#bchr)"/><rect x="58" y="10" width="4" height="10" fill="#6E747B"/><path d="M18 72a42 42 0 0 1 84 0z" fill="url(#bchr)"/><path d="M34 52c4-12 14-20 26-22" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/><rect x="8" y="72" width="104" height="14" rx="4" fill="#1E1A1A"/><rect x="8" y="72" width="104" height="4" fill="#3A3434"/></svg>';
   const tent=h('button',{type:'button',class:'dn-tent',onclick:()=>scrollTo('d-menu')},h('span',{class:'f'},h('span',{class:'t'},'Menu'),h('span',{class:'s'},'Breakfast and lunch'),h('span',{class:'g'},'Read it ',h('b',null,'→'))));
@@ -580,7 +581,8 @@ function diner(C){
       C.tel?h('a',{class:'dn-btn dn-red',href:C.tel},ico('phone',18,''),'Call for today\'s special'):null));
 
   const favs=(Array.isArray(C.x.favs)?C.x.favs:[]).filter(f=>f&&f.name).slice(0,6);
-  const favEl=favs.length?sec('d-favs','dn-favs-sec',head('Order up','House Favorites','The plates regulars come back for.'),
+  const memphis=h('div',{class:'dn-memphis','aria-hidden':'true'}); memphis.innerHTML='<i class="m1"></i><i class="m2"></i><i class="m3"></i><i class="m4"></i><i class="m5"></i><i class="m6"></i>';
+  const favEl=favs.length?sec('d-favs','dn-favs-sec',memphis,head('Order up','House Favorites','The plates regulars come back for.'),
     h('div',{class:'dn-checks'},favs.map((f,ix)=>{ const it=C.items.find(i=>i.name===f.name)||{};
       return h('article',{class:'dn-check'},
         h('div',{class:'dn-check-h'},h('span',null,'Guest check'),h('span',null,'No. '+(1041+ix))),
@@ -597,7 +599,7 @@ function diner(C){
   }
 
   const snaps=C.own.length?sec('d-snaps','dn-snaps',head('Around the cafe','Snapshots'),
-    h('div',{class:'dn-polas'},C.own.slice(0,9).map((u,ix)=>{ const cap=(C.x.caps||[])[ix]||''; return h('button',{type:'button',class:'dn-pola',style:'--r:'+([-3,2,-1.5,3,-2.5,1.5,-2,2.5,-1][ix%9])+'deg','aria-label':'Open photo',onclick:()=>gallery(C.own,'Dottie\'s Cafe',ix)},bg(h('div',{class:'ph'}),u),cap?h('span',null,cap):null); }))):null;
+    h('div',{class:'dn-polas'},C.own.slice(0,12).map((u,ix)=>{ const cap=(C.x.caps||[])[ix]||''; const big=C.x.hd===true?C.own.map(v=>v.replace(/(\.jpe?g)$/i,'-hd$1')):C.own; return h('button',{type:'button',class:'dn-pola',style:'--r:'+([-3,2,-1.5,3,-2.5,1.5,-2,2.5,-1][ix%9])+'deg','aria-label':'Open photo',onclick:()=>gallery(big,'Dottie\'s Cafe',ix)},bg(h('div',{class:'ph'}),u),cap?h('span',null,cap):null); }))):null;
 
   const story=sec('d-story','dn-story',bg(h('div',{class:'ph'}),C.storyPic||C.own[0]||C.hero),
     h('div',{class:'b'},h('span',{class:'dn-script'},'Our story'),h('h2',null,'A hometown counter on Central Avenue'),h('p',null,C.about),
@@ -635,7 +637,7 @@ function gallery(list,title,start){
   const cnt=h('span',null,(i+1)+' / '+list.length);
   const close=()=>{ box.remove(); document.removeEventListener('keydown',key); };
   const key=e=>{ if(e.key==='Escape') close(); if(e.key==='ArrowRight') go(1); if(e.key==='ArrowLeft') go(-1); };
-  const box=h('div',{class:'wx-lb',role:'dialog','aria-label':title,onclick:e=>{ if(e.target===box) close(); }},
+  const box=h('div',{class:'wx-lb'+(document.querySelector('.dn')?' wx-lb-big':''),role:'dialog','aria-label':title,onclick:e=>{ if(e.target===box) close(); }},
     h('div',{class:'in'},h('div',{class:'bar'},h('b',null,title),cnt,h('button',{type:'button','aria-label':'Close',onclick:close},'Close')),im,
       list.length>1?h('div',{class:'nav'},h('button',{type:'button',onclick:()=>go(-1)},'Previous'),h('button',{type:'button',onclick:()=>go(1)},'Next')):null));
   document.addEventListener('keydown',key); document.body.append(box);
