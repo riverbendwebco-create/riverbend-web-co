@@ -317,7 +317,7 @@ function demoSeeds_() {
   try { list = JSON.parse(raw); } catch (e) { return []; }
   if (!Array.isArray(list)) return [];
   return list.filter(function (sd) {
-    return sd && /^[a-z0-9-]{1,60}$/.test(String(sd.key)) && /^[a-z0-9-]{3,80}$/.test(String(sd.slug)) &&
+    return sd && /^[a-z0-9-]{1,60}$/.test(String(sd.key)) && (/^[a-z0-9-]{3,80}$/.test(String(sd.slug)) || (!sd.slug && sd.patch && /^[\w &'.-]{3,80}$/.test(String(sd.matchName || '')))) &&
       sd.data && typeof sd.data === 'object' && !Array.isArray(sd.data);
   }).slice(0, 60);
 }
@@ -330,8 +330,17 @@ function applySeeds_() {
     try {
       if (props.getProperty('seed_' + sd.key)) return;
       var sh = demoSheet_();
-      var row = findRow_(sh, sd.slug);
-      if (row) {
+      var rows = [];
+      if (sd.slug) { var r0 = findRow_(sh, sd.slug); if (r0) rows.push(r0); }
+      else if (sd.matchName && sd.patch) {
+        /* patch every demo whose business name matches (used when the slug is not known) */
+        var want = String(sd.matchName).toLowerCase().replace(/[^a-z0-9]/g, ''), last = sh.getLastRow();
+        if (want && last >= 2) sh.getRange(2, 1, last - 1, 2).getValues().forEach(function (v, i) {
+          if (String(v[1]).toLowerCase().replace(/[^a-z0-9]/g, '') === want) rows.push(i + 2);
+        });
+      }
+      rows.forEach(function (row) {
+        var slug = String(sh.getRange(row, 1).getValue());
         var prev = JSON.parse(sh.getRange(row, 7).getValue() || '{}');
         var src = JSON.parse(JSON.stringify(sd.data));
         if (sd.patch) { var base = JSON.parse(JSON.stringify(prev)); Object.keys(src).forEach(function (k) { base[k] = src[k]; }); src = base; }
@@ -342,8 +351,8 @@ function applySeeds_() {
         if (sd.dropHero && demo.heroId) { trash_(demo.heroId); demo.heroId = ''; }
         demo.updated = new Date().toISOString();
         var safe = function (v) { v = String(v || ''); return /^[=+\-@]/.test(v) ? "'" + v : v; };
-        sh.getRange(row, 1, 1, 7).setValues([[sd.slug, safe(demo.name), demo.style, safe(demo.city), demo.private.status, new Date(), JSON.stringify(demo)]]);
-      }
+        sh.getRange(row, 1, 1, 7).setValues([[slug, safe(demo.name), demo.style, safe(demo.city), demo.private.status, new Date(), JSON.stringify(demo)]]);
+      });
       props.setProperty('seed_' + sd.key, new Date().toISOString());
     } catch (e) { console.error(e); } finally { lock.releaseLock(); }
   });
