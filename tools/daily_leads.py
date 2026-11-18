@@ -38,7 +38,7 @@ def call(body, tries=3):
     for i in range(tries):
         try:
             req = urllib.request.Request(API, data=json.dumps(body).encode(), headers={'Content-Type': 'text/plain;charset=utf-8'})
-            with urllib.request.urlopen(req, timeout=330) as r:
+            with urllib.request.urlopen(req, timeout=180) as r:
                 return json.load(r)
         except Exception as e:  # network hiccup or Apps Script busy
             err = e
@@ -78,10 +78,22 @@ def main():
     def is_new(l):
         return l['id'] not in seen_ids and norm(l['name']) not in seen_names and digits(l.get('phone')) not in seen_phones
 
-    pool, searched = [], []
-    hot = 0
+    start = time.time()
+    today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-6))).strftime('%b %-d')
+    added = []
+
+    def save(batch):
+        for l in batch:
+            if len(added) >= TARGET:
+                return
+            l['note'] = 'Daily finder %s: %s' % (today, LABEL[l['kind']])
+            r = call({'token': tok, 'action': 'leads_save', 'lead': l})
+            if r.get('ok') and not r.get('already'):
+                added.append(l)
+
+    weak_pool = []
     for label, q in CATEGORIES:
-        if hot >= TARGET:
+        if len(added) >= TARGET or time.time() - start > 25 * 60:
             break
         r = call({'token': tok, 'action': 'leads_find', 'q': q, 'wide': True, 'fast': True})
         if not r.get('ok') and r.get('error') == 'busy':
@@ -94,36 +106,26 @@ def main():
                  if not l.get('brand') and l.get('kind') != 'chain' and digits(l.get('phone')) and is_new(l)
                  and (l.get('pending') or l.get('kind') in RANK)]
         cands.sort(key=lambda l: (0 if l.get('searchPending') else 1, RANK.get(l.get('kind'), 3)))
-        cands = cands[:48]
+        cands = cands[:24]
         batches = [cands[i:i + 4] for i in range(0, len(cands), 4)]
         checked = []
         with cf.ThreadPoolExecutor(max_workers=4) as ex:
             for res in ex.map(lambda b: call({'token': tok, 'action': 'leads_verify', 'leads': b}), batches):
                 if res.get('ok'):
                     checked.extend(res['leads'])
-        kept = 0
+        kept, hot_now = 0, []
         for l in checked:
             if l.get('kind') not in RANK or not digits(l.get('phone')) or not is_new(l):
                 continue
             l['category'] = label
-            pool.append(l)
             seen_names.add(norm(l['name']))
             seen_phones.add(digits(l['phone']))
             kept += 1
-            if l['kind'] in ('none', 'social'):
-                hot += 1
-        searched.append('%s %d' % (label, kept))
-        print('%s: %d found, %d checked, %d new leads' % (label, len(r['leads']), len(checked), kept))
+            (hot_now if l['kind'] in ('none', 'social') else weak_pool).append(l)
+        save(hot_now)  # no website and Facebook-only are saved right away
+        print('%s: %d found, %d checked, %d new leads, %d saved so far, %d min' % (label, len(r['leads']), len(checked), kept, len(added), (time.time() - start) // 60))
 
-    pool.sort(key=lambda l: RANK[l['kind']])
-    pick = pool[:TARGET]
-    today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-6))).strftime('%b %-d')
-    added = []
-    for l in pick:
-        l['note'] = 'Daily finder %s: %s' % (today, LABEL[l['kind']])
-        r = call({'token': tok, 'action': 'leads_save', 'lead': l})
-        if r.get('ok') and not r.get('already'):
-            added.append(l)
+    save(weak_pool)  # top up with weak websites if there is room
 
     by_kind = {k: sum(1 for l in added if l['kind'] == k) for k in RANK}
     by_cat = {}
