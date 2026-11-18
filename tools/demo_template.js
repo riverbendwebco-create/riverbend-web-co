@@ -532,7 +532,7 @@ function dnCounter(){
   const n=7, w=760, gap=w/n; let st='';
   for(let i=0;i<n;i++){ const x=gap*i+gap/2; st+='<g class="stool" style="animation-delay:'+(i*.35)+'s"><rect x="'+(x-3)+'" y="150" width="6" height="58" fill="url(#chr)"/><ellipse cx="'+x+'" cy="210" rx="22" ry="6" fill="url(#chr)"/><ellipse cx="'+x+'" cy="146" rx="30" ry="10" fill="#8E1620"/><ellipse cx="'+x+'" cy="141" rx="30" ry="10" fill="#C42633"/><ellipse cx="'+(x-8)+'" cy="138" rx="10" ry="3" fill="#fff" opacity=".35"/><rect x="'+(x-31)+'" y="141" width="62" height="5" fill="url(#chr)"/></g>'; }
   const d=h('div',{class:'dn-counter','aria-hidden':'true'});
-  d.innerHTML='<svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMax meet"><defs><linearGradient id="chr" x1="0" x2="1"><stop offset="0" stop-color="#8A9097"/><stop offset=".45" stop-color="#F4F6F8"/><stop offset="1" stop-color="#7B8188"/></linearGradient><pattern id="chk" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#1E1A1A"/><rect x="10" y="10" width="10" height="10" fill="#1E1A1A"/><rect x="10" width="10" height="10" fill="#fff"/><rect y="10" width="10" height="10" fill="#fff"/></pattern></defs><rect x="0" y="40" width="760" height="14" rx="4" fill="url(#chr)"/><rect x="0" y="54" width="760" height="58" fill="#B3202A"/><rect x="0" y="62" width="760" height="4" fill="#fff" opacity=".25"/><rect x="0" y="104" width="760" height="8" fill="url(#chr)"/><rect x="0" y="112" width="760" height="8" fill="url(#chk)"/><g opacity=".9"><rect x="70" y="18" width="34" height="24" rx="4" fill="#fff" stroke="#8A9097" stroke-width="2"/><path d="M104 24h6a5 5 0 0 1 0 10h-6" fill="none" stroke="#8A9097" stroke-width="2"/><rect x="560" y="6" width="22" height="36" rx="3" fill="#fff" stroke="#8A9097" stroke-width="2"/><rect x="590" y="14" width="18" height="28" rx="3" fill="#C42633"/><rect x="616" y="20" width="14" height="22" rx="3" fill="#F2C230"/></g>'+st+'</svg>';
+  d.innerHTML='<svg viewBox="0 40 760 180" preserveAspectRatio="xMidYMax meet"><defs><linearGradient id="chr" x1="0" x2="1"><stop offset="0" stop-color="#8A9097"/><stop offset=".45" stop-color="#F4F6F8"/><stop offset="1" stop-color="#7B8188"/></linearGradient><pattern id="chk" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#1E1A1A"/><rect x="10" y="10" width="10" height="10" fill="#1E1A1A"/><rect x="10" width="10" height="10" fill="#fff"/><rect y="10" width="10" height="10" fill="#fff"/></pattern></defs><rect x="0" y="40" width="760" height="14" rx="4" fill="url(#chr)"/><rect x="0" y="54" width="760" height="58" fill="#B3202A"/><rect x="0" y="62" width="760" height="4" fill="#fff" opacity=".25"/><rect x="0" y="104" width="760" height="8" fill="url(#chr)"/><rect x="0" y="112" width="760" height="8" fill="url(#chk)"/>'+st+'</svg>';
   return d;
 }
 function diner(C){
@@ -542,25 +542,34 @@ function diner(C){
   const sec=(id,cls,...k)=>h('section',{class:'dn-sec rv '+(cls||''),id},...k);
   const head=(script,title,sub)=>h('div',{class:'dn-head'},h('span',{class:'dn-script'},script),h('h2',null,title),sub?h('p',null,sub):null);
 
-  const nav=h('header',{class:'dn-nav'},h('div',{class:'dn-nav-in'},
-    h('a',{class:'dn-logo',href:'#',onclick:e=>{e.preventDefault();scrollTo('d-top');}},C.name.replace(/^Dotties\b/,"Dottie's")),
-    h('nav',{class:'dn-links'},[['d-special','Daily Special'],['d-favs','Favorites'],['d-menu','Menu'],['d-snaps','Snapshots'],['d-visit','Hours']].map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
-    C.tel?h('a',{class:'dn-btn dn-red dn-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null));
-
   const name=C.name.replace(/^Dotties\b/,"Dottie's");
+  const lk=([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l);
+  const nav=h('header',{class:'dn-nav'},h('div',{class:'dn-nav-in'},
+    h('nav',{class:'dn-links l'},[['d-special','Daily Special'],['d-favs','Favorites'],['d-menu','Menu']].map(lk)),
+    h('a',{class:'dn-logo',href:'#',onclick:e=>{e.preventDefault();scrollTo('d-top');}},name),
+    h('nav',{class:'dn-links r'},[['d-snaps','Snapshots'],['d-revs','Reviews'],['d-visit','Hours']].map(lk)),
+    C.tel?h('a',{class:'dn-mcall',href:C.tel,'aria-label':'Call '+C.phoneTxt},ico('phone',18,'')):null));
+
+  const bell=h('span',{class:'dn-bellart','aria-hidden':'true'}); bell.innerHTML='<svg viewBox="0 0 120 90"><defs><linearGradient id="bchr" x1="0" x2="1"><stop offset="0" stop-color="#7B8188"/><stop offset=".4" stop-color="#FAFBFC"/><stop offset="1" stop-color="#6E747B"/></linearGradient></defs><rect x="54" y="4" width="12" height="8" rx="3" fill="url(#bchr)"/><rect x="58" y="10" width="4" height="10" fill="#6E747B"/><path d="M18 72a42 42 0 0 1 84 0z" fill="url(#bchr)"/><path d="M34 52c4-12 14-20 26-22" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/><rect x="8" y="72" width="104" height="14" rx="4" fill="#1E1A1A"/><rect x="8" y="72" width="104" height="4" fill="#3A3434"/></svg>';
+  const tent=h('button',{type:'button',class:'dn-tent',onclick:()=>scrollTo('d-menu')},h('span',{class:'f'},h('span',{class:'t'},'Menu'),h('span',{class:'s'},'Breakfast and lunch'),h('span',{class:'g'},'Read it ',h('b',null,'→'))));
+  const callEl=C.tel?h('a',{class:'dn-bell',href:C.tel},bell,h('span',{class:'dn-bell-t'},h('small',null,'Ring the counter'),h('b',null,C.phoneTxt))):null;
+  const sign=h('div',{class:'dn-mini'},h('small',null,openNow?'Open today':'Closed today'),h('b',null,openNow?C.today:'See you Tuesday'),h('span',null,'Hours ↓'));
+  sign.addEventListener('click',()=>scrollTo('d-visit'));
   const hero=h('section',{class:'dn-hero',id:'d-top'},
-    h('div',{class:'dn-hero-in'},
-      h('div',{class:'dn-hero-t'},
-        h('div',{class:'dn-neon'},h('span',null,'Meals'),h('span',null,'Lunches')),
-        h('h1',null,name),
-        h('p',{class:'dn-tag'},C.tag),
-        h('p',null,short(C.about.replace(C.tag,'').trim(),190)),
-        h('div',{class:'dn-acts'},C.tel?h('a',{class:'dn-btn dn-red',href:C.tel},ico('phone',18,''),'Call '+C.phoneTxt):null,
-          h('button',{type:'button',class:'dn-btn dn-line',onclick:()=>scrollTo('d-menu')},'See the menu')),
-        h('div',{class:'dn-open'},h('b',null,openNow?'Open today':'Closed today'),h('span',null,openNow?C.today:'Opens 5:30am Tuesday'),h('span',null,[C.addr,city].filter(Boolean).join(', ')))),
-      h('div',{class:'dn-window'},bg(h('div',{class:'ph'}),C.hero))),
-    h('div',{class:'dn-pull'},h('span',{class:'dn-script'},'Pull up a stool'),h('p',null,'Red booths, a long lunch counter and stools that still spin.')),
-    dnCounter());
+    h('div',{class:'dn-marquee'},
+      h('div',{class:'dn-neon'},h('span',null,'Meals'),h('i'),h('span',null,'Lunches')),
+      h('h1',null,name),
+      h('p',{class:'dn-tag'},C.tag)),
+    h('div',{class:'dn-bar'},h('div',{class:'dn-props'},tent,callEl,sign),dnCounter(),
+      h('span',{class:'dn-hint'},'Hover a stool, they still spin')),
+    h('div',{class:'dn-booth'},
+      h('i',{class:'dn-seat l'}),
+      h('div',{class:'dn-table'},
+        h('div',{class:'dn-window'},bg(h('div',{class:'ph'}),C.storyPic||C.hero),h('span',null,(C.addr||'')+' · '+city)),
+        h('div',{class:'dn-booth-t'},h('span',{class:'dn-script'},'Pull up a stool'),
+          h('h2',null,'Breakfast and lunch on Central Avenue'),
+          h('p',null,C.about.replace(C.tag,'').trim()))),
+      h('i',{class:'dn-seat r'})));
 
   const sp=C.x.special&&typeof C.x.special==='object'?C.x.special:{};
   const special=sec('d-special','dn-board-sec',
@@ -609,7 +618,7 @@ function diner(C){
 
   const foot=h('footer',{class:'dn-foot'},h('i',{class:'dn-checker'}),h('div',{class:'in'},h('b',null,name),
     h('span',null,'© '+new Date().getFullYear()+' '+name+' · '+[C.addr,C.city].filter(Boolean).join(', ')),h('span',null,'Site by Riverbend Web Co.')));
-  return h('div',{class:'demo western on dn'},nav,hero,special,favEl,menu,snaps,story,revs,visit,foot);
+  return h('div',{class:'demo western on dn'},nav,hero,special,favEl,menu,snaps,revs,visit,foot);
 }
 /* Hero review card: best review first, gently rotates through the top three */
 function heroReview(C){
