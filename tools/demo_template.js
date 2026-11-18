@@ -379,30 +379,41 @@ function trailhead(C){
   const pts=Array.isArray(ride.points)?ride.points.filter(x=>typeof x==='string').slice(0,5):[];
   const first=C.specials[0];
   const sec=(id,cls,...k)=>h('section',{class:'hl-sec rv '+(cls||''),id},...k);
-  const head=(kick,title,sub)=>h('div',{class:'hl-head'},kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null);
+  let secN=0;
+  const head=(kick,title,sub)=>{ secN++; return h('div',{class:'hl-head'},h('span',{class:'hl-num'},String(secN).padStart(2,'0')),h('div',null,kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null)); };
 
   const top=first?h('div',{class:'hl-ann'},h('span',null,first.title),first.when?h('b',null,first.when):null):null;
-  const links=[['w-events','Specials'],C.x.feature?['w-feature','Trail Boss']:null,C.items.length?['w-menu','Menu']:null,['w-camp','Our Story'],C.reviews.length?['w-reviews','Reviews']:null,['w-visit','Find Us']].filter(Boolean);
+  const links=[['w-top','Trailhead'],['w-events','Specials'],C.x.feature?['w-feature','Trail Boss']:null,C.items.length?['w-menu','Menu']:null,C.own.length>=3?['w-gal','Photos']:null,['w-camp','Our Story'],C.reviews.length?['w-reviews','Reviews']:null,['w-visit','Find Us']].filter(Boolean);
+  const stopBtns=[];
+  const side=h('aside',{class:'hl-side'},
+    h('a',{class:'hl-side-logo',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');}},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name)),
+    h('div',{class:'hl-side-lbl'},'Trail map'),
+    h('nav',{class:'hl-stops'},links.map(([id,l])=>{ const bt=h('button',{type:'button','data-id':id,onclick:()=>scrollTo(id)},h('i'),l); stopBtns.push(bt); return bt; })),
+    h('div',{class:'hl-side-foot'},
+      C.today?h('div',{class:'hl-side-today'},h('small',null,'Today'),h('b',null,openNow?C.today:'Closed')):null,
+      C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',16,''),C.phoneTxt):null));
   const nav=h('header',{class:'hl-nav'},h('div',{class:'hl-nav-in'},
     h('a',{class:'hl-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');}},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name)),
-    h('nav',{class:'hl-links'},links.map(([id,l],i)=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('i',null,String(i+1).padStart(2,'0')),l))),
-    C.tel?h('a',{class:'hl-btn hl-rust hl-sm',href:C.tel},ico('phone',16,''),'Call'):null));
+    C.tel?h('a',{class:'hl-btn hl-rust hl-sm',href:C.tel},ico('phone',16,''),'Call'):null),
+    h('nav',{class:'hl-mstops'},links.slice(1).map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
 
   const rv=C.reviews[0];
-  const hero=h('section',{class:'hl-hero',id:'w-top'},
-    h('div',{class:'hl-hero-t'},
-      h('div',{class:'hl-kick'},h('span',null,'Trailhead'),[C.cat,city].filter(Boolean).join(' · ')),
-      h('h1',null,C.tag||C.name),
-      heroTxt?h('p',null,heroTxt):null,
-      h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',18,''),C.phoneTxt):null,
-        C.items.length?h('button',{type:'button',class:'hl-btn hl-line',onclick:()=>scrollTo('w-menu')},'See the menu'):null),
-      h('dl',{class:'hl-board'},
-        h('div',null,h('dt',null,'Today'),h('dd',null,C.today?(openNow?'Open '+C.today:'Closed today'):'Call for hours')),
-        (C.addr||C.city)?h('div',null,h('dt',null,'Find us'),h('dd',null,[C.addr,city].filter(Boolean).join(', '))):null,
-        pts[0]?h('div',null,h('dt',null,'Ride in'),h('dd',null,pts[0])):null)),
-    bg(h('div',{class:'hl-hero-p ph'},
+  const hero=bg(h('section',{class:'hl-hero ph',id:'w-top'},
       h('span',{class:'hl-pin'},ico('pin',16,''),[city,(C.city.split(',')[1]||'').trim()].filter(Boolean).join(', ')),
-      rv?h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),h('blockquote',null,'“'+short(rv.text,120)+'”'),h('figcaption',null,rv.name)):null),C.hero));
+      h('div',{class:'hl-hero-t'},
+        h('div',{class:'hl-kick'},[C.cat,city].filter(Boolean).join(' / ')),
+        h('h1',null,C.name),
+        h('p',{class:'hl-slogan'},C.tag),
+        heroTxt?h('p',null,heroTxt):null,
+        h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',18,''),C.phoneTxt):null,
+          C.items.length?h('button',{type:'button',class:'hl-btn hl-line-w',onclick:()=>scrollTo('w-menu')},'See the menu'):null)),
+      rv?h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),h('blockquote',null,'“'+short(rv.text,110)+'”'),h('figcaption',null,rv.name)):null),
+    C.hero,'linear-gradient(0deg,rgba(20,26,21,.92) 0%,rgba(20,26,21,.55) 45%,rgba(20,26,21,.15) 100%)');
+  const strip=h('div',{class:'hl-strip'},
+    h('div',null,h('small',null,'Today'),h('b',null,C.today?(openNow?'Open '+C.today:'Closed today'):'Call for hours')),
+    (C.addr||C.city)?h('div',null,h('small',null,'Find us'),h('b',null,[C.addr,city].filter(Boolean).join(', '))):null,
+    pts[0]?h('div',null,h('small',null,'Ride in'),h('b',null,pts[0])):null,
+    C.phoneTxt?h('div',null,h('small',null,'Call'),h('b',null,C.phoneTxt)):null);
 
   /* weekly specials: day rail on the left, big stage on the right */
   const days=C.x.week.filter(w=>w&&typeof w==='object'&&w.title).slice(0,8);
@@ -421,7 +432,7 @@ function trailhead(C){
   paint();
   if(days.length>1&&!matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(()=>{wi=(wi+1)%days.length;paint();},7000);
   const b=C.x.banner&&typeof C.x.banner==='object'&&C.x.banner.title?C.x.banner:null;
-  const week=sec('w-events','hl-week',head('Every day is a reason to ride in','This Week at '+C.name.replace(/^The /,'the ')),
+  const week=sec('w-events','hl-week',head('Every day is a reason to ride in','This week at the Holler'.replace('the Holler',C.name.replace(/^The /,'the '))),
     h('div',{class:'hl-weekgrid'},rail,stage),
     b?h('div',{class:'hl-banner'},h('span',null,'Once a month'),h('b',null,b.title),b.detail?h('p',null,b.detail):null):null);
 
@@ -487,7 +498,9 @@ function trailhead(C){
 
   const foot=h('footer',{class:'hl-foot'},h('div',{class:'in'},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name),
     h('span',null,'© '+new Date().getFullYear()+' '+C.name+(C.addr?' · '+[C.addr,C.city].filter(Boolean).join(', '):'')),h('span',null,'Site by Riverbend Web Co.')));
-  const page=h('div',{class:'demo western on v-trail hl'},top,nav,hero,week,boss,menu,gal,camp,revs,visit,foot);
+  const main=h('div',{class:'hl-main'},top,nav,hero,strip,week,boss,menu,gal,camp,revs,visit,foot);
+  const page=h('div',{class:'demo western on v-trail hl'},side,main);
+  if('IntersectionObserver' in window) setTimeout(()=>{ const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) stopBtns.forEach(b=>b.classList.toggle('on',b.dataset.id===e.target.id)); }),{rootMargin:'-45% 0px -50% 0px'}); links.forEach(([id])=>{ const el=document.getElementById(id); if(el) io.observe(el); }); },0);
   Object.keys(C.bg).forEach(k=>{ if(/^[a-z]{2,12}$/.test(k)&&okUrl(C.bg[k])) page.style.setProperty('--bg-'+k,cssUrl(C.bg[k])); });
   return page;
 }
