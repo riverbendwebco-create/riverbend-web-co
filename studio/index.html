@@ -497,7 +497,8 @@ function renderCards(){
       el('div',{class:'dc-actions'},
         el('button',{class:'btn btn-primary btn-sm',type:'button',onclick:()=>openDemo(d.slug)},svgUse('i-ext'),document.createTextNode('Open demo')),
         el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>edit(d.slug)},document.createTextNode('Edit')),
-        el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>copyLink(d.slug)},svgUse('i-link'),document.createTextNode('Copy link'))));
+        el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>copyLink(d.slug)},svgUse('i-link'),document.createTextNode('Copy link')),
+        el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>window.open(demoUrl(d.slug)+'&view=marketing','_blank','noopener')},svgUse('i-ext'),document.createTextNode('Marketing'))));
   }));
 }
 $('#q').addEventListener('input',renderCards); $('#fStatus').addEventListener('change',renderCards);
