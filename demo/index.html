@@ -1049,7 +1049,6 @@ const MK_SOCIAL=[
   {id:'soc2',name:'Social Growth',price:199,per:'mo',what:'The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you.',idea:C=>{ const f=pickFavs(C)[0]; return f?'A short Reel of your '+f.name+' to show people what they are missing.':''; }}
 ];
 const MK=[
-  {id:'gbp',name:'Google Business Profile management',price:99,per:'mo',what:'We keep your hours, photos, specials and posts current on Google Search and Maps.',idea:C=>C.hasHours?'Your hours, specials and new photos stay correct on Google, so people searching nearby see you first.':''},
   {id:'club',name:'Email or text club for specials',price:25,per:'mo',what:'Guests sign up on your site, and we send your specials and events to them for you.',idea:C=>C.specials[0]?'A text to your club before '+C.specials[0].title+(C.specials[0].when?' ('+C.specials[0].when+')':'')+'.':''},
   {id:'qr',name:'QR menu and table tents',price:60,per:'one-time',what:'Table tents with a QR code that opens your menu, specials and social pages.',idea:()=>''},
   {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',what:'We connect online ordering, carry-out or reservations to your website.',idea:C=>C.specials.some(s=>/carry|reserve|order/i.test(s.detail||''))?'Your guests already call ahead for carry-out, so online ordering could take some of those calls.':''}
@@ -1108,7 +1107,7 @@ function marketing(C){
       h('div',{class:'mp-cover-l'},
         h('div',{class:'mp-eyebrow'},'Marketing proposal'),
         h('h1',null,'Social media and local marketing for '+(C.name||'your business')),
-        h('p',null,'A simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Facebook, Instagram and Google.')),
+        h('p',null,'A simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Facebook and Instagram.')),
       h('dl',{class:'mp-meta'},
         h('div',null,h('dt',null,'Prepared for'),h('dd',null,C.name||'')),
         h('div',null,h('dt',null,'Prepared by'),h('dd',null,'Riverbend Web Co., Dubuque')),
