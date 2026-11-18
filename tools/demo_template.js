@@ -1163,8 +1163,8 @@ function osteria(C){
     osSvg(OS_SPRIG,'os-sprig'),
     h('div',{class:'os-cta'},jump('os-reserve','Reserve a Table','os-btn gold'),C.items.length?jump('os-menu','View the Menu','os-btn ghost'):null),
     C.today?h('p',{class:'os-today'},'Open today · '+C.today):null)),
-    C.hero,'linear-gradient(180deg,rgba(18,12,9,.3) 0%,rgba(18,12,9,.48) 55%,rgba(18,12,9,.82) 100%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
-  const story=C.about?h('section',{class:'os-sec os-story os-light'},h('div',{class:'os-wrap os-story-in'},
+    C.hero,'linear-gradient(180deg,rgba(38,22,12,.35) 0%,rgba(38,22,12,.5) 55%,rgba(31,22,17,.95) 100%),radial-gradient(ellipse at 50% 40%,rgba(230,160,80,.18),rgba(0,0,0,0) 65%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
+  const story=C.about?h('section',{class:'os-sec os-story'},h('div',{class:'os-wrap os-story-in'},
     bg(h('div',{class:'os-story-pic rv'}),C.storyPic||C.pic(1)),
     h('div',{class:'rv'},h('span',{class:'os-eyebrow'},'La Nostra Storia'),h('h2',null,'Welcome to the table'),
       h('p',{class:'os-about'},C.about),C.phoneTxt?h('a',{class:'os-link',href:C.tel||null},'Call '+C.phoneTxt):null))):null;
@@ -1176,14 +1176,14 @@ function osteria(C){
       h('div',{class:'os-item-b'},h('div',{class:'os-item-top'},h('b',null,i.name),h('span',{class:'os-dots'}),i.price?h('span',{class:'os-price'},i.price):null),i.desc?h('p',null,i.desc):null))));
     const tabs=G.names.length>1?h('div',{class:'os-tabs',role:'tablist'},G.names.map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k); }); return b; })):null;
     show(G.names[0]);
-    menu=h('section',{class:'os-sec os-menu os-light os-white',id:'os-menu'},h('div',{class:'os-wrap'},
+    menu=h('section',{class:'os-sec os-menu',id:'os-menu'},h('div',{class:'os-wrap'},
       h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'Il Menu'),h('h2',null,'From our kitchen'),osSvg(OS_SPRIG,'os-sprig')),tabs,list));
   }
   const pics=C.own.length?C.own.slice(0,7):[];
   const gal=pics.length>1?h('section',{class:'os-sec os-gal',id:'os-gallery'},h('div',{class:'os-wrap'},
     h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'La Sala'),h('h2',null,'A look inside')),
     h('div',{class:'os-grid'},pics.map((u,i)=>{ const t=bg(h('button',{type:'button',class:'os-ph g'+i,'aria-label':'Open photo '+(i+1)}),u); t.addEventListener('click',()=>gallery(pics,C.name,i)); return t; })))):null;
-  const revs=C.reviews.length?h('section',{class:'os-sec os-revs os-light'},h('div',{class:'os-wrap'},
+  const revs=C.reviews.length?h('section',{class:'os-sec os-revs'},h('div',{class:'os-wrap'},
     h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'Dicono di Noi'),h('h2',null,'What guests say')),
     h('div',{class:'os-rev-grid'},C.reviews.slice(0,3).map(r=>h('figure',{class:'os-rev rv'},h('blockquote',null,'“'+short(r.text,260)+'”'),h('figcaption',null,r.name)))),
     C.reviewsSource?h('p',{class:'os-src'},C.reviewsSource):null)):null;
@@ -1202,7 +1202,7 @@ function osteria(C){
   const map=addrTxt?h('div',{class:'os-map rv'},
     h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+C.name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}),
     h('div',{class:'os-map-card'},h('b',null,C.name),h('span',null,addrTxt),C.maps?h('a',{class:'os-btn gold sm',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)):null;
-  const visit=h('section',{class:'os-sec os-visit os-light os-white',id:'os-visit'},h('div',{class:'os-wrap'},
+  const visit=h('section',{class:'os-sec os-visit',id:'os-visit'},h('div',{class:'os-wrap'},
     h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'Vieni a Trovarci'),h('h2',null,'Visit us')),cards,map));
   const foot=h('footer',{class:'os-foot'},h('div',{class:'os-wrap os-foot-in'},
     h('div',null,h('span',{class:'os-brand'},C.name),addrTxt?h('small',null,addrTxt):null),

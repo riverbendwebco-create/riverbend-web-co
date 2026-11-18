@@ -201,6 +201,37 @@ html.os-lock,html.os-lock body{overflow:hidden}
 .os-light .os-map{border-color:#ECE6DC;box-shadow:0 20px 50px rgba(30,22,18,.1)}
 .os-light .socials a{color:#B8924A;border-color:#E2D4B8}
 .os .os-btn.gold{box-shadow:0 10px 24px rgba(201,163,91,.25)}
+
+/* Osteria: cozy candlelit luxury (warm browns, amber glow, fine grain) */
+body.t-os{background:#1F1611}
+.os{--esp:#1F1611;--esp2:#2A1E17;--gold:#D4AE6A;--gold2:#EBCB8E;--ivory:#F5EBDD;--mut:#C7B49C;background:#1F1611;position:relative}
+.os::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.os-sec{position:relative;overflow:hidden}
+.os-sec>.os-wrap{position:relative;z-index:1}
+.os-story,.os-gal,.os-visit{background:radial-gradient(ellipse 60% 70% at 15% 20%,rgba(214,150,70,.12),rgba(0,0,0,0) 70%),#2A1E17}
+.os-menu,.os-revs{background:radial-gradient(ellipse 55% 60% at 85% 15%,rgba(214,150,70,.1),rgba(0,0,0,0) 70%),radial-gradient(ellipse 50% 50% at 10% 90%,rgba(122,31,43,.18),rgba(0,0,0,0) 70%),#1F1611}
+.os-reserve{background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(214,150,70,.14),rgba(0,0,0,0) 70%),linear-gradient(135deg,#4A1620,#2A1E17 65%)}
+.os-nav{background:rgba(31,22,17,.82);border-bottom-color:rgba(212,174,106,.25)}
+.os h2{color:#FFF6EA}
+.os-hero h1{text-shadow:0 8px 50px rgba(60,30,10,.6)}
+.os-story-pic{border-radius:18px;box-shadow:0 30px 70px rgba(0,0,0,.45),0 0 0 1px rgba(212,174,106,.25)}
+.os-about,.os-res-in p{color:#E8DCCB}
+.os-item{padding:16px 18px;border-radius:14px;transition:background .25s}
+.os-item:hover{background:rgba(212,174,106,.06)}
+.os-item-top b,.os-addr,.os-info-c p,.os-info-c p a{color:#FFF6EA}
+.os-item p,.os-hrs{color:#CDBBA3}
+.os-ph{border-radius:14px}
+.os-rev{border-radius:16px;background:rgba(255,240,220,.04);border-color:rgba(212,174,106,.22)}
+.os-card{border-radius:18px;background:rgba(31,22,17,.72);box-shadow:0 30px 70px rgba(0,0,0,.35)}
+.os-info-c{border-radius:18px;background:linear-gradient(180deg,rgba(255,240,220,.06),rgba(255,240,220,.02));border-color:rgba(212,174,106,.22);box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.os-map{border-radius:18px;border-color:rgba(212,174,106,.25);box-shadow:0 30px 70px rgba(0,0,0,.35)}
+.os-map iframe{filter:invert(.88) hue-rotate(180deg) sepia(.35) saturate(.55) brightness(.92) contrast(.92)}
+.os-map-card{border-radius:14px;background:rgba(31,22,17,.9)}
+.os-btn{border-radius:10px}
+.os .os-btn.gold{background:linear-gradient(180deg,#E3C27E,#C9A35B);border-color:#D4AE6A;box-shadow:0 10px 28px rgba(212,174,106,.28)}
+.os-form input,.os-form textarea{border-bottom-color:rgba(245,235,221,.3)}
+.os-form button{border-radius:10px;background:linear-gradient(180deg,#E3C27E,#C9A35B)}
+.os-foot{background:#1A120E}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
