@@ -434,7 +434,7 @@ function botLogin_(jwt) {
     var now = Date.now() / 1000;
     if (c.iss !== GH_OIDC || c.aud !== BOT_AUD || c.repository !== BOT_REPO || c.ref !== 'refs/heads/main'
       || c.workflow_ref !== BOT_WORKFLOW || !(c.exp > now) || !(c.iat < now + 120)
-      || ['schedule', 'workflow_dispatch'].indexOf(c.event_name) < 0) return { ok: false, error: 'auth' };
+      || ['schedule', 'workflow_dispatch', 'push'].indexOf(c.event_name) < 0) return { ok: false, error: 'auth' };
     var find = function (ks) { return (ks.keys || []).filter(function (k) { return k.kid === head.kid && k.kty === 'RSA'; })[0]; };
     var key = find(ghKeys_(false)) || find(ghKeys_(true));
     if (!key || !rsaVerify_(key.n, key.e, p[0] + '.' + p[1], p[2])) return { ok: false, error: 'auth' };
