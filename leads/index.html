@@ -44,82 +44,99 @@ svg.rw{width:52px;height:auto;aspect-ratio:1115/562;display:block}
 .msg.err{color:var(--red)}
 
 /* App shell */
-.app{height:100%;display:flex;flex-direction:column}
-.top{flex:none;background:var(--navy);color:#fff;display:flex;align-items:center;gap:12px;padding:12px 18px;padding-top:max(12px,env(safe-area-inset-top))}
-.top .t b{display:block;font-size:1rem;letter-spacing:-.01em}
-.top .t span{display:block;font-size:.75rem;color:#94A3B8}
+.app{height:100%;display:flex;flex-direction:column;background:#fff}
+.top{flex:none;display:flex;align-items:center;gap:10px;padding:12px 20px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:1px solid var(--line);background:#fff}
+.top .t b{display:block;font-size:.98rem;letter-spacing:-.01em}
 .top .sp{flex:1}
-.top button{white-space:nowrap;background:transparent;border:1px solid #334155;color:#E2E8F0;border-radius:8px;height:34px;padding:0 12px;font-weight:600;font-size:.82rem;cursor:pointer}
-.top button:hover{border-color:#64748B}
-.feed{flex:1;overflow-y:auto;padding:22px 16px 10px;-webkit-overflow-scrolling:touch}
-.wrap{max-width:820px;margin:0 auto}
-.row{display:flex;margin:0 0 14px}
+.top button{white-space:nowrap;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:8px;height:34px;padding:0 12px;font-weight:600;font-size:.84rem;cursor:pointer}
+.top button:hover{border-color:#94A3B8}
+.top button.plain{border-color:transparent;color:var(--mut)}
+.feed{flex:1;overflow-y:auto;padding:28px 18px 16px;-webkit-overflow-scrolling:touch;background:#F8FAFC}
+.wrap{max-width:760px;margin:0 auto}
+.row{display:flex;margin:0 0 18px}
 .row.me{justify-content:flex-end}
-.bubble{max-width:88%;padding:12px 15px;border-radius:12px;line-height:1.5;font-size:.95rem}
-.me .bubble{background:var(--navy);color:#fff;border-bottom-right-radius:4px}
-.bot .bubble{background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+.bubble{max-width:85%;line-height:1.55;font-size:.95rem}
+.me .bubble{background:var(--navy);color:#fff;padding:10px 14px;border-radius:12px;border-bottom-right-radius:4px}
+.bot .bubble{color:var(--ink)}
 .bot .bubble p{margin:0 0 8px}.bot .bubble p:last-child{margin:0}
 .bot.wide .bubble{max-width:100%;width:100%}
-.sugs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.sug{border:1px solid #CBD5E1;background:#fff;border-radius:8px;padding:7px 11px;font-size:.84rem;font-weight:600;cursor:pointer;color:var(--slate)}
+.sugs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sug{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:.86rem;font-weight:600;cursor:pointer;color:var(--slate)}
 .sug:hover{border-color:var(--blue);color:var(--blue)}
-.typing{display:inline-flex;gap:5px;align-items:center;color:var(--mut);font-size:.88rem}
+.typing{display:inline-flex;gap:6px;align-items:center;color:var(--mut);font-size:.9rem}
 .dot{width:6px;height:6px;border-radius:50%;background:#94A3B8;animation:b 1s infinite}
 .dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
 @keyframes b{0%,80%,100%{opacity:.3}40%{opacity:1}}
 
-/* Stats line */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 4px}
-.stat{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--soft)}
-.stat b{display:block;font-size:1.25rem;line-height:1.1}
-.stat span{font-size:.74rem;color:var(--mut);font-weight:600}
-.stat.hot b{color:var(--red)}.stat.warm b{color:var(--amber)}
+/* Welcome */
+.hero{padding:26px 0 6px}
+.hero h2{margin:0 0 6px;font-size:1.7rem;letter-spacing:-.02em;line-height:1.2}
+.hero p{margin:0;color:var(--mut);font-size:1rem}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.tile:hover{border-color:var(--blue);box-shadow:0 4px 14px rgba(0,82,204,.08)}
+.tile b{display:block;font-size:.98rem}
+.tile span{display:block;color:var(--mut);font-size:.8rem;margin-top:3px}
 
-/* Lead cards */
-.cards{display:grid;gap:10px;margin-top:12px}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 15px}
-.card-h{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
-.card h3{margin:0;font-size:1rem;letter-spacing:-.01em}
-.card .sub{color:var(--mut);font-size:.82rem;margin-top:2px}
-.tag{flex:none;font-size:.72rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:4px 8px;border-radius:6px;border:1px solid}
-.tag.none{color:var(--red);border-color:#FECACA;background:#FEF2F2}
-.tag.social{color:#9A3412;border-color:#FED7AA;background:#FFF7ED}
-.tag.weak{color:var(--amber);border-color:#FDE68A;background:#FFFBEB}
-.tag.site{color:#334155;border-color:var(--line);background:var(--soft)}
-.tag.chain{color:#475569;border-color:var(--line);background:var(--soft)}
-.meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin:9px 0 0;font-size:.85rem;color:#334155}
-.issues{margin:8px 0 0;padding-left:18px;font-size:.85rem;color:#334155}
-.issues li{margin:2px 0}
-.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.saved-on{color:var(--green);border-color:#BBF7D0;background:#F0FDF4}
-.pipe{display:grid;grid-template-columns:160px 1fr;gap:8px;margin-top:10px}
+/* Results */
+.res-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.res-h h3{margin:0;font-size:1.15rem;letter-spacing:-.01em}
+.res-h span{color:var(--mut);font-size:.85rem}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}
+.tabs button{flex:none;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font-size:.84rem;font-weight:600;color:var(--slate);cursor:pointer}
+.tabs button b{font-weight:800;margin-left:4px;color:var(--mut)}
+.tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.tabs button.on b{color:#94A3B8}
+.list{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lead{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:14px 16px;border-top:1px solid var(--line)}
+.lead:first-child{border-top:0}
+.lead h4{margin:0;font-size:.98rem;letter-spacing:-.01em}
+.lead .sub{color:var(--mut);font-size:.82rem;margin-top:2px}
+.why{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:.84rem;font-weight:600}
+.why i{width:8px;height:8px;border-radius:50%;flex:none}
+.k-none .why{color:var(--red)}.k-none .why i{background:var(--red)}
+.k-social .why{color:#C2410C}.k-social .why i{background:#EA580C}
+.k-weak .why{color:var(--amber)}.k-weak .why i{background:#D97706}
+.k-site .why,.k-chain .why{color:var(--mut)}.k-site .why i,.k-chain .why i{background:#CBD5E1}
+.lead .more-why{color:var(--mut);font-size:.8rem;margin-top:3px}
+.acts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.links{grid-column:1/-1;display:flex;gap:14px;font-size:.82rem}
+.links a{color:var(--mut);text-decoration:none;font-weight:600}
+.links a:hover{color:var(--blue)}
+.saved-on{color:var(--green)!important;border-color:#BBF7D0!important;background:#F0FDF4!important}
+.done{grid-column:1/-1;margin-top:4px;padding:10px 12px;border:1px solid #BBF7D0;background:#F0FDF4;border-radius:8px;font-size:.86rem}
+.done .acts{justify-content:flex-start;margin-top:8px}
+.note{font-size:.8rem;color:var(--mut);margin-top:10px}
+.showmore{display:block;width:100%;border:0;border-top:1px solid var(--line);background:#fff;padding:12px;font-weight:600;font-size:.86rem;color:var(--blue);cursor:pointer}
+
+/* Saved */
+.pipe{display:grid;grid-template-columns:150px 1fr;gap:8px;grid-column:1/-1;margin-top:4px}
 .pipe select,.pipe textarea{border:1px solid #CBD5E1;border-radius:8px;padding:7px 9px;background:#fff;font-size:.85rem}
-.pipe textarea{resize:vertical;min-height:58px}
-.more{margin-top:10px}
+.pipe textarea{resize:vertical;min-height:38px}
+.stage{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);border:1px solid #BFDBFE;background:#EFF6FF;border-radius:6px;padding:4px 8px;height:fit-content}
 
 /* Composer */
-.composer{flex:none;background:#fff;border-top:1px solid var(--line);padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
-.composer form{display:flex;gap:8px;max-width:820px;margin:0 auto}
-.composer input{flex:1;height:46px;border:1px solid #CBD5E1;border-radius:10px;padding:0 14px;outline:none;font-size:1rem}
-.composer input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,82,204,.15)}
-.composer button{height:46px;padding:0 18px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
+.composer{flex:none;background:#fff;border-top:1px solid var(--line);padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+.composer form{display:flex;gap:8px;max-width:760px;margin:0 auto}
+.composer input{flex:1;height:48px;border:1px solid #CBD5E1;border-radius:10px;padding:0 16px;outline:none;font-size:1rem;background:#F8FAFC}
+.composer input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(0,82,204,.12)}
+.composer button{height:48px;padding:0 20px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 
-/* Key setup */
+/* Key setup (only if a Google key is ever used) */
 .steps{margin:6px 0 10px;padding-left:20px;font-size:.9rem}
 .steps li{margin:5px 0}
 .keyrow{display:flex;gap:8px;margin-top:6px}
-.keyrow input{flex:1;height:42px;border:1px solid #CBD5E1;border-radius:8px;padding:0 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem}
-.note{font-size:.8rem;color:var(--mut)}
-@media (max-width:600px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .pipe{grid-template-columns:1fr}
-  .bubble{max-width:94%}
-  .top{padding:10px 12px}
-  .top .t span{display:none}
-  .top .t b{font-size:.9rem}
-  .top{gap:8px}
-  .top button{height:32px;padding:0 9px;font-size:.78rem}
+.keyrow input{flex:1;height:42px;border:1px solid #CBD5E1;border-radius:8px;padding:0 12px;font-size:.85rem}
+.issues{margin:8px 0 0;padding-left:18px;font-size:.88rem}
+@media (max-width:640px){
+  .top{padding:10px 14px}
   .top svg.rw{width:40px}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .hero h2{font-size:1.4rem}
+  .lead{grid-template-columns:1fr}
+  .acts{justify-content:flex-start}
+  .pipe{grid-template-columns:1fr}
+  .bubble{max-width:92%}
 }
 </style>
 </head>
@@ -144,16 +161,17 @@ svg.rw{width:52px;height:auto;aspect-ratio:1115/562;display:block}
 
 <section class="app hidden" id="app">
   <header class="top">
-    <svg class="rw" aria-hidden="true"><use href="#rw-dark"/></svg>
-    <div class="t"><b>riverbendwebcoleads</b><span>Riverbend Web Co. lead finder</span></div>
+    <svg class="rw" aria-hidden="true"><use href="#rw-light"/></svg>
+    <div class="t"><b>Leads</b></div>
     <div class="sp"></div>
-    <button type="button" id="savedBtn">Saved leads</button>
-    <button type="button" id="logoutBtn">Log out</button>
+    <button type="button" id="newBtn" class="plain">New search</button>
+    <button type="button" id="savedBtn">Saved</button>
+    <button type="button" id="logoutBtn" class="plain">Log out</button>
   </header>
   <main class="feed" id="feed" aria-live="polite"><div class="wrap" id="thread"></div></main>
   <div class="composer">
     <form id="chatForm" autocomplete="off">
-      <input id="q" type="text" placeholder="Try: bars with no website" aria-label="Message" enterkeyhint="send">
+      <input id="q" type="text" placeholder="What should I find? Try: bars with no website" aria-label="Message" enterkeyhint="send">
       <button type="submit">Send</button>
     </form>
   </div>
@@ -213,12 +231,12 @@ function bot(kids,wide){ const b=el('div',{class:'bubble'},kids); const r=el('di
 function typing(label){ const r=el('div',{class:'row bot'},el('div',{class:'bubble'},el('span',{class:'typing'},el('i',{class:'dot'}),el('i',{class:'dot'}),el('i',{class:'dot'}),' '+(label||'Working')))); thread.appendChild(r); scroll(); return r; }
 function sugs(list){ return el('div',{class:'sugs'},list.map(t=>el('button',{type:'button',class:'sug',onclick:()=>send(t)},t))); }
 
-const STARTERS=['Bars with no website','Restaurants with bad websites','Auto repair shops','Roofers and contractors','Hair salons and barbers','Show my saved leads'];
+const STARTERS=['Bars with no website','Restaurants with bad websites','Auto repair shops','Roofers','Hair salons','Show my saved leads'];
+const TILES=[['Bars and pubs','Bars'],['Restaurants','Restaurants'],['Auto repair','Auto repair shops'],['Contractors','Contractors'],['Salons and barbers','Hair salons'],['Shops and boutiques','Boutiques']];
 
 function hello(){
-  bot([el('p',null,el('b',null,'Hey, I find local businesses that need you.')),
-    el('p',null,'Tell me what kind of business to look for. I pull every one I can find around Dubuque, check whether each has a real website, then put the best leads first: no website, only a Facebook page, then weak or outdated sites. Free, no setup.'),
-    sugs(STARTERS)]);
+  bot([el('div',{class:'hero'},el('h2',null,'Who needs a website?'),el('p',null,'Pick a type of business or type your own. I find them around Dubuque and put the ones without a real website first.')),
+    el('div',{class:'tiles'},TILES.map(([t,q])=>el('button',{type:'button',class:'tile',onclick:()=>send(q)},el('b',null,t),el('span',null,'Search Dubuque'))))],true);
 }
 
 function keySetup(){
@@ -317,35 +335,27 @@ function help(){
 /* ---------- Results ---------- */
 const TAGS={none:'No website',social:'Social page only',weak:'Weak website',site:'Has a website',chain:'Chain'};
 function showResults(r,it){
-  const c=r.counts;
-  let shown=r.leads, rest=[];
-  if(it.mode==='none') { shown=r.leads.filter(l=>l.kind==='none'||l.kind==='social'); }
-  else if(it.mode==='weak') { shown=r.leads.filter(l=>l.kind==='weak'); }
-  else if(it.mode==='best') { shown=r.leads.filter(l=>l.kind==='none'||l.kind==='social'||l.kind==='weak'); rest=r.leads.filter(l=>!shown.includes(l)); }
-  const where=it.city&&!/^Dubuque/.test(it.city)?it.city.split(',')[0]:'Dubuque';
-  const head=c.total
-    ? 'Found '+c.total+' '+it.q+' around '+where+'. '+(c.none+c.social)+' have no real website and '+c.weak+' have a weak one.'
-    : 'I could not find any '+it.q+' around '+where+'. Try a different word.';
-  const kids=[el('p',null,el('b',null,head))];
-  if(c.total) kids.push(el('div',{class:'stats'},
-    el('div',{class:'stat hot'},el('b',null,String(c.none)),el('span',null,'No website')),
-    el('div',{class:'stat hot'},el('b',null,String(c.social)),el('span',null,'Social page only')),
-    el('div',{class:'stat warm'},el('b',null,String(c.weak)),el('span',null,'Weak website')),
-    el('div',{class:'stat'},el('b',null,String(c.site+c.chain)),el('span',null,'Good site or chain'))));
-  if(c.total&&!shown.length) kids.push(el('p',null,'None match that filter. Here is everything instead.'));
-  const list=el('div',{class:'cards'},(shown.length?shown:r.leads).map(leadCard));
-  kids.push(list);
-  if(rest.length){
-    const more=el('button',{type:'button',class:'btn sm more',text:'Show '+rest.length+' with good sites or chains'});
-    more.addEventListener('click',()=>{ rest.forEach(l=>list.appendChild(leadCard(l))); more.remove(); });
-    kids.push(more);
-  }
-  kids.push(el('p',{class:'note',style:'margin-top:10px'},r.free?'Businesses come from free public map data, so a few may be missing. Website checks come from the map, a web search and a quick look at each site. Open it yourself before you pitch.':'Website checks come from Google and a quick look at each site. Open it yourself before you pitch.'));
-  bot(kids,true);
+  const c=r.counts, where=it.city&&!/^Dubuque/.test(it.city)?it.city.split(',')[0]:'Dubuque';
+  if(!c.total) return bot([el('p',null,'I could not find any '+it.q+' around '+where+'. Try another word.'),sugs(STARTERS.slice(0,4))]);
+  const groups=[
+    ['best','Best leads',r.leads.filter(l=>l.kind==='none'||l.kind==='social'||l.kind==='weak')],
+    ['none','No website',r.leads.filter(l=>l.kind==='none'||l.kind==='social')],
+    ['weak','Weak website',r.leads.filter(l=>l.kind==='weak')],
+    ['all','All',r.leads]];
+  let start=it.mode==='none'?'none':it.mode==='weak'?'weak':it.mode==='all'?'all':'best';
+  if(!groups.find(g=>g[0]===start)[2].length) start='all';
+  const list=el('div',{class:'list'});
+  const tabs=el('div',{class:'tabs',role:'tablist'});
+  const show=k=>{ const g=groups.find(x=>x[0]===k); tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===k)); list.replaceChildren(...(g[2].length?g[2].map(leadRow):[el('div',{class:'lead'},el('div',{class:'sub'},'Nothing here.'))])); };
+  groups.forEach(([k,label,arr])=>{ const b=el('button',{type:'button','data-k':k},label,el('b',null,String(arr.length))); b.addEventListener('click',()=>show(k)); tabs.appendChild(b); });
+  show(start);
+  bot([el('div',{class:'res-h'},el('h3',null,cap(it.q)+' in '+where),el('span',null,(c.none+c.social)+' with no website')),tabs,list,
+    el('p',{class:'note'},r.free?'From free public map data, so a few businesses may be missing. Open their site yourself before you pitch.':'Open their site yourself before you pitch.')],true);
 }
+function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
 
 function tel(p){ const d=String(p||'').replace(/\D/g,''); return d.length>=10?'tel:+1'+d.slice(-10):''; }
-function leadCard(l){
+function leadRow(l){
   const where=[l.address,l.city].filter(Boolean).join(', ');
   const saveBtn=el('button',{type:'button',class:'btn sm'+(l.saved?' saved-on':''),text:l.saved?'Saved':'Save'});
   saveBtn.addEventListener('click',async()=>{
@@ -355,36 +365,29 @@ function leadCard(l){
     saveBtn.disabled=false;
     if(r.ok){ l.saved='New'; saveBtn.textContent='Saved'; saveBtn.classList.add('saved-on'); } else saveBtn.textContent='Save';
   });
-  const demoBtn=el('button',{type:'button',class:'btn sm dark',text:'Build demo'});
-  const out=el('div');
-  demoBtn.addEventListener('click',()=>buildDemo(l,demoBtn,out));
-  return el('div',{class:'card'},
-    el('div',{class:'card-h'},
-      el('div',null,el('h3',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),
-      el('span',{class:'tag '+l.kind},TAGS[l.kind]||'')),
-    el('div',{class:'meta'},
-      l.rating?el('span',null,l.rating.toFixed(1)+' stars, '+l.reviews+' Google reviews'):null,
-      l.phone?el('span',null,l.phone):null),
-    l.issues&&l.issues.length&&l.kind!=='site'?el('ul',{class:'issues'},l.issues.map(i=>el('li',null,i))):null,
-    el('div',{class:'acts'},
-      tel(l.phone)?el('a',{class:'btn sm',href:tel(l.phone)},'Call'):null,
-      l.maps?el('a',{class:'btn sm',href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,
-      l.website?el('a',{class:'btn sm',href:l.website,target:'_blank',rel:'noopener'},'Their site'):null,
-      saveBtn,demoBtn),
-    out);
+  const demoBtn=el('button',{type:'button',class:'btn sm primary',text:'Build demo'});
+  const row=el('div',{class:'lead k-'+l.kind});
+  demoBtn.addEventListener('click',()=>buildDemo(l,demoBtn,row));
+  const main=(l.issues||[])[0]||TAGS[l.kind];
+  const extra=(l.issues||[]).slice(1).join(' · ');
+  row.append(
+    el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · ')),
+      el('div',{class:'why'},el('i'),l.kind==='site'||l.kind==='chain'?TAGS[l.kind]:main),
+      extra&&l.kind!=='site'?el('div',{class:'more-why'},extra):null),
+    el('div',{class:'acts'},tel(l.phone)?el('a',{class:'btn sm',href:tel(l.phone)},'Call'):null,saveBtn,demoBtn),
+    el('div',{class:'links'},l.phone?el('span',{style:'color:var(--mut)'},l.phone):null,l.maps?el('a',{href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,l.website?el('a',{href:l.website,target:'_blank',rel:'noopener'},'Their site'):null));
+  return row;
 }
 
-async function buildDemo(l,btn,out){
+async function buildDemo(l,btn,row){
   btn.disabled=true; btn.textContent='Building...';
-  out.replaceChildren(el('p',{class:'note',style:'margin:10px 0 0'},l.website&&l.kind!=='social'?'Reading their website. About 20 seconds.':'Using their Google info. A few seconds.'));
+  const old=row.querySelector('.done'); if(old) old.remove();
   const r=await api({action:'leads_demo',lead:l});
   btn.disabled=false; btn.textContent='Build demo';
-  if(!r.ok){ out.replaceChildren(el('p',{class:'msg err'},'Could not build the demo. Try again.')); return; }
+  if(!r.ok){ row.appendChild(el('div',{class:'done',style:'border-color:#FECACA;background:#FEF2F2'},'Could not build the demo. Try again.')); return; }
   l.saved=l.saved||'Demo built';
   const got=[r.items?r.items+' menu items':'',r.photos?r.photos+' photos':''].filter(Boolean).join(' and ');
-  out.replaceChildren(el('div',{style:'margin-top:10px;padding:10px 12px;border:1px solid #BBF7D0;background:#F0FDF4;border-radius:8px;font-size:.88rem'},
-    el('b',null,'Demo ready. '),got?'Pulled '+got+' from their site. ':'Built from their listing. ',
-    'Add photos and a menu in the Studio before you pitch.',
+  row.appendChild(el('div',{class:'done'},el('b',null,'Demo ready. '),got?'Pulled '+got+' from their site.':'Add photos in the Studio before you pitch.',
     el('div',{class:'acts'},
       el('a',{class:'btn sm primary',href:'/demo/?d='+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Open demo'),
       el('a',{class:'btn sm',href:'/studio/#'+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Edit in Studio'))));
@@ -402,33 +405,34 @@ async function showSaved(stage){
   const n=x=>x+' saved lead'+(x===1?'':'s');
   const chips=el('div',{class:'sugs'},stage?el('button',{type:'button',class:'sug',onclick:()=>send('Show my saved leads')},'All saved'):null,
     status.stages.filter(s=>by[s]&&s!==stage).map(s=>el('button',{type:'button',class:'sug',onclick:()=>send('Saved leads '+s)},s+' ('+by[s]+')')));
-  bot([el('p',null,el('b',null,(stage?n(leads.length)+' marked '+stage:'You have '+n(leads.length))+'.'),stage?'':' '+summary+'.'),
-    el('div',{class:'cards'},leads.map(savedCard)),chips],true);
+  bot([el('div',{class:'res-h'},el('h3',null,stage?stage+' leads':'Saved leads'),el('span',null,stage?n(leads.length):summary)),
+    el('div',{class:'list'},leads.map(savedCard)),chips],true);
 }
 function savedCard(l){
   const sel=el('select',{'aria-label':'Stage'},status.stages.map(s=>{ const o=el('option',{value:s},s); if(s===l.stage) o.selected=true; return o; }));
-  const tagEl=el('span',{class:'tag '+(/no website/i.test(l.lead)?'none':/page, no real/i.test(l.lead)?'social':l.lead?'weak':'site')},l.stage);
-  sel.addEventListener('change',async()=>{ const r=await api({action:'leads_update',id:l.id,stage:sel.value}); if(r.ok){ l.stage=sel.value; tagEl.textContent=sel.value; } });
-  const notes=el('textarea',{rows:'1',placeholder:'Notes: who you talked to, when to follow up','aria-label':'Notes'});
+  const stageEl=el('span',{class:'stage'},l.stage);
+  sel.addEventListener('change',async()=>{ const r=await api({action:'leads_update',id:l.id,stage:sel.value}); if(r.ok){ l.stage=sel.value; stageEl.textContent=sel.value; } });
+  const notes=el('textarea',{rows:'1',placeholder:'Notes','aria-label':'Notes'});
   notes.value=l.notes||'';
   notes.addEventListener('blur',async()=>{ if(notes.value!==l.notes){ const r=await api({action:'leads_update',id:l.id,notes:notes.value}); if(r.ok) l.notes=notes.value; } });
-  const rm=el('button',{type:'button',class:'btn sm',text:'Remove'});
-  const card=el('div',{class:'card'},
-    el('div',{class:'card-h'},el('div',null,el('h3',null,l.name),el('div',{class:'sub'},[l.type,l.address].filter(Boolean).join(' · ')+(l.saved?' · saved '+l.saved:''))),
-      tagEl),
-    l.lead?el('ul',{class:'issues'},l.lead.split('; ').map(i=>el('li',null,i))):null,
+  const rm=el('a',{href:'#'},'Remove');
+  const kind=/no website/i.test(l.lead)?'none':/page, no real/i.test(l.lead)?'social':l.lead?'weak':'site';
+  const row=el('div',{class:'lead k-'+kind},
+    el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,l.address].filter(Boolean).join(' · ')),
+      l.lead?el('div',{class:'why'},el('i'),l.lead.split('; ')[0]):null),
+    el('div',{class:'acts'},stageEl),
     el('div',{class:'pipe'},sel,notes),
-    el('div',{class:'acts'},
-      tel(l.phone)?el('a',{class:'btn sm',href:tel(l.phone)},'Call '+l.phone):null,
-      l.maps?el('a',{class:'btn sm',href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,
-      l.demo?el('a',{class:'btn sm primary',href:'/demo/?d='+encodeURIComponent(l.demo),target:'_blank',rel:'noopener'},'Open demo'):null,
-      rm));
-  rm.addEventListener('click',async()=>{ if(!confirm('Remove '+l.name+' from saved leads?')) return; const r=await api({action:'leads_update',id:l.id,remove:true}); if(r.ok) card.remove(); });
-  return card;
+    el('div',{class:'links'},
+      tel(l.phone)?el('a',{href:tel(l.phone)},'Call '+l.phone):null,
+      l.maps?el('a',{href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,
+      l.demo?el('a',{href:'/demo/?d='+encodeURIComponent(l.demo),target:'_blank',rel:'noopener'},'Open demo'):null,rm));
+  rm.addEventListener('click',async e=>{ e.preventDefault(); if(!confirm('Remove '+l.name+'?')) return; const r=await api({action:'leads_update',id:l.id,remove:true}); if(r.ok) row.remove(); });
+  return row;
 }
 
 $('#chatForm').addEventListener('submit',e=>{ e.preventDefault(); send($('#q').value); });
 $('#savedBtn').addEventListener('click',()=>send('Show my saved leads'));
+$('#newBtn').addEventListener('click',()=>{ thread.replaceChildren(); hello(); $('#q').focus(); });
 
 async function start(){
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
