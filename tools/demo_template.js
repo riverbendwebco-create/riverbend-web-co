@@ -778,12 +778,29 @@ function bzCup(kind,c1,c2){
 }
 function bzArt(kind,c1,c2,cls){ const d=h('div',{class:cls||'bz-art','aria-hidden':'true'}); d.innerHTML=bzCup(kind,c1,c2); return d; }
 function bzMark(C,cls){
-  if(C.logo) return h('span',{class:cls+' img'},h('img',{src:C.logo,alt:C.name}));
+  const lu=okUrl(C.x.logoUrl);
+  if(C.logo||lu) return h('span',{class:cls+' img'},h('img',{src:C.logo||lu,alt:C.name}));
   const d=h('span',{class:cls,role:'img','aria-label':C.name+' logo'});
   d.innerHTML='<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#fff" stroke="#111" stroke-width="6"/><text x="60" y="76" text-anchor="middle" font-family="Archivo,Arial Black,sans-serif" font-weight="800" font-size="46" letter-spacing="-2" fill="#111">BUZ</text></svg>';
   return d;
 }
 function bzSizes(s){ return String(s||'').split('|').map(p=>p.trim()).filter(Boolean).map(p=>{ const m=p.match(/^(.*?)\s*(\$[\d.,]+)\s*$/); return m?[m[1],m[2]]:['',p]; }); }
+function bzLightbox(list,caps,start){
+  let i=start; const prev=document.activeElement;
+  const img=h('img',{alt:''}), cap=h('p',{class:'bz-lb-cap'}), cnt=h('span',{class:'bz-lb-n'});
+  const ov=h('div',{class:'bz-lb',role:'dialog','aria-modal':'true','aria-label':'Photo gallery'});
+  const show=n=>{ i=(n+list.length)%list.length; img.src=list[i]; img.alt=caps[i]||'Photo from BUZ'; cap.textContent=caps[i]||''; cnt.textContent=(i+1)+' / '+list.length; };
+  const key=e=>{ if(e.key==='Escape') close(); else if(e.key==='ArrowRight') show(i+1); else if(e.key==='ArrowLeft') show(i-1); };
+  const close=()=>{ ov.remove(); document.removeEventListener('keydown',key); document.body.style.overflow=''; if(prev&&prev.focus) prev.focus(); };
+  const x=h('button',{type:'button',class:'bz-lb-x','aria-label':'Close',onclick:close},'Close');
+  const pv=h('button',{type:'button',class:'bz-lb-a l','aria-label':'Previous photo',onclick:()=>show(i-1)},'\u2039');
+  const nx=h('button',{type:'button',class:'bz-lb-a r','aria-label':'Next photo',onclick:()=>show(i+1)},'\u203A');
+  let sx=null; ov.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true});
+  ov.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; sx=null; if(Math.abs(dx)>50) show(i+(dx<0?1:-1)); });
+  ov.addEventListener('click',e=>{ if(e.target===ov||e.target.classList.contains('bz-lb-stage')) close(); });
+  ov.append(x,h('div',{class:'bz-lb-stage'},pv,img,nx),h('div',{class:'bz-lb-bar'},cap,cnt));
+  document.body.append(ov); document.body.style.overflow='hidden'; document.addEventListener('keydown',key); show(i); x.focus();
+}
 function buz(C){
   const raw=Array.isArray(C.x.menu)&&C.x.menu.length?C.x.menu.map(m=>({cat:String(m.cat||'Menu'),n:String(m.n||''),s:String(m.s||''),c:String(m.c||''),note:String(m.note||'')})):C.items.map(i=>({cat:i.group||'Menu',n:i.name,s:i.price?String(i.price):'',c:'',note:i.desc||''}));
   const menu=raw.filter(m=>m.n);
@@ -797,7 +814,7 @@ function buz(C){
   const stEl=h('span',{class:'bz-st'});
   const paint=()=>{ const s=byStatus(C); stEl.className='bz-st '+(s.state||''); stEl.replaceChildren(...(s.label?[h('i'),h('b',null,s.label),s.hrs?h('em',null,s.hrs):null].filter(Boolean):[])); };
   paint(); setInterval(paint,60000);
-  const links=[menu.length?['z-menu','Menu']:null,['z-about','About'],['z-visit','Hours & Map']].filter(Boolean);
+  const links=[menu.length?['z-menu','Menu']:null,C.own.length?['z-gallery','Gallery']:null,['z-about','About'],['z-visit','Hours & Map']].filter(Boolean);
   const nav=h('header',{class:'bz-nav'},h('div',{class:'bz-nav-in'},
     h('a',{class:'bz-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('z-top');}},bzMark(C,'bz-mk sm'),h('b',null,name)),
     h('nav',{class:'bz-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
@@ -816,7 +833,7 @@ function buz(C){
         h('div',{class:'bz-cta'},
           menu.length?h('button',{type:'button',class:'bz-btn ink',onclick:()=>scrollTo('z-menu')},'See the menu'):null,
           C.maps?h('a',{class:'bz-btn line',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Get directions'):null)),
-      h('div',{class:'bz-hero-art','aria-hidden':'true'},heroCups.map(([k,a,b],i)=>bzArt(k,a,b,'bz-hc c'+i)))));
+      C.own.length>=3?h('div',{class:'bz-hero-art ph3'},C.own.slice(0,3).map((u,i)=>h('button',{type:'button',class:'bz-hp p'+i,'aria-label':'Open photo',onclick:()=>scrollTo('z-gallery')},bg(h('span'),u)))):h('div',{class:'bz-hero-art','aria-hidden':'true'},heroCups.map(([k,a,b],i)=>bzArt(k,a,b,'bz-hc c'+i)))));
 
   /* quick info */
   const tiles=[
@@ -864,8 +881,10 @@ function buz(C){
     h('div',null,h('h2',null,'About '+name),C.about?C.about.split(/\n+/).map(t=>h('p',null,t)):null),
     facts.length?h('dl',{class:'bz-facts'},facts.map((f,i)=>h('div',{style:'--cc:'+BZ_FALL[i%BZ_FALL.length]},h('dt',null,String(f.k)),h('dd',null,String(f.v))))):null));
 
-  /* photos (only if the owner has real ones) */
-  const gal=C.own.length?h('section',{class:'bz-sec bz-gal'},h('div',{class:'bz-wrap'},h('h2',null,'Around BUZ'),h('div',{class:'bz-photos'},C.own.slice(0,6).map(u=>bg(h('div',{class:'bz-ph'}),u))))):null;
+  /* gallery (only if the owner has real photos) */
+  const caps=Array.isArray(C.x.caps)?C.x.caps.map(t=>typeof t==='string'?t:''):[];
+  const gal=C.own.length?h('section',{class:'bz-sec bz-gal',id:'z-gallery'},h('div',{class:'bz-wrap'},h('h2',null,'Gallery'),h('p',{class:'bz-sub'},'Tap a photo to see it full size.'),
+    h('div',{class:'bz-photos'},C.own.slice(0,12).map((u,i)=>h('button',{type:'button',class:'bz-gt'+(i===0?' big':''),'aria-label':'Open photo '+(i+1)+(caps[i]?': '+caps[i]:''),onclick:()=>bzLightbox(C.own.slice(0,12),caps,i)},bg(h('span',{class:'bz-ph'}),u),caps[i]?h('em',null,caps[i]):null)))) ):null;
 
   /* visit */
   const visit=h('section',{class:'bz-sec bz-visit',id:'z-visit'},h('div',{class:'bz-wrap bz-vgrid'},
