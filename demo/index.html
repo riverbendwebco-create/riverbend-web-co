@@ -388,10 +388,10 @@ html.os-lock,html.os-lock body{overflow:hidden}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .55s ease,visibility .55s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
-.os-intro-pic{position:absolute;inset:-4%;background-size:cover;background-position:center 58%;opacity:0;transform:scale(1.14);filter:brightness(.62) contrast(1.08) saturate(1.05) sepia(.18)}
+.os-intro-pic{position:absolute;inset:-4%;background-size:cover;background-position:center 58%;opacity:0;transform:scale(1.14);filter:brightness(.8) contrast(1.1) saturate(1.1) sepia(.12)}
 .os-intro.go .os-intro-pic{animation:osPush 2.9s cubic-bezier(.2,.6,.2,1) forwards}
 @keyframes osPush{0%{opacity:0;transform:scale(1.14)}18%{opacity:1}100%{opacity:1;transform:scale(1.0)}}
-.os-intro::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(14,9,7,0) 0%,rgba(14,9,7,.35) 45%,rgba(14,9,7,.92) 100%),linear-gradient(180deg,rgba(40,20,10,.25),rgba(14,9,7,.55));pointer-events:none}
+.os-intro::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(14,9,7,0) 0%,rgba(14,9,7,.18) 50%,rgba(14,9,7,.85) 100%),linear-gradient(180deg,rgba(40,20,10,.12),rgba(14,9,7,.4));pointer-events:none}
 .os-steam2{position:absolute;left:50%;top:38%;width:240px;height:220px;transform:translateX(-50%);z-index:1;pointer-events:none}
 .os-steam2 i{position:absolute;bottom:0;width:70px;height:150px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,250,240,.22),rgba(255,250,240,0) 70%);filter:blur(14px);opacity:0}
 .os-steam2 i:nth-child(1){left:30px}.os-steam2 i:nth-child(2){left:90px}.os-steam2 i:nth-child(3){left:150px}
