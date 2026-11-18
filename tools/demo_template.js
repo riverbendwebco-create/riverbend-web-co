@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -217,6 +217,7 @@ function pub(C){
 /* ===================== WESTERN (saloon, light) ===================== */
 function stars(n,cls){ return h('span',{class:cls||'wx-stars','aria-hidden':'true'},Array.from({length:n||3},()=>ico('star',14,''))); }
 function western(C){
+  if(C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length) return trailhead(C);
   const G=groups(C.items,'Menu');
   const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
   const [heroTxt,storyTxt]=splitAbout(C.about,170);
@@ -368,6 +369,128 @@ function trailRide(C){
 /* Hand-drawn side-view UTV with a dust trail, tucked in the menu corner */
 const UTV='<svg viewBox="0 0 260 140" aria-hidden="true"><g fill="#C9B79A" opacity=".55"><circle cx="18" cy="112" r="12"/><circle cx="36" cy="100" r="16"/><circle cx="8" cy="96" r="9"/><circle cx="52" cy="116" r="10"/></g><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M92 74 L104 30 L176 30 L196 70"/><path d="M128 30 L122 72"/></g><path d="M64 78 Q66 70 76 70 L206 70 Q222 70 228 84 L232 96 L60 96 Z" fill="currentColor"/><path d="M196 70 L214 52 L226 56 L214 72 Z" fill="currentColor"/><rect x="150" y="78" width="40" height="8" rx="3" fill="#fff" opacity=".35"/><g><circle cx="94" cy="102" r="26" fill="#23201C"/><circle cx="94" cy="102" r="11" fill="#9AA59A"/><circle cx="202" cy="102" r="26" fill="#23201C"/><circle cx="202" cy="102" r="11" fill="#9AA59A"/></g><g stroke="#23201C" stroke-width="4" stroke-dasharray="4 6"><circle cx="94" cy="102" r="28" fill="none"/><circle cx="202" cy="102" r="28" fill="none"/></g><path d="M8 132 H252" stroke="#C9B79A" stroke-width="3" stroke-dasharray="10 8" stroke-linecap="round"/></svg>';
 function utvArt(){ const d=h('div',{class:'tw-utv'}); d.innerHTML=UTV; return d; }
+/* ===================== TRAILHEAD (own layout for trail demos) ===================== */
+function trailhead(C){
+  const G=groups(C.items,'Menu');
+  const [heroTxt,storyTxt]=splitAbout(C.about,170);
+  const openNow=C.today&&!/closed/i.test(C.today);
+  const city=C.city.split(',')[0];
+  const ride=C.x.ride&&typeof C.x.ride==='object'?C.x.ride:{};
+  const pts=Array.isArray(ride.points)?ride.points.filter(x=>typeof x==='string').slice(0,5):[];
+  const first=C.specials[0];
+  const sec=(id,cls,...k)=>h('section',{class:'hl-sec rv '+(cls||''),id},...k);
+  const head=(kick,title,sub)=>h('div',{class:'hl-head'},kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null);
+
+  const top=first?h('div',{class:'hl-ann'},h('span',null,first.title),first.when?h('b',null,first.when):null):null;
+  const links=[['w-events','Specials'],C.x.feature?['w-feature','Trail Boss']:null,C.items.length?['w-menu','Menu']:null,['w-camp','Our Story'],C.reviews.length?['w-reviews','Reviews']:null,['w-visit','Find Us']].filter(Boolean);
+  const nav=h('header',{class:'hl-nav'},h('div',{class:'hl-nav-in'},
+    h('a',{class:'hl-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');}},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name)),
+    h('nav',{class:'hl-links'},links.map(([id,l],i)=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('i',null,String(i+1).padStart(2,'0')),l))),
+    C.tel?h('a',{class:'hl-btn hl-rust hl-sm',href:C.tel},ico('phone',16,''),'Call'):null));
+
+  const rv=C.reviews[0];
+  const hero=h('section',{class:'hl-hero',id:'w-top'},
+    h('div',{class:'hl-hero-t'},
+      h('div',{class:'hl-kick'},h('span',null,'Trailhead'),[C.cat,city].filter(Boolean).join(' · ')),
+      h('h1',null,C.tag||C.name),
+      heroTxt?h('p',null,heroTxt):null,
+      h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',18,''),C.phoneTxt):null,
+        C.items.length?h('button',{type:'button',class:'hl-btn hl-line',onclick:()=>scrollTo('w-menu')},'See the menu'):null),
+      h('dl',{class:'hl-board'},
+        h('div',null,h('dt',null,'Today'),h('dd',null,C.today?(openNow?'Open '+C.today:'Closed today'):'Call for hours')),
+        (C.addr||C.city)?h('div',null,h('dt',null,'Find us'),h('dd',null,[C.addr,city].filter(Boolean).join(', '))):null,
+        pts[0]?h('div',null,h('dt',null,'Ride in'),h('dd',null,pts[0])):null)),
+    bg(h('div',{class:'hl-hero-p ph'},
+      h('span',{class:'hl-pin'},ico('pin',16,''),[city,(C.city.split(',')[1]||'').trim()].filter(Boolean).join(', ')),
+      rv?h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),h('blockquote',null,'“'+short(rv.text,120)+'”'),h('figcaption',null,rv.name)):null),C.hero));
+
+  /* weekly specials: day rail on the left, big stage on the right */
+  const days=C.x.week.filter(w=>w&&typeof w==='object'&&w.title).slice(0,8);
+  let wi=(()=>{ for(let k=0;k<7;k++){ const d=(todayIx()+k)%7; const f=days.findIndex(w=>dayOf(w.day)===d); if(f>=0) return f; } return 0; })(), timer=null;
+  const stage=h('div',{class:'hl-stage'}), rail=h('div',{class:'hl-rail',role:'tablist'});
+  const stop=()=>{ if(timer){clearInterval(timer);timer=null;} };
+  const paint=()=>{ const w=days[wi], di=dayOf(w.day);
+    stage.replaceChildren(
+      bg(h('div',{class:'hl-stage-p ph'},h('b',null,String(w.day||'').toUpperCase()),di===todayIx()?h('em',null,'Today'):null),okUrl(w.photo)||C.venue(wi)),
+      h('div',{class:'hl-stage-t'},h('h3',null,w.title),w.time?h('div',{class:'hl-time'},ico('i-clock',16,''),w.time):null,
+        w.detail?h('p',null,w.detail):null,w.note?h('small',null,w.note):null,
+        h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust hl-sm',href:C.tel},ico('phone',16,''),'Call ahead'):null,
+          days.length>1?h('button',{type:'button',class:'hl-btn hl-line hl-sm',onclick:()=>{wi=(wi+1)%days.length;paint();stop();}},'Next special'):null)));
+    rail.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===wi)); };
+  days.forEach((w,k)=>rail.append(h('button',{type:'button',onclick:()=>{wi=k;paint();stop();}},h('b',null,String(w.day||'').slice(0,3).toUpperCase()),h('span',null,w.short||w.title),w.time?h('small',null,w.time):null)));
+  paint();
+  if(days.length>1&&!matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(()=>{wi=(wi+1)%days.length;paint();},7000);
+  const b=C.x.banner&&typeof C.x.banner==='object'&&C.x.banner.title?C.x.banner:null;
+  const week=sec('w-events','hl-week',head('Every day is a reason to ride in','This Week at '+C.name.replace(/^The /,'the ')),
+    h('div',{class:'hl-weekgrid'},rail,stage),
+    b?h('div',{class:'hl-banner'},h('span',null,'Once a month'),h('b',null,b.title),b.detail?h('p',null,b.detail):null):null);
+
+  /* signature burger: poster plus a trail of numbered steps */
+  const f=C.x.feature&&typeof C.x.feature==='object'&&C.x.feature.title?C.x.feature:null;
+  const steps=f&&Array.isArray(f.steps)?f.steps.filter(x=>typeof x==='string').slice(0,8):[];
+  const boss=f?sec('w-feature','hl-boss',
+    h('div',{class:'hl-poster'},
+      h('div',{class:'hl-poster-t'},f.badge?h('span',{class:'hl-tag'},f.badge):null,f.kick?h('small',null,f.kick):null,h('h2',null,f.title),
+        f.desc?h('p',null,f.desc):null,f.source?h('em',null,f.source):null,
+        C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',18,''),'Order: '+C.phoneTxt):null),
+      bg(h('div',{class:'hl-poster-p ph'}),okUrl(f.photo)||C.hero)),
+    steps.length?h('div',{class:'hl-steps'},h('h3',null,f.howTitle||'How it works'),f.howSub?h('p',null,f.howSub):null,
+      h('ol',null,steps.map((t,k)=>h('li',null,h('b',null,String(k+1)),h('span',null,t)))),
+      h('div',{class:'hl-acts'},f.note?h('p',{class:'hl-note'},f.note):null,okUrl(f.link)?h('a',{class:'hl-btn hl-line hl-sm',href:f.link,target:'_blank',rel:'noopener'},f.linkText||'Contest rules'):null)):null):null;
+
+  /* menu: category chips, rider picks, then a two-column board */
+  let menu=null;
+  if(C.items.length){
+    const board=h('div',{class:'hl-board2'});
+    const show=k=>{ board.replaceChildren(...G.map[k].map(i=>h('div',{class:'hl-mi'+(i.photo?' has':'')},
+      i.photo?bg(h('div',{class:'hl-mi-p ph'}),i.photo):null,
+      h('div',{class:'hl-mi-t'},h('div',{class:'r'},h('b',null,i.name),i.price?h('span',null,i.price):null),i.desc?h('p',null,heat(i.desc)):null)))); };
+    const chips=h('div',{class:'hl-chips'},G.names.slice(0,8).map((k,ix)=>{ const bt=h('button',{type:'button',class:ix?null:'on'},k); bt.addEventListener('click',()=>{ chips.querySelectorAll('button').forEach(x=>x.classList.remove('on')); bt.classList.add('on'); show(k); }); return bt; }));
+    show(G.names[0]);
+    const picks=pickFavs(C);
+    menu=sec('w-menu','hl-menu',utvArt(),head('Food and drinks','The Menu',openNow?'Kitchen and bar open today '+C.today:null),
+      picks.length?h('div',{class:'hl-picks'},h('small',null,'Rider picks'),picks.map((i,ix)=>h('article',null,bg(h('div',{class:'ph'}),C.itemPic(i)||C.venue(ix)),h('div',null,h('b',null,i.name),i.group&&i.group!=='Menu'?h('span',null,i.group):null)))):null,
+      chips,board);
+  }
+
+  /* photo mosaic */
+  const gal=C.own.length>=3?sec('w-gal','hl-gal',head('Straight from the Holler','Photos'),
+    h('div',{class:'hl-mosaic'},C.own.slice(0,8).map((u,ix)=>bg(h('button',{type:'button',class:'ph','aria-label':'Open photo gallery',onclick:()=>gallery(C.own,'Photos from '+C.name,ix)}),u)),
+      C.own.length>8?h('button',{type:'button',class:'hl-all',onclick:()=>gallery(C.own,'Photos from '+C.name,8)},'See all '+C.own.length+' photos'):null)):null;
+
+  /* story and trail riders side by side */
+  const camp=sec('w-camp','hl-camp',
+    h('div',{class:'hl-story'},bg(h('div',{class:'ph'}),C.storyPic||C.own[0]||C.hero),
+      h('div',{class:'b'},h('small',null,'Our story'),h('h2',null,'Welcome to '+C.name),h('p',null,storyTxt||C.about),
+        C.tel?h('a',{class:'hl-btn hl-rust hl-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null)),
+    ride.title?h('div',{class:'hl-ride'},bg(h('div',{class:'ph'}),okUrl(ride.photo)||C.hero),
+      h('div',{class:'b'},h('small',null,ride.kick||'Trail riders welcome'),h('h2',null,ride.title),ride.text?h('p',null,ride.text):null,
+        pts.length?h('ul',null,pts.map(t=>h('li',null,ico('check',14,''),t))):null,
+        C.maps?h('a',{class:'hl-btn hl-line-w hl-sm',href:C.maps,target:'_blank',rel:'noopener'},ico('map',16,''),'Directions'):null)):null);
+
+  /* reviews as a swipeable row */
+  const revs=C.reviews.length?sec('w-reviews','hl-revs',
+    h('div',{class:'hl-revs-h'},head('What riders and regulars say','Reviews'),C.reviewsSource?h('div',{class:'hl-score'},stars(5),h('span',null,C.reviewsSource)):null),
+    h('div',{class:'hl-revrow'},C.reviews.map(r=>h('figure',null,h('i',{'aria-hidden':'true'},'“'),h('blockquote',null,r.text),h('figcaption',null,stars(r.stars||5),r.name)))),
+    C.reviewLink?h('div',{class:'hl-acts hl-c'},h('a',{class:'hl-btn hl-line hl-sm',href:C.reviewLink,target:'_blank',rel:'noopener'},'Read them on Google')):null):null;
+
+  /* trailhead info board */
+  const street=(C.addr.match(/\d+\s+(.+)/)||[])[1]||'MAIN ST';
+  const visit=sec('w-visit','hl-visit',head('Plan your stop','Find Us'),
+    h('div',{class:'hl-vgrid'},
+      h('div',{class:'hl-sign'},h('div',{class:'hl-sign-h'},'Hours'),C.hasHours?h('div',{class:'hl-hrs'},DAYS.map((day,i)=>h('div',{class:i===todayIx()?'today':null},h('span',null,day),h('span',null,C.hours[i]||'Closed')))):h('p',null,'Call for hours')),
+      h('div',{class:'hl-find'},h('h3',null,C.name),h('address',null,C.addr,h('br'),C.city),
+        pts.length?h('p',null,pts[0]):null,
+        h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust hl-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null,C.maps?h('a',{class:'hl-btn hl-line hl-sm',href:C.maps,target:'_blank',rel:'noopener'},ico('map',16,''),'Directions'):null),
+        socials(C)),
+      h('div',{class:'hl-map wx-map'},mapBox(street.toUpperCase().slice(0,22),C.maps))));
+
+  const foot=h('footer',{class:'hl-foot'},h('div',{class:'in'},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name),
+    h('span',null,'© '+new Date().getFullYear()+' '+C.name+(C.addr?' · '+[C.addr,C.city].filter(Boolean).join(', '):'')),h('span',null,'Site by Riverbend Web Co.')));
+  const page=h('div',{class:'demo western on v-trail hl'},top,nav,hero,week,boss,menu,gal,camp,revs,visit,foot);
+  Object.keys(C.bg).forEach(k=>{ if(/^[a-z]{2,12}$/.test(k)&&okUrl(C.bg[k])) page.style.setProperty('--bg-'+k,cssUrl(C.bg[k])); });
+  return page;
+}
 /* Hero review card: best review first, gently rotates through the top three */
 function heroReview(C){
   const top=C.reviews.slice(0,3); let i=0;
