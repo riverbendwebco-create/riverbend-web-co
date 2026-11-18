@@ -865,6 +865,33 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mo-price span{display:block;color:#64748B;font-size:.9rem;margin-top:6px}
 .mo-fine{margin-top:32px;font-size:.85rem}
 @media (max-width:700px){.mo-item{grid-template-columns:1fr;gap:10px;padding:28px 0}.mo-num{padding-top:0}.mo-price{text-align:left;padding-top:8px}.mo-price b{font-size:2rem}}
+
+/* Marketing page: diner skin (Dottie's) */
+.mk-diner .mp-bar{border-bottom:4px solid #B3202A}
+.mk-diner .mp-back{color:#B3202A}
+.mk-diner .mp-cover{background:#fff;color:#1E1A1A;position:relative;padding:48px 0 64px}
+.mk-diner .mp-cover:after{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;background:conic-gradient(#1E1A1A 25%,#fff 0 50%,#1E1A1A 0 75%,#fff 0) 0 0/14px 14px}
+.mk-diner .mp-cover .mp-in{grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto;gap:26px 48px;align-items:start}
+.mk-diner .mp-cover-l{grid-column:1;grid-row:1}
+.mk-diner .mp-meta{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin:0;border-top-color:#D7D2D2}
+.mk-diner .mp-meta div{border-bottom-color:#D7D2D2}
+.mk-diner .mp-meta dt{color:#6B6363}
+.mk-diner .mp-meta a{color:#B3202A}
+.mp-word{font-family:'Pacifico',cursive;color:#B3202A;font-size:clamp(2.6rem,5.4vw,4rem);line-height:1.1;margin-bottom:14px;text-shadow:3px 3px 0 rgba(179,32,42,.14)}
+.mk-diner .mp-eyebrow{color:#2E7D5B;font-weight:700}
+.mk-diner .mp-cover h1{color:#1E1A1A}
+.mk-diner .mp-cover p{color:#4A4444}
+.mp-photo{grid-column:2;grid-row:1/span 2;margin:0;background:#fff;border:10px solid #fff;outline:3px solid #C9CED3;border-radius:10px;box-shadow:0 30px 50px -30px rgba(30,26,26,.6)}
+.mp-photo .ph{height:380px;background-size:cover;background-position:center;border-radius:2px}
+.mp-photo figcaption{font-size:.82rem;color:#6B6363;padding-top:8px}
+.mk-diner .mp-label{border-top:3px solid #B3202A;color:#1E1A1A}
+.mk-diner .mp-label span,.mk-diner .mo-num{color:#B3202A}
+.mk-diner .mo-body h3{color:#1E1A1A}
+.mk-diner .mo-ex{background:#EEF8F4;border-left-color:#2E7D5B}
+.mk-diner .mo-ex span{color:#2E7D5B}
+.mk-diner .mo-more li::before{background:#B3202A}
+.mk-diner .mo-price b{color:#B3202A}
+@media (max-width:860px){.mk-diner .mp-cover .mp-in{grid-template-columns:1fr}.mp-photo{grid-column:1;grid-row:auto}.mp-photo .ph{height:240px}.mk-diner .mp-meta{grid-template-columns:1fr}}
 @media (max-width:980px){.mp-cover .mp-in{grid-template-columns:1fr}.mp-logo{display:none}.mp-body{grid-template-columns:1fr}.mp-side{position:static}}
 @media (max-width:700px){.mp-in{padding:0 18px}.mp-cover{padding:44px 0 36px}.mp-plans{grid-template-columns:1fr}.mp-plan{border-left:0;border-top:1px solid #E2E8F0}.mp-plan:first-child{border-top:0}.mp-plan.on{box-shadow:inset 3px 0 0 #0052CC}.mp-row{flex-direction:column;gap:12px}.mp-row-r{width:100%;justify-content:space-between}.mp-row-price{text-align:left}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}

@@ -657,19 +657,19 @@ const MK_SOCIAL=[
 const MK=[
   {id:'club',more:["A sign-up form on your website, plus a QR code you can post at the bar", "We write and send your specials and event news to everyone on the list", "Text or email, whichever your customers prefer", "Opt-in only, with an easy way to unsubscribe", "A monthly count of how many people have joined"],name:'Email or text club for specials',price:25,per:'mo',what:'Guests sign up on your site, and we send your specials and events to them for you.',idea:C=>C.specials[0]?'A text to your club before '+C.specials[0].title+(C.specials[0].when?' ('+C.specials[0].when+')':'')+'.':''},
   {id:'qr',more:["Table tents designed to match your logo and colors", "The QR code opens your live website menu, so price changes never mean reprinting", "Links to your specials and your Facebook page in the same scan", "Print-ready files you can take to any printer"],name:'QR menu and table tents',price:60,per:'one-time',what:'Table tents with a QR code that opens your menu, specials and social pages.',idea:()=>''},
-  {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:()=>'We can connect apps like DoorDash, Grubhub and Uber Eats, so customers can order from your website.'}
+  {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',more:["Carry-out ordering right from your website, with orders sent to you by email or text", "Or we connect DoorDash, Grubhub and Uber Eats so they show up on your site", "Reservations or call-ahead requests instead, if that fits you better", "We set it up, test it and walk your staff through it"],what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:()=>'We can connect apps like DoorDash, Grubhub and Uber Eats, so customers can order from your website.'}
 ];
 function marketing(C){
   const money=n=>'$'+n.toLocaleString('en-US');
   const unit=m=>m.label||(m.per==='mo'?'per month':'one-time');
   const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const offer=(m,ix,kind)=>{ const idea=m.idea(C);
+  const offer=(m,ix,kind)=>{ const ov=C.x.mkIdeas&&typeof C.x.mkIdeas==='object'?C.x.mkIdeas[m.id]:''; const idea=(typeof ov==='string'&&ov)||m.idea(C);
     return h('article',{class:'mo-item mo-'+kind},
       h('div',{class:'mo-num'},String(ix+1).padStart(2,'0')),
       h('div',{class:'mo-body'},
         h('h3',null,m.name),
         h('p',{class:'mo-what'},m.what),
-        C.mkMore&&m.more?h('ul',{class:'mo-more'},m.more.map(t=>h('li',null,t))):null,
+        (()=>{ const om=C.x.mkMore&&typeof C.x.mkMore==='object'&&Array.isArray(C.x.mkMore[m.id])?C.x.mkMore[m.id].filter(t=>typeof t==='string'):null; const L=om||m.more; return C.mkMore&&L?h('ul',{class:'mo-more'},L.map(t=>h('li',null,t))):null; })(),
         idea?h('div',{class:'mo-ex'},h('span',null,'Example for '+C.name),h('p',null,idea)):null),
       h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
   const soc=[C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null].filter(Boolean);
@@ -681,6 +681,7 @@ function marketing(C){
       h('a',{class:'mp-back',href:'?d='+encodeURIComponent(slug)},'View website demo'))),
     h('section',{class:'mp-cover'},h('div',{class:'mp-in'},
       h('div',{class:'mp-cover-l'},
+        typeof C.x.mkWord==='string'&&C.x.mkWord?h('div',{class:'mp-word'},C.x.mkWord):null,
         h('div',{class:'mp-eyebrow'},'Marketing proposal'),
         h('h1',null,'Social media and local marketing for '+(C.name||'your business')),
         h('p',null,'A simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Facebook and Instagram.')),
@@ -689,7 +690,8 @@ function marketing(C){
         h('div',null,h('dt',null,'Prepared by'),h('dd',null,'Riverbend Web Co., Dubuque')),
         h('div',null,h('dt',null,'Date'),h('dd',null,today)),
         soc.length?h('div',null,h('dt',null,'Pages we would manage'),h('dd',null,soc.map((a,i)=>[i?', ':'',a]))):null),
-      C.logo?h('img',{class:'mp-logo',src:C.logo,alt:C.name}):null)),
+      C.logo?h('img',{class:'mp-logo',src:C.logo,alt:C.name}):null,
+      okUrl(C.x.mkPhoto)?h('figure',{class:'mp-photo'},bg(h('div',{class:'ph'}),okUrl(C.x.mkPhoto)),typeof C.x.mkCap==='string'&&C.x.mkCap?h('figcaption',null,C.x.mkCap):null):null)),
     h('main',{class:'mp-in mo'},
       h('section',null,
         h('div',{class:'mp-label'},h('span',null,'01'),'Social media management'),
