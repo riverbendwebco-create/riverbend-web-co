@@ -340,7 +340,7 @@ const MK_SOCIAL=[
 const MK=[
   {id:'club',name:'Email or text club for specials',price:25,per:'mo',what:'Guests sign up on your site, and we send your specials and events to them for you.',idea:C=>C.specials[0]?'A text to your club before '+C.specials[0].title+(C.specials[0].when?' ('+C.specials[0].when+')':'')+'.':''},
   {id:'qr',name:'QR menu and table tents',price:60,per:'one-time',what:'Table tents with a QR code that opens your menu, specials and social pages.',idea:()=>''},
-  {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:C=>C.specials.some(s=>/carry|reserve|order/i.test(s.detail||''))?'Your guests already call ahead for carry-out, so online ordering could take some of those calls.':''}
+  {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:()=>'We can connect apps like DoorDash, Grubhub and Uber Eats, so customers can order from your website.'}
 ];
 function marketing(C){
   const money=n=>'$'+n.toLocaleString('en-US');
