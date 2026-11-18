@@ -592,7 +592,8 @@ function diner(C){
   let menu=null;
   if(C.items.length){
     const page=h('div',{class:'dn-page'});
-    const show=k=>{ page.replaceChildren(h('h3',null,k),...G.map[k].map(i=>h('div',{class:'dn-mi'},h('div',{class:'r'},h('b',null,i.name),h('i'),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null))); };
+    const favN=(Array.isArray(C.x.favs)?C.x.favs:[]).map(f=>f&&f.name);
+    const show=k=>{ page.replaceChildren(h('div',{class:'dn-page-h'},h('small',null,'Dottie\'s Cafe · '+(G.names.indexOf(k)+1)+' of '+G.names.length),h('h3',null,k)),...G.map[k].map(i=>{ const fav=favN.indexOf(i.name)>=0; return h('div',{class:'dn-mi'+(fav?' hfav':'')},h('div',{class:'r'},h('b',null,i.name,fav?h('em',{class:'dn-star'},'House favorite'):null),h('i'),i.price?h('span',null,i.price):h('span',{class:'ask'},'Ask')),i.desc?h('p',null,i.desc):null); }),h('div',{class:'dn-page-f'},'Bottomless coffee · Breakfast served all day')); };
     const tabs=h('div',{class:'dn-tabs'},G.names.map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k); }); return b; }));
     show(G.names[0]);
     menu=sec('d-menu','dn-menu',head('Breakfast and lunch','The Menu','Big portions, old-fashioned prices.'),h('div',{class:'dn-book'},tabs,page));
