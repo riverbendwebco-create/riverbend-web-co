@@ -1163,7 +1163,7 @@ function osteria(C){
     osSvg(OS_SPRIG,'os-sprig'),
     h('div',{class:'os-cta'},jump('os-reserve','Reserve a Table','os-btn gold'),C.items.length?jump('os-menu','View the Menu','os-btn ghost'):null),
     C.today?h('p',{class:'os-today'},'Open today · '+C.today):null)),
-    C.hero,'linear-gradient(180deg,rgba(38,22,12,.35) 0%,rgba(38,22,12,.5) 55%,rgba(31,22,17,.95) 100%),radial-gradient(ellipse at 50% 40%,rgba(230,160,80,.18),rgba(0,0,0,0) 65%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
+    C.hero,'linear-gradient(180deg,rgba(31,22,17,.4) 0%,rgba(31,22,17,.55) 55%,rgba(31,22,17,1) 100%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
   const story=C.about?h('section',{class:'os-sec os-story'},h('div',{class:'os-wrap os-story-in'},
     bg(h('div',{class:'os-story-pic rv'}),C.storyPic||C.pic(1)),
     h('div',{class:'rv'},h('span',{class:'os-eyebrow'},'La Nostra Storia'),h('h2',null,'Welcome to the table'),

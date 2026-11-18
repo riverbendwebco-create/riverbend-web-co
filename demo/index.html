@@ -479,6 +479,15 @@ body.t-os{background:#1F1611}
 .os-form input,.os-form textarea{border-bottom-color:rgba(245,235,221,.3)}
 .os-form button{border-radius:10px;background:linear-gradient(180deg,#E3C27E,#C9A35B)}
 .os-foot{background:#1A120E}
+
+/* Osteria: simplified palette, one brown, gold, cream */
+.os-story,.os-gal,.os-visit,.os-menu,.os-revs,.os-reserve,.os-foot{background:#1F1611}
+.os-sec+.os-sec{border-top:1px solid rgba(212,174,106,.14)}
+.os-story-pic{box-shadow:0 30px 70px rgba(0,0,0,.45),0 0 0 1px rgba(212,174,106,.25)}
+.os-card{background:#241A14}
+.os-info-c,.os-rev{background:#241A14;border-color:rgba(212,174,106,.18)}
+.os-map-card{background:#1F1611}
+.os::before{opacity:.05}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
@@ -498,7 +507,7 @@ body.t-os{background:#1F1611}
 .os-intro-txt .os-eyebrow{color:#E2C48A}
 .os-intro .os-sprig{color:#C9A35B}
 @keyframes osTxt{from{opacity:0;transform:translateY(16px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
-@media (max-width:860px){.os-links{display:none}.os-nav-in .os-btn{margin-left:auto}.os-sec{padding:76px 0}.os-story-in,.os-res-in,.os-visit-in{grid-template-columns:1fr;gap:36px}.os-story-pic{box-shadow:12px 12px 0 rgba(122,31,43,.55)}.os-menu-list{grid-template-columns:1fr}.os-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.os-rev-grid{grid-template-columns:1fr}.os-form{grid-template-columns:1fr}.os-brand{font-size:1.35rem}}
+@media (max-width:860px){.os-links{display:none}.os-nav-in .os-btn{margin-left:auto}.os-sec{padding:76px 0}.os-story-in,.os-res-in,.os-visit-in{grid-template-columns:1fr;gap:36px}.os-story-pic{box-shadow:0 20px 50px rgba(0,0,0,.45)}.os-menu-list{grid-template-columns:1fr}.os-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.os-rev-grid{grid-template-columns:1fr}.os-form{grid-template-columns:1fr}.os-brand{font-size:1.35rem}}
 
 .rb-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#0F172A;color:#E2E8F0;border-top:1px solid rgba(96,165,250,.3);font-family:var(--font-b);padding-bottom:env(safe-area-inset-bottom)}
 .rb-in{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px;height:64px}
@@ -3065,7 +3074,7 @@ function osteria(C){
     osSvg(OS_SPRIG,'os-sprig'),
     h('div',{class:'os-cta'},jump('os-reserve','Reserve a Table','os-btn gold'),C.items.length?jump('os-menu','View the Menu','os-btn ghost'):null),
     C.today?h('p',{class:'os-today'},'Open today · '+C.today):null)),
-    C.hero,'linear-gradient(180deg,rgba(38,22,12,.35) 0%,rgba(38,22,12,.5) 55%,rgba(31,22,17,.95) 100%),radial-gradient(ellipse at 50% 40%,rgba(230,160,80,.18),rgba(0,0,0,0) 65%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
+    C.hero,'linear-gradient(180deg,rgba(31,22,17,.4) 0%,rgba(31,22,17,.55) 55%,rgba(31,22,17,1) 100%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
   const story=C.about?h('section',{class:'os-sec os-story'},h('div',{class:'os-wrap os-story-in'},
     bg(h('div',{class:'os-story-pic rv'}),C.storyPic||C.pic(1)),
     h('div',{class:'rv'},h('span',{class:'os-eyebrow'},'La Nostra Storia'),h('h2',null,'Welcome to the table'),
