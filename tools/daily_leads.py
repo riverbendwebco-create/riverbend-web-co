@@ -129,21 +129,18 @@ def main():
     by_cat = {}
     for l in added:
         by_cat[l['category']] = by_cat.get(l['category'], 0) + 1
-    top = ['%s (%s, %s)' % (l['name'], l['category'], LABEL[l['kind']]) for l in added[:5]]
     summary = ('%d new leads added to riverbendwebco.com/leads for %s: %d no website, %d Facebook only, %d weak website. '
-               'By type: %s. Top: %s.') % (
+               'By type: %s.') % (
         len(added), today, by_kind['none'], by_kind['social'], by_kind['weak'],
-        ', '.join('%s %d' % kv for kv in sorted(by_cat.items(), key=lambda kv: -kv[1])) or 'none',
-        '; '.join(top) or 'none')
+        ', '.join('%s %d' % kv for kv in sorted(by_cat.items(), key=lambda kv: -kv[1])) or 'none')
     if len(added) < TARGET:
         summary += ' Only %d were new today; the free map data around Dubuque is running low on new businesses with a phone number.' % len(added)
+    # Counts only: this repo and its Actions pages are public, so no business names or phone numbers here.
     print('SUMMARY: ' + summary)
     out = os.environ.get('GITHUB_STEP_SUMMARY')
     if out:
         with open(out, 'a') as f:
-            f.write('## Daily leads\n\n' + summary + '\n\n| Business | Type | Lead | Phone |\n|---|---|---|---|\n')
-            for l in added:
-                f.write('| %s | %s | %s | %s |\n' % (l['name'], l['category'], LABEL[l['kind']], l.get('phone', '')))
+            f.write('## Daily leads\n\n' + summary + '\n')
     with open('daily-leads-summary.txt', 'w') as f:
         f.write(summary + '\n')
 

@@ -5,6 +5,9 @@ name: Daily leads
 on:
   schedule:
     - cron: '10 11 * * *'   # 5:10 AM CST / 6:10 AM CDT
+  push:
+    branches: [main]
+    paths: ['tools/daily_leads.py', '.github/workflows/daily-leads.yml']
   workflow_dispatch:
     inputs:
       target:
@@ -12,7 +15,7 @@ on:
         default: '50'
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 concurrency:
@@ -32,11 +35,15 @@ jobs:
         env:
           TARGET: ${{ github.event.inputs.target || '50' }}
         run: python3 tools/daily_leads.py
-      - name: Keep the summary
+      - name: Save the summary for the phone report
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: daily-leads-summary
-          path: daily-leads-summary.txt
-          if-no-files-found: ignore
-          retention-days: 14
+        run: |
+          [ -f daily-leads-summary.txt ] || echo "The daily lead finder did not finish today. Check GitHub > Actions > Daily leads." > daily-leads-summary.txt
+          cp daily-leads-summary.txt /tmp/summary.txt
+          git config user.name "riverbend-leads-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch -q origin daily-leads-log 2>/dev/null; then git checkout -q -B daily-leads-log FETCH_HEAD; else git checkout -q --orphan daily-leads-log; git rm -rq --cached . ; fi
+          { date -u +%Y-%m-%dT%H:%M:%SZ; cat /tmp/summary.txt; } > summary.txt
+          git add summary.txt
+          git commit -qm "Daily leads summary $(date -u +%F)"
+          git push -q origin daily-leads-log
