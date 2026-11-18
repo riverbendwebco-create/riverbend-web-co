@@ -530,45 +530,132 @@ const BY_GATOR='<svg viewBox="0 0 320 200" aria-hidden="true"><defs><linearGradi
 function byConfetti(n){ const d=h('div',{class:'by-confetti','aria-hidden':'true'}); const cols=['#F2C230','#9B4FCF','#3DBB5A','#F2C230','#E8E2F0'];
   for(let i=0;i<n;i++){ const p=h('i'); p.style.left=(Math.random()*100)+'%'; p.style.background=cols[i%cols.length]; p.style.animationDelay=(-Math.random()*12)+'s'; p.style.animationDuration=(8+Math.random()*8)+'s'; p.style.transform='rotate('+(Math.random()*360)+'deg)'; if(i%3===0) p.style.borderRadius='50%'; d.append(p); } return d; }
 function nextFatTuesday(){ const now=new Date(); for(let y=now.getFullYear();y<now.getFullYear()+3;y++){ const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),hh=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-hh-k)%7,m=Math.floor((a+11*hh+22*l)/451),mo=Math.floor((hh+l-7*m+114)/31),da=((hh+l-7*m+114)%31)+1; const easter=new Date(y,mo-1,da); const ft=new Date(easter); ft.setDate(ft.getDate()-47); ft.setHours(15,0,0,0); if(ft>now) return ft; } return null; }
+/* ---- Bayou helpers: live hours, status pill, weekly specials ---- */
+const BY_TZ='America/Chicago';
+function byNow(){
+  try{ const p=new Intl.DateTimeFormat('en-US',{timeZone:BY_TZ,weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()); const g=t=>(p.find(x=>x.type===t)||{}).value;
+    const d=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(g('weekday')); return {d:d<0?todayIx():d,m:(+g('hour'))*60+(+g('minute'))}; }
+  catch(e){ const n=new Date(); return {d:todayIx(),m:n.getHours()*60+n.getMinutes()}; }
+}
+function byParse(s){
+  const m=String(s||'').match(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m\.?\s*(?:-|\u2013|\u2014|to)\s*(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m\.?/i); if(!m) return null;
+  const t=(hh,mi,ap)=>((+hh%12)+(/p/i.test(ap)?12:0))*60+(+(mi||0));
+  const o=t(m[1],m[2],m[3]); let c=t(m[4],m[5],m[6]); if(c<=o) c+=1440; return {o,c};
+}
+function byFmt(min){ min=((min%1440)+1440)%1440; let hh=Math.floor(min/60); const mm=min%60, ap=hh>=12?'PM':'AM'; hh=hh%12||12; return hh+':'+String(mm).padStart(2,'0')+' '+ap; }
+const byRange=p=>byFmt(p.o)+' – '+byFmt(p.c);
+function byStatus(C){
+  const n=byNow(), cur=byParse(C.hours[n.d]), prev=byParse(C.hours[(n.d+6)%7]);
+  if(prev&&prev.c>1440&&n.m<prev.c-1440) return {state:'open',label:'Open now',hrs:'Until '+byFmt(prev.c)};
+  if(cur&&n.m>=cur.o) return {state:'open',label:'Open now',hrs:'Today '+byRange(cur)};
+  if(cur) return {state:'soon',label:'Opens today',hrs:'Today '+byRange(cur)};
+  for(let k=1;k<=7;k++){ const d=(n.d+k)%7, p=byParse(C.hours[d]); if(p) return {state:'closed',label:'Closed today',hrs:'Opens '+(k===1?'tomorrow':DAYS[d])+' '+byFmt(p.o)}; }
+  return C.today&&!/closed/i.test(C.today)?{state:'open',label:'Open today',hrs:C.today}:{state:'unknown',label:'',hrs:''};
+}
+function byWeekly(C){
+  const w=Array.isArray(C.x.weekly)?C.x.weekly:[]; if(w.length<7) return [];
+  const pair=o=>({t:String((o||{}).t||''),d:String((o||{}).d||'')});
+  return w.slice(0,7).map(x=>({food:pair((x||{}).food),drink:pair((x||{}).drink),strip:String((x||{}).strip||'')}));
+}
+function byPill(C){
+  const el=h('div',{class:'by-pill'});
+  const paint=()=>{ const s=byStatus(C);
+    el.replaceChildren(
+      s.label?h('span',{class:'st '+s.state},h('i'),h('b',null,s.label),s.hrs?h('span',{class:'hr'},s.hrs):null):null,
+      (s.label&&C.addr)?h('span',{class:'sep','aria-hidden':'true'}):null,
+      C.addr?h(C.maps?'a':'span',{class:'ad',href:C.maps||null,target:C.maps?'_blank':null,rel:C.maps?'noopener':null,'aria-label':C.maps?('Open '+C.addr+' in Google Maps'):null},ico('pin',14,''),C.addr):null); };
+  paint(); setInterval(paint,60000); return el;
+}
+function byVip(){
+  let mode='email';
+  const input=h('input',{type:'email',id:'vip-c',name:'contact',autocomplete:'email',inputmode:'email',placeholder:'you@email.com',maxlength:'120',required:'required','aria-describedby':'vip-msg'});
+  const label=h('label',{for:'vip-c'},'Email address');
+  const fine=h('p',{class:'fine'},'Event updates and drink deals only. Unsubscribe any time.');
+  const msg=h('p',{class:'msg',id:'vip-msg',role:'status','aria-live':'polite'});
+  const consent=h('input',{type:'checkbox',id:'vip-ok',required:'required'});
+  const seg=h('div',{class:'by-seg',role:'group','aria-label':'How should we reach you'});
+  const mk=(k,txt)=>{ const b=h('button',{type:'button',class:k===mode?'on':null,'aria-pressed':k===mode?'true':'false',onclick:()=>set(k)},txt); b.dataset.k=k; return b; };
+  seg.append(mk('email','Email'),mk('sms','Text'));
+  function set(k){ mode=k; seg.querySelectorAll('button').forEach(b=>{ const on=b.dataset.k===k; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); });
+    input.value=''; msg.textContent=''; msg.className='msg';
+    if(k==='sms'){ input.type='tel'; input.setAttribute('inputmode','tel'); input.setAttribute('autocomplete','tel'); input.placeholder='563-555-0123'; label.textContent='Mobile number'; fine.textContent='By joining you agree to get recurring texts about events and drink deals. Msg and data rates may apply. Reply STOP to opt out.'; }
+    else{ input.type='email'; input.setAttribute('inputmode','email'); input.setAttribute('autocomplete','email'); input.placeholder='you@email.com'; label.textContent='Email address'; fine.textContent='Event updates and drink deals only. Unsubscribe any time.'; } }
+  const form=h('form',{class:'by-vip-f',novalidate:'novalidate',onsubmit:e=>{ e.preventDefault();
+    const v=String(input.value||'').replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,120);
+    const ok=mode==='email'?/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v):(()=>{ const d=v.replace(/\D/g,''); return d.length===10||(d.length===11&&d[0]==='1'); })();
+    if(!ok){ msg.className='msg err'; msg.textContent=mode==='email'?'Please enter a valid email address.':'Please enter a 10 digit mobile number.'; input.focus(); return; }
+    if(!consent.checked){ msg.className='msg err'; msg.textContent='Please check the box to join the list.'; consent.focus(); return; }
+    msg.className='msg info'; msg.textContent='Preview only: this form is not connected yet, so nothing was sent. On the live site, signups go straight to the owner’s list.'; }},
+    h('span',{class:'by-kick'},'How should we reach you?'),seg,
+    h('div',{class:'by-fld'},label,input),
+    h('label',{class:'by-chk',for:'vip-ok'},consent,h('span',null,'Yes, send me Mardi Gras updates and drink deals.')),
+    fine,
+    h('button',{type:'submit',class:'by-btn by-gold by-full'},'Join the VIP List'),msg);
+  return form;
+}
 function bayou(C){
   const G=groups(C.items,'Menu');
   const name=C.name, logo=okUrl(C.x.logo);
   const sec=(id,cls,...k)=>h('section',{class:'by-sec rv '+(cls||''),id},...k);
   const head=(kick,title,sub)=>h('div',{class:'by-head'},h('span',{class:'by-kick'},kick),h('h2',null,title),sub?h('p',null,sub):null);
-  const lk=([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l);
-  const links=[['b-drinks','Drink Nights'],['b-favs','Favorites'],['b-menu','Menu'],['b-mardi','Mardi Gras'],['b-photos','Photos'],['b-visit','Hours']];
-  const nav=h('header',{class:'by-nav'},h('div',{class:'by-nav-in'},
-    h('a',{class:'by-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('b-top');}},logo?h('img',{src:logo,alt:name}):h('b',null,name)),
-    h('nav',{class:'by-links'},links.map(lk)),
-    C.tel?h('a',{class:'by-btn by-gold by-sm',href:C.tel},ico('phone',16,''),h('span',null,C.phoneTxt)):null),
-    h('nav',{class:'by-mtabs','aria-label':'Sections'},links.map(lk)));
+  const wk=byWeekly(C), orderUrl=okUrl(C.x.order);
 
-  const openNow=C.today&&!/closed/i.test(C.today);
-  const hero=h('section',{class:'by-hero',id:'b-top'},byConfetti(46),
+  /* hero: live status pill, special strip, 50/50 button row */
+  let stripEl=null;
+  if(wk.length){
+    const n=byNow(); let ix=n.d, tonight=true;
+    if(!byParse(C.hours[n.d])){ tonight=false; for(let k=1;k<=7;k++){ const d=(n.d+k)%7; if(byParse(C.hours[d])||!C.hasHours){ ix=d; break; } } }
+    else { const st=byStatus(C); tonight=st.state!=='closed'; }
+    const w=wk[ix];
+    if(w&&w.strip) stripEl=h('button',{type:'button',class:'by-strip',onclick:()=>scrollTo('b-drinks')},
+      h('span',{class:'k'},ico('i-flame',18,''),tonight?'Tonight’s Special':DAYS[ix]+'’s Special'),h('b',null,w.strip),ico('arrow',18,''));
+  }
+  const hero=h('section',{class:'by-hero',id:'b-top'},
     h('div',{class:'by-bulbs t','aria-hidden':'true'}),
     h('div',{class:'by-hero-in'},
       h('div',{class:'by-hero-t'},
         h('span',{class:'by-kick'},'University Ave · Dubuque · Since the 90s'),
+        byPill(C),
         logo?h('img',{class:'by-logo',src:logo,alt:name}):h('h1',null,name),
         h('h1',{class:'by-sr'},name),
         h('p',{class:'by-tag'},C.tag),
-        h('div',{class:'by-acts'},
-          h('button',{type:'button',class:'by-btn by-gold',onclick:()=>scrollTo('b-drinks')},'Tonight\'s specials'),
-          h('button',{type:'button',class:'by-btn by-line',onclick:()=>scrollTo('b-menu')},'The menu'),
-          okUrl(C.x.order)?h('a',{class:'by-btn by-line',href:okUrl(C.x.order),target:'_blank',rel:'noopener'},'Order carry out'):null),
-        h('p',{class:'by-open'},h('i',{class:openNow?'on':''}),openNow?('Open today '+C.today):'Closed today, open Tuesday at 3pm')),
-      h('div',{class:'by-hero-pic'},bg(h('div',{class:'ph'}),C.hero),h('span',{class:'by-gator'})))
+        h('div',{class:'by-hero-acts'},stripEl,
+          h('div',{class:'by-row2'},
+            h('button',{type:'button',class:'by-btn by-line',onclick:()=>scrollTo('b-menu')},'The Menu'),
+            orderUrl?h('a',{class:'by-btn by-gold',href:orderUrl,target:'_blank',rel:'noopener'},'Order Carry Out'):(C.tel?h('a',{class:'by-btn by-gold',href:C.tel},'Call to Order'):null)))),
+      h('div',{class:'by-hero-pic'},bg(h('div',{class:'ph'}),C.hero),byConfetti(30),h('span',{class:'by-gator'})))
   );
   hero.querySelector('.by-gator').innerHTML=BY_GATOR;
 
   const ticker=(Array.isArray(C.x.ticker)?C.x.ticker:[]).filter(t=>typeof t==='string');
   const tick=ticker.length?h('div',{class:'by-ticker','aria-label':'Specials'},h('div',{class:'by-ticker-in'},[...ticker,...ticker].map(t=>h('span',null,t)))):null;
 
-  const nights=(Array.isArray(C.x.nights)?C.x.nights:[]).filter(n=>n&&n.day);
-  const drinks=nights.length?sec('b-drinks','by-drinks',head('Throw me something, mister','Drink Nights and Specials',C.x.nightsNote||null),
-    h('div',{class:'by-coins'},nights.map((n,ix)=>h('div',{class:'by-coin c'+(ix%3),tabindex:'0'},
-      h('div',{class:'f'},h('small',null,n.day),h('b',null,n.title),n.price?h('em',null,n.price):null),
-      h('div',{class:'b'},h('b',null,n.title),h('p',null,n.text||''))))),
+  /* 7 day food and drink specials switcher */
+  let weekEl=null;
+  if(wk.length){
+    let cur=byNow().d; const today=cur;
+    const panel=h('div',{class:'by-day',role:'tabpanel',id:'by-wp'});
+    const tabs=h('div',{class:'by-wtabs',role:'tablist','aria-label':'Specials by day'},DAYS.map((d,i)=>{
+      const b=h('button',{type:'button',role:'tab',id:'by-wt'+i,'aria-controls':'by-wp',class:'c'+(i%3),onclick:()=>set(i)},h('span',{class:'f'},d),h('span',{class:'s'},SHORT[i]),i===today?h('em',null,'Today'):null); return b; }));
+    function set(i){ cur=i;
+      tabs.querySelectorAll('button').forEach((b,k)=>{ b.classList.toggle('on',k===i); b.setAttribute('aria-selected',k===i?'true':'false'); b.tabIndex=k===i?0:-1; });
+      const w=wk[i], hp=byParse(C.hours[i]);
+      panel.setAttribute('aria-labelledby','by-wt'+i);
+      panel.replaceChildren(
+        h('div',{class:'by-day-h'},h('b',null,DAYS[i]),h('span',null,hp?('Open '+byRange(hp)):(C.hours[i]||'Closed'))),
+        h('div',{class:'by-day-g'},
+          h('div',{class:'by-dc food'},h('small',null,'Food special'),h('h3',null,w.food.t),h('p',null,w.food.d)),
+          h('div',{class:'by-dc drink'},h('small',null,'Drink special'),h('h3',null,w.drink.t),h('p',null,w.drink.d)))); }
+    tabs.addEventListener('keydown',e=>{ const k={ArrowRight:1,ArrowLeft:-1}[e.key]; if(!k) return; e.preventDefault(); const nx=(cur+k+7)%7; set(nx); tabs.children[nx].focus(); });
+    set(cur); weekEl=h('div',{class:'by-week'},tabs,panel);
+  }
+  const nights=(Array.isArray(C.x.nights)?C.x.nights:[]).filter(n=>n&&n.day&&!(weekEl&&/friday/i.test(n.day)));
+  const drinks=(weekEl||nights.length)?sec('b-drinks','by-drinks',head('Throw me something, mister',weekEl?'Food and Drink Specials':'Drink Nights and Specials',C.x.nightsNote||null),
+    weekEl,
+    nights.length?h('div',{class:'by-always'},weekEl?h('span',{class:'by-kick'},'Always on the board'):null,
+      h('div',{class:'by-coins'},nights.map((n,ix)=>h('div',{class:'by-coin c'+(ix%3),tabindex:'0'},
+        h('div',{class:'f'},h('small',null,n.day),h('b',null,n.title),n.price?h('em',null,n.price):null),
+        h('div',{class:'b'},h('b',null,n.title),h('p',null,n.text||'')))))):null,
     C.tel?h('div',{class:'by-acts by-c'},h('a',{class:'by-btn by-gold',href:C.tel},ico('phone',18,''),'Call for tonight\'s special')):null):null;
 
   const favs=(Array.isArray(C.x.favs)?C.x.favs:[]).filter(f=>f&&f.name&&okUrl(f.photo));
@@ -587,7 +674,7 @@ function bayou(C){
     const tabs=h('div',{class:'by-tabs'},G.names.map((k,ix)=>{ const b=h('button',{type:'button',class:(ix?'':'on ')+'c'+(ix%3)},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k); }); return b; }));
     const st=Math.max(0,G.names.findIndex(k=>G.map[k].length>3)); tabs.querySelectorAll('button').forEach((x,i)=>x.classList.toggle('on',i===st)); show(G.names[st]);
     menu=sec('b-menu','by-menu',head('Down South and up the street','The Menu','Gumbo, po\' boys, burgers and late night bites. Prices from their ordering menu.'),tabs,body,
-      okUrl(C.x.order)?h('div',{class:'by-acts by-c'},h('a',{class:'by-btn by-gold',href:okUrl(C.x.order),target:'_blank',rel:'noopener'},'Order online for pick up')):null);
+      orderUrl?h('div',{class:'by-acts by-c'},h('a',{class:'by-btn by-gold',href:orderUrl,target:'_blank',rel:'noopener'},'Order Carry Out')):null);
   }
 
   const ft=nextFatTuesday();
@@ -604,27 +691,64 @@ function bayou(C){
         h('div',{class:'by-cd'},nums)));
   }
 
+  /* Mardi Gras and VIP list signup */
+  const vip=sec('b-vip','by-vip',
+    h('div',{class:'by-vip-in'},
+      h('div',null,h('span',{class:'by-kick'},'Mardi Gras and VIP list'),h('h2',null,'Get on the list.'),
+        h('p',null,'Be first to hear about the Fat Tuesday party, the Friday special and the week’s drink deals. No spam, just the good stuff.'),
+        h('ul',null,h('li',null,ico('check',16,''),'Mardi Gras party news before anyone else'),h('li',null,ico('check',16,''),'Weekly drink and food deals'),h('li',null,ico('check',16,''),'Choose email or text'))),
+      byVip()));
+
   const photos=C.own.slice(0,12);
   const caps=Array.isArray(C.x.caps)?C.x.caps:[];
   const gal=photos.length?sec('b-photos','by-photos',head('Around the bar','Photos'),
     h('div',{class:'by-grid'},photos.map((u,ix)=>h('button',{type:'button',class:'by-ph g'+(ix%7),'aria-label':'Open photo',onclick:()=>gallery(photos,name,ix)},bg(h('div',{class:'ph'}),u),caps[ix]?h('span',null,caps[ix]):null)))):null;
 
-  const revs=C.reviews.length?sec('b-revs','by-revs',head('Word on University Ave','Reviews',C.reviewsSource||null),
-    h('div',{class:'by-quotes'},C.reviews.slice(0,6).map((r,ix)=>h('figure',{class:'by-q c'+(ix%3)},stars(r.stars||5),h('blockquote',null,'“'+r.text+'”'),h('figcaption',null,r.name))))):null;
+  /* reviews: three real guest reviews, preferring ones about gumbo, po' boys and Mardi Gras */
+  const rank=r=>(/gumbo/i.test(r.text)?4:0)+(/po.?boy/i.test(r.text)?4:0)+(/mardi/i.test(r.text)?4:0)+(/fat tuesday/i.test(r.text)?2:0);
+  const picks=C.reviews.map((r,i)=>[r,i]).sort((a,b)=>rank(b[0])-rank(a[0])||a[1]-b[1]).slice(0,3).map(x=>x[0]);
+  const score=(String(C.reviewsSource||'').match(/\d\.\d/)||[''])[0];
+  const revs=picks.length?sec('b-revs','by-revs',head('Word on University Ave','Reviews',null),
+    h('div',{class:'by-rsum'},score?h('b',null,score):null,stars(5),h('span',null,String(C.reviewsSource||'').replace(/^\d\.\d\s*stars?\s*/i,''))),
+    h('div',{class:'by-quotes'},picks.map((r,ix)=>h('figure',{class:'by-q c'+(ix%3)},stars(r.stars||5),h('blockquote',null,'“'+r.text+'”'),h('figcaption',null,r.name,h('small',null,'Google review'))))),
+    (C.reviewLink||C.maps)?h('div',{class:'by-acts by-c'},h('a',{class:'by-btn by-line',href:C.reviewLink||C.maps,target:'_blank',rel:'noopener'},'Read more reviews on Google')):null):null;
 
-  const notes=(C.x.notes||[]).filter(t=>typeof t==='string');
-  const visit=sec('b-visit','by-visit',head('Pull up a stool','Hours and Location'),
-    h('div',{class:'by-vgrid'},
-      h('div',{class:'by-neon'},h('div',{class:'by-neon-h'},h('span',null,'OPEN'),h('span',null,'TIL 2')),h('div',{class:'by-hrs'},DAYS.map((d,i)=>h('div',{class:i===todayIx()?'today':null},h('span',null,d),h('span',null,C.hours[i]||'Closed'))))),
-      h('div',{class:'by-find'},h('h3',null,name),h('address',null,C.addr,h('br'),C.city),
-        notes.length?h('ul',null,notes.slice(0,6).map(t=>h('li',null,t))):null,
-        h('div',{class:'by-acts'},C.tel?h('a',{class:'by-btn by-gold by-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null,C.maps?h('a',{class:'by-btn by-line by-sm',href:C.maps,target:'_blank',rel:'noopener'},ico('map',16,''),'Directions'):null),
-        h('div',{class:'by-soc'},C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null)),
-      h('div',{class:'by-map wx-map'},mapBox('UNIVERSITY AVE',C.maps))));
+  /* footer location card: kitchen vs bar hours, phone, address, socials, map */
+  const nowD=byNow().d;
+  const hrsRow=(d,v,on)=>h('div',{class:on?'today':null},h('span',null,d),h('span',null,v));
+  const barHrs=h('div',{class:'by-hrs'},DAYS.map((d,i)=>{ const p=byParse(C.hours[i]); return hrsRow(d,p?byRange(p):(C.hours[i]||'Closed'),i===nowD); }));
+  const kit=Array.isArray(C.x.kitchen)&&C.x.kitchen.length===7?C.x.kitchen:null;
+  const kitHrs=h('div',{class:'by-hrs'},kit?DAYS.map((d,i)=>hrsRow(d,kit[i]||'Closed',i===nowD)):[hrsRow('Late night menu','Until close',false)]);
+  const kNote=typeof C.x.kitchenNote==='string'&&C.x.kitchenNote?h('p',{class:'by-hnote'},C.x.kitchenNote):null;
+  const d10=C.phone.replace(/\D/g,'').slice(-10), phoneDash=d10.length===10?d10.slice(0,3)+'-'+d10.slice(3,6)+'-'+d10.slice(6):C.phoneTxt;
+  const addrFull=[C.addr,C.city].filter(Boolean).join(', ');
+  const visit=sec('b-visit','by-visit',
+    h('div',{class:'by-loc'},
+      h('div',{class:'by-loc-top'},h('span',{class:'by-kick'},'Pull up a stool'),h('h2',null,'Hours & Location')),
+      h('div',{class:'by-loc-grid'},
+        h('div',{class:'by-loc-info'},h('h3',null,name),
+          addrFull?h(C.maps?'a':'span',{class:'by-addr',href:C.maps||null,target:C.maps?'_blank':null,rel:C.maps?'noopener':null},ico('pin',20,''),h('span',null,addrFull)):null,
+          C.tel?h('a',{class:'by-bigtel',href:C.tel},ico('phone',22,''),phoneDash):null,
+          h('div',{class:'by-acts'},C.maps?h('a',{class:'by-btn by-gold',href:C.maps,target:'_blank',rel:'noopener'},ico('map',18,''),'Get Directions'):null,orderUrl?h('a',{class:'by-btn by-line',href:orderUrl,target:'_blank',rel:'noopener'},'Order Carry Out'):null),
+          (C.fb||C.ig)?h('div',{class:'by-soc'},C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',18,''),'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},ico('i-ig',18,''),'Instagram'):null):null),
+        h('div',{class:'by-loc-hrs'},
+          h('div',{class:'by-hcard kit'},h('div',{class:'by-hcard-h'},h('b',null,'Kitchen Hours')),kitHrs,kNote),
+          h('div',{class:'by-hcard bar'},h('div',{class:'by-hcard-h'},h('b',null,'Bar Hours'),h('span',null,'Open til 2')),barHrs)),
+        h('div',{class:'by-map wx-map'},mapBox('UNIVERSITY AVE',C.maps,true)))));
 
   const foot=h('footer',{class:'by-foot'},h('div',{class:'by-bulbs','aria-hidden':'true'}),h('div',{class:'in'},logo?h('img',{src:logo,alt:''}):h('b',null,name),
     h('span',null,'© '+new Date().getFullYear()+' '+name+' · '+[C.addr,C.city].filter(Boolean).join(', ')),h('span',null,'Site by Riverbend Web Co.')));
-  return h('div',{class:'demo western on by'},nav,hero,tick,drinks,favEl,menu,mardi,gal,revs,visit,foot);
+
+  /* nav last, so it only links to sections that exist */
+  const has={'b-drinks':!!drinks,'b-menu':!!menu,'b-revs':!!revs,'b-visit':true};
+  const links=[['b-drinks','Specials'],['b-menu','Menu'],[mardi?'b-mardi':'b-vip','Mardi Gras'],['b-revs','Reviews'],['b-visit','Hours & Map']].filter(([id])=>has[id]!==false);
+  const lk=([id,l])=>h('button',{type:'button',class:id==='b-visit'?'hm':null,onclick:()=>scrollTo(id)},l);
+  const nav=h('header',{class:'by-nav'},h('div',{class:'by-nav-in'},
+    h('a',{class:'by-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('b-top');}},logo?h('img',{src:logo,alt:name}):h('b',null,name)),
+    h('nav',{class:'by-links'},links.map(lk)),
+    C.tel?h('a',{class:'by-btn by-gold by-sm',href:C.tel},ico('phone',16,''),h('span',null,C.phoneTxt)):null),
+    h('nav',{class:'by-mtabs','aria-label':'Sections'},links.map(lk)));
+  return h('div',{class:'demo western on by'},nav,hero,tick,drinks,favEl,menu,gal,revs,mardi,vip,visit,foot);
 }
 /* ===================== DINER (Dottie's: counter, stools, guest checks) ===================== */
 const DN_ICON={
@@ -817,8 +941,8 @@ function marketing(C){
         h('div',{class:'mo-list'},adds.map((m,i)=>offer(m,i,'add')))),
       h('p',{class:'mp-fine mo-fine'},'Prices are for Riverbend Web Co. services and can be added to any website plan. Ask us about terms.')));
 }
-function mapBox(label,href){
-  const NS='http://www.w3.org/2000/svg', s=document.createElementNS(NS,'svg'); s.setAttribute('viewBox','0 0 320 170'); s.setAttribute('aria-hidden','true');
+function mapBox(label,href,fill){
+  const NS='http://www.w3.org/2000/svg', s=document.createElementNS(NS,'svg'); s.setAttribute('viewBox','0 0 320 170'); s.setAttribute('aria-hidden','true'); if(fill) s.setAttribute('preserveAspectRatio','xMidYMid slice');
   s.innerHTML='<rect width="320" height="170" fill="#1a1a1e"/><g stroke="#2c2c32" stroke-width="7"><path d="M0 40h250M0 95h240M0 145h230M60 0v170M130 0v170M200 0v170"/></g><g stroke="#3a3a42" stroke-width="2"><path d="M0 68h245M0 120h235M95 0v170M165 0v170"/></g><path d="M262 0 C 240 50, 290 90, 262 170 L320 170 L320 0Z" fill="#1e3a5f"/><circle cx="130" cy="95" r="18" fill="rgba(232,163,61,.2)"/><path d="M130 72c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z" fill="var(--gold)"/><circle cx="130" cy="86" r="5" fill="#1a1205"/>';
   const t=document.createElementNS(NS,'text'); t.setAttribute('x','66'); t.setAttribute('y','91'); t.setAttribute('fill','#6b6b74'); t.setAttribute('font-size','8'); t.setAttribute('font-family','sans-serif'); t.textContent=label; s.append(t);
   return h('div',{class:'mapbox'},s,href?h('a',{href,target:'_blank',rel:'noopener',class:'map-go'},'Directions →'):null);
