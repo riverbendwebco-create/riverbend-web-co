@@ -483,6 +483,17 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mp-btn{display:flex;align-items:center;justify-content:center;height:48px;border-radius:10px;background:#0052CC;color:#fff;font-weight:700;text-decoration:none;border:1px solid #0052CC;cursor:pointer;font-size:.95rem;width:100%;font-family:inherit}
 .mp-btn:hover{background:#0047B3}
 .mp-ghost{background:#fff;color:#0F172A;border-color:#CBD5E1;margin-top:10px}.mp-ghost:hover{background:#F8FAFC}
+.mk-trail .mp-cover{background:#2F4A35 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='1.5'%3E%3Cpath d='M-10 50 Q70 10 130 50 T270 50'/%3E%3Cpath d='M-10 95 Q70 55 130 95 T270 95'/%3E%3Cpath d='M-10 150 Q70 110 130 150 T270 150'/%3E%3Cpath d='M-10 205 Q70 165 130 205 T270 205'/%3E%3C/g%3E%3C/svg%3E");border-bottom:5px solid #B5521B}
+.mk-trail .mp-eyebrow{color:#F2B27C}
+.mk-trail .mp-cover p{color:#DCE5D8}
+.mk-trail .mp-meta dt{color:#B9C8B4}
+.mk-trail .mp-back{color:#B5521B}
+.mk-trail .mp-label{border-top-color:#2F4A35;color:#23201C}
+.mk-trail .mp-label span,.mk-trail .mo-num{color:#B5521B}
+.mk-trail .mo-body h3{color:#2F4A35}
+.mk-trail .mo-price b{color:#23201C}
+.mk-trail .mo-ex{background:#EEF3EC;border-left-color:#B5521B}
+.mk-trail .mo-ex span{color:#B5521B}
 .mp-fine{color:#94A3B8;font-size:.78rem;line-height:1.5;margin-top:14px}
 .mo{padding-top:56px;padding-bottom:80px}
 .mo section+section{margin-top:60px}
