@@ -370,9 +370,9 @@ function studio_(d) {
    sha256(STUDIO_PW_SALT + password) in hex, and bump STUDIO_PW_GEN so
    everyone signed in with the old password is signed out.
    Leave STUDIO_PW_HASH empty to fall back to Script Properties > ADMIN_PASSWORD. */
-var STUDIO_PW_SALT = '8c8becc04d71b9c8c3aaf49a3aa07ecf';
-var STUDIO_PW_HASH = '8027e918aef307a79779a317b7fbd7fbde841ee26f111b783d51ec8557ba77e5';
-var STUDIO_PW_GEN = '2';
+var STUDIO_PW_SALT = 'c3ec4cc852cac2e771470ef8de7a11a6';
+var STUDIO_PW_HASH = '983a93265453b7a91d8ce828b405a35ac9909bc9d7a45a272e340d416288d0d8';
+var STUDIO_PW_GEN = '3';
 
 function sha256Hex_(v) {
   return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, v, Utilities.Charset.UTF_8)
