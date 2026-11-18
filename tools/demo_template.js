@@ -301,7 +301,7 @@ function western(C){
     h('span',null,'Site by Riverbend Web Co.')));
   if(C.variant==='trail'&&menu) menu.append(utvArt());
   const trail=C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length;
-  const page=trail?h('div',{class:'demo western on'},top,nav,heroEl,trailWeek(C),favEl,menu,trailRide(C),strip,storyEl,revEl,visit,foot)
+  const page=trail?h('div',{class:'demo western on'},top,nav,heroEl,trailWeek(C),trailFeature(C),favEl,menu,trailRide(C),strip,storyEl,revEl,visit,foot)
     :h('div',{class:'demo western on'},top,nav,heroEl,favEl,menu,spot,strip,storyEl,revEl,visit,foot);
   page.style.setProperty('--wn',C.navy); page.style.setProperty('--wr',C.red);
   if(/^[a-z]{3,20}$/.test(C.variant||'')) page.classList.add('v-'+C.variant);
@@ -337,6 +337,21 @@ function trailWeek(C){
       days.length>1?h('button',{type:'button',class:'tw-arrow r','aria-label':'Next special',onclick:()=>{go(1);stop();}},'›'):null),
     tabs,
     b?h('div',{class:'tw-banner'},h('b',null,b.title),b.detail?h('span',null,b.detail):null):null);
+}
+/* Signature burger feature with how-the-contest-works steps */
+function trailFeature(C){
+  const f=C.x.feature&&typeof C.x.feature==='object'&&C.x.feature.title?C.x.feature:null; if(!f) return null;
+  const steps=Array.isArray(f.steps)?f.steps.filter(x=>typeof x==='string').slice(0,8):[];
+  return h('section',{class:'tf rv',id:'w-feature'},
+    h('div',{class:'tf-top'},
+      bg(h('div',{class:'tf-pic ph'},f.badge?h('span',null,f.badge):null),okUrl(f.photo)||C.hero),
+      h('div',{class:'tf-b'},f.kick?h('small',null,f.kick):null,h('h2',null,f.title),f.desc?h('p',{class:'tf-q'},'“'+f.desc+'”'):null,
+        f.source?h('div',{class:'tf-src'},f.source):null,
+        h('div',{class:'wx-acts'},C.tel?h('a',{class:'wx-btn wx-red',href:C.tel},ico('phone',18,''),'Order: '+C.phoneTxt):null))),
+    steps.length?h('div',{class:'tf-how'},h('h3',null,f.howTitle||'How it works'),f.howSub?h('p',{class:'tf-sub'},f.howSub):null,
+      h('ol',null,steps.map((t,k)=>h('li',null,h('b',null,String(k+1)),h('span',null,t)))),
+      f.note?h('p',{class:'tf-note'},f.note):null,
+      okUrl(f.link)?h('a',{class:'wx-btn wx-line wx-sm',href:f.link,target:'_blank',rel:'noopener'},f.linkText||'Contest details'):null):null);
 }
 /* Trail riders band */
 function trailRide(C){
