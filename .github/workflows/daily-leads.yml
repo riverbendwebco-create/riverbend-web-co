@@ -20,7 +20,7 @@ permissions:
 
 concurrency:
   group: daily-leads
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   find:
