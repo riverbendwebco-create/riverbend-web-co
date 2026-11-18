@@ -2996,7 +2996,7 @@ function osteria(C){
     h('nav',{class:'os-links'},C.items.length?jump('os-menu','Menu'):null,C.own.length>1?jump('os-gallery','Gallery'):null,jump('os-visit','Visit')),
     jump('os-reserve','Reserve a Table','os-btn gold sm')));
   const city=C.city.split(',')[0];
-  const hero=bg(h('section',{class:'os-hero'},h('div',{class:'os-hero-in rv'},
+  const hero=bg(h('section',{class:'os-hero'},h('div',{class:'os-hero-in'},
     h('span',{class:'os-eyebrow'},[C.cat||'Italian Kitchen',city].filter(Boolean).join(' · ')),
     h('h1',null,C.name),
     C.tag?h('p',{class:'os-tag'},C.tag):null,
