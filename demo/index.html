@@ -1051,12 +1051,12 @@ const MK_SOCIAL=[
 const MK=[
   {id:'club',name:'Email or text club for specials',price:25,per:'mo',what:'Guests sign up on your site, and we send your specials and events to them for you.',idea:C=>C.specials[0]?'A text to your club before '+C.specials[0].title+(C.specials[0].when?' ('+C.specials[0].when+')':'')+'.':''},
   {id:'qr',name:'QR menu and table tents',price:60,per:'one-time',what:'Table tents with a QR code that opens your menu, specials and social pages.',idea:()=>''},
-  {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',what:'We connect online ordering, carry-out or reservations to your website.',idea:C=>C.specials.some(s=>/carry|reserve|order/i.test(s.detail||''))?'Your guests already call ahead for carry-out, so online ordering could take some of those calls.':''}
+  {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:C=>C.specials.some(s=>/carry|reserve|order/i.test(s.detail||''))?'Your guests already call ahead for carry-out, so online ordering could take some of those calls.':''}
 ];
 function marketing(C){
   const chosen=new Set(['soc1']);
   const money=n=>'$'+n.toLocaleString('en-US');
-  const unit=m=>m.per==='mo'?'per month':'one-time';
+  const unit=m=>m.label||(m.per==='mo'?'per month':'one-time');
   const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   const none={id:'none',name:'Not right now',price:0,per:'mo',what:'Skip social media for now. You can add it any time.',idea:()=>''};
 
@@ -1092,9 +1092,9 @@ function marketing(C){
     const pick=all.filter(m=>chosen.has(m.id));
     const mo=pick.filter(m=>m.per==='mo').reduce((a,m)=>a+m.price,0);
     const once=pick.filter(m=>m.per!=='mo').reduce((a,m)=>a+m.price,0);
-    lines.replaceChildren(...(pick.length?pick.map(m=>h('div',null,h('span',null,m.name),h('span',null,money(m.price)+(m.per==='mo'?'/mo':'')))):[h('p',{class:'mp-empty'},'Nothing selected yet.')]));
+    lines.replaceChildren(...(pick.length?pick.map(m=>h('div',null,h('span',null,m.name+(m.label?' (setup fee)':'')),h('span',null,money(m.price)+(m.per==='mo'?'/mo':'')))):[h('p',{class:'mp-empty'},'Nothing selected yet.')]));
     moEl.textContent=money(mo); onceEl.textContent=money(once);
-    copy.dataset.text='Marketing proposal for '+C.name+' ('+today+')\n'+pick.map(m=>'- '+m.name+': '+money(m.price)+(m.per==='mo'?'/month':' one-time')).join('\n')+'\nMonthly: '+money(mo)+'\nOne-time: '+money(once);
+    copy.dataset.text='Marketing proposal for '+C.name+' ('+today+')\n'+pick.map(m=>'- '+m.name+': '+money(m.price)+(m.per==='mo'?'/month':m.label?' one-time setup fee':' one-time')).join('\n')+'\nMonthly: '+money(mo)+'\nOne-time: '+money(once);
   }
   sum();
 
