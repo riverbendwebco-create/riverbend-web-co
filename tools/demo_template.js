@@ -1126,12 +1126,12 @@ function osIntro(C){
   const box=h('div',{class:'os-intro',role:'presentation'},photo,
     h('div',{class:'os-steam2','aria-hidden':'true'},h('i'),h('i'),h('i')),
     h('div',{class:'os-intro-txt'},h('span',{class:'os-eyebrow'},'Benvenuti'),h('b',null,C.name||''),osSvg(OS_SPRIG,'os-sprig')));
-  const done=()=>{ if(!box.isConnected||box.classList.contains('out')) return; box.classList.add('out'); document.documentElement.classList.remove('os-lock'); setTimeout(()=>box.remove(),600); try{ sessionStorage.setItem('osIntro_'+C.name,'1'); }catch(e){} };
+  const done=()=>{ if(!box.isConnected||box.classList.contains('out')) return; box.classList.add('out'); document.documentElement.classList.remove('os-lock'); setTimeout(()=>box.remove(),300); try{ sessionStorage.setItem('osIntro_'+C.name,'1'); }catch(e){} };
   box.addEventListener('click',done);
   document.documentElement.classList.add('os-lock');
   document.body.append(box);
   const img=new Image(); let started=false;
-  const go=()=>{ if(started) return; started=true; box.classList.add('go'); setTimeout(done,2000); };
+  const go=()=>{ if(started) return; started=true; box.classList.add('go'); setTimeout(done,1500); };
   img.onload=go; img.onerror=()=>done(); img.src=pic;
   setTimeout(()=>{ if(!started) done(); },1800); /* slow connection: skip straight to the site */
 }

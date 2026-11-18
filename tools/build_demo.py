@@ -139,7 +139,7 @@ html.os-lock,html.os-lock body{overflow:hidden}
 .os-foot{padding:54px 0 70px;text-align:center;border-top:1px solid rgba(201,163,91,.2)}
 .os-foot small{display:block;color:var(--mut);margin-top:12px}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
-.os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .55s ease,visibility .55s;cursor:pointer}
+.os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
 .os-intro-pic{position:absolute;inset:-4%;background-size:cover;background-position:center 58%;opacity:0;transform:scale(1.14);filter:brightness(.8) contrast(1.1) saturate(1.1) sepia(.12)}
 .os-intro.go .os-intro-pic{animation:osPush 2.9s cubic-bezier(.2,.6,.2,1) forwards}
@@ -152,7 +152,7 @@ html.os-lock,html.os-lock body{overflow:hidden}
 .os-intro.go .os-steam2 i:nth-child(2){animation-delay:.6s}.os-intro.go .os-steam2 i:nth-child(3){animation-delay:.9s}
 @keyframes osWisp{0%{opacity:0;transform:translateY(30px) scaleX(.8)}40%{opacity:1}100%{opacity:0;transform:translateY(-90px) scaleX(1.3)}}
 .os-intro-txt{position:relative;z-index:2;text-align:center;opacity:0;padding:0 20px}
-.os-intro.go .os-intro-txt{animation:osTxt 1.1s cubic-bezier(.2,.7,.2,1) .45s forwards}
+.os-intro.go .os-intro-txt{animation:osTxt .8s cubic-bezier(.2,.7,.2,1) .25s forwards}
 .os-intro-txt b{display:block;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(3rem,9vw,6rem);line-height:1;color:#fff;margin-top:8px;text-shadow:0 4px 30px rgba(0,0,0,.6)}
 .os-intro-txt .os-eyebrow{color:#E2C48A}
 .os-intro .os-sprig{color:#C9A35B}
