@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'">
 <title>riverbendwebcoleads | Riverbend Web Co.</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -13,130 +13,138 @@
 <meta name="apple-mobile-web-app-title" content="RW Leads">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0F172A">
+<meta name="theme-color" content="#0B1220">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0F172A;--slate:#1E293B;--ink:#0F172A;--mut:#64748B;--line:#E2E8F0;--soft:#F8FAFC;--blue:#0052CC;--blue2:#60A5FA;--red:#DC2626;--amber:#B45309;--green:#16A34A}
+:root{--side:#0B1220;--side2:#111A2E;--sline:#1E293B;--ink:#0F172A;--mut:#64748B;--line:#E5E9F0;--bg:#F5F7FA;--blue:#0052CC;--blue2:#3B82F6;--red:#DC2626;--orange:#EA580C;--amber:#D97706;--green:#16A34A}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:#F1F5F9;-webkit-font-smoothing:antialiased}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 a{color:var(--blue)}
 .hidden{display:none!important}
-svg.rw{width:52px;height:auto;aspect-ratio:1115/562;display:block}
-
-/* Login */
-.login{min-height:100%;display:grid;place-items:center;padding:24px}
-.login-card{width:100%;max-width:380px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px 26px;box-shadow:0 10px 30px rgba(15,23,42,.06)}
-.login-card h1{font-size:1.25rem;margin:18px 0 4px;letter-spacing:-.01em}
-.login-card p{margin:0 0 18px;color:var(--mut);font-size:.92rem}
-.field{display:block;width:100%;height:46px;border:1px solid #CBD5E1;border-radius:8px;padding:0 14px;background:#fff;outline:none}
-.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,82,204,.15)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:42px;padding:0 16px;border-radius:8px;border:1px solid transparent;font-weight:700;font-size:.9rem;cursor:pointer;text-decoration:none;white-space:nowrap;background:#fff;color:var(--ink);border-color:#CBD5E1}
+svg.rw{width:46px;height:auto;aspect-ratio:1115/562;display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 13px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:.84rem;cursor:pointer;text-decoration:none;color:var(--ink);white-space:nowrap}
 .btn:hover{border-color:#94A3B8}
 .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
 .btn.primary:hover{background:#0047B3}
-.btn.dark{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn.sm{height:34px;padding:0 11px;font-size:.82rem}
 .btn[disabled]{opacity:.55;cursor:default}
 .msg{min-height:20px;margin-top:10px;font-size:.88rem;color:var(--mut)}
 .msg.err{color:var(--red)}
 
-/* App shell */
-.app{height:100%;display:flex;flex-direction:column;background:#fff}
-.top{flex:none;display:flex;align-items:center;gap:10px;padding:12px 20px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:1px solid var(--line);background:#fff}
-.top .t b{display:block;font-size:.98rem;letter-spacing:-.01em}
-.top .sp{flex:1}
-.top button{white-space:nowrap;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:8px;height:34px;padding:0 12px;font-weight:600;font-size:.84rem;cursor:pointer}
-.top button:hover{border-color:#94A3B8}
-.top button.plain{border-color:transparent;color:var(--mut)}
-.feed{flex:1;overflow-y:auto;padding:28px 18px 16px;-webkit-overflow-scrolling:touch;background:#F8FAFC}
-.wrap{max-width:760px;margin:0 auto}
-.row{display:flex;margin:0 0 18px}
-.row.me{justify-content:flex-end}
-.bubble{max-width:85%;line-height:1.55;font-size:.95rem}
-.me .bubble{background:var(--navy);color:#fff;padding:10px 14px;border-radius:12px;border-bottom-right-radius:4px}
-.bot .bubble{color:var(--ink)}
-.bot .bubble p{margin:0 0 8px}.bot .bubble p:last-child{margin:0}
-.bot.wide .bubble{max-width:100%;width:100%}
-.sugs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.sug{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:.86rem;font-weight:600;cursor:pointer;color:var(--slate)}
-.sug:hover{border-color:var(--blue);color:var(--blue)}
-.typing{display:inline-flex;gap:6px;align-items:center;color:var(--mut);font-size:.9rem}
-.dot{width:6px;height:6px;border-radius:50%;background:#94A3B8;animation:b 1s infinite}
-.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
-@keyframes b{0%,80%,100%{opacity:.3}40%{opacity:1}}
+/* Login */
+.login{min-height:100%;display:grid;place-items:center;padding:24px;background:var(--side)}
+.login-card{width:100%;max-width:380px;background:#fff;border-radius:16px;padding:32px 28px}
+.login-card h1{font-size:1.3rem;margin:18px 0 4px;letter-spacing:-.01em}
+.login-card p{margin:0 0 18px;color:var(--mut);font-size:.92rem}
+.field{display:block;width:100%;height:46px;border:1px solid #CBD5E1;border-radius:10px;padding:0 14px;outline:none}
+.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,82,204,.15)}
 
-/* Welcome */
-.hero{padding:26px 0 6px}
-.hero h2{margin:0 0 6px;font-size:1.7rem;letter-spacing:-.02em;line-height:1.2}
-.hero p{margin:0;color:var(--mut);font-size:1rem}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
-.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s}
-.tile:hover{border-color:var(--blue);box-shadow:0 4px 14px rgba(0,82,204,.08)}
-.tile b{display:block;font-size:.98rem}
-.tile span{display:block;color:var(--mut);font-size:.8rem;margin-top:3px}
+/* Shell */
+.app{height:100%;display:grid;grid-template-columns:248px 1fr}
+.side{background:var(--side);color:#CBD5E1;display:flex;flex-direction:column;padding:20px 14px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px 22px}
+.brand b{color:#fff;font-size:1rem;letter-spacing:-.01em;display:block}
+.brand span{font-size:.72rem;color:#64748B;display:block}
+.nav{display:grid;gap:2px}
+.nav button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:0;background:transparent;color:#CBD5E1;text-align:left;padding:10px 12px;border-radius:9px;font-weight:600;font-size:.9rem;cursor:pointer}
+.nav button:hover{background:var(--side2);color:#fff}
+.nav button.on{background:var(--side2);color:#fff;box-shadow:inset 3px 0 0 var(--blue2)}
+.nav .count{font-size:.75rem;color:#94A3B8;background:#1E293B;border-radius:6px;padding:2px 7px}
+.side h6{margin:24px 12px 8px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#64748B}
+.quick button{display:block;width:100%;border:0;background:transparent;color:#94A3B8;text-align:left;padding:7px 12px;border-radius:8px;font-size:.86rem;cursor:pointer}
+.quick button:hover{background:var(--side2);color:#fff}
+.side .sp{flex:1;min-height:20px}
+.side .out{border:1px solid var(--sline);background:transparent;color:#94A3B8;border-radius:9px;padding:9px 12px;font-weight:600;font-size:.85rem;cursor:pointer;text-align:left}
+.side .out:hover{color:#fff;border-color:#334155}
 
-/* Results */
-.res-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
-.res-h h3{margin:0;font-size:1.15rem;letter-spacing:-.01em}
-.res-h span{color:var(--mut);font-size:.85rem}
-.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}
-.tabs button{flex:none;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font-size:.84rem;font-weight:600;color:var(--slate);cursor:pointer}
-.tabs button b{font-weight:800;margin-left:4px;color:var(--mut)}
-.tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
-.tabs button.on b{color:#94A3B8}
-.list{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.lead{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:14px 16px;border-top:1px solid var(--line)}
+.main{display:flex;flex-direction:column;min-width:0;height:100%}
+.cmd{flex:none;padding:18px 28px;background:#fff;border-bottom:1px solid var(--line)}
+.cmd form{display:flex;gap:10px;max-width:980px;width:100%}
+.cmd .in{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:48px;border:1px solid #CBD5E1;border-radius:12px;padding:0 6px 0 14px;background:#fff}
+.cmd .in:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,82,204,.12)}
+.cmd .ai{flex:none;width:26px;height:26px;border-radius:7px;background:var(--side);color:#fff;font-size:.68rem;font-weight:800;display:grid;place-items:center;letter-spacing:.02em}
+.cmd input{flex:1;border:0;outline:none;height:100%;font-size:1rem;background:transparent;min-width:0}
+.cmd button{flex:none;height:36px;padding:0 16px;border-radius:9px;border:0;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
+.view{flex:1;overflow-y:auto;padding:26px 28px 40px}
+.inner{max-width:980px}
+.say{display:flex;gap:12px;align-items:flex-start;margin-bottom:20px}
+.say .ai{flex:none;width:30px;height:30px;border-radius:8px;background:var(--side);color:#fff;font-size:.72rem;font-weight:800;display:grid;place-items:center}
+.say p{margin:4px 0 0;font-size:.98rem;line-height:1.5}
+.say .q{color:var(--mut);font-size:.82rem;margin:0}
+h1.pg{margin:0 0 4px;font-size:1.6rem;letter-spacing:-.02em}
+.lede{margin:0 0 22px;color:var(--mut)}
+
+/* Home tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.tile:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(15,23,42,.07);transform:translateY(-1px)}
+.tile b{display:block;font-size:1rem}
+.tile span{display:block;color:var(--mut);font-size:.82rem;margin-top:4px}
+.tips{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.tips h3{margin:0 0 8px;font-size:.95rem}
+.tips ul{margin:0;padding-left:18px;color:#334155;font-size:.9rem;line-height:1.7}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left;cursor:pointer;transition:border-color .15s}
+.stat:hover{border-color:#94A3B8}
+.stat.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,82,204,.10)}
+.stat small{display:flex;align-items:center;gap:7px;color:var(--mut);font-weight:600;font-size:.8rem}
+.stat small i{width:8px;height:8px;border-radius:50%}
+.stat b{display:block;font-size:1.6rem;letter-spacing:-.02em;margin-top:4px}
+
+/* Lead list */
+.list{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lead{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:15px 18px;border-top:1px solid var(--line);align-items:center}
 .lead:first-child{border-top:0}
 .lead h4{margin:0;font-size:.98rem;letter-spacing:-.01em}
 .lead .sub{color:var(--mut);font-size:.82rem;margin-top:2px}
 .why{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:.84rem;font-weight:600}
 .why i{width:8px;height:8px;border-radius:50%;flex:none}
 .k-none .why{color:var(--red)}.k-none .why i{background:var(--red)}
-.k-social .why{color:#C2410C}.k-social .why i{background:#EA580C}
-.k-weak .why{color:var(--amber)}.k-weak .why i{background:#D97706}
+.k-social .why{color:#C2410C}.k-social .why i{background:var(--orange)}
+.k-weak .why{color:#B45309}.k-weak .why i{background:var(--amber)}
 .k-site .why,.k-chain .why{color:var(--mut)}.k-site .why i,.k-chain .why i{background:#CBD5E1}
-.lead .more-why{color:var(--mut);font-size:.8rem;margin-top:3px}
-.acts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.links{grid-column:1/-1;display:flex;gap:14px;font-size:.82rem}
-.links a{color:var(--mut);text-decoration:none;font-weight:600}
+.more-why{color:var(--mut);font-size:.8rem;margin-top:3px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.links{grid-column:1/-1;display:flex;gap:14px;font-size:.8rem;margin-top:2px}
+.links a,.links span{color:var(--mut);text-decoration:none;font-weight:600}
 .links a:hover{color:var(--blue)}
 .saved-on{color:var(--green)!important;border-color:#BBF7D0!important;background:#F0FDF4!important}
-.done{grid-column:1/-1;margin-top:4px;padding:10px 12px;border:1px solid #BBF7D0;background:#F0FDF4;border-radius:8px;font-size:.86rem}
+.done{grid-column:1/-1;margin-top:6px;padding:10px 12px;border:1px solid #BBF7D0;background:#F0FDF4;border-radius:10px;font-size:.86rem}
 .done .acts{justify-content:flex-start;margin-top:8px}
-.note{font-size:.8rem;color:var(--mut);margin-top:10px}
-.showmore{display:block;width:100%;border:0;border-top:1px solid var(--line);background:#fff;padding:12px;font-weight:600;font-size:.86rem;color:var(--blue);cursor:pointer}
-
-/* Saved */
-.pipe{display:grid;grid-template-columns:150px 1fr;gap:8px;grid-column:1/-1;margin-top:4px}
+.empty{padding:28px 18px;color:var(--mut);text-align:center}
+.note{font-size:.8rem;color:var(--mut);margin-top:12px}
+.skel{height:74px;border-top:1px solid var(--line);background:linear-gradient(90deg,#fff 0,#F1F5F9 40%,#fff 80%);background-size:200% 100%;animation:sh 1.2s infinite}
+.skel:first-child{border-top:0}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.stage{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);border:1px solid #BFDBFE;background:#EFF6FF;border-radius:6px;padding:4px 8px}
+.pipe{display:grid;grid-template-columns:160px 1fr;gap:8px;grid-column:1/-1;margin-top:6px}
 .pipe select,.pipe textarea{border:1px solid #CBD5E1;border-radius:8px;padding:7px 9px;background:#fff;font-size:.85rem}
 .pipe textarea{resize:vertical;min-height:38px}
-.stage{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);border:1px solid #BFDBFE;background:#EFF6FF;border-radius:6px;padding:4px 8px;height:fit-content}
 
-/* Composer */
-.composer{flex:none;background:#fff;border-top:1px solid var(--line);padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
-.composer form{display:flex;gap:8px;max-width:760px;margin:0 auto}
-.composer input{flex:1;height:48px;border:1px solid #CBD5E1;border-radius:10px;padding:0 16px;outline:none;font-size:1rem;background:#F8FAFC}
-.composer input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(0,82,204,.12)}
-.composer button{height:48px;padding:0 20px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
-
-/* Key setup (only if a Google key is ever used) */
-.steps{margin:6px 0 10px;padding-left:20px;font-size:.9rem}
-.steps li{margin:5px 0}
-.keyrow{display:flex;gap:8px;margin-top:6px}
-.keyrow input{flex:1;height:42px;border:1px solid #CBD5E1;border-radius:8px;padding:0 12px;font-size:.85rem}
-.issues{margin:8px 0 0;padding-left:18px;font-size:.88rem}
-@media (max-width:640px){
-  .top{padding:10px 14px}
-  .top svg.rw{width:40px}
+.tabbar{display:none}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr;grid-template-rows:1fr auto}
+  .side{display:none}
+  .cmd{padding:12px 14px;padding-top:max(12px,env(safe-area-inset-top))}
+  .cmd form{gap:8px}
+  .cmd button{padding:0 14px}
+  .cmd .ai{display:none}
+  .view{padding:18px 14px 30px}
   .tiles{grid-template-columns:repeat(2,1fr)}
-  .hero h2{font-size:1.4rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat{padding:10px 12px}
+  .stat b{font-size:1.25rem}
   .lead{grid-template-columns:1fr}
-  .acts{justify-content:flex-start}
+  .acts{justify-content:flex-start;margin-top:6px}
   .pipe{grid-template-columns:1fr}
-  .bubble{max-width:92%}
+  h1.pg{font-size:1.35rem}
+  .tabbar{display:grid;grid-template-columns:repeat(3,1fr);background:var(--side);padding:6px 6px max(6px,env(safe-area-inset-bottom))}
+  .tabbar button{border:0;background:transparent;color:#94A3B8;font-weight:700;font-size:.82rem;padding:10px 4px;border-radius:8px}
+  .tabbar button.on{color:#fff;background:var(--side2)}
 }
 </style>
 </head>
@@ -150,7 +158,7 @@ svg.rw{width:52px;height:auto;aspect-ratio:1115/562;display:block}
 
 <section class="login" id="login">
   <form class="login-card" id="loginForm" autocomplete="on">
-    <svg class="rw" aria-label="Riverbend Web Co."><use href="#rw-light"/></svg>
+    <svg class="rw" style="width:58px" aria-label="Riverbend Web Co."><use href="#rw-light"/></svg>
     <h1>riverbendwebcoleads</h1>
     <p>Find Dubuque businesses that need a website. Same password as the Demo Studio.</p>
     <input class="field" id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
@@ -160,21 +168,31 @@ svg.rw{width:52px;height:auto;aspect-ratio:1115/562;display:block}
 </section>
 
 <section class="app hidden" id="app">
-  <header class="top">
-    <svg class="rw" aria-hidden="true"><use href="#rw-light"/></svg>
-    <div class="t"><b>Leads</b></div>
+  <aside class="side">
+    <div class="brand"><svg class="rw" aria-hidden="true"><use href="#rw-dark"/></svg><div><b>Leads</b><span>Riverbend Web Co.</span></div></div>
+    <nav class="nav">
+      <button type="button" id="navFind" class="on">Find leads</button>
+      <button type="button" id="navSaved">Saved leads <span class="count" id="savedCount">0</span></button>
+    </nav>
+    <h6>Quick searches</h6>
+    <div class="quick" id="quick"></div>
     <div class="sp"></div>
-    <button type="button" id="newBtn" class="plain">New search</button>
-    <button type="button" id="savedBtn">Saved</button>
-    <button type="button" id="logoutBtn" class="plain">Log out</button>
-  </header>
-  <main class="feed" id="feed" aria-live="polite"><div class="wrap" id="thread"></div></main>
-  <div class="composer">
-    <form id="chatForm" autocomplete="off">
-      <input id="q" type="text" placeholder="What should I find? Try: bars with no website" aria-label="Message" enterkeyhint="send">
-      <button type="submit">Send</button>
-    </form>
-  </div>
+    <button type="button" class="out" id="logoutBtn">Log out</button>
+  </aside>
+  <main class="main">
+    <div class="cmd">
+      <form id="chatForm" autocomplete="off">
+        <label class="in"><span class="ai">RW</span><input id="q" type="text" placeholder="Ask me: bars with no website, roofers in Asbury..." aria-label="Ask" enterkeyhint="search"></label>
+        <button type="submit">Find</button>
+      </form>
+    </div>
+    <div class="view" id="view"><div class="inner" id="inner"></div></div>
+  </main>
+  <nav class="tabbar">
+    <button type="button" id="tabFind" class="on">Find</button>
+    <button type="button" id="tabSaved">Saved</button>
+    <button type="button" id="tabOut">Log out</button>
+  </nav>
 </section>
 
 <script>
@@ -223,47 +241,9 @@ function signOut(expired){
 }
 $('#logoutBtn').addEventListener('click',()=>signOut(false));
 
-/* ---------- Chat ---------- */
-const thread=$('#thread'), feed=$('#feed');
-function scroll(){ requestAnimationFrame(()=>{ feed.scrollTop=feed.scrollHeight; }); }
-function me(text){ thread.appendChild(el('div',{class:'row me'},el('div',{class:'bubble',text}))); scroll(); }
-function bot(kids,wide){ const b=el('div',{class:'bubble'},kids); const r=el('div',{class:'row bot'+(wide?' wide':'')},b); thread.appendChild(r); scroll(); return b; }
-function typing(label){ const r=el('div',{class:'row bot'},el('div',{class:'bubble'},el('span',{class:'typing'},el('i',{class:'dot'}),el('i',{class:'dot'}),el('i',{class:'dot'}),' '+(label||'Working')))); thread.appendChild(r); scroll(); return r; }
-function sugs(list){ return el('div',{class:'sugs'},list.map(t=>el('button',{type:'button',class:'sug',onclick:()=>send(t)},t))); }
 
-const STARTERS=['Bars with no website','Restaurants with bad websites','Auto repair shops','Roofers','Hair salons','Show my saved leads'];
-const TILES=[['Bars and pubs','Bars'],['Restaurants','Restaurants'],['Auto repair','Auto repair shops'],['Contractors','Contractors'],['Salons and barbers','Hair salons'],['Shops and boutiques','Boutiques']];
+$('#tabOut').addEventListener('click',()=>signOut(false));
 
-function hello(){
-  bot([el('div',{class:'hero'},el('h2',null,'Who needs a website?'),el('p',null,'Pick a type of business or type your own. I find them around Dubuque and put the ones without a real website first.')),
-    el('div',{class:'tiles'},TILES.map(([t,q])=>el('button',{type:'button',class:'tile',onclick:()=>send(q)},el('b',null,t),el('span',null,'Search Dubuque'))))],true);
-}
-
-function keySetup(){
-  const input=el('input',{type:'password',placeholder:'AIza...','aria-label':'Google API key',autocomplete:'off'});
-  const msg=el('div',{class:'msg'});
-  const btn=el('button',{type:'button',class:'btn primary',text:'Save key'});
-  btn.addEventListener('click',async()=>{
-    const k=input.value.trim(); if(!k) return;
-    btn.disabled=true; btn.textContent='Checking with Google...'; msg.className='msg'; msg.textContent='';
-    const r=await api({action:'leads_key',key:k});
-    btn.disabled=false; btn.textContent='Save key';
-    if(r.ok){ input.value=''; status.hasKey=true; msg.textContent='Connected. You are ready to go.'; hello(); }
-    else { msg.className='msg err'; msg.textContent=r.message||'That key did not work.'; }
-  });
-  bot([el('p',null,el('b',null,'One-time setup: connect Google')),
-    el('p',null,'I use Google business listings to find leads. You only do this once, about 5 minutes.'),
-    el('ol',{class:'steps'},
-      el('li',null,'Go to ',el('a',{href:'https://console.cloud.google.com/',target:'_blank',rel:'noopener'},'console.cloud.google.com'),' and sign in with riverbendwebco@gmail.com. Create a project named riverbendwebcoleads.'),
-      el('li',null,'Open Billing and add a card. Normal use stays inside Google\'s free monthly allowance. Set a budget alert at $5 so you are told if it ever charges.'),
-      el('li',null,'Open APIs and Services, then Library. Search "Places API (New)" and click Enable.'),
-      el('li',null,'Open APIs and Services, then Credentials. Click Create credentials, then API key. Copy the key.'),
-      el('li',null,'Paste it below. It is stored on the server and never shown again.')),
-    el('div',{class:'keyrow'},input,btn),msg,
-    el('p',{class:'note'},'Searches are capped at 300 Google calls a day so nothing runs away.')],true);
-}
-
-/* ---------- Understanding the message ---------- */
 const CATS=[
   [/\b(bars?|pubs?|taverns?|taps?|saloons?|taprooms?|lounges?|dive)\b/,'bars'],
   [/\bbrewer(y|ies)|winer(y|ies)|distiller(y|ies)\b/,'breweries and wineries'],
@@ -303,79 +283,91 @@ function understand(raw){
   return {type:'find',q,mode,city};
 }
 
-async function send(text){
-  text=String(text||'').trim(); if(!text||busy) return;
-  me(text); $('#q').value='';
-  const it=understand(text);
-  if(it.type==='hello') return hello();
-  if(it.type==='help') return help();
-  if(it.type==='unclear') return bot([el('p',null,'Tell me a kind of business, like bars, pizza, roofers or hair salons.'),sugs(STARTERS)]);
-  if(it.type==='saved') return showSaved(it.stage);
-  busy=true;
-  const w=typing('Searching for '+it.q+(it.city&&!/^Dubuque/.test(it.city)?' in '+it.city:' in Dubuque')+' and checking their websites. A new search can take up to a minute');
-  const r=await api({action:'leads_find',q:it.q,city:it.city||undefined});
-  w.remove(); busy=false;
-  if(!r.ok){
-    if(r.error==='nokey'){ status.hasKey=false; return keySetup(); }
-    return bot(el('p',null,r.message||'That search did not work. Try again in a minute.'));
-  }
-  showResults(r,it);
-}
 
-function help(){
-  bot([el('p',null,el('b',null,'Here is what I can do')),
-    el('ul',{class:'issues'},
-      el('li',null,'Find businesses: "bars", "pizza places", "roofers in Asbury", "salons in Galena".'),
-      el('li',null,'Filter: add "with no website" or "with bad websites".'),
-      el('li',null,'Every lead has Call, Map, Save and Build demo. Build demo makes a Studio demo from their real info.'),
-      el('li',null,'Say "saved leads" to see your list, set stages (Contacted, Pitched, Won) and add notes.')),
-    sugs(STARTERS)]);
-}
 
-/* ---------- Results ---------- */
+/* ---------- Layout ---------- */
+const inner=$('#inner'), view=$('#view');
+const QUICK=[['Bars and pubs','Bars'],['Restaurants','Restaurants'],['Pizza places','Pizza'],['Coffee shops','Coffee shops'],['Auto repair','Auto repair shops'],['Contractors','Contractors'],['Roofers','Roofers'],['Salons and barbers','Hair salons'],['Shops and boutiques','Boutiques']];
 const TAGS={none:'No website',social:'Social page only',weak:'Weak website',site:'Has a website',chain:'Chain'};
-function showResults(r,it){
-  const c=r.counts, where=it.city&&!/^Dubuque/.test(it.city)?it.city.split(',')[0]:'Dubuque';
-  if(!c.total) return bot([el('p',null,'I could not find any '+it.q+' around '+where+'. Try another word.'),sugs(STARTERS.slice(0,4))]);
-  const groups=[
-    ['best','Best leads',r.leads.filter(l=>l.kind==='none'||l.kind==='social'||l.kind==='weak')],
-    ['none','No website',r.leads.filter(l=>l.kind==='none'||l.kind==='social')],
-    ['weak','Weak website',r.leads.filter(l=>l.kind==='weak')],
-    ['all','All',r.leads]];
-  let start=it.mode==='none'?'none':it.mode==='weak'?'weak':it.mode==='all'?'all':'best';
-  if(!groups.find(g=>g[0]===start)[2].length) start='all';
-  const list=el('div',{class:'list'});
-  const tabs=el('div',{class:'tabs',role:'tablist'});
-  const show=k=>{ const g=groups.find(x=>x[0]===k); tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===k)); list.replaceChildren(...(g[2].length?g[2].map(leadRow):[el('div',{class:'lead'},el('div',{class:'sub'},'Nothing here.'))])); };
-  groups.forEach(([k,label,arr])=>{ const b=el('button',{type:'button','data-k':k},label,el('b',null,String(arr.length))); b.addEventListener('click',()=>show(k)); tabs.appendChild(b); });
-  show(start);
-  bot([el('div',{class:'res-h'},el('h3',null,cap(it.q)+' in '+where),el('span',null,(c.none+c.social)+' with no website')),tabs,list,
-    el('p',{class:'note'},r.free?'From free public map data, so a few businesses may be missing. Open their site yourself before you pitch.':'Open their site yourself before you pitch.')],true);
+let savedTotal=0, reqId=0;
+function setNav(which){
+  ['navFind','tabFind'].forEach(id=>$('#'+id).classList.toggle('on',which==='find'));
+  ['navSaved','tabSaved'].forEach(id=>$('#'+id).classList.toggle('on',which==='saved'));
 }
-function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
-
+function paint(...kids){ inner.replaceChildren(...kids.flat()); view.scrollTop=0; }
+function say(text,q){ return el('div',{class:'say'},el('span',{class:'ai'},'RW'),el('div',null,q?el('p',{class:'q'},'You asked: '+q):null,el('p',null,text))); }
 function tel(p){ const d=String(p||'').replace(/\D/g,''); return d.length>=10?'tel:+1'+d.slice(-10):''; }
+function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
+function plural(n,w){ return n+' '+w+(n===1?'':'s'); }
+
+function home(){
+  setNav('find');
+  paint(el('h1',{class:'pg'},'Who needs a website?'),
+    el('p',{class:'lede'},'Pick a type of business or ask in the bar above. I find them around Dubuque and put the ones without a real website first.'),
+    el('div',{class:'tiles'},QUICK.slice(0,6).map(([t,q])=>el('button',{type:'button',class:'tile',onclick:()=>send(q)},el('b',null,t),el('span',null,'Search Dubuque')))),
+    el('div',{class:'tips'},el('h3',null,'Things you can ask'),
+      el('ul',null,el('li',null,'"bars with no website" or "restaurants with bad websites"'),
+        el('li',null,'"roofers in Asbury", "salons in Galena", "pizza in East Dubuque"'),
+        el('li',null,'"saved leads" or "saved leads pitched" to see your list'))));
+}
+
+async function send(text){
+  text=String(text||'').trim(); if(!text) return;
+  $('#q').value=''; $('#q').blur();
+  const it=understand(text);
+  if(it.type==='hello'||it.type==='help') return home();
+  if(it.type==='unclear') return paint(say('Tell me a kind of business, like bars, pizza, roofers or hair salons.',text));
+  if(it.type==='saved') return showSaved(it.stage,text);
+  setNav('find');
+  const where=it.city&&!/^Dubuque/.test(it.city)?it.city.split(',')[0]:'Dubuque';
+  const my=++reqId;
+  paint(say('Looking for '+it.q+' around '+where+' and checking every website. A new search can take up to a minute.',text),
+    el('div',{class:'list'},[0,1,2,3,4].map(()=>el('div',{class:'skel'}))));
+  const r=await api({action:'leads_find',q:it.q,city:it.city||undefined});
+  if(my!==reqId) return;
+  if(!r.ok) return paint(say(r.message||'That search did not work. Try again in a minute.',text));
+  showResults(r,it,text,where);
+}
+
+function showResults(r,it,text,where){
+  const c=r.counts;
+  if(!c.total) return paint(say('I could not find any '+it.q+' around '+where+'. Try another word.',text));
+  const groups={best:r.leads.filter(l=>l.kind==='none'||l.kind==='social'||l.kind==='weak'),none:r.leads.filter(l=>l.kind==='none'||l.kind==='social'),weak:r.leads.filter(l=>l.kind==='weak'),all:r.leads};
+  let cur=it.mode==='none'?'none':it.mode==='weak'?'weak':it.mode==='all'?'all':'best';
+  if(!groups[cur].length) cur='all';
+  const list=el('div',{class:'list'});
+  const cards=[['best','Best leads','#0052CC'],['none','No website','#DC2626'],['weak','Weak website','#D97706'],['all','All found','#94A3B8']].map(([k,label,color])=>{
+    const b=el('button',{type:'button',class:'stat'},el('small',null,el('i',{style:'background:'+color}),label),el('b',null,String(groups[k].length)));
+    b.addEventListener('click',()=>show(k)); b.dataset.k=k; return b; });
+  function show(k){ cur=k; cards.forEach(b=>b.classList.toggle('on',b.dataset.k===k)); list.replaceChildren(...(groups[k].length?groups[k].map(leadRow):[el('div',{class:'empty'},'Nothing in this group.')])); }
+  show(cur);
+  const hot=c.none+c.social;
+  const biz=n=>n+(n===1?' business':' businesses'), has=n=>n===1?' has':' have';
+  paint(say('Found '+biz(c.total)+' for '+it.q+' around '+where+'. '+(hot?hot+has(hot)+' no real website and '+c.weak+has(c.weak)+' a weak one. Best leads are first.':'Most already have a website. '+c.weak+(c.weak===1?' looks':' look')+' weak.'),text),
+    el('div',{class:'stats'},cards),list,
+    el('p',{class:'note'},r.free?'From free public map data, so a few businesses may be missing. Open their site yourself before you pitch.':'Open their site yourself before you pitch.'));
+}
+
 function leadRow(l){
   const where=[l.address,l.city].filter(Boolean).join(', ');
-  const saveBtn=el('button',{type:'button',class:'btn sm'+(l.saved?' saved-on':''),text:l.saved?'Saved':'Save'});
+  const saveBtn=el('button',{type:'button',class:'btn'+(l.saved?' saved-on':''),text:l.saved?'Saved':'Save'});
   saveBtn.addEventListener('click',async()=>{
     if(l.saved) return;
     saveBtn.disabled=true; saveBtn.textContent='Saving...';
     const r=await api({action:'leads_save',lead:l});
     saveBtn.disabled=false;
-    if(r.ok){ l.saved='New'; saveBtn.textContent='Saved'; saveBtn.classList.add('saved-on'); } else saveBtn.textContent='Save';
+    if(r.ok){ l.saved='New'; saveBtn.textContent='Saved'; saveBtn.classList.add('saved-on'); if(!r.already) setCount(savedTotal+1); } else saveBtn.textContent='Save';
   });
-  const demoBtn=el('button',{type:'button',class:'btn sm primary',text:'Build demo'});
+  const demoBtn=el('button',{type:'button',class:'btn primary',text:'Build demo'});
   const row=el('div',{class:'lead k-'+l.kind});
   demoBtn.addEventListener('click',()=>buildDemo(l,demoBtn,row));
-  const main=(l.issues||[])[0]||TAGS[l.kind];
-  const extra=(l.issues||[]).slice(1).join(' · ');
+  const main=l.kind==='site'||l.kind==='chain'?TAGS[l.kind]:((l.issues||[])[0]||TAGS[l.kind]);
+  const extra=l.kind==='site'?'':(l.issues||[]).slice(1).join(' · ');
   row.append(
     el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · ')),
-      el('div',{class:'why'},el('i'),l.kind==='site'||l.kind==='chain'?TAGS[l.kind]:main),
-      extra&&l.kind!=='site'?el('div',{class:'more-why'},extra):null),
-    el('div',{class:'acts'},tel(l.phone)?el('a',{class:'btn sm',href:tel(l.phone)},'Call'):null,saveBtn,demoBtn),
-    el('div',{class:'links'},l.phone?el('span',{style:'color:var(--mut)'},l.phone):null,l.maps?el('a',{href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,l.website?el('a',{href:l.website,target:'_blank',rel:'noopener'},'Their site'):null));
+      el('div',{class:'why'},el('i'),main),extra?el('div',{class:'more-why'},extra):null),
+    el('div',{class:'acts'},tel(l.phone)?el('a',{class:'btn',href:tel(l.phone)},'Call'):null,saveBtn,demoBtn),
+    el('div',{class:'links'},l.phone?el('span',null,l.phone):null,l.maps?el('a',{href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,l.website?el('a',{href:l.website,target:'_blank',rel:'noopener'},'Their site'):null));
   return row;
 }
 
@@ -385,30 +377,37 @@ async function buildDemo(l,btn,row){
   const r=await api({action:'leads_demo',lead:l});
   btn.disabled=false; btn.textContent='Build demo';
   if(!r.ok){ row.appendChild(el('div',{class:'done',style:'border-color:#FECACA;background:#FEF2F2'},'Could not build the demo. Try again.')); return; }
-  l.saved=l.saved||'Demo built';
+  if(!l.saved){ l.saved='Demo built'; setCount(savedTotal+1); }
   const got=[r.items?r.items+' menu items':'',r.photos?r.photos+' photos':''].filter(Boolean).join(' and ');
   row.appendChild(el('div',{class:'done'},el('b',null,'Demo ready. '),got?'Pulled '+got+' from their site.':'Add photos in the Studio before you pitch.',
     el('div',{class:'acts'},
-      el('a',{class:'btn sm primary',href:'/demo/?d='+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Open demo'),
-      el('a',{class:'btn sm',href:'/studio/#'+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Edit in Studio'))));
+      el('a',{class:'btn primary',href:'/demo/?d='+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Open demo'),
+      el('a',{class:'btn',href:'/studio/#'+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Edit in Studio'))));
 }
 
-/* ---------- Saved pipeline ---------- */
-async function showSaved(stage){
-  busy=true; const w=typing('Loading your saved leads'); const r=await api({action:'leads_saved'}); w.remove(); busy=false;
-  if(!r.ok) return bot(el('p',null,'Could not load your saved leads. Try again.'));
-  let leads=r.leads||[];
-  if(stage) leads=leads.filter(l=>l.stage===stage);
-  if(!leads.length) return bot([el('p',null,stage?'No saved leads are marked '+stage+'.':'You have not saved any leads yet. Search for some and tap Save.'),sugs(STARTERS.slice(0,4))]);
-  const by={}; (r.leads||[]).forEach(l=>{ by[l.stage]=(by[l.stage]||0)+1; });
-  const summary=status.stages.filter(s=>by[s]).map(s=>by[s]+' '+s).join(', ');
-  const n=x=>x+' saved lead'+(x===1?'':'s');
-  const chips=el('div',{class:'sugs'},stage?el('button',{type:'button',class:'sug',onclick:()=>send('Show my saved leads')},'All saved'):null,
-    status.stages.filter(s=>by[s]&&s!==stage).map(s=>el('button',{type:'button',class:'sug',onclick:()=>send('Saved leads '+s)},s+' ('+by[s]+')')));
-  bot([el('div',{class:'res-h'},el('h3',null,stage?stage+' leads':'Saved leads'),el('span',null,stage?n(leads.length):summary)),
-    el('div',{class:'list'},leads.map(savedCard)),chips],true);
+/* ---------- Saved ---------- */
+function setCount(n){ savedTotal=n; $('#savedCount').textContent=String(n); }
+async function showSaved(stage,text){
+  setNav('saved');
+  const my=++reqId;
+  paint(el('h1',{class:'pg'},'Saved leads'),el('div',{class:'list'},[0,1,2].map(()=>el('div',{class:'skel'}))));
+  const r=await api({action:'leads_saved'});
+  if(my!==reqId) return;
+  if(!r.ok) return paint(el('h1',{class:'pg'},'Saved leads'),say('Could not load your saved leads. Try again.'));
+  const all=r.leads||[]; setCount(all.length);
+  let cur=stage||'';
+  const by={}; all.forEach(l=>{ by[l.stage]=(by[l.stage]||0)+1; });
+  const list=el('div',{class:'list'});
+  const chips=[['','All',all.length]].concat(status.stages.map(s=>[s,s,by[s]||0])).map(([k,label,n])=>{
+    const b=el('button',{type:'button',class:'stat'},el('small',null,label),el('b',null,String(n)));
+    b.addEventListener('click',()=>show(k)); b.dataset.k=k; return b; });
+  function show(k){ cur=k; chips.forEach(b=>b.classList.toggle('on',b.dataset.k===k)); const arr=k?all.filter(l=>l.stage===k):all;
+    list.replaceChildren(...(arr.length?arr.map(savedRow):[el('div',{class:'empty'},k?'No leads marked '+k+'.':'No saved leads yet. Find some and tap Save.')])); }
+  show(cur);
+  paint(el('h1',{class:'pg'},'Saved leads'),el('p',{class:'lede'},'Move each lead through the stages and keep notes as you go.'),
+    el('div',{class:'stats',style:'grid-template-columns:repeat(auto-fit,minmax(110px,1fr))'},chips),list);
 }
-function savedCard(l){
+function savedRow(l){
   const sel=el('select',{'aria-label':'Stage'},status.stages.map(s=>{ const o=el('option',{value:s},s); if(s===l.stage) o.selected=true; return o; }));
   const stageEl=el('span',{class:'stage'},l.stage);
   sel.addEventListener('change',async()=>{ const r=await api({action:'leads_update',id:l.id,stage:sel.value}); if(r.ok){ l.stage=sel.value; stageEl.textContent=sel.value; } });
@@ -426,24 +425,23 @@ function savedCard(l){
       tel(l.phone)?el('a',{href:tel(l.phone)},'Call '+l.phone):null,
       l.maps?el('a',{href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,
       l.demo?el('a',{href:'/demo/?d='+encodeURIComponent(l.demo),target:'_blank',rel:'noopener'},'Open demo'):null,rm));
-  rm.addEventListener('click',async e=>{ e.preventDefault(); if(!confirm('Remove '+l.name+'?')) return; const r=await api({action:'leads_update',id:l.id,remove:true}); if(r.ok) row.remove(); });
+  rm.addEventListener('click',async e=>{ e.preventDefault(); if(!confirm('Remove '+l.name+'?')) return; const r=await api({action:'leads_update',id:l.id,remove:true}); if(r.ok){ row.remove(); setCount(Math.max(0,savedTotal-1)); } });
   return row;
 }
 
+/* ---------- Wiring ---------- */
+$('#quick').replaceChildren(...QUICK.map(([t,q])=>el('button',{type:'button',onclick:()=>send(q)},t)));
 $('#chatForm').addEventListener('submit',e=>{ e.preventDefault(); send($('#q').value); });
-$('#savedBtn').addEventListener('click',()=>send('Show my saved leads'));
-$('#newBtn').addEventListener('click',()=>{ thread.replaceChildren(); hello(); $('#q').focus(); });
+['navFind','tabFind'].forEach(id=>$('#'+id).addEventListener('click',home));
+['navSaved','tabSaved'].forEach(id=>$('#'+id).addEventListener('click',()=>showSaved('')));
 
 async function start(){
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
-  thread.replaceChildren();
-  const w=typing('Starting up');
+  home();
   const s=await api({action:'leads_status'});
-  w.remove();
-  if(!s.ok){ if(!token) return; bot(el('p',null,'Could not reach the server. Refresh to try again.')); return; }
-  status=Object.assign(status,s);
-  hello();
-  $('#q').focus();
+  if(s.ok) status=Object.assign(status,s);
+  const sv=await api({action:'leads_saved'});
+  if(sv.ok) setCount((sv.leads||[]).length);
 }
 if(token) start(); else $('#pw').focus();
 })();
