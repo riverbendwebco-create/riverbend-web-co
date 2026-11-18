@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -217,6 +217,7 @@ function pub(C){
 /* ===================== WESTERN (saloon, light) ===================== */
 function stars(n,cls){ return h('span',{class:cls||'wx-stars','aria-hidden':'true'},Array.from({length:n||3},()=>ico('star',14,''))); }
 function western(C){
+  if(C.variant==='diner') return diner(C);
   if(C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length) return trailhead(C);
   const G=groups(C.items,'Menu');
   const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
@@ -514,6 +515,101 @@ function heroRevRotate(C){
   const card=h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),q,who,dots);
   restart();
   return card;
+}
+/* ===================== DINER (Dottie's: counter, stools, guest checks) ===================== */
+const DN_ICON={
+ gift:'<svg viewBox="0 0 64 64"><rect x="10" y="26" width="44" height="30" rx="3" fill="#fff" stroke="currentColor" stroke-width="3"/><rect x="6" y="18" width="52" height="10" rx="2" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M32 18v38" stroke="currentColor" stroke-width="5"/><path d="M32 18c-6-10-18-10-14-2 2 4 10 2 14 2zM32 18c6-10 18-10 14-2-2 4-10 2-14 2z" fill="none" stroke="currentColor" stroke-width="3"/><text x="44" y="48" font-size="14" font-weight="800" fill="currentColor" font-family="sans-serif">?</text></svg>',
+ gravy:'<svg viewBox="0 0 64 64"><path d="M8 32h40c0 10-8 16-20 16S8 42 8 32z" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M48 34c6-1 9-5 10-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M16 52h24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M14 32c4-4 8 2 12-2s8 2 12-2 6 2 8 0" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M22 22c-2-4 2-6 0-10M30 22c-2-4 2-6 0-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg>',
+ flame:'<svg viewBox="0 0 64 64"><path d="M32 6c4 12 16 16 16 32a16 16 0 0 1-32 0c0-8 4-12 6-16 2 6 4 8 6 8-2-10 2-18 4-24z" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M32 30c3 6 8 8 8 14a8 8 0 0 1-16 0c0-4 4-8 8-14z" fill="currentColor" opacity=".25"/><path d="M10 58h44" stroke="currentColor" stroke-width="3" stroke-dasharray="6 4"/></svg>',
+ swirl:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M32 32c0-3 4-3 4 0s-4 7-8 6-6-6-4-10 8-7 13-5 8 9 5 14-10 9-16 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M14 22c4-2 6 2 10 0M40 48c4-2 6 2 10 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".5"/></svg>',
+ steam:'<svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="26" ry="8" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M14 44c4-8 32-8 36 0" fill="currentColor" opacity=".25"/><path d="M22 30c-3-5 3-7 0-12M32 30c-3-5 3-7 0-12M42 30c-3-5 3-7 0-12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+ cup:'<svg viewBox="0 0 64 64"><path d="M12 26h34v14a14 14 0 0 1-14 14h-6a14 14 0 0 1-14-14z" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M46 30h4a6 6 0 0 1 0 12h-4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M22 20c-2-4 2-6 0-10M32 20c-2-4 2-6 0-10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M8 58h44" stroke="currentColor" stroke-width="3"/></svg>',
+ potato:'<svg viewBox="0 0 64 64"><path d="M10 40c0-12 14-22 28-20s18 10 16 20-14 14-26 12S10 50 10 40z" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M18 38l8-4M28 44l10-6M36 32l10-2M20 46l6-2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>'
+};
+function dnIcon(k){ const d=h('span',{class:'dn-ico'}); d.innerHTML=DN_ICON[k]||DN_ICON.cup; return d; }
+/* counter with chrome stools that spin */
+function dnCounter(){
+  const n=7, w=760, gap=w/n; let st='';
+  for(let i=0;i<n;i++){ const x=gap*i+gap/2; st+='<g class="stool" style="animation-delay:'+(i*.35)+'s"><rect x="'+(x-3)+'" y="150" width="6" height="58" fill="url(#chr)"/><ellipse cx="'+x+'" cy="210" rx="22" ry="6" fill="url(#chr)"/><ellipse cx="'+x+'" cy="146" rx="30" ry="10" fill="#8E1620"/><ellipse cx="'+x+'" cy="141" rx="30" ry="10" fill="#C42633"/><ellipse cx="'+(x-8)+'" cy="138" rx="10" ry="3" fill="#fff" opacity=".35"/><rect x="'+(x-31)+'" y="141" width="62" height="5" fill="url(#chr)"/></g>'; }
+  const d=h('div',{class:'dn-counter','aria-hidden':'true'});
+  d.innerHTML='<svg viewBox="0 0 760 220" preserveAspectRatio="xMidYMax meet"><defs><linearGradient id="chr" x1="0" x2="1"><stop offset="0" stop-color="#8A9097"/><stop offset=".45" stop-color="#F4F6F8"/><stop offset="1" stop-color="#7B8188"/></linearGradient><pattern id="chk" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#1E1A1A"/><rect x="10" y="10" width="10" height="10" fill="#1E1A1A"/><rect x="10" width="10" height="10" fill="#fff"/><rect y="10" width="10" height="10" fill="#fff"/></pattern></defs><rect x="0" y="40" width="760" height="14" rx="4" fill="url(#chr)"/><rect x="0" y="54" width="760" height="58" fill="#B3202A"/><rect x="0" y="62" width="760" height="4" fill="#fff" opacity=".25"/><rect x="0" y="104" width="760" height="8" fill="url(#chr)"/><rect x="0" y="112" width="760" height="8" fill="url(#chk)"/><g opacity=".9"><rect x="70" y="18" width="34" height="24" rx="4" fill="#fff" stroke="#8A9097" stroke-width="2"/><path d="M104 24h6a5 5 0 0 1 0 10h-6" fill="none" stroke="#8A9097" stroke-width="2"/><rect x="560" y="6" width="22" height="36" rx="3" fill="#fff" stroke="#8A9097" stroke-width="2"/><rect x="590" y="14" width="18" height="28" rx="3" fill="#C42633"/><rect x="616" y="20" width="14" height="22" rx="3" fill="#F2C230"/></g>'+st+'</svg>';
+  return d;
+}
+function diner(C){
+  const G=groups(C.items,'Menu');
+  const city=C.city.split(',')[0];
+  const openNow=C.today&&!/closed/i.test(C.today);
+  const sec=(id,cls,...k)=>h('section',{class:'dn-sec rv '+(cls||''),id},...k);
+  const head=(script,title,sub)=>h('div',{class:'dn-head'},h('span',{class:'dn-script'},script),h('h2',null,title),sub?h('p',null,sub):null);
+
+  const nav=h('header',{class:'dn-nav'},h('div',{class:'dn-nav-in'},
+    h('a',{class:'dn-logo',href:'#',onclick:e=>{e.preventDefault();scrollTo('d-top');}},C.name.replace(/^Dotties\b/,"Dottie's")),
+    h('nav',{class:'dn-links'},[['d-special','Daily Special'],['d-favs','Favorites'],['d-menu','Menu'],['d-snaps','Snapshots'],['d-visit','Hours']].map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
+    C.tel?h('a',{class:'dn-btn dn-red dn-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null));
+
+  const name=C.name.replace(/^Dotties\b/,"Dottie's");
+  const hero=h('section',{class:'dn-hero',id:'d-top'},
+    h('div',{class:'dn-hero-in'},
+      h('div',{class:'dn-hero-t'},
+        h('div',{class:'dn-neon'},h('span',null,'Meals'),h('span',null,'Lunches')),
+        h('h1',null,name),
+        h('p',{class:'dn-tag'},C.tag),
+        h('p',null,short(C.about.replace(C.tag,'').trim(),190)),
+        h('div',{class:'dn-acts'},C.tel?h('a',{class:'dn-btn dn-red',href:C.tel},ico('phone',18,''),'Call '+C.phoneTxt):null,
+          h('button',{type:'button',class:'dn-btn dn-line',onclick:()=>scrollTo('d-menu')},'See the menu')),
+        h('div',{class:'dn-open'},h('b',null,openNow?'Open today':'Closed today'),h('span',null,openNow?C.today:'Opens 5:30am Tuesday'),h('span',null,[C.addr,city].filter(Boolean).join(', ')))),
+      h('div',{class:'dn-window'},bg(h('div',{class:'ph'}),C.hero))),
+    h('div',{class:'dn-pull'},h('span',{class:'dn-script'},'Pull up a stool'),h('p',null,'Red booths, a long lunch counter and stools that still spin.')),
+    dnCounter());
+
+  const sp=C.x.special&&typeof C.x.special==='object'?C.x.special:{};
+  const special=sec('d-special','dn-board-sec',
+    h('div',{class:'dn-board'},h('div',{class:'dn-board-in'},
+      h('small',null,'Today at '+name),h('b',null,sp.title||'Daily Special'),
+      h('span',null,sp.line1||'Ask your server'),h('span',null,sp.line2||'or check the board'))),
+    h('div',{class:'dn-board-t'},head('Stop in and try our','Daily Special'),h('p',null,sp.text||'There is a special on the board every morning.'),
+      C.tel?h('a',{class:'dn-btn dn-red',href:C.tel},ico('phone',18,''),'Call for today\'s special'):null));
+
+  const favs=(Array.isArray(C.x.favs)?C.x.favs:[]).filter(f=>f&&f.name).slice(0,6);
+  const favEl=favs.length?sec('d-favs','dn-favs-sec',head('Order up','House Favorites','The plates regulars come back for.'),
+    h('div',{class:'dn-checks'},favs.map((f,ix)=>{ const it=C.items.find(i=>i.name===f.name)||{};
+      return h('article',{class:'dn-check'},
+        h('div',{class:'dn-check-h'},h('span',null,'Guest check'),h('span',null,'No. '+(1041+ix))),
+        h('div',{class:'dn-check-b'},dnIcon(f.icon),h('div',null,h('h3',null,f.name),f.quip?h('em',null,f.quip):null,it.desc?h('p',null,it.desc):null)),
+        h('div',{class:'dn-check-f'},h('span',null,'Total'),h('b',null,it.price||'Ask'))); }))):null;
+
+  let menu=null;
+  if(C.items.length){
+    const page=h('div',{class:'dn-page'});
+    const show=k=>{ page.replaceChildren(h('h3',null,k),...G.map[k].map(i=>h('div',{class:'dn-mi'},h('div',{class:'r'},h('b',null,i.name),h('i'),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null))); };
+    const tabs=h('div',{class:'dn-tabs'},G.names.map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k); }); return b; }));
+    show(G.names[0]);
+    menu=sec('d-menu','dn-menu',head('Breakfast and lunch','The Menu','Big portions, old-fashioned prices.'),h('div',{class:'dn-book'},tabs,page));
+  }
+
+  const snaps=C.own.length?sec('d-snaps','dn-snaps',head('Around the cafe','Snapshots'),
+    h('div',{class:'dn-polas'},C.own.slice(0,9).map((u,ix)=>{ const cap=(C.x.caps||[])[ix]||''; return h('button',{type:'button',class:'dn-pola',style:'--r:'+([-3,2,-1.5,3,-2.5,1.5,-2,2.5,-1][ix%9])+'deg','aria-label':'Open photo',onclick:()=>gallery(C.own,'Dottie\'s Cafe',ix)},bg(h('div',{class:'ph'}),u),cap?h('span',null,cap):null); }))):null;
+
+  const story=sec('d-story','dn-story',bg(h('div',{class:'ph'}),C.storyPic||C.own[0]||C.hero),
+    h('div',{class:'b'},h('span',{class:'dn-script'},'Our story'),h('h2',null,'A hometown counter on Central Avenue'),h('p',null,C.about),
+      C.tel?h('a',{class:'dn-btn dn-red dn-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null));
+
+  const revs=C.reviews.length?sec('d-revs','dn-revs',head('Overheard at the counter','Reviews',C.reviewsSource||null),
+    h('div',{class:'dn-napkins'},C.reviews.slice(0,6).map(r=>h('figure',{class:'dn-napkin'},stars(r.stars||5),h('blockquote',null,'“'+r.text+'”'),h('figcaption',null,r.name)))),
+    C.reviewLink?h('div',{class:'dn-acts dn-c'},h('a',{class:'dn-btn dn-line dn-sm',href:C.reviewLink,target:'_blank',rel:'noopener'},'Read more on Google')):null):null;
+
+  const street=(C.addr.match(/\d+\s+(.+)/)||[])[1]||'MAIN ST';
+  const visit=sec('d-visit','dn-visit',head('Come on in','Hours and Location'),
+    h('div',{class:'dn-vgrid'},
+      h('div',{class:'dn-sign'},h('div',{class:'dn-sign-h'},'OPEN'),h('div',{class:'dn-hrs'},DAYS.map((day,i)=>h('div',{class:i===todayIx()?'today':null},h('span',null,day),h('span',null,C.hours[i]||'Closed'))))),
+      h('div',{class:'dn-find'},h('h3',null,name),h('address',null,C.addr,h('br'),C.city),
+        (C.x.notes||[]).length?h('ul',null,C.x.notes.slice(0,5).map(t=>h('li',null,t))):null,
+        h('div',{class:'dn-acts'},C.tel?h('a',{class:'dn-btn dn-red dn-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null,C.maps?h('a',{class:'dn-btn dn-line dn-sm',href:C.maps,target:'_blank',rel:'noopener'},ico('map',16,''),'Directions'):null)),
+      h('div',{class:'dn-map wx-map'},mapBox(street.toUpperCase().slice(0,22),C.maps))));
+
+  const foot=h('footer',{class:'dn-foot'},h('i',{class:'dn-checker'}),h('div',{class:'in'},h('b',null,name),
+    h('span',null,'© '+new Date().getFullYear()+' '+name+' · '+[C.addr,C.city].filter(Boolean).join(', ')),h('span',null,'Site by Riverbend Web Co.')));
+  return h('div',{class:'demo western on dn'},nav,hero,special,favEl,menu,snaps,story,revs,visit,foot);
 }
 /* Hero review card: best review first, gently rotates through the top three */
 function heroReview(C){
