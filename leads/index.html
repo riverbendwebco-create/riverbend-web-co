@@ -492,6 +492,18 @@ async function showSaved(stage){
   show(cur);
   paint(el('div',{class:'stats'},four),chips,list);
 }
+function studioBtnFor(l){
+  if(l.demo) return el('a',{class:'btn primary',href:'/studio/#'+encodeURIComponent(l.demo)},'Open in Studio');
+  const b=el('button',{type:'button',class:'btn primary'},'Build demo');
+  b.addEventListener('click',async()=>{
+    b.disabled=true; b.textContent='Building demo...';
+    const city=(String(l.address||'').match(/([A-Za-z .]+,\s*(IA|IL|WI))\s*$/)||[])[1]||'';
+    const r=await api({action:'leads_demo',lead:{id:l.id,name:l.name,type:l.type,phone:l.phone,address:l.address,city,website:l.website,maps:l.maps,kind:savedKind(l),issues:l.lead?l.lead.split('; '):[]}});
+    if(r.ok&&r.slug){ l.demo=r.slug; l.stage='Demo built'; b.textContent='Opening Studio...'; location.href='/studio/#'+encodeURIComponent(r.slug); return; }
+    b.disabled=false; b.textContent='Try again';
+  });
+  return b;
+}
 function savedCard(l){
   const kind=savedKind(l);
   const stageEl=el('span',{class:'badge '+(l.stage==='Won'?'b-won':'b-stage')},l.stage);
@@ -512,7 +524,7 @@ function savedCard(l){
         l.maps?el('a',{class:'tag',href:l.maps,target:'_blank',rel:'noopener'},'Map'):null,
         l.website?el('a',{class:'tag',href:l.website,target:'_blank',rel:'noopener'},'Site'):null,
         l.demo?el('a',{class:'tag',href:'/demo/?d='+encodeURIComponent(l.demo),target:'_blank',rel:'noopener'},'Demo'):null,rm),
-      l.saved?el('span',{class:'when'},'Saved '+l.saved):null));
+      el('div',{class:'acts'},l.saved?el('span',{class:'when'},'Saved '+l.saved):null,studioBtnFor(l))));
   rm.addEventListener('click',async()=>{ if(!confirm('Remove '+l.name+'?')) return; const r=await api({action:'leads_update',id:l.id,remove:true}); if(r.ok){ card.remove(); savedAll=savedAll.filter(x=>x.id!==l.id); setCount(savedAll.length); } });
   return card;
 }
