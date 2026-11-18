@@ -1,2 +1,2 @@
-2026-11-18T21:32:12Z
-The daily lead finder did not finish today. Check GitHub > Actions > Daily leads.
+2026-11-18T22:05:06Z
+40 new leads added to riverbendwebco.com/leads for Nov 18: 22 no website, 6 Facebook only, 12 weak website. By type: Bars 13, Restaurants 11, Auto repair 7, Salons 6, Boutiques 3. Only 40 were new today; the free map data around Dubuque is running low on new businesses with a phone number.
