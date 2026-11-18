@@ -1117,47 +1117,23 @@ function rgba(hx,a){ const n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16&255
 /* ===================== OSTERIA (fine Italian: candlelit, wine and gold, plating intro) ===================== */
 function osSvg(markup,cls){ const d=h('div',{class:cls,'aria-hidden':'true'}); d.innerHTML=markup; return d; }
 const OS_SPRIG='<svg viewBox="0 0 120 24"><path d="M2 12h116" stroke="currentColor" stroke-width="1"/><g fill="currentColor"><ellipse cx="30" cy="7" rx="7" ry="2.6" transform="rotate(-25 30 7)"/><ellipse cx="44" cy="17" rx="7" ry="2.6" transform="rotate(25 44 17)"/><ellipse cx="58" cy="7" rx="7" ry="2.6" transform="rotate(-25 58 7)"/><ellipse cx="72" cy="17" rx="7" ry="2.6" transform="rotate(25 72 17)"/><ellipse cx="86" cy="7" rx="7" ry="2.6" transform="rotate(-25 86 7)"/><circle cx="98" cy="13" r="3"/></g></svg>';
-function osRibbons(){
-  const rnd=(a,b)=>a+Math.random()*(b-a); let out='';
-  for(let r=0;r<13;r++){
-    let d='', a0=rnd(0,6.28), turns=rnd(1.2,2.1), r0=rnd(6,20), r1=rnd(70,96);
-    for(let k=0;k<=60;k++){ const t=k/60, ang=a0+t*turns*6.283, rad=r0+(r1-r0)*t+Math.sin(t*14+r)*3.5;
-      const x=200+Math.cos(ang)*rad, y=200+Math.sin(ang)*rad*0.62-t*6; d+=(k?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }
-    out+='<path class="os-nd" style="--d:'+(0.5+r*0.1).toFixed(2)+'s" d="'+d+'"/><path class="os-nh" style="--d:'+(0.58+r*0.1).toFixed(2)+'s" d="'+d+'"/>';
-  }
-  return out;
-}
-function osIntroSvg(){
-  const rnd=(a,b)=>a+Math.random()*(b-a);
-  let pep='',par='';
-  for(let i=0;i<40;i++){ const a=rnd(0,6.28), r=rnd(4,86); pep+='<circle class="os-pep" style="--d:'+(2.35+i*0.02).toFixed(2)+'s" cx="'+(200+Math.cos(a)*r).toFixed(1)+'" cy="'+(198+Math.sin(a)*r*0.62).toFixed(1)+'" r="'+rnd(0.8,1.7).toFixed(1)+'"/>'; }
-  for(let i=0;i<22;i++){ const a=rnd(0,6.28), r=rnd(6,84); par+='<g class="os-par" style="--d:'+(2.55+i*0.05).toFixed(2)+'s"><rect x="'+(200+Math.cos(a)*r).toFixed(1)+'" y="'+(196+Math.sin(a)*r*0.6).toFixed(1)+'" width="'+rnd(3,5.5).toFixed(1)+'" height="'+rnd(2,3.4).toFixed(1)+'" rx="1.2" transform="rotate('+rnd(0,180).toFixed(0)+' '+(200+Math.cos(a)*r).toFixed(1)+' '+(196+Math.sin(a)*r*0.6).toFixed(1)+')"/></g>'; }
-  return '<svg viewBox="0 0 400 400" class="os-plate-svg">'+
-    '<defs><radialGradient id="osPl" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#F1EEE8"/><stop offset="1" stop-color="#D9D3C8"/></radialGradient>'+
-    '<radialGradient id="osSa" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#FFF8E4"/><stop offset=".75" stop-color="#F3E2B4"/><stop offset="1" stop-color="#E9D29A" stop-opacity="0"/></radialGradient>'+
-    '<linearGradient id="osFk" x1="0" x2="1"><stop offset="0" stop-color="#8E959E"/><stop offset=".5" stop-color="#F2F4F7"/><stop offset="1" stop-color="#9AA1AA"/></linearGradient></defs>'+
-    '<g class="os-steam"><path d="M170 120c-10-14 10-22 0-38s8-24 0-36"/><path d="M200 112c-10-14 10-22 0-38s8-24 0-36"/><path d="M230 120c-10-14 10-22 0-38s8-24 0-36"/></g>'+
-    '<g class="os-plate"><ellipse cx="200" cy="232" rx="168" ry="104" fill="rgba(0,0,0,.45)"/><ellipse cx="200" cy="210" rx="168" ry="104" fill="url(#osPl)"/>'+
-    '<ellipse cx="200" cy="210" rx="118" ry="72" fill="none" stroke="#D9D2C5" stroke-width="2"/><ellipse cx="200" cy="210" rx="158" ry="97" fill="none" stroke="#C9A35B" stroke-width="1.4" opacity=".8"/></g>'+
-    '<ellipse class="os-sauce" cx="200" cy="204" rx="116" ry="68" fill="url(#osSa)"/>'+
-    '<g class="os-nest">'+osRibbons()+'</g>'+
-    '<g class="os-pepg" fill="#2A211B">'+pep+'</g><g fill="#4F7A2E">'+par+'</g>'+
-    '<g class="os-fork"><rect x="196" y="-40" width="8" height="150" rx="4" fill="url(#osFk)"/><path d="M186 104h28v14c0 10-6 16-14 16s-14-6-14-16z" fill="url(#osFk)"/><g fill="url(#osFk)"><rect x="186" y="128" width="4" height="40" rx="2"/><rect x="194" y="128" width="4" height="44" rx="2"/><rect x="202" y="128" width="4" height="44" rx="2"/><rect x="210" y="128" width="4" height="40" rx="2"/></g></g>'+
-    '</svg>';
-}
+const OS_INTRO_PHOTO='1645112411341-6c4fd023714a'; /* real fettuccine Alfredo (Unsplash) */
 function osIntro(C){
   try{ if(sessionStorage.getItem('osIntro_'+C.name)) return; }catch(e){}
   if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const box=h('div',{class:'os-intro',role:'presentation'},
-    h('div',{class:'os-intro-in'},osSvg(osIntroSvg(),'os-plate-wrap'),
-      h('div',{class:'os-intro-txt'},h('span',{class:'os-eyebrow'},'Benvenuti'),h('b',null,C.name||'Benvenuti'),osSvg(OS_SPRIG,'os-sprig'))),
-    h('button',{type:'button',class:'os-skip'},'Skip intro'));
-  const done=()=>{ if(!box.isConnected) return; box.classList.add('out'); setTimeout(()=>box.remove(),700); document.documentElement.classList.remove('os-lock'); try{ sessionStorage.setItem('osIntro_'+C.name,'1'); }catch(e){} };
+  const pic=C.x&&typeof C.x.introPhoto==='string'&&/^https:\/\//.test(C.x.introPhoto)?C.x.introPhoto:U(OS_INTRO_PHOTO).replace('w=1400','w=2000');
+  const photo=h('div',{class:'os-intro-pic'}); photo.style.backgroundImage=cssUrl(pic);
+  const box=h('div',{class:'os-intro',role:'presentation'},photo,
+    h('div',{class:'os-steam2','aria-hidden':'true'},h('i'),h('i'),h('i')),
+    h('div',{class:'os-intro-txt'},h('span',{class:'os-eyebrow'},'Benvenuti'),h('b',null,C.name||''),osSvg(OS_SPRIG,'os-sprig')));
+  const done=()=>{ if(!box.isConnected||box.classList.contains('out')) return; box.classList.add('out'); document.documentElement.classList.remove('os-lock'); setTimeout(()=>box.remove(),600); try{ sessionStorage.setItem('osIntro_'+C.name,'1'); }catch(e){} };
   box.addEventListener('click',done);
   document.documentElement.classList.add('os-lock');
   document.body.append(box);
-  box.querySelectorAll('.os-nd,.os-nh').forEach(p=>{ const L=Math.ceil(p.getTotalLength()); p.style.strokeDasharray=L; p.style.strokeDashoffset=L; });
-  setTimeout(done,5200);
+  const img=new Image(); let started=false;
+  const go=()=>{ if(started) return; started=true; box.classList.add('go'); setTimeout(done,2000); };
+  img.onload=go; img.onerror=()=>done(); img.src=pic;
+  setTimeout(()=>{ if(!started) done(); },1800); /* slow connection: skip straight to the site */
 }
 function osteria(C){
   const G=groups(C.items,'Menu');

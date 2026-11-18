@@ -138,38 +138,25 @@ html.os-lock,html.os-lock body{overflow:hidden}
 .os .socials{display:flex;gap:10px}.os .socials a{width:40px;height:40px;border:1px solid rgba(201,163,91,.45);border-radius:50%;color:var(--gold)}
 .os-foot{padding:54px 0 70px;text-align:center;border-top:1px solid rgba(201,163,91,.2)}
 .os-foot small{display:block;color:var(--mut);margin-top:12px}
-/* Intro: pasta being plated */
-.os-intro{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:radial-gradient(circle at 50% 42%,#2A1C15 0%,#120C09 70%);transition:opacity .7s ease,visibility .7s;cursor:pointer}
+/* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
+.os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .55s ease,visibility .55s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
-.os-intro-in{display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px}
-.os-plate-wrap{width:min(78vw,430px)}
-.os-plate-svg{display:block;width:100%;height:auto;overflow:visible}
-.os-plate{transform-origin:200px 210px;animation:osPlate .9s cubic-bezier(.2,.8,.2,1) both}
-@keyframes osPlate{from{opacity:0;transform:scale(.6) rotate(-12deg)}to{opacity:1;transform:none}}
-.os-sauce{transform-origin:200px 206px;animation:osSauce 1s ease-out 1.1s both}
-@keyframes osSauce{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
-.os-nest{transform-origin:200px 200px;animation:osNest 2.2s cubic-bezier(.3,.7,.2,1) .45s both}
-@keyframes osNest{0%{transform:translateY(-170px) rotate(-540deg) scale(.6)}70%{transform:translateY(6px) rotate(-8deg) scale(1.02)}100%{transform:none}}
-.os-nd,.os-nh{fill:none;stroke-linecap:round;stroke-linejoin:round;animation:osDraw 1.5s ease-out var(--d) forwards}
-.os-nd{stroke:#E9CF86;stroke-width:11}
-.os-nh{stroke:#FFF4D2;stroke-width:2.2;opacity:.85}
-@keyframes osDraw{to{stroke-dashoffset:0}}
-.os-fork{transform-origin:200px 150px;animation:osFork 2.7s cubic-bezier(.4,0,.2,1) .35s both}
-@keyframes osFork{0%{opacity:0;transform:translateY(-190px)}15%{opacity:1;transform:translateY(-120px)}35%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(0) rotate(6deg)}65%{transform:translateY(0) rotate(-4deg)}80%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(-240px)}}
-.os-pep,.os-par{transform-box:fill-box;transform-origin:center}
-.os-pep{opacity:0;animation:osPop .35s ease-out var(--d) forwards}
-.os-par{opacity:0;animation:osFall .7s cubic-bezier(.3,.8,.3,1) var(--d) forwards}
-@keyframes osPop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:none}}
-@keyframes osFall{from{opacity:0;transform:translateY(-60px)}to{opacity:1;transform:none}}
-.os-steam path{fill:none;stroke:rgba(255,255,255,.35);stroke-width:4;stroke-linecap:round;opacity:0;animation:osSteam 2.4s ease-in-out 2.9s infinite}
-.os-steam path:nth-child(2){animation-delay:3.2s}.os-steam path:nth-child(3){animation-delay:3.5s}
-@keyframes osSteam{0%{opacity:0;transform:translateY(16px)}40%{opacity:.8}100%{opacity:0;transform:translateY(-26px)}}
-.os-intro-txt{text-align:center;opacity:0;animation:osTxt 1s ease-out 2.7s forwards}
-.os-intro-txt b{display:block;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(2.6rem,8vw,4.6rem);line-height:1;color:#fff;margin-top:6px}
-.os-intro-txt .os-eyebrow{color:#C9A35B}
+.os-intro-pic{position:absolute;inset:-4%;background-size:cover;background-position:center 58%;opacity:0;transform:scale(1.14);filter:brightness(.62) contrast(1.08) saturate(1.05) sepia(.18)}
+.os-intro.go .os-intro-pic{animation:osPush 2.9s cubic-bezier(.2,.6,.2,1) forwards}
+@keyframes osPush{0%{opacity:0;transform:scale(1.14)}18%{opacity:1}100%{opacity:1;transform:scale(1.0)}}
+.os-intro::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(14,9,7,0) 0%,rgba(14,9,7,.35) 45%,rgba(14,9,7,.92) 100%),linear-gradient(180deg,rgba(40,20,10,.25),rgba(14,9,7,.55));pointer-events:none}
+.os-steam2{position:absolute;left:50%;top:38%;width:240px;height:220px;transform:translateX(-50%);z-index:1;pointer-events:none}
+.os-steam2 i{position:absolute;bottom:0;width:70px;height:150px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,250,240,.22),rgba(255,250,240,0) 70%);filter:blur(14px);opacity:0}
+.os-steam2 i:nth-child(1){left:30px}.os-steam2 i:nth-child(2){left:90px}.os-steam2 i:nth-child(3){left:150px}
+.os-intro.go .os-steam2 i{animation:osWisp 2.4s ease-out .3s forwards}
+.os-intro.go .os-steam2 i:nth-child(2){animation-delay:.6s}.os-intro.go .os-steam2 i:nth-child(3){animation-delay:.9s}
+@keyframes osWisp{0%{opacity:0;transform:translateY(30px) scaleX(.8)}40%{opacity:1}100%{opacity:0;transform:translateY(-90px) scaleX(1.3)}}
+.os-intro-txt{position:relative;z-index:2;text-align:center;opacity:0;padding:0 20px}
+.os-intro.go .os-intro-txt{animation:osTxt 1.1s cubic-bezier(.2,.7,.2,1) .45s forwards}
+.os-intro-txt b{display:block;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(3rem,9vw,6rem);line-height:1;color:#fff;margin-top:8px;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.os-intro-txt .os-eyebrow{color:#E2C48A}
 .os-intro .os-sprig{color:#C9A35B}
-@keyframes osTxt{from{opacity:0;transform:translateY(14px);letter-spacing:.06em}to{opacity:1;transform:none}}
-.os-skip{position:absolute;right:20px;bottom:24px;background:none;border:1px solid rgba(201,163,91,.5);color:#E2C48A;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;padding:9px 14px;border-radius:2px;cursor:pointer}
+@keyframes osTxt{from{opacity:0;transform:translateY(16px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 @media (max-width:860px){.os-links{display:none}.os-nav-in .os-btn{margin-left:auto}.os-sec{padding:76px 0}.os-story-in,.os-res-in,.os-visit-in{grid-template-columns:1fr;gap:36px}.os-story-pic{box-shadow:12px 12px 0 rgba(122,31,43,.55)}.os-menu-list{grid-template-columns:1fr}.os-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.os-rev-grid{grid-template-columns:1fr}.os-form{grid-template-columns:1fr}.os-brand{font-size:1.35rem}}
 
 .rb-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#0F172A;color:#E2E8F0;border-top:1px solid rgba(96,165,250,.3);font-family:var(--font-b);padding-bottom:env(safe-area-inset-bottom)}
