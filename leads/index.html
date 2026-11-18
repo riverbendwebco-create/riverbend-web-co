@@ -33,7 +33,7 @@ svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
 .btn.primary:hover{background:#246BF0}
 .btn[disabled]{opacity:.55;cursor:default}
 .btn.saved-on{color:var(--green);border-color:rgba(43,196,138,.45);background:rgba(43,196,138,.08)}
-.gbtn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 15px;border-radius:8px;border:1px solid #9CC0FF;background:linear-gradient(#F3F7FF,#CFE0FF);color:#0A1A33;font-weight:700;font-size:.86rem;text-decoration:none;cursor:pointer;box-shadow:0 0 0 2px rgba(47,123,255,.35),0 0 20px rgba(47,123,255,.45)}
+.gbtn{display:inline-flex;white-space:nowrap;flex:none;align-items:center;gap:6px;height:34px;padding:0 15px;border-radius:8px;border:1px solid #9CC0FF;background:linear-gradient(#F3F7FF,#CFE0FF);color:#0A1A33;font-weight:700;font-size:.86rem;text-decoration:none;cursor:pointer;box-shadow:0 0 0 2px rgba(47,123,255,.35),0 0 20px rgba(47,123,255,.45)}
 .msg{min-height:20px;margin-top:10px;font-size:.88rem;color:var(--mut)}
 .msg.err{color:var(--red)}
 
@@ -99,6 +99,11 @@ svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
 .pbar i{display:block;height:100%;background:var(--blue);box-shadow:0 0 10px var(--blue);transition:width .4s}
 .bar i.run{background:linear-gradient(90deg,var(--line2),var(--blue),var(--line2));background-size:200% 100%;animation:sh 1.2s infinite}
 .why{margin-top:6px;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.daily{background:linear-gradient(180deg,rgba(47,123,255,.13),rgba(47,123,255,.03));border:1px solid rgba(91,155,255,.45);border-radius:14px;padding:18px 18px 16px;margin:6px 0 16px;box-shadow:0 0 24px rgba(47,123,255,.12)}
+.daily .dtop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.daily small{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue2)}
+.daily h3{margin:4px 0 0;font-family:var(--disp);font-style:italic;font-weight:700;font-size:1.8rem;line-height:1;text-transform:uppercase;color:#fff}
+.daily p{margin:10px 0 12px;color:var(--txt);font-size:.92rem;line-height:1.5}
 .badge{flex:none;font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:4px;border:1px solid;white-space:nowrap}
 .b-none{color:var(--red);border-color:rgba(255,90,99,.45);background:rgba(255,90,99,.08)}
 .b-social{color:var(--orange);border-color:rgba(255,138,61,.45);background:rgba(255,138,61,.08)}
@@ -294,8 +299,18 @@ function home(){
   head('Pipeline','Leads',studioBtn());
   const by=stageCounts();
   const four=[['New','New'],['Contacted','Contacted'],['Pitched','Pitched'],['Won','Won']].map(([k,label])=>{ const b=statBox(by[k]||0,label); b.addEventListener('click',()=>showSaved(k)); return b; });
-  const recent=savedAll.filter(l=>l.stage!=='Won'&&l.stage!=='Lost').slice(0,4);
+  const recent=savedAll.filter(l=>l.stage!=='Won'&&l.stage!=='Lost'&&!isDaily(l)).slice(0,4);
+  const d=dailyBatch();
+  const kinds={none:0,social:0,weak:0}; d.list.forEach(l=>{ kinds[savedKind(l)]=(kinds[savedKind(l)]||0)+1; });
+  const daily=el('div',{class:'daily'},
+    el('div',{class:'dtop'},
+      el('div',null,el('small',null,d.date?'Daily finder · '+d.date:'Daily finder'),
+        el('h3',null,d.list.length?d.list.length+' new leads ready for you':'New leads arrive every morning')),
+      d.list.length?el('button',{type:'button',class:'gbtn',onclick:()=>showSaved('Daily')},'See all'):null),
+    el('p',null,d.list.length?kinds.none+' with no website, '+kinds.social+' Facebook only, '+kinds.weak+' with a weak website. All within about 30 miles of Dubuque, each with a real phone number.':'Every morning before 7 AM, 50 new local businesses that need a website show up here, no searching needed.'),
+    d.list.length?el('div',{class:'cards'},d.list.slice().sort((a,b)=>rankOf(a)-rankOf(b)).slice(0,6).map(savedCard)):null);
   paint(chipRow(QUICK.map(([t,q])=>[q,t]),'',q=>send(q)),
+    daily,
     el('div',{class:'stats'},four),
     el('div',{class:'sect'},recent.length?'Working on':'Things you can ask'),
     recent.length?el('div',{class:'cards'},recent.map(savedCard)):
@@ -450,6 +465,11 @@ async function buildDemo(l,btn,card){
 }
 
 /* ---------- Saved ---------- */
+function isDaily(l){ return /^Daily finder/.test(l.notes||''); }
+function dailyDate(l){ const m=(l.notes||'').match(/^Daily finder ([A-Z][a-z]{2} \d{1,2})/); return m?m[1]:''; }
+function dailyBatch(){ const all=savedAll.filter(l=>isDaily(l)&&l.stage==='New'); const date=all.length?dailyDate(all[0]):''; return {date,list:all.filter(l=>dailyDate(l)===date)}; }
+function savedKind(l){ return /no website/i.test(l.lead)?'none':/page, no real|social|facebook/i.test(l.lead)?'social':l.lead?'weak':'site'; }
+function rankOf(l){ return {none:0,social:1,weak:2,site:3}[savedKind(l)]; }
 function stageCounts(){ const by={}; savedAll.forEach(l=>{ by[l.stage]=(by[l.stage]||0)+1; }); return by; }
 function setCount(n){ $('#savedCount').textContent=String(n); }
 async function refreshSaved(){ const r=await api({action:'leads_saved'}); if(r.ok){ savedAll=r.leads||[]; setCount(savedAll.length); } return r; }
@@ -464,16 +484,16 @@ async function showSaved(stage){
   let cur=stage||'Active';
   const by=stageCounts();
   const list=el('div',{class:'cards'});
-  const pick=a=>cur==='All'?a:cur==='Active'?a.filter(l=>l.stage!=='Won'&&l.stage!=='Lost'):a.filter(l=>l.stage===cur);
+  const pick=a=>cur==='All'?a:cur==='Daily'?a.filter(l=>isDaily(l)&&l.stage==='New').sort((x,y)=>rankOf(x)-rankOf(y)):cur==='Active'?a.filter(l=>l.stage!=='Won'&&l.stage!=='Lost'):a.filter(l=>l.stage===cur);
   function show(k){ cur=k; const arr=pick(savedAll);
-    list.replaceChildren(...(arr.length?arr.map(savedCard):[el('div',{class:'empty'},savedAll.length?'No leads in '+k+'.':'No saved leads yet. Search above and tap Save.')])); }
+    list.replaceChildren(...(arr.length?arr.map(savedCard):[el('div',{class:'empty'},k==='Daily'?'No daily finds waiting. New ones arrive every morning before 7 AM.':savedAll.length?'No leads in '+k+'.':'No saved leads yet. Search above and tap Save.')])); }
   const four=['New','Contacted','Pitched','Won'].map(k=>{ const b=statBox(by[k]||0,k); b.addEventListener('click',()=>{ chips.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.textContent===k)); show(k); }); return b; });
-  const chips=chipRow([['Active','Active']].concat(status.stages.map(s=>[s,s]),[['All','All']]),cur,show);
+  const chips=chipRow([['Daily','Daily finds'],['Active','Active']].concat(status.stages.map(s=>[s,s]),[['All','All']]),cur,show);
   show(cur);
   paint(el('div',{class:'stats'},four),chips,list);
 }
 function savedCard(l){
-  const kind=/no website/i.test(l.lead)?'none':/page, no real|social|facebook/i.test(l.lead)?'social':l.lead?'weak':'site';
+  const kind=savedKind(l);
   const stageEl=el('span',{class:'badge '+(l.stage==='Won'?'b-won':'b-stage')},l.stage);
   const sel=el('select',{'aria-label':'Stage'},status.stages.map(s=>{ const o=el('option',{value:s},s); if(s===l.stage) o.selected=true; return o; }));
   sel.addEventListener('change',async()=>{ const r=await api({action:'leads_update',id:l.id,stage:sel.value}); if(r.ok){ l.stage=sel.value; stageEl.textContent=sel.value; stageEl.className='badge '+(l.stage==='Won'?'b-won':'b-stage'); } });
