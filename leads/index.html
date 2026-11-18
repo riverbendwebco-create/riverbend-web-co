@@ -94,6 +94,10 @@ svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
 .score small{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:3px}
 .bar{height:4px;border-radius:2px;background:var(--line2);margin-top:10px;overflow:hidden}
 .bar i{display:block;height:100%;border-radius:2px}
+.prog small{display:block;margin-top:6px;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.pbar{height:4px;border-radius:2px;background:var(--line2);margin-top:9px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--blue);box-shadow:0 0 10px var(--blue);transition:width .4s}
+.bar i.run{background:linear-gradient(90deg,var(--line2),var(--blue),var(--line2));background-size:200% 100%;animation:sh 1.2s infinite}
 .badge{flex:none;font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:4px;border:1px solid;white-space:nowrap}
 .b-none{color:var(--red);border-color:rgba(255,90,99,.45);background:rgba(255,90,99,.08)}
 .b-social{color:var(--orange);border-color:rgba(255,138,61,.45);background:rgba(255,138,61,.08)}
@@ -311,31 +315,60 @@ async function send(text){
   const where=it.city&&!/^Dubuque/.test(it.city)?it.city.split(',')[0]:'Dubuque';
   head('Search · '+where,cap(it.q));
   const my=++reqId;
-  paint(say('Looking for '+it.q+' around '+where+' and checking every website. A new search can take up to a minute.',text),
+  paint(say('Looking for '+it.q+' around '+where+'...',text),
     el('div',{class:'cards'},[0,1,2,3].map(()=>el('div',{class:'skel'}))));
-  const r=await api({action:'leads_find',q:it.q,city:it.city||undefined});
+  const r=await api({action:'leads_find',q:it.q,city:it.city||undefined,fast:true});
   if(my!==reqId) return;
   if(!r.ok) return paint(say(r.message||'That search did not work. Try again in a minute.',text));
   showResults(r,it,text,where);
 }
 
 function showResults(r,it,text,where){
-  const c=r.counts;
-  if(!c.total) return paint(say('I could not find any '+it.q+' around '+where+'. Try another word.',text));
-  const groups={best:r.leads.filter(l=>l.kind==='none'||l.kind==='social'||l.kind==='weak'),none:r.leads.filter(l=>l.kind==='none'||l.kind==='social'),weak:r.leads.filter(l=>l.kind==='weak'),all:r.leads};
-  for(const k in groups) groups[k]=groups[k].slice().sort((a,b)=>chance(b)-chance(a));
+  if(!r.counts.total) return paint(say('I could not find any '+it.q+' around '+where+'. Try another word.',text));
+  const leads=r.leads, cardOf={}, my=reqId;
+  const isHot=l=>l.kind==='none'||l.kind==='social'||l.kind==='weak';
+  function grp(){ const g={best:leads.filter(isHot),none:leads.filter(l=>l.kind==='none'||l.kind==='social'),weak:leads.filter(l=>l.kind==='weak'),all:leads};
+    for(const k in g) g[k]=g[k].slice().sort((a,b)=>chance(b)-chance(a)); return g; }
+  let groups=grp();
   let cur=it.mode==='none'?'none':it.mode==='weak'?'weak':it.mode==='all'?'all':'best';
   if(!groups[cur].length) cur='all';
   const list=el('div',{class:'cards'});
   const boxes=[['best','Best leads','#2F7BFF'],['none','No website','#FF5A63'],['weak','Weak site','#F2B23B'],['all','All found','#5B6779']].map(([k,label,color])=>{
     const b=statBox(groups[k].length,label,color); b.dataset.k=k; b.addEventListener('click',()=>show(k)); return b; });
-  function show(k){ cur=k; boxes.forEach(b=>b.classList.toggle('on',b.dataset.k===k)); list.replaceChildren(...(groups[k].length?groups[k].map(leadCard):[el('div',{class:'empty'},'Nothing in this group.')])); }
+  function show(k){ cur=k; boxes.forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+    list.replaceChildren(...(groups[k].length?groups[k].map(l=>(cardOf[l.id]=leadCard(l))):[el('div',{class:'empty'},'Nothing in this group.')])); }
   show(cur);
-  const hot=c.none+c.social;
+  const msg=el('span'), prog=el('div',{class:'prog'});
+  const sayEl=el('div',{class:'say'},el('em',null,'You asked: '+text),msg,prog);
   const biz=n=>n+(n===1?' business':' businesses'), has=n=>n===1?' has':' have';
-  paint(say('Found '+biz(c.total)+' around '+where+'. '+(hot?hot+has(hot)+' no real website and '+c.weak+has(c.weak)+' a weak one. Sorted by chance of landing them.':'Most already have a website. '+c.weak+(c.weak===1?' looks':' look')+' weak.'),text),
-    el('div',{class:'stats'},boxes),list,
-    el('p',{class:'note'},r.free?'Chance is an estimate from the website check, phone and type of business, not a promise. From free public map data, so a few businesses may be missing. Open their site yourself before you pitch.':'Chance is an estimate from the website check, phone and type of business, not a promise. Open their site yourself before you pitch.'));
+  function update(){
+    groups=grp();
+    boxes.forEach(b=>{ b.querySelector('b').textContent=String(groups[b.dataset.k].length); });
+    const left=leads.filter(l=>l.pending).length, total=leads.length;
+    const nn=leads.filter(l=>(l.kind==='none'||l.kind==='social')&&!l.pending).length, nw=leads.filter(l=>l.kind==='weak'&&!l.pending).length;
+    if(left){ msg.textContent='Found '+biz(total)+' around '+where+'. Checking their websites now, the cards update as each one finishes.';
+      prog.replaceChildren(el('div',{class:'pbar'},el('i',{style:'width:'+Math.round((total-left)/total*100)+'%'})),el('small',null,'Checked '+(total-left)+' of '+total)); }
+    else { msg.textContent='Found '+biz(total)+' around '+where+'. '+(nn?nn+has(nn)+' no real website and '+nw+has(nw)+' a weak one. Sorted by chance of landing them.':'Most already have a website. '+nw+(nw===1?' looks':' look')+' weak.'); prog.replaceChildren(); }
+  }
+  update();
+  paint(sayEl,el('div',{class:'stats'},boxes),list,
+    el('p',{class:'note'},'Chance is an estimate from the website check, phone and type of business, not a promise. '+(r.free?'From free public map data, so a few businesses may be missing. ':'')+'Open their site yourself before you pitch.'));
+  const pend=leads.filter(l=>l.pending);
+  if(!pend.length) return;
+  const batches=[]; for(let i=0;i<pend.length;i+=5) batches.push(pend.slice(i,i+5));
+  let bi=0;
+  function redraw(l){ const cd=cardOf[l.id]; if(cd&&cd.isConnected){ const n=leadCard(l); cardOf[l.id]=n; cd.replaceWith(n); } }
+  async function worker(){
+    while(bi<batches.length){
+      const b=batches[bi++];
+      const res=await api({action:'leads_verify',leads:b});
+      if(my!==reqId) return;
+      if(res.ok) res.leads.forEach(u=>{ const l=leads.find(x=>x.id===u.id); if(!l) return; const sv=l.saved; Object.assign(l,u,{pending:false,searchPending:false,saved:sv}); redraw(l); });
+      b.forEach(l=>{ if(l.pending){ l.pending=false; if(l.searchPending){ l.searchPending=false; l.issues=['No website listed on the map (could not finish the check, double check)']; } redraw(l); } });
+      update();
+    }
+  }
+  Promise.all([worker(),worker(),worker()]).then(()=>{ if(my===reqId&&window.scrollY<150) show(cur); });
 }
 
 function chance(l){
@@ -360,13 +393,13 @@ function leadCard(l){
   const demoBtn=el('button',{type:'button',class:'btn primary',text:'Build demo'});
   const card=el('div',{class:'card'});
   demoBtn.addEventListener('click',()=>buildDemo(l,demoBtn,card));
-  const pc=chance(l);
+  const pc=l.pending?0:chance(l);
   const issues=(l.issues||[]).filter(Boolean);
   const desc=l.kind==='site'?'Has a working website'+(l.website?' ('+String(l.website).replace(/^https?:\/\/(www\.)?/,'').replace(/\/.*$/,'')+')':'')+'.':l.kind==='chain'?'Part of a chain, so the website is run by head office.':(issues.length?issues.join('. ')+'.':TAGS[l.kind]+'.');
   card.append(
-    el('div',{class:'top'},el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),el('div',{class:'rt'},el('span',{class:'badge b-'+l.kind},TAGS[l.kind]||'Lead'),el('div',{class:'score',title:'Estimated chance of landing this lead'},el('b',{class:pc>=60?'hot':pc>=35?'mid':'low'},pc+'%'),el('small',null,'Chance')))),
-    el('div',{class:'bar'},el('i',{style:'width:'+pc+'%;background:'+(pc>=60?'var(--green)':pc>=35?'var(--amber)':'var(--dim)')})),
-    el('p',{class:'desc'},desc.replace(/\.\.$/,'.')),
+    el('div',{class:'top'},el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),el('div',{class:'rt'},el('span',{class:'badge b-'+(l.pending?'site':l.kind)},l.pending?'Checking':(TAGS[l.kind]||'Lead')),el('div',{class:'score',title:'Estimated chance of landing this lead'},el('b',{class:l.pending?'low':pc>=60?'hot':pc>=35?'mid':'low'},l.pending?'--':pc+'%'),el('small',null,'Chance')))),
+    el('div',{class:'bar'},el('i',{class:l.pending?'run':'',style:'width:'+(l.pending?100:pc)+'%;background:'+(pc>=60?'var(--green)':pc>=35?'var(--amber)':'var(--dim)')})),
+    el('p',{class:'desc'},l.pending?(l.searchPending?'Checking for a website...':'Checking their website...'):desc.replace(/\.\.$/,'.')),
     el('div',{class:'foot'},
       el('div',{class:'tags'},el('span',{class:'tag hi'},where.split(',')[0]),
         tel(l.phone)?el('a',{class:'tag',href:tel(l.phone),title:l.phone},'Phone'):null,

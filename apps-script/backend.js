@@ -364,6 +364,7 @@ function studio_(d) {
     case 'leads_status': return leadsStatus_();
     case 'leads_key': return leadsSetKey_(String(d.key || ''));
     case 'leads_find': return leadsFind_(d);
+    case 'leads_verify': return leadsVerify_(d);
     case 'leads_saved': return { ok: true, leads: leadsSaved_() };
     case 'leads_save': return leadsSave_(d.lead || {});
     case 'leads_update': return leadsUpdate_(String(d.id || ''), d);
@@ -1219,8 +1220,11 @@ function leadsKm_(lat, lng) {
   return Math.round(2 * R * Math.asin(Math.sqrt(x * x + Math.cos(a) * Math.cos(b) * y * y)));
 }
 
+function leadsSiteKey_(u) { return 'sc1_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, String(u))).slice(0, 22); }
+
 function leadsCheckSites_(leads, deep) {
   var year = new Date().getFullYear();
+  var cache = CacheService.getScriptCache();
   var toCheck = [];
   leads.forEach(function (l) {
     var host = hostOf_(l.website);
@@ -1229,10 +1233,14 @@ function leadsCheckSites_(leads, deep) {
     if (/\/(locations?|stores?|restaurants?)\//i.test(l.website) || /\/location\b/i.test(l.website)) { l.kind = 'chain'; l.issues.push('Chain or franchise location'); return; }
     if (LEADS_FREE.test(host)) { l.kind = 'weak'; l.issues.push('Free builder site (' + host + ')'); }
     if (/^http:\/\//i.test(l.website)) l.httpOnly = true;
+    var hit = cache.get(leadsSiteKey_(l.website));
+    if (hit) { try { var o = JSON.parse(hit); l.website = o.w || l.website; if (o.b) l.blocked = true; (o.i || []).forEach(function (x) { l.issues.push(x); }); return; } catch (e) {} }
     toCheck.push(l);
   });
-  if (deep && toCheck.length) {
+  if (!deep) { toCheck.forEach(function (l) { l.pending = true; }); }
+  else if (toCheck.length) {
     var batch = toCheck.slice(0, 30);
+    var orig = batch.map(function (l) { return l.website; });
     var reqs = batch.map(function (l) {
       return { url: l.httpOnly ? l.website.replace(/^http:/i, 'https:') : l.website, muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: true,
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RiverbendLeads/1.0; +https://riverbendwebco.com)' } };
@@ -1240,29 +1248,34 @@ function leadsCheckSites_(leads, deep) {
     var res = [];
     try { res = UrlFetchApp.fetchAll(reqs); } catch (e) { res = leadsFetchEach_(reqs); }
     batch.forEach(function (l, i) {
-      var r = res[i];
-      if (!r) { if (l.httpOnly) l.issues.push('No secure https version'); return; }
-      var code = r.getResponseCode();
-      if (code === 401 || code === 403 || code === 429 || code === 503) { l.blocked = true; return; }
-      if (code >= 400) {
-        var home = (l.website.match(/^https?:\/\/[^\/]+/i) || [''])[0] + '/';
-        var hr = null; if (home !== l.website) { try { hr = UrlFetchApp.fetch(home, { muteHttpExceptions: true, followRedirects: true }); } catch (x) {} }
-        if (hr && hr.getResponseCode() < 400) { l.website = home; return; }
-        if (hr && [401, 403, 429, 503].indexOf(hr.getResponseCode()) >= 0) { l.blocked = true; return; }
-        l.issues.push('Website is down or broken (error ' + code + ')'); return;
-      }
-      if (l.httpOnly) l.website = l.website.replace(/^http:/i, 'https:');
-      var html = '';
-      try { html = r.getContentText().slice(0, 400000); } catch (e) { return; }
-      if (!/<meta[^>]+name=["']?viewport/i.test(html)) l.issues.push('Not built for phones');
-      var ys = [], m, re = /(?:&copy;|\u00a9|copyright)\s*(?:&nbsp;|\s)*(?:(?:19|20)\d{2}\s*(?:-|&ndash;|\u2013)\s*)?((?:19|20)\d{2})/gi;
-      while ((m = re.exec(html))) ys.push(Number(m[1]));
-      if (ys.length) { var y = Math.max.apply(null, ys); if (y <= year - 3) l.issues.push('Not updated since ' + y); }
-      if (/wix\.com|wixstatic|godaddy|websitebuilder|weebly|squarespace-cdn|jimdo|site123/i.test(html) && l.kind !== 'weak') l.builder = true;
-      if (html.length < 3000 && !/<script/i.test(html)) l.issues.push('Almost empty page');
+      var pre = l.issues.length;
+      leadsSiteOne_(l, res[i], year);
+      if (res[i]) cache.put(leadsSiteKey_(orig[i]), JSON.stringify({ w: l.website, i: l.issues.slice(pre), b: !!l.blocked }), 24 * 60 * 60);
     });
   }
   leads.forEach(function (l) { if (l.kind === 'site' && l.issues.length) l.kind = 'weak'; });
+}
+
+function leadsSiteOne_(l, r, year) {
+  if (!r) { if (l.httpOnly) l.issues.push('No secure https version'); return; }
+  var code = r.getResponseCode();
+  if (code === 401 || code === 403 || code === 429 || code === 503) { l.blocked = true; return; }
+  if (code >= 400) {
+    var home = (l.website.match(/^https?:\/\/[^\/]+/i) || [''])[0] + '/';
+    var hr = null; if (home !== l.website) { try { hr = UrlFetchApp.fetch(home, { muteHttpExceptions: true, followRedirects: true }); } catch (x) {} }
+    if (hr && hr.getResponseCode() < 400) { l.website = home; return; }
+    if (hr && [401, 403, 429, 503].indexOf(hr.getResponseCode()) >= 0) { l.blocked = true; return; }
+    l.issues.push('Website is down or broken (error ' + code + ')'); return;
+  }
+  if (l.httpOnly) l.website = l.website.replace(/^http:/i, 'https:');
+  var html = '';
+  try { html = r.getContentText().slice(0, 400000); } catch (e) { return; }
+  if (!/<meta[^>]+name=["']?viewport/i.test(html)) l.issues.push('Not built for phones');
+  var ys = [], m, re = /(?:&copy;|©|copyright)\s*(?:&nbsp;|\s)*(?:(?:19|20)\d{2}\s*(?:-|&ndash;|–)\s*)?((?:19|20)\d{2})/gi;
+  while ((m = re.exec(html))) ys.push(Number(m[1]));
+  if (ys.length) { var y = Math.max.apply(null, ys); if (y <= year - 3) l.issues.push('Not updated since ' + y); }
+  if (/wix\.com|wixstatic|godaddy|websitebuilder|weebly|squarespace-cdn|jimdo|site123/i.test(html) && l.kind !== 'weak') l.builder = true;
+  if (html.length < 3000 && !/<script/i.test(html)) l.issues.push('Almost empty page');
 }
 
 function leadsSiteName_(host) {
@@ -1469,12 +1482,10 @@ function leadsFindFree_(d) {
       maps: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(tg.name + ' ' + (addr || '') + ' ' + city),
       hours: [], kind: 'site', issues: [], source: 'free' };
   });
-  leadsVerifyFree_(leads);
-  leadsCheckSites_(leads, d.check !== false);
-  leads.forEach(function (l) {
-    if (l.brand) { l.kind = 'chain'; l.issues = ['Chain or franchise location']; }
-    if (l.found) l.issues.unshift('Website found: ' + hostOf_(l.website));
-  });
+  var fast = !!d.fast;
+  leadsVerifyFree_(leads, fast);
+  leadsCheckSites_(leads, !fast && d.check !== false);
+  leadsFinish_(leads);
   var saved = {};
   leadsSaved_().forEach(function (x) { saved[x.id] = x.stage || 'New'; });
   leads.forEach(function (l) { if (saved[l.id]) l.saved = saved[l.id]; });
@@ -1491,9 +1502,31 @@ function humanTag_(tg) {
   return v ? v.charAt(0).toUpperCase() + v.slice(1) : '';
 }
 
+function leadsFinish_(leads) {
+  leads.forEach(function (l) {
+    if (l.brand) { l.kind = 'chain'; l.issues = ['Chain or franchise location']; l.pending = false; l.searchPending = false; }
+    if (l.searchPending) { l.pending = true; l.issues = ['Checking for a website...']; }
+    if (l.found) l.issues.unshift('Website found: ' + hostOf_(l.website));
+  });
+}
+
+/* Second step of a fast search: check up to 8 leads at a time while the list is already on screen. */
+function leadsVerify_(d) {
+  var list = (d.leads || []).slice(0, 8).map(function (l) {
+    return { id: clip_(l.id, 200), name: clip_(l.name, 120), type: clip_(l.type, 60), ptype: clip_(l.ptype, 40), phone: clip_(l.phone, 40),
+      website: l.searchPending ? '' : clip_(l.website, 300), address: clip_(l.address, 160), city: clip_(l.city, 60), full: clip_(l.full, 220),
+      rating: Number(l.rating) || 0, reviews: Number(l.reviews) || 0, brand: !!l.brand, maps: clip_(l.maps, 400), hours: [],
+      found: !!l.found && !l.searchPending, kind: 'site', issues: [], source: 'free' };
+  }).filter(function (l) { return l.id && l.name; });
+  leadsVerifyFree_(list, false, 22000);
+  leadsCheckSites_(list, true);
+  leadsFinish_(list);
+  return { ok: true, leads: list };
+}
+
 /* For leads with no website on the map, search the web for one.
    Small batches so the free search does not rate-limit us. */
-function leadsVerifyFree_(leads) {
+function leadsVerifyFree_(leads, cacheOnly, budget) {
   var need = leads.filter(function (l) { return !l.website && !l.brand; });
   var cache = CacheService.getScriptCache();
   var keyOf = function (l) { return 'ws3_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20); };
@@ -1502,15 +1535,12 @@ function leadsVerifyFree_(leads) {
     var c = cache.get(keyOf(l));
     if (c === null) todo.push(l); else { l.checked = true; if (c) { l.website = c; l.found = true; } }
   });
+  if (cacheOnly) { todo.forEach(function (l) { l.searchPending = true; }); return; }
   var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
   var start = Date.now();
-  todo = todo.filter(function (l) {
-    var site = guessDomain_(l.name, l.city, ua, start);
-    if (site) { l.website = site; l.found = true; l.checked = true; cache.put(keyOf(l), site, 7 * 24 * 60 * 60); return false; }
-    return true;
-  });
+  todo = guessDomains_(todo, ua, cache, keyOf);
   var ends = ['https://lite.duckduckgo.com/lite/?q=', 'https://html.duckduckgo.com/html/?q='], e = 0, misses = 0;
-  for (var i = 0; i < todo.length && Date.now() - start < 45000 && misses < 3; i += 4) {
+  for (var i = 0; i < todo.length && Date.now() - start < (budget || 45000) && misses < 3; i += 4) {
     var batch = todo.slice(i, i + 4);
     var reqs = batch.map(function (l) {
       return { url: ends[e % 2] + encodeURIComponent('"' + l.name + '" ' + l.city.split(',')[0]), muteHttpExceptions: true, followRedirects: true,
@@ -1561,13 +1591,13 @@ function leadsFetchEach_(reqs) {
   return reqs.map(function (q) { try { return UrlFetchApp.fetch(q.url, q); } catch (e) { return null; } });
 }
 
-/* Try the web addresses local businesses usually use: name.com, namedbq.com, namedubuque.com. */
-function guessDomain_(name, city, ua, start) {
-  if (Date.now() - start > 30000) return '';
+/* Try the web addresses local businesses usually use: name.com, namedbq.com, namedubuque.com.
+   All names are looked up at once through Google DNS, then only the ones that exist are opened, also at once. */
+function domainPlan_(name, city) {
   var base = String(name).toLowerCase().replace(/&/g, 'and').replace(/'s\b/g, 's').replace(/[^a-z0-9 ]/g, '').trim();
   var noThe = base.replace(/^the\s+/, '');
   var slug = noThe.replace(/\s+/g, ''), slugThe = base.replace(/\s+/g, '');
-  if (slug.length < 4) return '';
+  if (slug.length < 4) return null;
   var town = String(city || 'Dubuque').split(',')[0].toLowerCase().replace(/[^a-z]/g, '');
   var short = town === 'dubuque' ? 'dbq' : '';
   var oneWord = noThe.split(/\s+/).length < 2;
@@ -1575,18 +1605,41 @@ function guessDomain_(name, city, ua, start) {
     .filter(function (x, i, a) { return x && a.indexOf(x) === i; });
   var words = noThe.split(/\s+/).filter(function (w) { return w.length > 2 && !/^(and|bar|grill|restaurant|pub|tap|cafe|inc|llc|company)$/.test(w); });
   if (!words.length) words = [slug];
-  for (var i = 0; i < cands.length; i++) {
-    var r = null;
-    try { r = UrlFetchApp.fetch('https://' + cands[i] + '/', { muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: false, headers: { 'User-Agent': ua } }); } catch (x) { continue; }
-    var code = r.getResponseCode();
-    if (code === 403 || code === 401) { if (/(dbq|dubuque)\.com$/.test(cands[i])) return 'https://' + cands[i] + '/'; continue; }
-    if (code >= 400) continue;
-    var html = String(r.getContentText()).slice(0, 200000).toLowerCase();
-    if (/domain (is )?for sale|buy this domain|parked free|this domain may be for sale|godaddy\.com\/domainsearch|sedoparking|hugedomains|dan\.com/.test(html)) continue;
-    var title = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || '';
-    var hay = title + ' ' + html.slice(0, 60000);
-    var hits = words.filter(function (w) { return hay.indexOf(w) >= 0; }).length;
-    if (hits >= Math.max(1, Math.ceil(words.length * 0.6)) && hay.indexOf(words[0]) >= 0 && (!town || hay.indexOf(town) >= 0 || hay.indexOf('iowa') >= 0 || hay.indexOf(', ia') >= 0 || hay.indexOf('563') >= 0)) return 'https://' + cands[i] + '/';
+  return { cands: cands, words: words, town: town };
+}
+
+function domainMatch_(plan, cand, r) {
+  if (!r) return false;
+  var code = r.getResponseCode();
+  if (code === 403 || code === 401) return /(dbq|dubuque)\.com$/.test(cand);
+  if (code >= 400) return false;
+  var html = String(r.getContentText()).slice(0, 200000).toLowerCase();
+  if (/domain (is )?for sale|buy this domain|parked free|this domain may be for sale|godaddy\.com\/domainsearch|sedoparking|hugedomains|dan\.com/.test(html)) return false;
+  var title = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || '';
+  var hay = title + ' ' + html.slice(0, 60000), w = plan.words, t = plan.town;
+  var hits = w.filter(function (x) { return hay.indexOf(x) >= 0; }).length;
+  return hits >= Math.max(1, Math.ceil(w.length * 0.6)) && hay.indexOf(w[0]) >= 0 && (!t || hay.indexOf(t) >= 0 || hay.indexOf('iowa') >= 0 || hay.indexOf(', ia') >= 0 || hay.indexOf('563') >= 0);
+}
+
+function guessDomains_(todo, ua, cache, keyOf) {
+  var plans = todo.map(function (l) { return domainPlan_(l.name, l.city); });
+  var all = [];
+  plans.forEach(function (p, i) { if (p) p.cands.forEach(function (c) { all.push([i, c]); }); });
+  if (!all.length) return todo;
+  var dns = [];
+  try { dns = UrlFetchApp.fetchAll(all.map(function (k) { return { url: 'https://dns.google/resolve?type=A&name=' + k[1], muteHttpExceptions: true }; })); } catch (e) { dns = []; }
+  var live = all.filter(function (k, j) {
+    var r = dns[j]; if (!r) return true;
+    try { var o = JSON.parse(r.getContentText()); return o.Status === 0 && (o.Answer || []).length > 0; } catch (e) { return true; }
+  });
+  var found = {};
+  if (live.length) {
+    var reqs = live.map(function (k) { return { url: 'https://' + k[1] + '/', muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: false, headers: { 'User-Agent': ua } }; });
+    var res; try { res = UrlFetchApp.fetchAll(reqs); } catch (x) { res = leadsFetchEach_(reqs); }
+    live.forEach(function (k, j) { if (!found[k[0]] && domainMatch_(plans[k[0]], k[1], res[j])) found[k[0]] = 'https://' + k[1] + '/'; });
   }
-  return '';
+  return todo.filter(function (l, i) {
+    if (!found[i]) return true;
+    l.website = found[i]; l.found = true; l.checked = true; cache.put(keyOf(l), found[i], 7 * 24 * 60 * 60); return false;
+  });
 }
