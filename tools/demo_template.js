@@ -761,22 +761,44 @@ const BZ_CAT={'Hot':'#FF7A59','Iced':'#4CC3FF','Tea':'#3DDBA5','Energy':'#FF4FA3
 const BZ_KIND={'Hot':'hot','Iced':'iced','Tea':'mug','Energy':'iced','Blended Drinks':'blend'};
 const BZ_FALL=['#FF7A59','#4CC3FF','#3DDBA5','#FF4FA3','#B69CFF','#FFD23F'];
 const bzHex=v=>/^[0-9a-fA-F]{6}$/.test(v||'')?'#'+v:'';
-function bzCup(kind,c1,c2){
-  const g='bz'+(++bzN), ink='#111';
-  const grad='<defs><linearGradient id="'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>';
+function bzCup(kind,c1,c2,energy){
+  const g='bz'+(++bzN), ink='#111', sk='rgba(17,17,17,.55)';
+  const sticker=y=>'<circle cx="50" cy="'+y+'" r="11" fill="#fff" stroke="rgba(17,17,17,.3)" stroke-width=".8"/><text x="50" y="'+(y+3.7)+'" text-anchor="middle" font-family="Archivo,Arial Black,sans-serif" font-weight="800" font-size="10" letter-spacing="-.5" fill="#111">BUZ</text>';
+  const defs='<defs><linearGradient id="'+g+'d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient>'+
+    '<linearGradient id="'+g+'g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".1"/><stop offset=".25" stop-color="#fff" stop-opacity=".5"/><stop offset=".6" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient>'+
+    '<linearGradient id="'+g+'p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#f1f1f4"/><stop offset="1" stop-color="#cfcfd6"/></linearGradient>'+
+    '<linearGradient id="'+g+'c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e4e0e6"/></linearGradient></defs>';
+  const shadow='<ellipse cx="50" cy="132" rx="30" ry="4" fill="#000" opacity=".16"/>';
+  const cube=(x,y,r)=>'<rect x="'+x+'" y="'+y+'" width="13" height="13" rx="3" fill="#fff" fill-opacity=".38" stroke="#fff" stroke-opacity=".85" stroke-width="1" transform="rotate('+r+' '+(x+6.5)+' '+(y+6.5)+')"/>';
   let b='';
-  if(kind==='hot'){
-    b='<path d="M24 40 L76 40 L70 120 Q69 126 63 126 L37 126 Q31 126 30 120Z" fill="#fff" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M26.6 66 L73.4 66 L71.4 96 L28.6 96Z" fill="url(#'+g+')" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><rect x="19" y="30" width="62" height="12" rx="4" fill="'+ink+'"/><rect x="38" y="23" width="24" height="8" rx="3" fill="'+ink+'"/><path d="M40 16 Q36 10 40 5 M50 16 Q46 10 50 4 M60 16 Q56 10 60 5" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".35"/>';
-  } else if(kind==='mug'){
-    b='<rect x="20" y="46" width="52" height="68" rx="10" fill="url(#'+g+')" stroke="'+ink+'" stroke-width="3"/><path d="M72 58 Q94 58 94 80 Q94 100 72 100" fill="none" stroke="'+ink+'" stroke-width="6" stroke-linecap="round"/><path d="M26 56 L26 100" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".45"/><path d="M44 46 Q50 30 62 22" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><rect x="58" y="14" width="16" height="12" rx="3" fill="#fff" stroke="'+ink+'" stroke-width="2.4" transform="rotate(25 66 20)"/><path d="M34 34 Q30 28 34 22 M46 34 Q42 28 46 20" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".35"/>';
+  if(kind==='hot'||kind==='mug'){
+    const body='M24 46 L76 46 L70 124 Q69.5 128 65 128 L35 128 Q30.5 128 30 124Z';
+    b=shadow+'<path d="'+body+'" fill="url(#'+g+'p)" stroke="'+sk+'" stroke-width="1.4" stroke-linejoin="round"/>'+
+      '<path d="M25.4 68 L74.6 68 L72.4 104 L27.6 104Z" fill="'+c1+'"/><path d="M25.4 68 L74.6 68 L72.4 104 L27.6 104Z" fill="url(#'+g+'g)"/>'+sticker(86)+
+      '<path d="M19 40 Q19 33 27 33 L73 33 Q81 33 81 40 L80 47 L20 47Z" fill="#202024" stroke="#000" stroke-width="1"/><path d="M24 38 Q50 35 76 38" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="62" cy="36" rx="5" ry="1.6" fill="#000" opacity=".6"/>'+
+      '<path d="M40 24 Q36 17 41 10 M50 24 Q46 16 51 8 M60 24 Q56 17 61 10" fill="none" stroke="#9aa0a6" stroke-width="2" stroke-linecap="round" opacity=".5"/>';
+    if(kind==='mug') b+='<path d="M52 36 Q64 28 72 20" fill="none" stroke="#6b6b70" stroke-width="1"/><rect x="68" y="12" width="14" height="10" rx="1.5" fill="#fff" stroke="'+sk+'" stroke-width="1" transform="rotate(20 75 17)"/>';
   } else if(kind==='blend'){
-    b='<path d="M54 16 L62 4" stroke="'+ink+'" stroke-width="5" stroke-linecap="round"/><path d="M22 52 L78 52 L72 118 Q71 124 65 124 L35 124 Q29 124 28 118Z" fill="url(#'+g+')" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M26 40 Q28 20 50 20 Q72 20 74 40 Q78 48 74 54 L26 54 Q22 48 26 40Z" fill="#fff" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M34 40 Q50 32 66 40" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".3"/><g fill="'+ink+'"><circle cx="42" cy="46" r="1.8"/><circle cx="56" cy="44" r="1.8"/><circle cx="62" cy="48" r="1.8"/></g><path d="M34 62 L33 108" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".4"/>';
+    const body='M21 64 L79 64 L72 124 Q71.5 128.5 66 128.5 L34 128.5 Q28.5 128.5 28 124Z';
+    b=shadow+'<clipPath id="'+g+'k"><path d="'+body+'"/></clipPath><g clip-path="url(#'+g+'k)"><rect x="0" y="66" width="100" height="70" fill="url(#'+g+'d)"/><ellipse cx="50" cy="66" rx="30" ry="3" fill="#fff" opacity=".35"/><path d="M26 80 Q40 74 50 84 T74 80" fill="none" stroke="'+c2+'" stroke-width="3" opacity=".5"/><rect x="24" y="68" width="6" height="64" fill="#fff" opacity=".3"/></g>'+
+      '<path d="'+body+'" fill="url(#'+g+'g)" stroke="'+sk+'" stroke-width="1.5" stroke-linejoin="round"/>'+sticker(100)+
+      '<path d="M22 64 Q19 30 50 27 Q81 30 78 64Z" fill="#fff" fill-opacity=".14" stroke="'+sk+'" stroke-width="1.3"/>'+
+      '<path d="M26 62 Q23 44 36 40 Q40 32 52 33 Q66 34 66 42 Q76 46 74 62Z" fill="url(#'+g+'c)" stroke="rgba(17,17,17,.18)" stroke-width="1"/><path d="M32 50 Q50 40 70 52 M30 58 Q50 48 72 60" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>'+
+      '<path d="M30 46 Q44 52 58 44 T72 54" fill="none" stroke="'+c2+'" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>'+
+      '<path d="M54 42 L62 6" stroke="#1f1f1f" stroke-width="5" stroke-linecap="round"/><path d="M53 40 L60 12" stroke="#fff" stroke-opacity=".3" stroke-width="1.2" stroke-linecap="round"/>';
   } else {
-    b='<path d="M56 30 L66 4" stroke="'+ink+'" stroke-width="5" stroke-linecap="round"/><path d="M20 34 L80 34 L72 118 Q71 124 65 124 L35 124 Q29 124 28 118Z" fill="#fff" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M23 56 L77 56 L71.4 118 Q70.8 121 66 121 L34 121 Q29.2 121 28.6 118Z" fill="url(#'+g+')"/><g fill="#fff" opacity=".55" stroke="'+ink+'" stroke-width="1.6"><rect x="34" y="62" width="14" height="14" rx="3" transform="rotate(-12 41 69)"/><rect x="52" y="70" width="14" height="14" rx="3" transform="rotate(14 59 77)"/><rect x="38" y="86" width="14" height="14" rx="3" transform="rotate(8 45 93)"/></g><rect x="16" y="28" width="68" height="10" rx="4" fill="'+ink+'"/><path d="M32 46 L30 108" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".5"/><path d="M20 34 L80 34 L72 118 Q71 124 65 124 L35 124 Q29 124 28 118Z" fill="none" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/>';
+    const body='M22 42 L78 42 L71.5 122 Q71 127 65 127 L35 127 Q29 127 28.5 122Z';
+    b=shadow+'<clipPath id="'+g+'k"><path d="'+body+'"/></clipPath><g clip-path="url(#'+g+'k)"><rect x="0" y="60" width="100" height="72" fill="url(#'+g+'d)"/><ellipse cx="50" cy="60" rx="30" ry="3.2" fill="#fff" opacity=".4"/>'+cube(31,54,-14)+cube(52,60,12)+cube(36,80,8)+cube(54,92,-10)+
+      (energy?'<g fill="#fff" fill-opacity=".7"><circle cx="36" cy="70" r="1.4"/><circle cx="62" cy="76" r="1.8"/><circle cx="46" cy="98" r="1.5"/><circle cx="60" cy="108" r="1.3"/><circle cx="40" cy="112" r="1.7"/><circle cx="66" cy="94" r="1.2"/><circle cx="33" cy="94" r="1.1"/></g>':'')+
+      '<rect x="24" y="46" width="6" height="84" fill="#fff" opacity=".32"/></g>'+
+      '<path d="'+body+'" fill="url(#'+g+'g)" stroke="'+sk+'" stroke-width="1.5" stroke-linejoin="round"/>'+sticker(98)+
+      '<path d="M19 42 Q19 35 26 35 L74 35 Q81 35 81 42Z" fill="#fff" fill-opacity=".7" stroke="'+sk+'" stroke-width="1.3"/><ellipse cx="50" cy="42" rx="31" ry="4" fill="#fff" fill-opacity=".55" stroke="'+sk+'" stroke-width="1.2"/>'+
+      '<path d="M57 38 L67 5" stroke="#1f1f1f" stroke-width="5" stroke-linecap="round"/><path d="M56 36 L64 10" stroke="#fff" stroke-opacity=".3" stroke-width="1.2" stroke-linecap="round"/>'+
+      (energy?'<g transform="translate(76 22)"><circle r="11" fill="#FFD23F" stroke="'+ink+'" stroke-width="1.6"/><path d="M2 -8 L-5 2 L0 2 L-2 8 L5 -2 L0 -2Z" fill="'+ink+'"/></g>':'');
   }
-  return '<svg viewBox="0 0 100 130" aria-hidden="true">'+grad+b+'</svg>';
+  return '<svg viewBox="0 0 100 140" aria-hidden="true">'+defs+b+'</svg>';
 }
-function bzArt(kind,c1,c2,cls){ const d=h('div',{class:cls||'bz-art','aria-hidden':'true'}); d.innerHTML=bzCup(kind,c1,c2); return d; }
+function bzArt(kind,c1,c2,cls,energy){ const d=h('div',{class:cls||'bz-art','aria-hidden':'true'}); d.innerHTML=bzCup(kind,c1,c2,energy); return d; }
 function bzMark(C,cls){
   const lu=okUrl(C.x.logoUrl);
   if(C.logo||lu) return h('span',{class:cls+' img'},h('img',{src:C.logo||lu,alt:C.name}));
@@ -852,7 +874,7 @@ function buz(C){
     const search=h('input',{type:'search',class:'bz-search',placeholder:'Search drinks',autocomplete:'off','aria-label':'Search drinks'});
     const card=(m)=>{ const i=cats.indexOf(m.cat), col=catC(m.cat,i); const cc=m.c.split(',').map(bzHex);
       return h('article',{class:'bz-card',style:'--cc:'+col},
-        bzArt(catK(m.cat),cc[0]||col,cc[1]||cc[0]||col,'bz-art'),
+        bzArt(catK(m.cat),cc[0]||col,cc[1]||cc[0]||col,'bz-art',m.cat==='Energy'),
         h('div',{class:'bz-card-b'},h('span',{class:'bz-cat'},m.cat),h('h4',null,m.n),m.note?h('p',null,m.note):null,
           h('ul',{class:'bz-sz'},bzSizes(m.s).map(([a,b])=>h('li',null,a?h('span',null,a):null,h('b',null,b)))))); };
     const draw=()=>{ const t=q.trim().toLowerCase();
@@ -885,22 +907,28 @@ function buz(C){
     const S={d:0,s:0,f:-1,m:0};
     const out=h('div',{class:'bz-bout'}); const rows=h('div',{class:'bz-bsteps'});
     const chips=(label,opts,get,set)=>{ const row=h('div',{class:'bz-brow'},h('h3',null,label),h('div',{class:'bz-chips',role:'group','aria-label':label},opts.map((o,i)=>h('button',{type:'button',class:'bz-chip','aria-pressed':String(get()===i),onclick:()=>{ set(i); draw(); }},o)))); return row; };
+    const dRow=()=>{ const wrap=h('div',{class:'bz-brow'},h('h3',null,'1. Pick a drink'));
+      cats.forEach((cat,ci)=>{ const idx=bItems.map((m,i)=>m.cat===cat?i:-1).filter(i=>i>=0); if(!idx.length) return;
+        wrap.append(h('div',{class:'bz-grp',style:'--cc:'+catC(cat,ci)},h('span',{class:'bz-gl'},h('i'),cat==='Energy'?'Energy drinks':cat),
+          h('div',{class:'bz-chips',role:'group','aria-label':cat},idx.map(i=>h('button',{type:'button',class:'bz-chip','aria-pressed':String(S.d===i),onclick:()=>{ S.d=i; S.s=0; draw(); }},bItems[i].n))))); });
+      return wrap; };
     const draw=()=>{
       const it=bItems[S.d], sz=bzSizes(it.s); if(S.s>=sz.length) S.s=0;
+      const isEn=it.cat==='Energy', noMilk=isEn||/^hot tea$/i.test(it.n), noFlav=isEn;
       const ci=cats.indexOf(it.cat), col=catC(it.cat,ci), cc=it.c.split(',').map(bzHex);
-      const fl=S.f>=0?flavors[S.f]:null;
+      const fl=(!noFlav&&S.f>=0)?flavors[S.f]:null;
       const c1=(fl&&fl.a)||cc[0]||col, c2=(fl&&fl.b)||cc[1]||cc[0]||col;
       const line1=(sz[S.s][0]?sz[S.s][0]+' ':'')+it.n;
-      const line2=[fl?fl.n:null,milks[S.m]].filter(Boolean).join(' · ');
-      const txt=['My BUZ order:',line1,line2,'Menu price '+sz[S.s][1]].filter(Boolean).join('\n');
-      const copy=h('button',{type:'button',class:'bz-btn ink'},'Copy my order'); const note=h('p',{class:'bz-bnote','aria-live':'polite'},'Menu price shown. Ask at the window about flavor and milk.');
+      const line2=[fl?fl.n:null,noMilk?null:milks[S.m]].filter(Boolean).join(' \u00B7 ');
+      const txt=['My BUZ order:',line1,isEn?'Energy drink':'',line2,'Menu price '+sz[S.s][1]].filter(Boolean).join('\n');
+      const copy=h('button',{type:'button',class:'bz-btn ink'},'Copy my order'); const note=h('p',{class:'bz-bnote','aria-live':'polite'},isEn?'Menu price shown.':'Menu price shown. Ask at the window about flavor and milk.');
       copy.addEventListener('click',()=>{ const done=()=>{ note.textContent='Copied. Show it at the window.'; }; try{ navigator.clipboard.writeText(txt).then(done,()=>{ note.textContent='Show this order at the window.'; }); }catch(e){ note.textContent='Show this order at the window.'; } });
-      out.replaceChildren(bzArt(catK(it.cat),c1,c2,'bz-bcup'),h('div',{class:'bz-bres'},h('small',null,'Your BUZ'),h('b',null,line1),line2?h('span',null,line2):null,h('strong',null,sz[S.s][1]),copy,note));
-      rows.replaceChildren(
-        chips('1. Pick a drink',bItems.map(m=>m.n+(cats.length>1&&bItems.filter(x=>x.n===m.n).length>1?' ('+m.cat+')':'')),()=>S.d,i=>{S.d=i;S.s=0;}),
-        chips('2. Pick a size',sz.map(p=>(p[0]||'Regular')+'  '+p[1]),()=>S.s,i=>{S.s=i;}),
-        flavors.length?chips('3. Pick a flavor',['No flavor',...flavors.map(f=>f.n)],()=>S.f+1,i=>{S.f=i-1;}):null,
-        chips((flavors.length?'4':'3')+'. Pick a milk',milks,()=>S.m,i=>{S.m=i;}));
+      out.replaceChildren(bzArt(catK(it.cat),c1,c2,'bz-bcup',isEn),h('div',{class:'bz-bres'},h('span',{class:'bz-cat',style:'--cc:'+col},isEn?'Energy drink':it.cat),h('small',null,'Your BUZ'),h('b',null,line1),line2?h('span',null,line2):null,isEn?h('span',{class:'bz-bsub'},'Made with zero-sugar, zero-calorie Bang Energy'):null,h('strong',null,sz[S.s][1]),copy,note));
+      let n=2; const lab=t=>(n++)+'. '+t;
+      rows.replaceChildren(...[dRow(),
+        chips(lab('Pick a size'),sz.map(p=>(p[0]||'Regular')+'  '+p[1]),()=>S.s,i=>{S.s=i;}),
+        (!noFlav&&flavors.length)?chips(lab('Pick a flavor'),['No flavor',...flavors.map(f=>f.n)],()=>S.f+1,i=>{S.f=i-1;}):null,
+        noMilk?null:chips(lab('Pick a milk'),milks,()=>S.m,i=>{S.m=i;})].filter(Boolean));
     };
     draw();
     builder=h('section',{class:'bz-sec bz-build',id:'z-build'},h('div',{class:'bz-wrap'},h('h2',null,'Build your BUZ'),h('p',{class:'bz-sub'},'Mix a drink, see your price, then show it at the window.'),h('div',{class:'bz-bgrid'},rows,out)));
@@ -923,7 +951,7 @@ function buz(C){
   const eng=menu.filter(m=>m.cat==='Energy');
   const band=C.x.bandTitle?h('section',{class:'bz-band'},h('div',{class:'bz-wrap bz-band-in'},
     h('div',null,h('h2',null,C.x.bandTitle),C.x.bandText?h('p',null,String(C.x.bandText)):null),
-    eng.length?h('div',{class:'bz-cans','aria-hidden':'true'},eng.slice(0,3).map(m=>bzArt('iced',bzHex(m.c.split(',')[0])||'#FF4FA3',bzHex(m.c.split(',')[1])||'#2563EB','bz-bc'))):null)):null;
+    eng.length?h('div',{class:'bz-cans','aria-hidden':'true'},eng.slice(0,3).map(m=>bzArt('iced',bzHex(m.c.split(',')[0])||'#FF4FA3',bzHex(m.c.split(',')[1])||'#2563EB','bz-bc',true))):null)):null;
 
   /* about */
   const facts=Array.isArray(C.x.facts)?C.x.facts.filter(f=>f&&f.k&&f.v).slice(0,6):[];
