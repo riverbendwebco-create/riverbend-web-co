@@ -814,7 +814,7 @@ function buz(C){
   const stEl=h('span',{class:'bz-st'});
   const paint=()=>{ const s=byStatus(C); stEl.className='bz-st '+(s.state||''); stEl.replaceChildren(...(s.label?[h('i'),h('b',null,s.label),s.hrs?h('em',null,s.hrs):null].filter(Boolean):[])); };
   paint(); setInterval(paint,60000);
-  const links=[menu.length?['z-menu','Menu']:null,C.own.length?['z-gallery','Gallery']:null,['z-about','About'],['z-visit','Hours & Map']].filter(Boolean);
+  const links=[C.specials.length?['z-seasonal','Seasonal']:null,menu.length?['z-menu','Menu']:null,menu.some(m=>bzSizes(m.s).length)?['z-build','Build']:null,C.own.length?['z-gallery','Gallery']:null,['z-about','About'],['z-visit','Visit']].filter(Boolean);
   const nav=h('header',{class:'bz-nav'},h('div',{class:'bz-nav-in'},
     h('a',{class:'bz-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('z-top');}},bzMark(C,'bz-mk sm'),h('b',null,name)),
     h('nav',{class:'bz-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
@@ -869,6 +869,56 @@ function buz(C){
       tags.length?h('div',{class:'bz-also'},h('h3',null,'Also at the window'),h('div',{class:'bz-tags'},tags.map((t,i)=>h('span',{style:'--cc:'+BZ_FALL[i%BZ_FALL.length]},t)))):null));
   }
 
+  /* seasonal and limited drinks (uses the Studio's Specials & events) */
+  const seasonal=C.specials.length?h('section',{class:'bz-sec bz-season',id:'z-seasonal'},h('div',{class:'bz-wrap'},
+    h('h2',null,'Seasonal & limited drinks'),h('p',{class:'bz-sub'},'These come and go. Ask what is on at the window.'),
+    h('div',{class:'bz-sgrid'},C.specials.slice(0,8).map((s,i)=>h('article',{class:'bz-scard',style:'--cc:'+BZ_FALL[i%BZ_FALL.length]},
+      s.photos[0]?bg(h('div',{class:'bz-sph'}),s.photos[0]):bzArt('iced',BZ_FALL[i%BZ_FALL.length],'#111','bz-sph art'),
+      h('div',{class:'bz-sb'},s.when?h('span',{class:'bz-cat'},s.when):null,h('h3',null,s.title),s.detail?h('p',null,s.detail):null)))))):null;
+
+  /* build your BUZ */
+  let builder=null;
+  const bItems=menu.filter(m=>bzSizes(m.s).length);
+  if(bItems.length){
+    const flavors=(Array.isArray(C.x.flavors)?C.x.flavors:[]).filter(t=>typeof t==='string').slice(0,14).map(t=>{ const [n,c]=t.split('|'); const cc=(c||'').split(',').map(bzHex); return {n:n.trim(),a:cc[0]||'',b:cc[1]||cc[0]||''}; }).filter(f=>f.n);
+    const milks=(Array.isArray(C.x.milks)?C.x.milks:['Regular milk','Alternative milk']).filter(t=>typeof t==='string').slice(0,6);
+    const S={d:0,s:0,f:-1,m:0};
+    const out=h('div',{class:'bz-bout'}); const rows=h('div',{class:'bz-bsteps'});
+    const chips=(label,opts,get,set)=>{ const row=h('div',{class:'bz-brow'},h('h3',null,label),h('div',{class:'bz-chips',role:'group','aria-label':label},opts.map((o,i)=>h('button',{type:'button',class:'bz-chip','aria-pressed':String(get()===i),onclick:()=>{ set(i); draw(); }},o)))); return row; };
+    const draw=()=>{
+      const it=bItems[S.d], sz=bzSizes(it.s); if(S.s>=sz.length) S.s=0;
+      const ci=cats.indexOf(it.cat), col=catC(it.cat,ci), cc=it.c.split(',').map(bzHex);
+      const fl=S.f>=0?flavors[S.f]:null;
+      const c1=(fl&&fl.a)||cc[0]||col, c2=(fl&&fl.b)||cc[1]||cc[0]||col;
+      const line1=(sz[S.s][0]?sz[S.s][0]+' ':'')+it.n;
+      const line2=[fl?fl.n:null,milks[S.m]].filter(Boolean).join(' · ');
+      const txt=['My BUZ order:',line1,line2,'Menu price '+sz[S.s][1]].filter(Boolean).join('\n');
+      const copy=h('button',{type:'button',class:'bz-btn ink'},'Copy my order'); const note=h('p',{class:'bz-bnote','aria-live':'polite'},'Menu price shown. Ask at the window about flavor and milk.');
+      copy.addEventListener('click',()=>{ const done=()=>{ note.textContent='Copied. Show it at the window.'; }; try{ navigator.clipboard.writeText(txt).then(done,()=>{ note.textContent='Show this order at the window.'; }); }catch(e){ note.textContent='Show this order at the window.'; } });
+      out.replaceChildren(bzArt(catK(it.cat),c1,c2,'bz-bcup'),h('div',{class:'bz-bres'},h('small',null,'Your BUZ'),h('b',null,line1),line2?h('span',null,line2):null,h('strong',null,sz[S.s][1]),copy,note));
+      rows.replaceChildren(
+        chips('1. Pick a drink',bItems.map(m=>m.n+(cats.length>1&&bItems.filter(x=>x.n===m.n).length>1?' ('+m.cat+')':'')),()=>S.d,i=>{S.d=i;S.s=0;}),
+        chips('2. Pick a size',sz.map(p=>(p[0]||'Regular')+'  '+p[1]),()=>S.s,i=>{S.s=i;}),
+        flavors.length?chips('3. Pick a flavor',['No flavor',...flavors.map(f=>f.n)],()=>S.f+1,i=>{S.f=i-1;}):null,
+        chips((flavors.length?'4':'3')+'. Pick a milk',milks,()=>S.m,i=>{S.m=i;}));
+    };
+    draw();
+    builder=h('section',{class:'bz-sec bz-build',id:'z-build'},h('div',{class:'bz-wrap'},h('h2',null,'Build your BUZ'),h('p',{class:'bz-sub'},'Mix a drink, see your price, then show it at the window.'),h('div',{class:'bz-bgrid'},rows,out)));
+  }
+
+  /* gift cards */
+  const gift=(C.x.gift&&typeof C.x.gift==='object'&&C.x.gift.title)?h('section',{class:'bz-gift'},h('div',{class:'bz-wrap bz-gift-in'},
+    okUrl(C.x.gift.photo)?bg(h('div',{class:'bz-gph'}),C.x.gift.photo):null,
+    h('div',null,h('h2',null,String(C.x.gift.title)),C.x.gift.text?h('p',null,String(C.x.gift.text)):null))):null;
+
+  /* walk from campus */
+  const camps=(Array.isArray(C.x.campuses)?C.x.campuses:[]).filter(c=>c&&c.n&&c.q).slice(0,5);
+  const walk=(camps.length&&C.addr)?h('section',{class:'bz-sec bz-walk'},h('div',{class:'bz-wrap'},h('h2',null,'Walking over from campus?'),h('p',{class:'bz-sub'},'Tap your school for walking directions to the window.'),
+    h('div',{class:'bz-camps'},camps.map((c,i)=>h('a',{class:'bz-camp',style:'--cc:'+BZ_FALL[(i+2)%BZ_FALL.length],href:'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(String(c.q))+'&destination='+encodeURIComponent([C.addr,C.city].filter(Boolean).join(', '))+'&travelmode=walking',target:'_blank',rel:'noopener'},ico('pin',18,''),h('b',null,String(c.n)),h('span',null,'Walking directions')))))):null;
+
+  /* follow */
+  const follow=(C.fb||C.ig)?h('div',{class:'bz-follow'},h('b',null,'Follow BUZ for new drinks'),h('div',{class:'bz-cta'},C.ig?h('a',{class:'bz-btn ink',href:C.ig,target:'_blank',rel:'noopener'},ico('i-ig',18,''),'Instagram'):null,C.fb?h('a',{class:'bz-btn line',href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',18,''),'Facebook'):null)):null;
+
   /* energy band */
   const eng=menu.filter(m=>m.cat==='Energy');
   const band=C.x.bandTitle?h('section',{class:'bz-band'},h('div',{class:'bz-wrap bz-band-in'},
@@ -884,7 +934,7 @@ function buz(C){
   /* gallery (only if the owner has real photos) */
   const caps=Array.isArray(C.x.caps)?C.x.caps.map(t=>typeof t==='string'?t:''):[];
   const gal=C.own.length?h('section',{class:'bz-sec bz-gal',id:'z-gallery'},h('div',{class:'bz-wrap'},h('h2',null,'Gallery'),h('p',{class:'bz-sub'},'Tap a photo to see it full size.'),
-    h('div',{class:'bz-photos'},C.own.slice(0,12).map((u,i)=>h('button',{type:'button',class:'bz-gt'+(i===0?' big':''),'aria-label':'Open photo '+(i+1)+(caps[i]?': '+caps[i]:''),onclick:()=>bzLightbox(C.own.slice(0,12),caps,i)},bg(h('span',{class:'bz-ph'}),u),caps[i]?h('em',null,caps[i]):null)))) ):null;
+    h('div',{class:'bz-photos'},C.own.slice(0,12).map((u,i)=>h('button',{type:'button',class:'bz-gt'+(i===0?' big':''),'aria-label':'Open photo '+(i+1)+(caps[i]?': '+caps[i]:''),onclick:()=>bzLightbox(C.own.slice(0,12),caps,i)},bg(h('span',{class:'bz-ph'}),u),caps[i]?h('em',null,caps[i]):null))),follow)):null;
 
   /* visit */
   const visit=h('section',{class:'bz-sec bz-visit',id:'z-visit'},h('div',{class:'bz-wrap bz-vgrid'},
@@ -896,7 +946,7 @@ function buz(C){
       socials(C))));
 
   const foot=h('footer',{class:'bz-foot'},h('div',{class:'bz-wrap bz-foot-in'},bzMark(C,'bz-mk sm'),h('span',null,h('b',null,name),[C.addr,C.city].filter(Boolean).length?' · '+[C.addr,C.city].filter(Boolean).join(', '):''),socials(C)));
-  return h('div',{class:'demo bz on'},nav,hero,info,menuEl,band,about,gal,visit,foot);
+  return h('div',{class:'demo bz on'},nav,hero,info,seasonal,menuEl,builder,band,gal,gift,walk,about,visit,foot);
 }
 
 const DN_ICON={
