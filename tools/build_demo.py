@@ -1246,6 +1246,29 @@ body.t-mk{background:#fff;padding-bottom:0}
 @media (max-width:980px){.mp-cover .mp-in{grid-template-columns:1fr}.mp-logo{display:none}.mp-body{grid-template-columns:1fr}.mp-side{position:static}}
 @media (max-width:700px){.mp-in{padding:0 18px}.mp-cover{padding:44px 0 36px}.mp-plans{grid-template-columns:1fr}.mp-plan{border-left:0;border-top:1px solid #E2E8F0}.mp-plan:first-child{border-top:0}.mp-plan.on{box-shadow:inset 3px 0 0 #0052CC}.mp-row{flex-direction:column;gap:12px}.mp-row-r{width:100%;justify-content:space-between}.mp-row-price{text-align:left}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
+/* BUZ marketing proposal: black and hot pink */
+.mk-buz .mp-bar{border-bottom:3px solid #111}
+.mk-buz .mp-brand{color:#111}
+.mk-buz .mp-back{color:#C2125F}
+.mk-buz .mp-cover{background:#111;border-bottom:5px solid #FF4FA3;padding:44px 0 40px}
+.mk-buz .mp-cover .mp-in{grid-template-columns:1.3fr 1fr;grid-template-rows:auto auto;gap:26px 48px;align-items:center}
+.mk-buz .mp-cover-l{grid-column:1;grid-row:1}
+.mk-buz .mp-wlogo{width:112px;height:112px;border-radius:50%;margin-bottom:22px;display:block}
+.mk-buz .mp-eyebrow{color:#FF4FA3}
+.mk-buz .mp-cover h1{color:#fff}
+.mk-buz .mp-cover p{color:#D4D4D8}
+.mk-buz .mp-meta{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin:0}
+.mk-buz .mp-meta dt{color:#A1A1AA}
+.mk-buz .mp-photo{grid-column:2;grid-row:1/span 2;margin:0}
+.mk-buz .mp-photo .ph{aspect-ratio:4/5;max-height:430px;width:100%;background-size:cover;background-position:center;border-radius:12px;border:3px solid #fff;box-shadow:8px 8px 0 #FF4FA3}
+.mk-buz .mp-photo figcaption{color:#A1A1AA;font-size:.8rem;margin-top:12px}
+.mk-buz .mp-label{border-top-color:#111;color:#111}
+.mk-buz .mp-label span,.mk-buz .mo-num{color:#C2125F}
+.mk-buz .mo-body h3,.mk-buz .mo-price b{color:#111}
+.mk-buz .mo-more li::before{background:#FF4FA3}
+.mk-buz .mo-ex{background:#FFF1F8;border-left-color:#FF4FA3}
+.mk-buz .mo-ex span{color:#C2125F}
+@media (max-width:860px){.mk-buz .mp-cover .mp-in{grid-template-columns:1fr}.mk-buz .mp-photo{grid-column:1;grid-row:auto}.mk-buz .mp-photo .ph{aspect-ratio:4/3}.mk-buz .mp-meta{grid-template-columns:1fr}.mk-buz .mo-item{grid-template-columns:36px 1fr}.mk-buz .mo-price{grid-column:2;text-align:left}}
 /* ===== BUZ: bright, playful coffee + energy ===== */
 .bz{--ink:#111;--pk:#FF4FA3;--lv:#B69CFF;--mt:#3DDBA5;--sk:#4CC3FF;--sn:#FFD23F;--co:#FF7A59;--soft:#FFF5FA;--bf:'Fredoka','Nunito',system-ui,sans-serif;--bb:'Nunito',system-ui,sans-serif;background:#fff;color:var(--ink);font-family:var(--bb);font-weight:600;line-height:1.55}
 .bz *{box-sizing:border-box}
