@@ -730,6 +730,17 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mp-btn{display:flex;align-items:center;justify-content:center;height:48px;border-radius:10px;background:#0052CC;color:#fff;font-weight:700;text-decoration:none;border:1px solid #0052CC;cursor:pointer;font-size:.95rem;width:100%;font-family:inherit}
 .mp-btn:hover{background:#0047B3}
 .mp-ghost{background:#fff;color:#0F172A;border-color:#CBD5E1;margin-top:10px}.mp-ghost:hover{background:#F8FAFC}
+.mk-trail .mp-cover{background:#2F4A35 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='1.5'%3E%3Cpath d='M-10 50 Q70 10 130 50 T270 50'/%3E%3Cpath d='M-10 95 Q70 55 130 95 T270 95'/%3E%3Cpath d='M-10 150 Q70 110 130 150 T270 150'/%3E%3Cpath d='M-10 205 Q70 165 130 205 T270 205'/%3E%3C/g%3E%3C/svg%3E");border-bottom:5px solid #B5521B}
+.mk-trail .mp-eyebrow{color:#F2B27C}
+.mk-trail .mp-cover p{color:#DCE5D8}
+.mk-trail .mp-meta dt{color:#B9C8B4}
+.mk-trail .mp-back{color:#B5521B}
+.mk-trail .mp-label{border-top-color:#2F4A35;color:#23201C}
+.mk-trail .mp-label span,.mk-trail .mo-num{color:#B5521B}
+.mk-trail .mo-body h3{color:#2F4A35}
+.mk-trail .mo-price b{color:#23201C}
+.mk-trail .mo-ex{background:#EEF3EC;border-left-color:#B5521B}
+.mk-trail .mo-ex span{color:#B5521B}
 .mp-fine{color:#94A3B8;font-size:.78rem;line-height:1.5;margin-top:14px}
 .mo{padding-top:56px;padding-bottom:80px}
 .mo section+section{margin-top:60px}
@@ -1225,7 +1236,9 @@ function marketing(C){
         idea?h('div',{class:'mo-ex'},h('span',null,'Example for '+C.name),h('p',null,idea)):null),
       h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
   const soc=[C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null].filter(Boolean);
-  return h('div',{class:'mp'},
+  const hide=Array.isArray(C.x.mkHide)?C.x.mkHide.filter(x=>typeof x==='string'):[];
+  const adds=MK.filter(m=>hide.indexOf(m.id)<0), plans=MK_SOCIAL.filter(m=>hide.indexOf(m.id)<0);
+  return h('div',{class:'mp'+(/^[a-z]{3,20}$/.test(C.variant||'')?' mk-'+C.variant:'')},
     h('header',{class:'mp-bar'},h('div',{class:'mp-in'},
       h('span',{class:'mp-brand'},'Riverbend Web Co.'),
       h('a',{class:'mp-back',href:'?d='+encodeURIComponent(slug)},'View website demo'))),
@@ -1244,11 +1257,11 @@ function marketing(C){
       h('section',null,
         h('div',{class:'mp-label'},h('span',null,'01'),'Social media management'),
         h('p',{class:'mp-sub'},'Monthly plans. Choose one.'),
-        h('div',{class:'mo-list'},MK_SOCIAL.map((m,i)=>offer(m,i,'plan')))),
+        h('div',{class:'mo-list'},plans.map((m,i)=>offer(m,i,'plan')))),
       h('section',null,
         h('div',{class:'mp-label'},h('span',null,'02'),'Add-ons'),
         h('p',{class:'mp-sub'},'Add any of these to a plan.'),
-        h('div',{class:'mo-list'},MK.map((m,i)=>offer(m,i,'add')))),
+        h('div',{class:'mo-list'},adds.map((m,i)=>offer(m,i,'add')))),
       h('p',{class:'mp-fine mo-fine'},'Prices are for Riverbend Web Co. services and can be added to any website plan. Ask us about terms.')));
 }
 function mapBox(label,href){

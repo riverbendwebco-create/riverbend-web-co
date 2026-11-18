@@ -419,7 +419,9 @@ function marketing(C){
         idea?h('div',{class:'mo-ex'},h('span',null,'Example for '+C.name),h('p',null,idea)):null),
       h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
   const soc=[C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null].filter(Boolean);
-  return h('div',{class:'mp'},
+  const hide=Array.isArray(C.x.mkHide)?C.x.mkHide.filter(x=>typeof x==='string'):[];
+  const adds=MK.filter(m=>hide.indexOf(m.id)<0), plans=MK_SOCIAL.filter(m=>hide.indexOf(m.id)<0);
+  return h('div',{class:'mp'+(/^[a-z]{3,20}$/.test(C.variant||'')?' mk-'+C.variant:'')},
     h('header',{class:'mp-bar'},h('div',{class:'mp-in'},
       h('span',{class:'mp-brand'},'Riverbend Web Co.'),
       h('a',{class:'mp-back',href:'?d='+encodeURIComponent(slug)},'View website demo'))),
@@ -438,11 +440,11 @@ function marketing(C){
       h('section',null,
         h('div',{class:'mp-label'},h('span',null,'01'),'Social media management'),
         h('p',{class:'mp-sub'},'Monthly plans. Choose one.'),
-        h('div',{class:'mo-list'},MK_SOCIAL.map((m,i)=>offer(m,i,'plan')))),
+        h('div',{class:'mo-list'},plans.map((m,i)=>offer(m,i,'plan')))),
       h('section',null,
         h('div',{class:'mp-label'},h('span',null,'02'),'Add-ons'),
         h('p',{class:'mp-sub'},'Add any of these to a plan.'),
-        h('div',{class:'mo-list'},MK.map((m,i)=>offer(m,i,'add')))),
+        h('div',{class:'mo-list'},adds.map((m,i)=>offer(m,i,'add')))),
       h('p',{class:'mp-fine mo-fine'},'Prices are for Riverbend Web Co. services and can be added to any website plan. Ask us about terms.')));
 }
 function mapBox(label,href){
