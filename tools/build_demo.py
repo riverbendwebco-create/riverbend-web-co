@@ -692,7 +692,17 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mp-btn{display:flex;align-items:center;justify-content:center;height:48px;border-radius:10px;background:#0052CC;color:#fff;font-weight:700;text-decoration:none;border:1px solid #0052CC;cursor:pointer;font-size:.95rem;width:100%;font-family:inherit}
 .mp-btn:hover{background:#0047B3}
 .mp-ghost{background:#fff;color:#0F172A;border-color:#CBD5E1;margin-top:10px}.mp-ghost:hover{background:#F8FAFC}
-.mk-trail .mp-cover{background:#0A0C0C url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.05' stroke-width='1.5'%3E%3Cpath d='M-10 50 Q70 10 130 50 T270 50'/%3E%3Cpath d='M-10 95 Q70 55 130 95 T270 95'/%3E%3Cpath d='M-10 150 Q70 110 130 150 T270 150'/%3E%3Cpath d='M-10 205 Q70 165 130 205 T270 205'/%3E%3C/g%3E%3C/svg%3E");border-bottom:5px solid #9FD4D0}
+.mk-trail .mp-cover{background:#000;border-bottom:5px solid #9FD4D0;padding:40px 0 36px}
+.mk-trail .mp-cover .mp-in{grid-template-columns:1.25fr 1fr;grid-template-rows:auto auto;gap:22px 40px;align-items:center}
+.mk-trail .mp-cover-l{grid-column:1;grid-row:1}
+.mk-trail .mp-meta{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin:0}
+.mk-trail .mp-logo{grid-column:2;grid-row:1/span 2;justify-self:center;width:100%;max-width:400px;height:auto;background:none;padding:0;border-radius:0}
+.mk-trail .mp-cover h1{color:#fff}
+.mo-more{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:7px;max-width:600px}
+.mo-more li{position:relative;padding-left:22px;color:#334155;line-height:1.5}
+.mo-more li::before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:9px;background:#0052CC}
+.mk-trail .mo-more li::before{background:#24706C}
+@media (max-width:860px){.mk-trail .mp-cover .mp-in{grid-template-columns:1fr}.mk-trail .mp-logo{grid-column:1;grid-row:1;max-width:220px}.mk-trail .mp-cover-l{grid-row:2}.mk-trail .mp-meta{grid-row:3;grid-template-columns:1fr}}
 .mk-trail .mp-eyebrow{color:#9FD4D0}
 .mk-trail .mp-cover p{color:#D2DDDC}
 .mk-trail .mp-meta dt{color:#A2B6B4}
