@@ -1121,7 +1121,7 @@ function leadsUsed_() { return Number(PropertiesService.getScriptProperties().ge
 function leadsBump_() { var p = PropertiesService.getScriptProperties(); p.setProperty(leadsDay_(), String(leadsUsed_() + 1)); }
 
 function leadsStatus_() {
-  return { ok: true, hasKey: !!leadsKey_(), usedToday: leadsUsed_(), cap: LEADS_DAILY_CAP, stages: LEADS_STAGES };
+  return { ok: true, hasKey: !!leadsKey_(), free: !leadsKey_(), usedToday: leadsUsed_(), cap: LEADS_DAILY_CAP, stages: LEADS_STAGES };
 }
 
 function leadsSetKey_(key) {
@@ -1158,7 +1158,7 @@ function leadsCall_(key, body, mask) {
 
 function leadsFind_(d) {
   var key = leadsKey_();
-  if (!key) return { ok: false, error: 'nokey' };
+  if (!key) return leadsFindFree_(d);
   var q = clip_(d.q, 80), city = clip_(d.city || 'Dubuque, IA', 40);
   if (!q) return { ok: false, error: 'empty' };
   var text = q + ' in ' + city;
@@ -1224,7 +1224,7 @@ function leadsCheckSites_(leads, deep) {
   var toCheck = [];
   leads.forEach(function (l) {
     var host = hostOf_(l.website);
-    if (!l.website) { l.kind = 'none'; l.issues.push('No website on Google'); return; }
+    if (!l.website) { l.kind = 'none'; l.issues.push(l.source === 'free' ? (l.unverified ? 'No website listed on the map (search check was busy, double check)' : 'No website found on the map or in a web search') : 'No website on Google'); return; }
     if (LEADS_SOCIAL.test(host)) { l.kind = 'social'; l.issues.push('Only a ' + leadsSiteName_(host) + ' page, no real website'); return; }
     if (/\/(locations?|stores?|restaurants?)\//i.test(l.website) || /\/location\b/i.test(l.website)) { l.kind = 'chain'; l.issues.push('Chain or franchise location'); return; }
     if (LEADS_FREE.test(host)) { l.kind = 'weak'; l.issues.push('Free builder site (' + host + ')'); }
@@ -1353,4 +1353,183 @@ function leadsDemo_(l) {
   if (!row) { leadsSave_(l); row = leadsRow_(sh, clip_(l.id, 200)); }
   if (row) { sh.getRange(row, 13).setValue(r.slug); if (String(sh.getRange(row, 11).getValue() || 'New') === 'New') sh.getRange(row, 11).setValue('Demo built'); }
   return { ok: true, slug: r.slug, scanned: scanned, items: demo.items.length, photos: demo.photos.length };
+}
+
+
+/* ---------- Free lead source (no key, no card) ----------
+   Business list: OpenStreetMap through public Overpass servers (cached 24 h).
+   Website check: OSM website tag, then a free DuckDuckGo search for the
+   business name. A lead is only called "no website" when neither finds one. */
+var OSM_BBOX = '42.43,-90.82,42.60,-90.58';
+var OSM_TOWNS = { 'east dubuque': '42.47,-90.66,42.51,-90.61', 'galena': '42.39,-90.46,42.44,-90.40', 'asbury': '42.50,-90.79,42.53,-90.73',
+  'peosta': '42.43,-90.87,42.47,-90.82', 'dyersville': '42.46,-91.15,42.50,-91.10', 'epworth': '42.43,-90.95,42.46,-90.91', 'cascade': '42.28,-91.03,42.31,-90.99',
+  'platteville': '42.71,-90.51,42.76,-90.44', 'bellevue': '42.24,-90.44,42.28,-90.40', 'farley': '42.43,-91.02,42.45,-90.99', 'maquoketa': '42.05,-90.69,42.09,-90.64' };
+var OSM_CATS = [
+  [/bar|pub|tavern|tap|saloon|lounge/, 'nwr["amenity"~"^(bar|pub|biergarten|nightclub)$"]'],
+  [/brewer|winer|distill/, 'nwr["craft"~"^(brewery|winery|distillery)$"];nwr["industrial"="brewery"];nwr["shop"="wine"]'],
+  [/pizza/, 'nwr["cuisine"~"pizza"]'],
+  [/mexican|taco/, 'nwr["cuisine"~"mexican|tex-mex|taco"]'],
+  [/asian|chinese|thai|sushi|japanese/, 'nwr["cuisine"~"chinese|thai|japanese|sushi|asian|vietnamese|korean"]'],
+  [/bbq|barbecue|smokehouse/, 'nwr["cuisine"~"bbq|barbecue"]'],
+  [/coffee|cafe/, 'nwr["amenity"="cafe"];nwr["shop"="coffee"]'],
+  [/baker|donut/, 'nwr["shop"~"^(bakery|pastry|confectionery)$"];nwr["cuisine"~"donut"]'],
+  [/food truck/, 'nwr["amenity"="fast_food"]["food_truck"="yes"]'],
+  [/restaurant|diner|grill|eater|food/, 'nwr["amenity"~"^(restaurant|fast_food)$"]'],
+  [/car wash/, 'nwr["amenity"="car_wash"]'],
+  [/auto body/, 'nwr["shop"="car_repair"]["service"~"body"];nwr["craft"="car_painter"]'],
+  [/auto|mechanic|tire|oil/, 'nwr["shop"~"^(car_repair|tyres|car_parts)$"]'],
+  [/plumb/, 'nwr["craft"="plumber"]'],
+  [/electric/, 'nwr["craft"="electrician"]'],
+  [/roof/, 'nwr["craft"="roofer"]'],
+  [/hvac|heating/, 'nwr["craft"~"^(hvac|heating_engineer)$"]'],
+  [/contractor|construction|remodel|builder/, 'nwr["craft"~"^(builder|carpenter|tiler|plasterer|stonemason|window_construction|floorer)$"];nwr["office"="construction_company"]'],
+  [/landscap|lawn|tree/, 'nwr["craft"~"^(gardener|landscaper)$"];nwr["shop"="garden_centre"]'],
+  [/clean/, 'nwr["shop"~"^(dry_cleaning|laundry)$"];nwr["craft"="cleaning"]'],
+  [/paint/, 'nwr["craft"="painter"]'],
+  [/concrete|paving|asphalt/, 'nwr["craft"~"^(stonemason|paver)$"]'],
+  [/handym/, 'nwr["craft"="handyman"]'],
+  [/pest/, 'nwr["craft"="pest_control"]'],
+  [/tow/, 'nwr["shop"="car_repair"]["service:vehicle:towing"="yes"]'],
+  [/mover/, 'nwr["office"="moving_company"]'],
+  [/barber/, 'nwr["shop"="hairdresser"]["hairdresser"="barber"];nwr["shop"="hairdresser"]["name"~"[Bb]arber"]'],
+  [/hair|salon/, 'nwr["shop"="hairdresser"]'],
+  [/nail/, 'nwr["shop"="beauty"]["beauty"~"nails"];nwr["shop"="beauty"]["name"~"[Nn]ail"]'],
+  [/tattoo/, 'nwr["shop"="tattoo"]'],
+  [/spa|massage/, 'nwr["shop"~"^(massage|beauty)$"];nwr["leisure"="spa"]'],
+  [/gym|fitness/, 'nwr["leisure"~"^(fitness_centre|sports_centre)$"]'],
+  [/dentist/, 'nwr["amenity"="dentist"]'],
+  [/chiropract/, 'nwr["healthcare"="chiropractor"];nwr["healthcare:speciality"="chiropractic"]'],
+  [/veterinar/, 'nwr["amenity"="veterinary"]'],
+  [/boutique|cloth/, 'nwr["shop"~"^(clothes|boutique|shoes|fashion_accessories)$"]'],
+  [/florist/, 'nwr["shop"="florist"]'],
+  [/gift|antique/, 'nwr["shop"~"^(gift|antiques|second_hand|craft)$"]'],
+  [/real estate/, 'nwr["office"="estate_agent"]'],
+  [/insurance/, 'nwr["office"="insurance"]'],
+  [/lawyer/, 'nwr["office"="lawyer"]'],
+  [/daycare/, 'nwr["amenity"~"^(childcare|kindergarten)$"]'],
+  [/church/, 'nwr["amenity"="place_of_worship"]'],
+  [/photograph/, 'nwr["craft"="photographer"];nwr["shop"="photo"]'],
+  [/pet groom/, 'nwr["shop"="pet_grooming"]']
+];
+var OSM_SERVERS = ['https://maps.mail.ru/osm/tools/overpass/api/interpreter', 'https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
+var DIRECTORY_HOSTS = /(^|\.)(facebook\.com|instagram\.com|yelp\.com|tripadvisor\.com|mapquest\.com|yellowpages\.com|bbb\.org|google\.com|apple\.com|foursquare\.com|restaurantji\.com|menupix\.com|allmenus\.com|zomato\.com|opentable\.com|doordash\.com|grubhub\.com|ubereats\.com|toasttab\.com|linkedin\.com|wikipedia\.org|nextdoor\.com|angi\.com|homeadvisor\.com|thumbtack\.com|houzz\.com|manta\.com|chamberofcommerce\.com|dexknows\.com|superpages\.com|loc8nearme\.com|wanderlog\.com|traveldubuque\.com|dubuquechamber\.com|tiktok\.com|x\.com|twitter\.com|youtube\.com|pinterest\.com|indeed\.com|glassdoor\.com|zillow\.com|realtor\.com|booksy\.com|vagaro\.com|styleseat\.com|groupon\.com|untappd\.com|menuweb\.menu|sirved\.com|beerandbrewing\.com|duckduckgo\.com|bing\.com|kwwl\.com|telegraphherald\.com|thonline\.com|patch\.com|cityofdubuque\.org|birdeye\.com|waze\.com|roadtrippers\.com|top-rated\.online|nicelocal\.com|cybo\.com|opendi\.us|n49\.com|brownbook\.net|hotfrog\.com|merchantcircle\.com|citysearch\.com|local\.com|showmelocal\.com|usarestaurants\.info|restaurantguru\.com|menuwithprice\.com|postmates\.com|seamless\.com|slicelife\.com|beyondmenu\.com|menufy\.com)$/i;
+
+function leadsFindFree_(d) {
+  var raw = clip_(d.q, 80).toLowerCase(), cityIn = clip_(d.city || '', 40).toLowerCase();
+  if (!raw) return { ok: false, error: 'empty' };
+  var town = cityIn.split(',')[0].trim();
+  var bbox = OSM_TOWNS[town] || OSM_BBOX;
+  var cityLabel = OSM_TOWNS[town] ? d.city : 'Dubuque, IA';
+  var sel = '';
+  for (var i = 0; i < OSM_CATS.length; i++) if (OSM_CATS[i][0].test(raw)) { sel = OSM_CATS[i][1]; break; }
+  if (!sel) { var safeName = raw.replace(/[^a-z0-9 &'-]/g, '').trim(); if (!safeName) return { ok: false, error: 'empty' }; sel = 'nwr["name"~"' + safeName + '",i]'; }
+  var parts = sel.split(';').map(function (x) { return x.trim() + '["name"](' + bbox + ');'; }).join('');
+  var q = '[out:json][timeout:45];(' + parts + ');out tags center 200;';
+  var cache = CacheService.getScriptCache();
+  var ck = 'osm_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, q)).slice(0, 22);
+  var els = null, hit = cache.get(ck);
+  if (hit) { try { els = JSON.parse(hit); } catch (e) {} }
+  if (!els) {
+    for (var s = 0; s < OSM_SERVERS.length && !els; s++) {
+      try {
+        var r = UrlFetchApp.fetch(OSM_SERVERS[s], { method: 'post', payload: { data: q }, muteHttpExceptions: true,
+          headers: { 'User-Agent': 'RiverbendLeads/1.0 (riverbendwebco.com)' } });
+        var t = r.getContentText();
+        if (r.getResponseCode() === 200 && /^\s*\{/.test(t)) els = (JSON.parse(t).elements || []).map(function (e) { return { id: e.type + '/' + e.id, tags: e.tags || {}, lat: e.lat || (e.center || {}).lat, lon: e.lon || (e.center || {}).lon }; });
+      } catch (e) {}
+    }
+    if (!els) return { ok: false, error: 'busy', message: 'The free map service is busy right now. Try again in a minute.' };
+    var json = JSON.stringify(els);
+    if (json.length < 95000) cache.put(ck, json, 24 * 60 * 60);
+  }
+  var seen = {};
+  var leads = els.filter(function (e) {
+    var n = String(e.tags.name || '').toLowerCase();
+    if (!n || seen[n]) return false; seen[n] = 1;
+    return !e.tags['disused:amenity'] && !e.tags['disused:shop'];
+  }).slice(0, 60).map(function (e) {
+    var tg = e.tags;
+    var addr = [tg['addr:housenumber'], tg['addr:street']].filter(String).join(' ');
+    var web = tg.website || tg['contact:website'] || tg.url || '';
+    if (web && !/^https?:\/\//i.test(web)) web = 'https://' + web;
+    var fb = tg['contact:facebook'] || tg.facebook || '';
+    var city = tg['addr:city'] ? tg['addr:city'] + ', ' + (tg['addr:state'] || 'IA') : cityLabel;
+    var type = humanTag_(tg);
+    return { id: 'osm:' + e.id, name: clip_(tg.name, 120), type: type, ptype: tg.amenity || tg.shop || tg.craft || tg.office || '',
+      phone: fmtPhone_(tg.phone || tg['contact:phone'] || ''), website: clip_(web || fb, 300), address: clip_(addr, 160), city: city,
+      full: [addr, city].filter(String).join(', '), rating: 0, reviews: 0, brand: !!(tg.brand || tg['brand:wikidata']),
+      maps: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(tg.name + ' ' + (addr || '') + ' ' + city),
+      hours: [], kind: 'site', issues: [], source: 'free' };
+  });
+  leadsVerifyFree_(leads);
+  leadsCheckSites_(leads, d.check !== false);
+  leads.forEach(function (l) {
+    if (l.brand) { l.kind = 'chain'; l.issues = ['Chain or franchise location']; }
+    if (l.found) l.issues.unshift('Website found by search: ' + hostOf_(l.website));
+  });
+  var saved = {};
+  leadsSaved_().forEach(function (x) { saved[x.id] = x.stage || 'New'; });
+  leads.forEach(function (l) { if (saved[l.id]) l.saved = saved[l.id]; });
+  var rank = { none: 0, social: 1, weak: 2, site: 3, chain: 4 };
+  leads.sort(function (a, b) { return (rank[a.kind] - rank[b.kind]) || a.name.localeCompare(b.name); });
+  var counts = { total: leads.length, none: 0, social: 0, weak: 0, site: 0, chain: 0 };
+  leads.forEach(function (l) { counts[l.kind]++; });
+  return { ok: true, free: true, query: raw + ' in ' + cityLabel, leads: leads, counts: counts };
+}
+
+function humanTag_(tg) {
+  var v = tg.cuisine && (tg.amenity === 'restaurant' || tg.amenity === 'fast_food') ? String(tg.cuisine).split(';')[0] + ' restaurant' : (tg.amenity || tg.shop || tg.craft || tg.office || tg.leisure || tg.healthcare || '');
+  v = String(v).replace(/_/g, ' ');
+  return v ? v.charAt(0).toUpperCase() + v.slice(1) : '';
+}
+
+/* For leads with no website on the map, search the web for one. */
+function leadsVerifyFree_(leads) {
+  var need = leads.filter(function (l) { return !l.website; });
+  var cache = CacheService.getScriptCache();
+  var todo = [];
+  need.forEach(function (l) {
+    var c = cache.get('ws_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20));
+    if (c === null) todo.push(l); else if (c) { l.website = c; l.found = true; }
+    else l.checked = true;
+  });
+  for (var i = 0; i < todo.length; i += 15) {
+    var batch = todo.slice(i, i + 15);
+    var res = [];
+    try {
+      res = UrlFetchApp.fetchAll(batch.map(function (l) {
+        return { url: 'https://html.duckduckgo.com/html/?q=' + encodeURIComponent('"' + l.name + '" ' + l.city.split(',')[0]), muteHttpExceptions: true,
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' } };
+      }));
+    } catch (e) { res = []; }
+    batch.forEach(function (l, j) {
+      var r = res[j];
+      if (!r || r.getResponseCode() !== 200) return;
+      var html = r.getContentText();
+      if (!/result__a/.test(html)) return;
+      l.checked = true;
+      var site = siteFromResults_(html, l.name);
+      if (site) { l.website = site; l.found = true; }
+      var key = 'ws_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20);
+      cache.put(key, site || '', 7 * 24 * 60 * 60);
+    });
+  }
+  leads.forEach(function (l) { if (!l.website && !l.checked) l.unverified = true; });
+}
+
+function siteFromResults_(html, name) {
+  var words = String(name).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(function (w) { return w.length > 2 && !/^(the|and|bar|grill|restaurant|inc|llc|company|shop|dubuque|of)$/.test(w); });
+  var re = /class="result__a"[^>]*href="([^"]+)"/g, m, n = 0;
+  while ((m = re.exec(html)) && n < 8) {
+    n++;
+    var u = m[1];
+    var g = u.match(/uddg=([^&]+)/);
+    if (g) u = decodeURIComponent(g[1]);
+    if (!/^https?:\/\//i.test(u)) continue;
+    var host = hostOf_(u);
+    if (!host || DIRECTORY_HOSTS.test(host) || LEADS_SOCIAL.test(host)) continue;
+    var hostWord = host.replace(/\.(com|net|org|biz|us|info|co|site|online|io|bar|pub|restaurant)$/i, '').replace(/[^a-z0-9]/g, '');
+    if (words.some(function (w) { return hostWord.indexOf(w) >= 0; })) return (u.match(/^https?:\/\/[^\/]+/i) || [u])[0] + '/';
+  }
+  return '';
 }

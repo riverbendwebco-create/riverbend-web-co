@@ -26,6 +26,7 @@ Key reminders:
 
 ## riverbendwebcoleads (/leads)
 - Chat-only lead finder at riverbendwebco.com/leads. Same login as the Studio. Page: `leads/index.html`; backend: the `leads_*` actions at the bottom of `apps-script/backend.js`.
-- Data comes from Google Places API (New). The key is stored in Script Properties as PLACES_KEY (pasted once in the app, never sent to the browser). Searches are cached 6 hours and capped at 300 Google calls a day.
+- Default data is FREE (the owner does not want to pay): OpenStreetMap via public Overpass servers (cached 24 h) plus a DuckDuckGo search to find websites the map is missing (cached 7 days). Do not add paid services or ask for a card.
+- Optional: if Script Property PLACES_KEY is ever set, Google Places is used instead (cached 6 h, capped at 300 calls a day).
 - Saved leads live in the "Prospects" tab of the Riverbend Leads sheet. "Build demo" creates a Studio demo from the lead's Google info (and scans their site if they have a real one).
 - Lead labels must stay honest: "No website on Google", "Only a Facebook page", weak-site reasons from an actual fetch. Never claim a business has no website without that check.

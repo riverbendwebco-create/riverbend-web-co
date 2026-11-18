@@ -217,7 +217,7 @@ const STARTERS=['Bars with no website','Restaurants with bad websites','Auto rep
 
 function hello(){
   bot([el('p',null,el('b',null,'Hey, I find local businesses that need you.')),
-    el('p',null,'Tell me what kind of business to look for. I check Google for every one, then sort them so the best leads come first: no website, only a Facebook page, then weak or outdated sites.'),
+    el('p',null,'Tell me what kind of business to look for. I pull every one I can find around Dubuque, check whether each has a real website, then put the best leads first: no website, only a Facebook page, then weak or outdated sites. Free, no setup.'),
     sugs(STARTERS)]);
 }
 
@@ -293,9 +293,8 @@ async function send(text){
   if(it.type==='help') return help();
   if(it.type==='unclear') return bot([el('p',null,'Tell me a kind of business, like bars, pizza, roofers or hair salons.'),sugs(STARTERS)]);
   if(it.type==='saved') return showSaved(it.stage);
-  if(!status.hasKey) return keySetup();
   busy=true;
-  const w=typing('Searching Google for '+it.q+(it.city&&!/^Dubuque/.test(it.city)?' in '+it.city:' in Dubuque')+' and checking their websites');
+  const w=typing('Searching for '+it.q+(it.city&&!/^Dubuque/.test(it.city)?' in '+it.city:' in Dubuque')+' and checking their websites');
   const r=await api({action:'leads_find',q:it.q,city:it.city||undefined});
   w.remove(); busy=false;
   if(!r.ok){
@@ -310,7 +309,7 @@ function help(){
     el('ul',{class:'issues'},
       el('li',null,'Find businesses: "bars", "pizza places", "roofers in Asbury", "salons in Galena".'),
       el('li',null,'Filter: add "with no website" or "with bad websites".'),
-      el('li',null,'Every lead has Call, Map, Save and Build demo. Build demo makes a Studio demo from their real Google info.'),
+      el('li',null,'Every lead has Call, Map, Save and Build demo. Build demo makes a Studio demo from their real info.'),
       el('li',null,'Say "saved leads" to see your list, set stages (Contacted, Pitched, Won) and add notes.')),
     sugs(STARTERS)]);
 }
@@ -326,7 +325,7 @@ function showResults(r,it){
   const where=it.city&&!/^Dubuque/.test(it.city)?it.city.split(',')[0]:'Dubuque';
   const head=c.total
     ? 'Found '+c.total+' '+it.q+' around '+where+'. '+(c.none+c.social)+' have no real website and '+c.weak+' have a weak one.'
-    : 'Google did not find any '+it.q+' around '+where+'. Try a different word.';
+    : 'I could not find any '+it.q+' around '+where+'. Try a different word.';
   const kids=[el('p',null,el('b',null,head))];
   if(c.total) kids.push(el('div',{class:'stats'},
     el('div',{class:'stat hot'},el('b',null,String(c.none)),el('span',null,'No website')),
@@ -341,7 +340,7 @@ function showResults(r,it){
     more.addEventListener('click',()=>{ rest.forEach(l=>list.appendChild(leadCard(l))); more.remove(); });
     kids.push(more);
   }
-  kids.push(el('p',{class:'note',style:'margin-top:10px'},'Website checks come from Google and a quick look at each site. Open it yourself before you pitch.'));
+  kids.push(el('p',{class:'note',style:'margin-top:10px'},r.free?'Businesses come from free public map data, so a few may be missing. Website checks come from the map, a web search and a quick look at each site. Open it yourself before you pitch.':'Website checks come from Google and a quick look at each site. Open it yourself before you pitch.'));
   bot(kids,true);
 }
 
@@ -364,7 +363,7 @@ function leadCard(l){
       el('div',null,el('h3',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),
       el('span',{class:'tag '+l.kind},TAGS[l.kind]||'')),
     el('div',{class:'meta'},
-      l.rating?el('span',null,l.rating.toFixed(1)+' stars, '+l.reviews+' Google reviews'):el('span',null,'No Google rating yet'),
+      l.rating?el('span',null,l.rating.toFixed(1)+' stars, '+l.reviews+' Google reviews'):null,
       l.phone?el('span',null,l.phone):null),
     l.issues&&l.issues.length&&l.kind!=='site'?el('ul',{class:'issues'},l.issues.map(i=>el('li',null,i))):null,
     el('div',{class:'acts'},
@@ -377,14 +376,14 @@ function leadCard(l){
 
 async function buildDemo(l,btn,out){
   btn.disabled=true; btn.textContent='Building...';
-  out.replaceChildren(el('p',{class:'note',style:'margin:10px 0 0'},l.website&&l.kind!=='social'?'Reading their website and Google info. About 20 seconds.':'Using their Google info. A few seconds.'));
+  out.replaceChildren(el('p',{class:'note',style:'margin:10px 0 0'},l.website&&l.kind!=='social'?'Reading their website. About 20 seconds.':'Using their Google info. A few seconds.'));
   const r=await api({action:'leads_demo',lead:l});
   btn.disabled=false; btn.textContent='Build demo';
   if(!r.ok){ out.replaceChildren(el('p',{class:'msg err'},'Could not build the demo. Try again.')); return; }
   l.saved=l.saved||'Demo built';
   const got=[r.items?r.items+' menu items':'',r.photos?r.photos+' photos':''].filter(Boolean).join(' and ');
   out.replaceChildren(el('div',{style:'margin-top:10px;padding:10px 12px;border:1px solid #BBF7D0;background:#F0FDF4;border-radius:8px;font-size:.88rem'},
-    el('b',null,'Demo ready. '),got?'Pulled '+got+' from their site. ':'Built from their Google listing. ',
+    el('b',null,'Demo ready. '),got?'Pulled '+got+' from their site. ':'Built from their listing. ',
     'Add photos and a menu in the Studio before you pitch.',
     el('div',{class:'acts'},
       el('a',{class:'btn sm primary',href:'/demo/?d='+encodeURIComponent(r.slug),target:'_blank',rel:'noopener'},'Open demo'),
@@ -439,7 +438,7 @@ async function start(){
   w.remove();
   if(!s.ok){ if(!token) return; bot(el('p',null,'Could not reach the server. Refresh to try again.')); return; }
   status=Object.assign(status,s);
-  if(!status.hasKey) keySetup(); else hello();
+  hello();
   $('#q').focus();
 }
 if(token) start(); else $('#pw').focus();
