@@ -365,20 +365,46 @@ function studio_(d) {
   return { ok: false, error: 'unknown' };
 }
 
+/* Studio password. Only a salted SHA-256 hash lives here (this file is public).
+   To change it: pick a long random password, set STUDIO_PW_HASH to
+   sha256(STUDIO_PW_SALT + password) in hex, and bump STUDIO_PW_GEN so
+   everyone signed in with the old password is signed out.
+   Leave STUDIO_PW_HASH empty to fall back to Script Properties > ADMIN_PASSWORD. */
+var STUDIO_PW_SALT = '8c8becc04d71b9c8c3aaf49a3aa07ecf';
+var STUDIO_PW_HASH = '8027e918aef307a79779a317b7fbd7fbde841ee26f111b783d51ec8557ba77e5';
+var STUDIO_PW_GEN = '2';
+
+function sha256Hex_(v) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, v, Utilities.Charset.UTF_8)
+    .map(function (b) { return ('0' + (b & 255).toString(16)).slice(-2); }).join('');
+}
+function sameHex_(a, b) {
+  if (a.length !== b.length) return false;
+  var diff = 0;
+  for (var i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 function login_(pw) {
   var cache = CacheService.getScriptCache();
   var fails = Number(cache.get('rb_fail') || 0);
   if (fails >= 8) return { ok: false, error: 'locked' };
-  var real = PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
-  if (!real) { ensurePassword_(); return { ok: false, error: 'nopassword' }; }
-  if (!pw || !sameHash_(pw, real)) {
+  var ok = false;
+  if (STUDIO_PW_HASH) {
+    ok = !!pw && sameHex_(sha256Hex_(STUDIO_PW_SALT + pw), STUDIO_PW_HASH);
+  } else {
+    var real = PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
+    if (!real) { ensurePassword_(); return { ok: false, error: 'nopassword' }; }
+    ok = !!pw && sameHash_(pw, real);
+  }
+  if (!ok) {
     cache.put('rb_fail', String(fails + 1), 900); // lock for 15 min after 8 misses
     Utilities.sleep(600);
     return { ok: false, error: 'badpassword' };
   }
   cache.remove('rb_fail');
   var token = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
-  cache.put('tok_' + token, '1', TOKEN_TTL);
+  cache.put('tok_' + token, STUDIO_PW_GEN, TOKEN_TTL);
   return { ok: true, token: token };
 }
 
@@ -393,8 +419,8 @@ function sameHash_(a, b) {
 function authed_(token) {
   if (!token || !/^[a-f0-9]{64}$/.test(String(token))) return false;
   var cache = CacheService.getScriptCache();
-  if (!cache.get('tok_' + token)) return false;
-  cache.put('tok_' + token, '1', TOKEN_TTL); // sliding session
+  if (cache.get('tok_' + token) !== STUDIO_PW_GEN) return false; // old sessions end when the password changes
+  cache.put('tok_' + token, STUDIO_PW_GEN, TOKEN_TTL); // sliding session
   return true;
 }
 
