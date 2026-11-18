@@ -294,7 +294,7 @@ async function send(text){
   if(it.type==='unclear') return bot([el('p',null,'Tell me a kind of business, like bars, pizza, roofers or hair salons.'),sugs(STARTERS)]);
   if(it.type==='saved') return showSaved(it.stage);
   busy=true;
-  const w=typing('Searching for '+it.q+(it.city&&!/^Dubuque/.test(it.city)?' in '+it.city:' in Dubuque')+' and checking their websites');
+  const w=typing('Searching for '+it.q+(it.city&&!/^Dubuque/.test(it.city)?' in '+it.city:' in Dubuque')+' and checking their websites. A new search can take up to a minute');
   const r=await api({action:'leads_find',q:it.q,city:it.city||undefined});
   w.remove(); busy=false;
   if(!r.ok){

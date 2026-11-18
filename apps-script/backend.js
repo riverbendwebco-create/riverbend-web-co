@@ -368,7 +368,6 @@ function studio_(d) {
     case 'leads_save': return leadsSave_(d.lead || {});
     case 'leads_update': return leadsUpdate_(String(d.id || ''), d);
     case 'leads_demo': return leadsDemo_(d.lead || {});
-    case 'leads_probe': return leadsProbe_();
   }
   return { ok: false, error: 'unknown' };
 }
@@ -1229,22 +1228,23 @@ function leadsCheckSites_(leads, deep) {
     if (LEADS_SOCIAL.test(host)) { l.kind = 'social'; l.issues.push('Only a ' + leadsSiteName_(host) + ' page, no real website'); return; }
     if (/\/(locations?|stores?|restaurants?)\//i.test(l.website) || /\/location\b/i.test(l.website)) { l.kind = 'chain'; l.issues.push('Chain or franchise location'); return; }
     if (LEADS_FREE.test(host)) { l.kind = 'weak'; l.issues.push('Free builder site (' + host + ')'); }
-    if (/^http:\/\//i.test(l.website)) { l.issues.push('No secure https link'); }
+    if (/^http:\/\//i.test(l.website)) l.httpOnly = true;
     toCheck.push(l);
   });
   if (deep && toCheck.length) {
     var batch = toCheck.slice(0, 30);
     var reqs = batch.map(function (l) {
-      return { url: l.website, muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: false,
+      return { url: l.httpOnly ? l.website.replace(/^http:/i, 'https:') : l.website, muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: true,
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RiverbendLeads/1.0; +https://riverbendwebco.com)' } };
     });
     var res = [];
-    try { res = UrlFetchApp.fetchAll(reqs); } catch (e) { res = []; }
+    try { res = UrlFetchApp.fetchAll(reqs); } catch (e) { res = leadsFetchEach_(reqs); }
     batch.forEach(function (l, i) {
       var r = res[i];
-      if (!r) return;
+      if (!r) { if (l.httpOnly) l.issues.push('No secure https version'); return; }
       var code = r.getResponseCode();
       if (code >= 400) { l.issues.push('Website is down or broken (error ' + code + ')'); return; }
+      if (l.httpOnly) l.website = l.website.replace(/^http:/i, 'https:');
       var html = '';
       try { html = r.getContentText().slice(0, 400000); } catch (e) { return; }
       if (!/<meta[^>]+name=["']?viewport/i.test(html)) l.issues.push('Not built for phones');
@@ -1484,67 +1484,66 @@ function humanTag_(tg) {
   return v ? v.charAt(0).toUpperCase() + v.slice(1) : '';
 }
 
-/* For leads with no website on the map, search the web for one. */
+/* For leads with no website on the map, search the web for one.
+   Small batches so the free search does not rate-limit us. */
 function leadsVerifyFree_(leads) {
-  var need = leads.filter(function (l) { return !l.website; });
+  var need = leads.filter(function (l) { return !l.website && !l.brand; });
   var cache = CacheService.getScriptCache();
+  var keyOf = function (l) { return 'ws_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20); };
   var todo = [];
   need.forEach(function (l) {
-    var c = cache.get('ws_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20));
-    if (c === null) todo.push(l); else if (c) { l.website = c; l.found = true; }
-    else l.checked = true;
+    var c = cache.get(keyOf(l));
+    if (c === null) todo.push(l); else { l.checked = true; if (c) { l.website = c; l.found = true; } }
   });
-  for (var i = 0; i < todo.length; i += 15) {
-    var batch = todo.slice(i, i + 15);
-    var res = [];
-    try {
-      res = UrlFetchApp.fetchAll(batch.map(function (l) {
-        return { url: 'https://html.duckduckgo.com/html/?q=' + encodeURIComponent('"' + l.name + '" ' + l.city.split(',')[0]), muteHttpExceptions: true,
-          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' } };
-      }));
-    } catch (e) { res = []; }
+  var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
+  var start = Date.now(), ends = ['https://lite.duckduckgo.com/lite/?q=', 'https://html.duckduckgo.com/html/?q='], e = 0, misses = 0;
+  for (var i = 0; i < todo.length && Date.now() - start < 45000 && misses < 3; i += 4) {
+    var batch = todo.slice(i, i + 4);
+    var reqs = batch.map(function (l) {
+      return { url: ends[e % 2] + encodeURIComponent('"' + l.name + '" ' + l.city.split(',')[0]), muteHttpExceptions: true, followRedirects: true,
+        headers: { 'User-Agent': ua, 'Accept-Language': 'en-US,en' } };
+    });
+    e++;
+    var res;
+    try { res = UrlFetchApp.fetchAll(reqs); } catch (x) { res = leadsFetchEach_(reqs); }
+    var got = 0;
     batch.forEach(function (l, j) {
       var r = res[j];
       if (!r || r.getResponseCode() !== 200) return;
       var html = r.getContentText();
-      if (!/result__a/.test(html)) return;
+      if (/anomaly|challenge-form|captcha/i.test(html) || html.length < 2000) return;
+      got++;
       l.checked = true;
       var site = siteFromResults_(html, l.name);
       if (site) { l.website = site; l.found = true; }
-      var key = 'ws_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20);
-      cache.put(key, site || '', 7 * 24 * 60 * 60);
+      cache.put(keyOf(l), site || '', 7 * 24 * 60 * 60);
     });
+    if (!got) { misses++; Utilities.sleep(1500); } else { misses = 0; Utilities.sleep(250); }
   }
-  leads.forEach(function (l) { if (!l.website && !l.checked) l.unverified = true; });
+  leads.forEach(function (l) { if (!l.website && !l.checked && !l.brand) l.unverified = true; });
 }
 
 function siteFromResults_(html, name) {
-  var words = String(name).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(function (w) { return w.length > 2 && !/^(the|and|bar|grill|restaurant|inc|llc|company|shop|dubuque|of)$/.test(w); });
-  var re = /class="result__a"[^>]*href="([^"]+)"/g, m, n = 0;
-  while ((m = re.exec(html)) && n < 8) {
-    n++;
-    var u = m[1];
-    var g = u.match(/uddg=([^&]+)/);
-    if (g) u = decodeURIComponent(g[1]);
+  var words = String(name).toLowerCase().replace(/&/g, ' and ').replace(/'s\b/g, 's').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+    .filter(function (w) { return w.length > 2 && !/^(the|and|bar|grill|restaurant|inc|llc|company|shop|dubuque|of|pub|tap|cafe|co)$/.test(w); });
+  if (!words.length) words = String(name).toLowerCase().replace(/[^a-z0-9]/g, '').length > 3 ? [String(name).toLowerCase().replace(/[^a-z0-9]/g, '')] : [];
+  var re = /href="([^"]+)"/g, m, seen = {}, n = 0;
+  while ((m = re.exec(html)) && n < 12) {
+    var u = m[1].replace(/&amp;/g, '&');
+    var g = u.match(/[?&]uddg=([^&]+)/);
+    if (g) { try { u = decodeURIComponent(g[1]); } catch (x) { continue; } }
     if (!/^https?:\/\//i.test(u)) continue;
     var host = hostOf_(u);
-    if (!host || DIRECTORY_HOSTS.test(host) || LEADS_SOCIAL.test(host)) continue;
-    var hostWord = host.replace(/\.(com|net|org|biz|us|info|co|site|online|io|bar|pub|restaurant)$/i, '').replace(/[^a-z0-9]/g, '');
-    if (words.some(function (w) { return hostWord.indexOf(w) >= 0; })) return (u.match(/^https?:\/\/[^\/]+/i) || [u])[0] + '/';
+    if (!host || seen[host] || /duckduckgo\.com|w3\.org/i.test(host)) continue;
+    seen[host] = 1; n++;
+    if (DIRECTORY_HOSTS.test(host) || LEADS_SOCIAL.test(host)) continue;
+    var hostWord = host.split('.').slice(0, -1).join('').replace(/[^a-z0-9]/g, '');
+    if (words.some(function (w) { return hostWord.indexOf(w) >= 0; })) return 'https://' + host + '/';
   }
   return '';
 }
 
-function leadsProbe_() {
-  var q = encodeURIComponent('"Mason Dixon Saloon" Dubuque');
-  var urls = ['https://lite.duckduckgo.com/lite/?q=' + q, 'https://html.duckduckgo.com/html/?q=' + q, 'https://www.bing.com/search?q=' + q + '&setlang=en',
-    'https://www.mojeek.com/search?q=' + q, 'https://search.brave.com/search?q=' + q, 'https://search.yahoo.com/search?p=' + q, 'https://www.startpage.com/do/search?q=' + q];
-  var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
-  var t0 = Date.now();
-  var res = UrlFetchApp.fetchAll(urls.map(function (u) { return { url: u, muteHttpExceptions: true, followRedirects: true, headers: { 'User-Agent': ua, 'Accept-Language': 'en-US,en' } }; }));
-  return { ok: true, ms: Date.now() - t0, out: urls.map(function (u, i) {
-    var h = res[i].getContentText();
-    var hosts = (h.match(/https?:\/\/(?:www\.)?[a-z0-9-]+\.[a-z.]{2,}/gi) || []).map(function (x) { return x.replace(/^https?:\/\/(www\.)?/i, ''); });
-    return { u: u.slice(0, 40), code: res[i].getResponseCode(), len: h.length, mason: /masondixondbq/i.test(h), hosts: hosts.filter(function (x, j) { return hosts.indexOf(x) === j; }).slice(0, 12) };
-  }) };
+
+function leadsFetchEach_(reqs) {
+  return reqs.map(function (q) { try { return UrlFetchApp.fetch(q.url, q); } catch (e) { return null; } });
 }
