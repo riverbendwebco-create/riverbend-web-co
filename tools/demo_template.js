@@ -407,7 +407,7 @@ function trailhead(C){
         heroTxt?h('p',null,heroTxt):null,
         h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',18,''),C.phoneTxt):null,
           C.items.length?h('button',{type:'button',class:'hl-btn hl-line-w',onclick:()=>scrollTo('w-menu')},'See the menu'):null)),
-      rv?h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),h('blockquote',null,'“'+short(rv.text,110)+'”'),h('figcaption',null,rv.name)):null),
+      rv?heroRevRotate(C):null),
     C.hero,'linear-gradient(0deg,rgba(20,26,21,.92) 0%,rgba(20,26,21,.55) 45%,rgba(20,26,21,.15) 100%)');
   const strip=h('div',{class:'hl-strip'},
     h('div',null,h('small',null,'Today'),h('b',null,C.today?(openNow?'Open '+C.today:'Closed today'):'Call for hours')),
@@ -503,6 +503,17 @@ function trailhead(C){
   if('IntersectionObserver' in window) setTimeout(()=>{ const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) stopBtns.forEach(b=>b.classList.toggle('on',b.dataset.id===e.target.id)); }),{rootMargin:'-45% 0px -50% 0px'}); links.forEach(([id])=>{ const el=document.getElementById(id); if(el) io.observe(el); }); },0);
   Object.keys(C.bg).forEach(k=>{ if(/^[a-z]{2,12}$/.test(k)&&okUrl(C.bg[k])) page.style.setProperty('--bg-'+k,cssUrl(C.bg[k])); });
   return page;
+}
+/* Trailhead hero review: cycles through every review with a fade and dots */
+function heroRevRotate(C){
+  const list=C.reviews.slice(0,8); let i=0, t=null;
+  const q=h('blockquote',null,'“'+short(list[0].text,120)+'”'), who=h('figcaption',null,list[0].name);
+  const show=k=>{ i=k; card.classList.add('fade'); setTimeout(()=>{ q.textContent='“'+short(list[i].text,120)+'”'; who.textContent=list[i].name; if(dots) dots.querySelectorAll('button').forEach((b,n)=>b.classList.toggle('on',n===i)); card.classList.remove('fade'); },350); };
+  const restart=()=>{ if(t) clearInterval(t); if(list.length>1) t=setInterval(()=>show((i+1)%list.length),6000); };
+  const dots=list.length>1?h('div',{class:'hl-dots'},list.map((r,k)=>h('button',{type:'button','aria-label':'Show review '+(k+1),class:k?null:'on',onclick:()=>{ show(k); restart(); }}))):null;
+  const card=h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),q,who,dots);
+  restart();
+  return card;
 }
 /* Hero review card: best review first, gently rotates through the top three */
 function heroReview(C){
