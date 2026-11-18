@@ -1243,7 +1243,14 @@ function leadsCheckSites_(leads, deep) {
       var r = res[i];
       if (!r) { if (l.httpOnly) l.issues.push('No secure https version'); return; }
       var code = r.getResponseCode();
-      if (code >= 400) { l.issues.push('Website is down or broken (error ' + code + ')'); return; }
+      if (code === 401 || code === 403 || code === 429 || code === 503) { l.blocked = true; return; }
+      if (code >= 400) {
+        var home = (l.website.match(/^https?:\/\/[^\/]+/i) || [''])[0] + '/';
+        var hr = null; if (home !== l.website) { try { hr = UrlFetchApp.fetch(home, { muteHttpExceptions: true, followRedirects: true }); } catch (x) {} }
+        if (hr && hr.getResponseCode() < 400) { l.website = home; return; }
+        if (hr && [401, 403, 429, 503].indexOf(hr.getResponseCode()) >= 0) { l.blocked = true; return; }
+        l.issues.push('Website is down or broken (error ' + code + ')'); return;
+      }
       if (l.httpOnly) l.website = l.website.replace(/^http:/i, 'https:');
       var html = '';
       try { html = r.getContentText().slice(0, 400000); } catch (e) { return; }
@@ -1413,7 +1420,7 @@ var OSM_CATS = [
   [/pet groom/, 'nwr["shop"="pet_grooming"]']
 ];
 var OSM_SERVERS = ['https://maps.mail.ru/osm/tools/overpass/api/interpreter', 'https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
-var DIRECTORY_HOSTS = /(^|\.)(facebook\.com|instagram\.com|yelp\.com|tripadvisor\.com|mapquest\.com|yellowpages\.com|bbb\.org|google\.com|apple\.com|foursquare\.com|restaurantji\.com|menupix\.com|allmenus\.com|zomato\.com|opentable\.com|doordash\.com|grubhub\.com|ubereats\.com|toasttab\.com|linkedin\.com|wikipedia\.org|nextdoor\.com|angi\.com|homeadvisor\.com|thumbtack\.com|houzz\.com|manta\.com|chamberofcommerce\.com|dexknows\.com|superpages\.com|loc8nearme\.com|wanderlog\.com|traveldubuque\.com|dubuquechamber\.com|tiktok\.com|x\.com|twitter\.com|youtube\.com|pinterest\.com|indeed\.com|glassdoor\.com|zillow\.com|realtor\.com|booksy\.com|vagaro\.com|styleseat\.com|groupon\.com|untappd\.com|menuweb\.menu|sirved\.com|beerandbrewing\.com|duckduckgo\.com|bing\.com|kwwl\.com|telegraphherald\.com|thonline\.com|patch\.com|cityofdubuque\.org|birdeye\.com|waze\.com|roadtrippers\.com|top-rated\.online|nicelocal\.com|cybo\.com|opendi\.us|n49\.com|brownbook\.net|hotfrog\.com|merchantcircle\.com|citysearch\.com|local\.com|showmelocal\.com|usarestaurants\.info|restaurantguru\.com|menuwithprice\.com|postmates\.com|seamless\.com|slicelife\.com|beyondmenu\.com|menufy\.com)$/i;
+var DIRECTORY_HOSTS = /(^|\.)(facebook\.com|instagram\.com|yelp\.com|tripadvisor\.com|mapquest\.com|yellowpages\.com|bbb\.org|google\.com|apple\.com|foursquare\.com|restaurantji\.com|menupix\.com|allmenus\.com|zomato\.com|opentable\.com|doordash\.com|grubhub\.com|ubereats\.com|toasttab\.com|linkedin\.com|wikipedia\.org|nextdoor\.com|angi\.com|homeadvisor\.com|thumbtack\.com|houzz\.com|manta\.com|chamberofcommerce\.com|dexknows\.com|superpages\.com|loc8nearme\.com|wanderlog\.com|traveldubuque\.com|dubuquechamber\.com|tiktok\.com|x\.com|twitter\.com|youtube\.com|pinterest\.com|indeed\.com|glassdoor\.com|zillow\.com|realtor\.com|booksy\.com|vagaro\.com|styleseat\.com|groupon\.com|untappd\.com|menuweb\.menu|sirved\.com|beerandbrewing\.com|duckduckgo\.com|bing\.com|kwwl\.com|telegraphherald\.com|thonline\.com|patch\.com|cityofdubuque\.org|birdeye\.com|waze\.com|roadtrippers\.com|top-rated\.online|nicelocal\.com|cybo\.com|opendi\.us|n49\.com|brownbook\.net|hotfrog\.com|merchantcircle\.com|citysearch\.com|local\.com|showmelocal\.com|usarestaurants\.info|restaurantguru\.com|menuwithprice\.com|wheree\.com|restaurantmenu\.us|menupages\.com|happycow\.net|mapcarta\.com|yably\.com|pubcrawlers\.com|barsandpubs\.us|postmates\.com|seamless\.com|slicelife\.com|beyondmenu\.com|menufy\.com)$/i;
 
 function leadsFindFree_(d) {
   var raw = clip_(d.q, 80).toLowerCase(), cityIn = clip_(d.city || '', 40).toLowerCase();
@@ -1466,7 +1473,7 @@ function leadsFindFree_(d) {
   leadsCheckSites_(leads, d.check !== false);
   leads.forEach(function (l) {
     if (l.brand) { l.kind = 'chain'; l.issues = ['Chain or franchise location']; }
-    if (l.found) l.issues.unshift('Website found by search: ' + hostOf_(l.website));
+    if (l.found) l.issues.unshift('Website found: ' + hostOf_(l.website));
   });
   var saved = {};
   leadsSaved_().forEach(function (x) { saved[x.id] = x.stage || 'New'; });
@@ -1489,14 +1496,20 @@ function humanTag_(tg) {
 function leadsVerifyFree_(leads) {
   var need = leads.filter(function (l) { return !l.website && !l.brand; });
   var cache = CacheService.getScriptCache();
-  var keyOf = function (l) { return 'ws_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20); };
+  var keyOf = function (l) { return 'ws2_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20); };
   var todo = [];
   need.forEach(function (l) {
     var c = cache.get(keyOf(l));
     if (c === null) todo.push(l); else { l.checked = true; if (c) { l.website = c; l.found = true; } }
   });
   var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
-  var start = Date.now(), ends = ['https://lite.duckduckgo.com/lite/?q=', 'https://html.duckduckgo.com/html/?q='], e = 0, misses = 0;
+  var start = Date.now();
+  todo = todo.filter(function (l) {
+    var site = guessDomain_(l.name, l.city, ua, start);
+    if (site) { l.website = site; l.found = true; l.checked = true; cache.put(keyOf(l), site, 7 * 24 * 60 * 60); return false; }
+    return true;
+  });
+  var ends = ['https://lite.duckduckgo.com/lite/?q=', 'https://html.duckduckgo.com/html/?q='], e = 0, misses = 0;
   for (var i = 0; i < todo.length && Date.now() - start < 45000 && misses < 3; i += 4) {
     var batch = todo.slice(i, i + 4);
     var reqs = batch.map(function (l) {
@@ -1546,4 +1559,32 @@ function siteFromResults_(html, name) {
 
 function leadsFetchEach_(reqs) {
   return reqs.map(function (q) { try { return UrlFetchApp.fetch(q.url, q); } catch (e) { return null; } });
+}
+
+/* Try the web addresses local businesses usually use: name.com, namedbq.com, namedubuque.com. */
+function guessDomain_(name, city, ua, start) {
+  if (Date.now() - start > 30000) return '';
+  var base = String(name).toLowerCase().replace(/&/g, 'and').replace(/'s\b/g, 's').replace(/[^a-z0-9 ]/g, '').trim();
+  var noThe = base.replace(/^the\s+/, '');
+  var slug = noThe.replace(/\s+/g, ''), slugThe = base.replace(/\s+/g, '');
+  if (slug.length < 4) return '';
+  var town = String(city || 'Dubuque').split(',')[0].toLowerCase().replace(/[^a-z]/g, '');
+  var short = town === 'dubuque' ? 'dbq' : '';
+  var cands = [slug + '.com', slugThe + '.com', short ? slug + short + '.com' : '', slug + town + '.com', short ? slugThe + short + '.com' : '', slugThe + town + '.com']
+    .filter(function (x, i, a) { return x && a.indexOf(x) === i; });
+  var words = noThe.split(/\s+/).filter(function (w) { return w.length > 2 && !/^(and|bar|grill|restaurant|pub|tap|cafe|inc|llc|company)$/.test(w); });
+  if (!words.length) words = [slug];
+  for (var i = 0; i < cands.length; i++) {
+    var r = null;
+    try { r = UrlFetchApp.fetch('https://' + cands[i] + '/', { muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: false, headers: { 'User-Agent': ua } }); } catch (x) { continue; }
+    var code = r.getResponseCode();
+    if (code === 403 || code === 401) return 'https://' + cands[i] + '/';
+    if (code >= 400) continue;
+    var html = String(r.getContentText()).slice(0, 200000).toLowerCase();
+    if (/domain (is )?for sale|buy this domain|parked free|this domain may be for sale|godaddy\.com\/domainsearch|sedoparking|hugedomains|dan\.com/.test(html)) continue;
+    var title = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || '';
+    var hay = title + ' ' + html.slice(0, 60000);
+    if (words.every(function (w) { return hay.indexOf(w) >= 0; }) && (!town || hay.indexOf(town) >= 0 || hay.indexOf('iowa') >= 0 || hay.indexOf(', ia') >= 0 || hay.indexOf('563') >= 0)) return 'https://' + cands[i] + '/';
+  }
+  return '';
 }
