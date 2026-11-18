@@ -170,6 +170,37 @@ html.os-lock,html.os-lock body{overflow:hidden}
 .os-foot-b{display:flex;justify-content:space-between;margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.06);color:var(--mut);font-size:.82rem}
 .os-foot-b a{color:var(--mut);text-decoration:none}
 @media (max-width:860px){.os-info{grid-template-columns:1fr}.os-map{height:340px}.os-map{height:auto;display:flex;flex-direction:column}.os-map iframe{position:relative;height:300px}.os-map-card{position:relative;right:auto;top:auto;max-width:none;border-radius:0;border:0;border-top:1px solid rgba(201,163,91,.3)}.os-foot-in{flex-direction:column;align-items:flex-start}.os-foot-nav{gap:18px;flex-wrap:wrap}}
+
+/* Osteria: light porcelain sections for a brighter, more luxurious feel */
+.os-light{background:#FAF9F7;color:#2A1F1A;--mut:#6B5E52}
+.os-light.os-white{background:#FFFFFF}
+.os-light h2,.os-light .os-brand{color:#1E1612}
+.os-light .os-eyebrow{color:#8C6A2F}
+.os-light .os-sprig{color:#B8924A}
+.os-light .os-about,.os-light p{color:#4A3F37}
+.os-light .os-link{color:#7A1F2B;border-bottom-color:rgba(122,31,43,.4)}
+.os-light .os-story-pic{box-shadow:24px 24px 0 #7A1F2B}
+.os-light .os-tabs{border-bottom-color:#E7E1D8}
+.os-light .os-tabs button{color:#8A7E72}
+.os-light .os-tabs button.on{color:#1E1612;border-bottom-color:#B8924A}
+.os-light .os-item-top b{color:#1E1612}
+.os-light .os-price{color:#7A1F2B}
+.os-light .os-dots{border-bottom-color:rgba(184,146,74,.55)}
+.os-light .os-item p{color:#6B5E52}
+.os-light .os-item-pic{border-color:#E2D4B8;box-shadow:0 6px 18px rgba(30,22,18,.12)}
+.os-light .os-rev{background:#fff;border-color:#ECE6DC;box-shadow:0 14px 40px rgba(30,22,18,.06)}
+.os-light .os-rev blockquote{color:#2A1F1A}
+.os-light .os-rev figcaption{color:#8C6A2F}
+.os-light .os-info-c{background:#FFFFFF;border-color:#ECE6DC;box-shadow:0 18px 44px rgba(30,22,18,.07)}
+.os-light .os-info-c small{color:#8C6A2F}
+.os-light .os-info-c p,.os-light .os-info-c p a{color:#1E1612}
+.os-light .os-ico{color:#B8924A;border-color:#E2D4B8}
+.os-light .os-arrow{color:#7A1F2B}
+.os-light .os-hrs{color:#4A3F37}
+.os-light .os-hrs>div.on{color:#7A1F2B}
+.os-light .os-map{border-color:#ECE6DC;box-shadow:0 20px 50px rgba(30,22,18,.1)}
+.os-light .socials a{color:#B8924A;border-color:#E2D4B8}
+.os .os-btn.gold{box-shadow:0 10px 24px rgba(201,163,91,.25)}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
