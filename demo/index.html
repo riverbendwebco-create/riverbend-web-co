@@ -1009,11 +1009,11 @@ function heat(text){
 function rgba(hx,a){ const n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')'; }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
 const MK_SOCIAL=[
-  {id:'soc1',name:'Social Starter',price:639,per:'mo',what:'We run your Facebook and Instagram: 3 posts a week about your food, specials and events, plus a short monthly report.',idea:C=>C.specials[0]?'Posts every week for '+C.specials[0].title+', with photos.':''},
-  {id:'soc2',name:'Social Growth',price:1275,per:'mo',what:'Everything in Starter, plus 5 posts a week, weekly stories, 2 short Reels a month, and we answer comments and messages for you.',idea:C=>{ const f=pickFavs(C)[0]; return f?'A short Reel of your '+f.name+' to show people what they are missing.':''; }}
+  {id:'soc1',name:'Social Starter',price:750,per:'mo',what:'We run your Facebook and Instagram: 3 posts a week about your food, specials and events, plus a short monthly report.',idea:C=>C.specials[0]?'Posts every week for '+C.specials[0].title+', with photos.':''},
+  {id:'soc2',name:'Social Growth',price:1500,per:'mo',what:'Everything in Starter, plus 5 posts a week, weekly stories, 2 short Reels a month, and we answer comments and messages for you.',idea:C=>{ const f=pickFavs(C)[0]; return f?'A short Reel of your '+f.name+' to show people what they are missing.':''; }}
 ];
 const MK=[
-  {id:'ads',name:'Facebook and Instagram ads',price:850,per:'mo',what:'We build, run and adjust ads shown to people near you. Your ad budget is paid to Meta separately, and you set the amount.',idea:C=>C.specials[0]?'Ads to locals within a few miles before '+C.specials[0].title+'.':''},
+  {id:'ads',name:'Facebook and Instagram ads',price:1000,per:'mo',what:'We build, run and adjust ads shown to people near you. Your ad budget is paid to Meta separately, and you set the amount.',idea:C=>C.specials[0]?'Ads to locals within a few miles before '+C.specials[0].title+'.':''},
   {id:'gbp',name:'Google Business Profile management',price:99,per:'mo',what:'We keep your hours, photos, specials and posts current on Google Search and Maps.',idea:C=>C.hasHours?'Your hours, specials and new photos stay correct on Google, so people searching nearby see you first.':''},
   {id:'club',name:'Email or text club for specials',price:49,per:'mo',what:'Guests sign up on your site, and we send your specials and events to them for you.',idea:C=>C.specials[0]?'Example: a text to your club before '+C.specials[0].title+(C.specials[0].when?' ('+C.specials[0].when+')':'')+'.':''},
   {id:'qr',name:'QR menu and table tents',price:75,per:'one-time',what:'Table tents with a QR code that opens your menu, specials and social pages.',idea:()=>''},
