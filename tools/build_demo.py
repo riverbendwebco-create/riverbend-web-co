@@ -471,6 +471,12 @@ body.t-western{background:#fff}
 .hl-hero-rev .st{color:var(--r)}
 .hl-hero-rev blockquote{font-size:.98rem;line-height:1.5;margin:8px 0}
 .hl-hero-rev figcaption{font-weight:800;font-size:.85rem;color:var(--g)}
+.hl-hero-rev blockquote,.hl-hero-rev figcaption{transition:opacity .35s}
+.hl-hero-rev.fade blockquote,.hl-hero-rev.fade figcaption{opacity:0}
+.hl-hero-rev blockquote{min-height:4.5em}
+.hl-dots{display:flex;gap:6px;margin-top:12px}
+.hl-dots button{width:22px;height:5px;border:0;background:#D7DFD3;cursor:pointer;padding:0}
+.hl-dots button.on{background:var(--r)}
 .hl-strip{display:grid;grid-template-columns:repeat(4,1fr);background:var(--g);color:#fff}
 .hl-strip div{padding:18px 22px;border-left:1px solid rgba(255,255,255,.18)}
 .hl-strip div:first-child{border-left:0}
@@ -520,7 +526,7 @@ body.t-western{background:#fff}
 .hl-poster-t h2{font-size:clamp(4rem,10vw,8rem);line-height:.82;margin:8px 0 18px}
 .hl-poster-t p{font-size:1.1rem;line-height:1.7;color:#D6DED3}
 .hl-poster-t em{font-style:normal;color:#A9B8A5;font-size:.88rem;margin:10px 0 22px}
-.hl-poster-p{min-height:500px;border-left:2px solid var(--o)}
+.hl-poster-p{min-height:500px;border-left:2px solid var(--o);background-color:#0E1410;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important}
 .hl-steps{margin-top:60px}
 .hl-steps h3{font-size:clamp(2rem,4vw,3rem);color:#fff}
 .hl-steps>p{color:#A9B8A5;margin-top:4px}
