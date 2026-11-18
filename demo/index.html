@@ -1290,6 +1290,32 @@ body.t-mk{background:#fff;padding-bottom:0}
 @media (max-width:900px){.dn-book{padding:12px}.dn-tabs{gap:6px;padding:0 0 10px!important}.dn-tabs button{margin-left:0;border-radius:8px 8px 0 0}.dn-tabs button.on{margin-left:0}.dn-page{padding:20px 16px 20px 30px!important;background-image:linear-gradient(90deg,transparent 18px,rgba(179,32,42,.35) 18px 20px,transparent 20px),repeating-linear-gradient(#fff 0 33px,#E3F2EC 33px 34px)}}
 @media (max-width:700px){.mo-item{grid-template-columns:1fr;gap:10px;padding:28px 0}.mo-num{padding-top:0}.mo-price{text-align:left;padding-top:8px}.mo-price b{font-size:2rem}}
 
+/* Marketing page: bayou skin (Fat Tuesday's) */
+.mp-wlogo{display:block;width:min(320px,80%);margin-bottom:16px;filter:drop-shadow(0 6px 18px rgba(155,79,207,.45))}
+.mk-bayou .mp-bar{background:#120d17;border-bottom:3px solid #F2C230}
+.mk-bayou .mp-brand{color:#EDE6F2}
+.mk-bayou .mp-back{color:#F2C230}
+.mk-bayou .mp-cover{background:radial-gradient(ellipse at 15% 20%,rgba(123,63,176,.45),transparent 55%),radial-gradient(ellipse at 90% 90%,rgba(46,158,74,.25),transparent 50%),#120d17;position:relative;padding:52px 0 60px}
+.mk-bayou .mp-cover:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:repeating-linear-gradient(90deg,#7B3FB0 0 40px,#F2C230 40px 80px,#2E9E4A 80px 120px)}
+.mk-bayou .mp-cover .mp-in{grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto;gap:24px 48px;align-items:start}
+.mk-bayou .mp-cover-l{grid-column:1;grid-row:1}
+.mk-bayou .mp-meta{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin:0;border-top-color:rgba(242,194,48,.3)}
+.mk-bayou .mp-meta div{border-bottom-color:rgba(242,194,48,.2)}
+.mk-bayou .mp-meta dt{color:#B3A6C0}
+.mk-bayou .mp-meta a{color:#F2C230}
+.mk-bayou .mp-eyebrow{color:#3DBB5A;font-weight:700}
+.mk-bayou .mp-cover h1{color:#fff}
+.mk-bayou .mp-cover p{color:#D8CFE0}
+.mk-bayou .mp-photo{outline-color:#F2C230;border-color:#241a2e;background:#241a2e}
+.mk-bayou .mp-photo figcaption{color:#B3A6C0}
+.mk-bayou .mp-label{border-top:3px solid #7B3FB0}
+.mk-bayou .mp-label span,.mk-bayou .mo-num{color:#7B3FB0}
+.mk-bayou .mo-ex{background:#F5EFFA;border-left-color:#7B3FB0}
+.mk-bayou .mo-ex span{color:#6B2D8E}
+.mk-bayou .mo-more li::before{background:#2E9E4A}
+.mk-bayou .mo-price b{color:#6B2D8E}
+@media (max-width:860px){.mk-bayou .mp-cover .mp-in{grid-template-columns:1fr}.mk-bayou .mp-photo{grid-column:1;grid-row:auto}.mk-bayou .mp-meta{grid-template-columns:1fr}}
+
 /* Marketing page: diner skin (Dottie's) */
 .mk-diner .mp-bar{border-bottom:4px solid #B3202A}
 .mk-diner .mp-back{color:#B3202A}
@@ -2170,6 +2196,7 @@ function marketing(C){
       h('a',{class:'mp-back',href:'?d='+encodeURIComponent(slug)},'View website demo'))),
     h('section',{class:'mp-cover'},h('div',{class:'mp-in'},
       h('div',{class:'mp-cover-l'},
+        okUrl(C.x.mkLogo)?h('img',{class:'mp-wlogo',src:okUrl(C.x.mkLogo),alt:C.name}):null,
         typeof C.x.mkWord==='string'&&C.x.mkWord?h('div',{class:'mp-word'},C.x.mkWord):null,
         h('div',{class:'mp-eyebrow'},'Marketing proposal'),
         h('h1',null,'Social media and local marketing for '+(C.name||'your business')),

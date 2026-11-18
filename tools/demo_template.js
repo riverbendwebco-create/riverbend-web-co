@@ -794,6 +794,7 @@ function marketing(C){
       h('a',{class:'mp-back',href:'?d='+encodeURIComponent(slug)},'View website demo'))),
     h('section',{class:'mp-cover'},h('div',{class:'mp-in'},
       h('div',{class:'mp-cover-l'},
+        okUrl(C.x.mkLogo)?h('img',{class:'mp-wlogo',src:okUrl(C.x.mkLogo),alt:C.name}):null,
         typeof C.x.mkWord==='string'&&C.x.mkWord?h('div',{class:'mp-word'},C.x.mkWord):null,
         h('div',{class:'mp-eyebrow'},'Marketing proposal'),
         h('h1',null,'Social media and local marketing for '+(C.name||'your business')),
