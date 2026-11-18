@@ -30,3 +30,9 @@ Key reminders:
 - Optional: if Script Property PLACES_KEY is ever set, Google Places is used instead (cached 6 h, capped at 300 calls a day).
 - Saved leads live in the "Prospects" tab of the Riverbend Leads sheet. "Build demo" creates a Studio demo from the lead's Google info (and scans their site if they have a real one).
 - Lead labels must stay honest: "No website on Google", "Only a Facebook page", weak-site reasons from an actual fetch. Never claim a business has no website without that check.
+
+## Daily lead finder
+- `.github/workflows/daily-leads.yml` runs `tools/daily_leads.py` every morning (5:10 AM CST / 6:10 AM CDT) and on demand (Actions > Daily leads > Run workflow).
+- It finds up to 50 new leads within about 30 miles of Dubuque (`leads_find` with `wide:true`), checks their websites, and saves them to the Prospects sheet with the note "Daily finder <date>". No-website and Facebook-only first, then weak sites. Only independent businesses with a phone number; skips any id, name or phone already saved.
+- No password or secret: the job logs in with GitHub's signed OIDC token (`bot_login` in backend.js), which only works for this workflow file on main and only allows leads_find, leads_verify, leads_saved and leads_save.
+- Each run prints a `SUMMARY:` line and uploads `daily-leads-summary.txt`; a Claude scheduled task reads it and sends Kruz a phone summary.

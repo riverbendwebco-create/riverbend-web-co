@@ -352,7 +352,8 @@ function applySeeds_() {
 function studio_(d) {
   try { applySeeds_(); } catch (e) { console.error(e); }
   if (d.action === 'login') return login_(String(d.password || ''));
-  if (!authed_(d.token)) return { ok: false, error: 'auth' };
+  if (d.action === 'bot_login') return botLogin_(String(d.jwt || ''));
+  if (!authed_(d.token) && !(BOT_ACTIONS[d.action] && botAuthed_(d.token))) return { ok: false, error: 'auth' };
   switch (d.action) {
     case 'list': return { ok: true, demos: listDemos_() };
     case 'get': return getDemo_(String(d.slug || ''), true);
@@ -381,6 +382,70 @@ function studio_(d) {
 var STUDIO_PW_SALT = 'c3ec4cc852cac2e771470ef8de7a11a6';
 var STUDIO_PW_HASH = '983a93265453b7a91d8ce828b405a35ac9909bc9d7a45a272e340d416288d0d8';
 var STUDIO_PW_GEN = '3';
+
+/* Daily lead finder robot (.github/workflows/daily-leads.yml).
+   It has no password: GitHub gives the running job a signed ID token (OIDC), and we
+   check GitHub's signature and that it is our own daily-leads workflow on main.
+   The robot can only find, check and save leads. */
+var BOT_ACTIONS = { leads_find: 1, leads_verify: 1, leads_saved: 1, leads_save: 1 };
+var BOT_REPO = 'riverbendwebco-create/riverbend-web-co';
+var BOT_WORKFLOW = BOT_REPO + '/.github/workflows/daily-leads.yml@refs/heads/main';
+var BOT_AUD = 'riverbend-leads';
+var GH_OIDC = 'https://token.actions.githubusercontent.com';
+
+function b64uBytes_(s) { s = String(s); while (s.length % 4) s += '='; return Utilities.base64DecodeWebSafe(s); }
+function bytesHex_(b) { return b.map(function (x) { return ('0' + (x & 255).toString(16)).slice(-2); }).join(''); }
+function modPow_(b, e, m) {
+  var r = BigInt(1), zero = BigInt(0), one = BigInt(1);
+  b = b % m;
+  while (e > zero) { if ((e & one) === one) r = (r * b) % m; e = e >> one; b = (b * b) % m; }
+  return r;
+}
+function rsaVerify_(n64, e64, data, sig64) {
+  var nHex = bytesHex_(b64uBytes_(n64)).replace(/^(00)+/, '');
+  var k = Math.ceil(nHex.length / 2);
+  var n = BigInt('0x' + nHex), e = BigInt('0x' + bytesHex_(b64uBytes_(e64)));
+  var sigHex = bytesHex_(b64uBytes_(sig64));
+  if (sigHex.length / 2 !== k) return false;
+  var m = modPow_(BigInt('0x' + sigHex), e, n).toString(16);
+  while (m.length < k * 2) m = '0' + m;
+  var hash = bytesHex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data, Utilities.Charset.UTF_8));
+  var tail = '003031300d060960864801650304020105000420' + hash;
+  var want = '0001' + new Array(k * 2 - 4 - tail.length + 1).join('f') + tail;
+  return sameHex_(m, want);
+}
+function ghKeys_(force) {
+  var cache = CacheService.getScriptCache();
+  var hit = !force && cache.get('gh_jwks');
+  if (hit) return JSON.parse(hit);
+  var r = UrlFetchApp.fetch(GH_OIDC + '/.well-known/jwks', { muteHttpExceptions: true });
+  if (r.getResponseCode() !== 200) return { keys: [] };
+  var t = r.getContentText();
+  if (t.length < 90000) cache.put('gh_jwks', t, 6 * 60 * 60);
+  return JSON.parse(t);
+}
+function botLogin_(jwt) {
+  var p = jwt.split('.');
+  if (p.length !== 3) return { ok: false, error: 'auth' };
+  try {
+    var head = JSON.parse(Utilities.newBlob(b64uBytes_(p[0])).getDataAsString());
+    var c = JSON.parse(Utilities.newBlob(b64uBytes_(p[1])).getDataAsString());
+    if (head.alg !== 'RS256') return { ok: false, error: 'auth' };
+    var now = Date.now() / 1000;
+    if (c.iss !== GH_OIDC || c.aud !== BOT_AUD || c.repository !== BOT_REPO || c.ref !== 'refs/heads/main'
+      || c.workflow_ref !== BOT_WORKFLOW || !(c.exp > now) || !(c.iat < now + 120)
+      || ['schedule', 'workflow_dispatch'].indexOf(c.event_name) < 0) return { ok: false, error: 'auth' };
+    var find = function (ks) { return (ks.keys || []).filter(function (k) { return k.kid === head.kid && k.kty === 'RSA'; })[0]; };
+    var key = find(ghKeys_(false)) || find(ghKeys_(true));
+    if (!key || !rsaVerify_(key.n, key.e, p[0] + '.' + p[1], p[2])) return { ok: false, error: 'auth' };
+  } catch (e) { return { ok: false, error: 'auth' }; }
+  var token = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
+  CacheService.getScriptCache().put('bot_' + token, '1', 3600);
+  return { ok: true, token: token };
+}
+function botAuthed_(token) {
+  return !!token && /^[a-f0-9]{64}$/.test(String(token)) && CacheService.getScriptCache().get('bot_' + token) === '1';
+}
 
 function sha256Hex_(v) {
   return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, v, Utilities.Charset.UTF_8)
@@ -1327,7 +1392,7 @@ function leadsSave_(l) {
     var safe = function (s) { s = String(s || ''); return /^[=+\-@]/.test(s) ? "'" + s : s; };
     var address = [clip_(l.address, 160), clip_(l.city, 60)].filter(String).join(', ');
     sh.appendRow([new Date(), id, safe(clip_(l.name, 120)), safe(clip_(l.type, 60)), safe(clip_(l.phone, 30)), safe(address),
-      safe(clip_(l.website, 300)), safe(clip_((l.issues || []).join('; '), 300)), Number(l.rating || 0), Number(l.reviews || 0), 'New', '', '', safe(clip_(l.maps, 300))]);
+      safe(clip_(l.website, 300)), safe(clip_((l.issues || []).join('; '), 300)), Number(l.rating || 0), Number(l.reviews || 0), 'New', safe(clip_(l.note || '', 200)), '', safe(clip_(l.maps, 300))]);
     return { ok: true };
   } finally { lock.releaseLock(); }
 }
@@ -1382,6 +1447,7 @@ function leadsDemo_(l) {
    Website check: OSM website tag, then a free DuckDuckGo search for the
    business name. A lead is only called "no website" when neither finds one. */
 var OSM_BBOX = '42.43,-90.82,42.60,-90.58';
+var OSM_WIDE = '42.06,-91.26,42.94,-90.06'; /* about 30 miles around Dubuque */
 var OSM_TOWNS = { 'east dubuque': '42.47,-90.66,42.51,-90.61', 'galena': '42.39,-90.46,42.44,-90.40', 'asbury': '42.50,-90.79,42.53,-90.73',
   'peosta': '42.43,-90.87,42.47,-90.82', 'dyersville': '42.46,-91.15,42.50,-91.10', 'epworth': '42.43,-90.95,42.46,-90.91', 'cascade': '42.28,-91.03,42.31,-90.99',
   'platteville': '42.71,-90.51,42.76,-90.44', 'bellevue': '42.24,-90.44,42.28,-90.40', 'farley': '42.43,-91.02,42.45,-90.99', 'maquoketa': '42.05,-90.69,42.09,-90.64' };
@@ -1439,8 +1505,9 @@ function leadsFindFree_(d) {
   var raw = clip_(d.q, 80).toLowerCase(), cityIn = clip_(d.city || '', 40).toLowerCase();
   if (!raw) return { ok: false, error: 'empty' };
   var town = cityIn.split(',')[0].trim();
-  var bbox = OSM_TOWNS[town] || OSM_BBOX;
-  var cityLabel = OSM_TOWNS[town] ? d.city : 'Dubuque, IA';
+  var wide = !!d.wide;
+  var bbox = wide ? OSM_WIDE : (OSM_TOWNS[town] || OSM_BBOX);
+  var cityLabel = wide ? 'Dubuque area' : (OSM_TOWNS[town] ? d.city : 'Dubuque, IA');
   var sel = '';
   for (var i = 0; i < OSM_CATS.length; i++) if (OSM_CATS[i][0].test(raw)) { sel = OSM_CATS[i][1]; break; }
   if (!sel) { var safeName = raw.replace(/[^a-z0-9 &'-]/g, '').trim(); if (!safeName) return { ok: false, error: 'empty' }; sel = 'nwr["name"~"' + safeName + '",i]'; }
@@ -1467,8 +1534,9 @@ function leadsFindFree_(d) {
   var leads = els.filter(function (e) {
     var n = String(e.tags.name || '').toLowerCase();
     if (!n || seen[n]) return false; seen[n] = 1;
+    if (wide && e.lat && leadsKm_(e.lat, e.lon) > 49) return false;
     return !e.tags['disused:amenity'] && !e.tags['disused:shop'];
-  }).slice(0, 60).map(function (e) {
+  }).slice(0, wide ? 250 : 60).map(function (e) {
     var tg = e.tags;
     var addr = [tg['addr:housenumber'], tg['addr:street']].filter(String).join(' ');
     var web = tg.website || tg['contact:website'] || tg.url || '';

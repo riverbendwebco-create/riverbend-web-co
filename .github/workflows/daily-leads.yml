@@ -1,0 +1,42 @@
+name: Daily leads
+
+# Every morning before 7 AM Central: find up to 50 new local leads around Dubuque
+# (about 30 miles) and save them into the riverbendwebco.com/leads portal.
+on:
+  schedule:
+    - cron: '10 11 * * *'   # 5:10 AM CST / 6:10 AM CDT
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'How many leads to add'
+        default: '50'
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: daily-leads
+  cancel-in-progress: false
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Find and save leads
+        env:
+          TARGET: ${{ github.event.inputs.target || '50' }}
+        run: python3 tools/daily_leads.py
+      - name: Keep the summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-leads-summary
+          path: daily-leads-summary.txt
+          if-no-files-found: ignore
+          retention-days: 14
