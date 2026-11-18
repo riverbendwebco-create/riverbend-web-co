@@ -408,7 +408,7 @@ function trailhead(C){
         h('div',{class:'hl-acts'},C.tel?h('a',{class:'hl-btn hl-rust',href:C.tel},ico('phone',18,''),C.phoneTxt):null,
           C.items.length?h('button',{type:'button',class:'hl-btn hl-line-w',onclick:()=>scrollTo('w-menu')},'See the menu'):null)),
       rv?heroRevRotate(C):null),
-    C.hero,'linear-gradient(0deg,rgba(20,26,21,.92) 0%,rgba(20,26,21,.55) 45%,rgba(20,26,21,.15) 100%)');
+    C.hero,'linear-gradient(0deg,rgba(8,10,10,.92) 0%,rgba(8,10,10,.55) 45%,rgba(8,10,10,.12) 100%)');
   const strip=h('div',{class:'hl-strip'},
     h('div',null,h('small',null,'Today'),h('b',null,C.today?(openNow?'Open '+C.today:'Closed today'):'Call for hours')),
     (C.addr||C.city)?h('div',null,h('small',null,'Find us'),h('b',null,[C.addr,city].filter(Boolean).join(', '))):null,
