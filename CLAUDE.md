@@ -23,3 +23,9 @@ Key reminders:
 - `.github/workflows/auto-merge-demos.yml` auto-approves and merges PRs from `oseffrood9681-web` when every changed file is under `demo/`, `tools/demo_template.js` or `tools/build_demo.py`. Draft PRs are skipped.
 - PRs that touch anything else (index.html, studio/, apps-script/, .github/) still need Kruz's approval. Keep it that way: backend.js runs as Kruz's Google account.
 - Demo data updates go in `demo/data/seeds.json` (fetched by backend.js, cached 5 min, each key runs once). New per-demo fields go under `x`. See DESIGN_TEAM.md. Do not put seed data back into backend.js.
+
+## riverbendwebcoleads (/leads)
+- Chat-only lead finder at riverbendwebco.com/leads. Same login as the Studio. Page: `leads/index.html`; backend: the `leads_*` actions at the bottom of `apps-script/backend.js`.
+- Data comes from Google Places API (New). The key is stored in Script Properties as PLACES_KEY (pasted once in the app, never sent to the browser). Searches are cached 6 hours and capped at 300 Google calls a day.
+- Saved leads live in the "Prospects" tab of the Riverbend Leads sheet. "Build demo" creates a Studio demo from the lead's Google info (and scans their site if they have a real one).
+- Lead labels must stay honest: "No website on Google", "Only a Facebook page", weak-site reasons from an actual fetch. Never claim a business has no website without that check.

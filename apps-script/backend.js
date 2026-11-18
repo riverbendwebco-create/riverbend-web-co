@@ -361,6 +361,13 @@ function studio_(d) {
     case 'scan': return scanSite_(String(d.url || ''));
     case 'image': return grabImage_(String(d.url || ''));
     case 'logout': CacheService.getScriptCache().remove('tok_' + d.token); return { ok: true };
+    case 'leads_status': return leadsStatus_();
+    case 'leads_key': return leadsSetKey_(String(d.key || ''));
+    case 'leads_find': return leadsFind_(d);
+    case 'leads_saved': return { ok: true, leads: leadsSaved_() };
+    case 'leads_save': return leadsSave_(d.lead || {});
+    case 'leads_update': return leadsUpdate_(String(d.id || ''), d);
+    case 'leads_demo': return leadsDemo_(d.lead || {});
   }
   return { ok: false, error: 'unknown' };
 }
@@ -1092,4 +1099,258 @@ function grabImage_(raw) {
     if (!bytes.length || bytes.length > 12 * 1024 * 1024) return { ok: false, error: 'toobig' };
     return { ok: true, type: type, data: Utilities.base64Encode(bytes) };
   } catch (e) { return { ok: false, error: 'unreachable' }; }
+}
+
+/* ===================== riverbendwebcoleads =====================
+   Chat portal at /leads. Finds local businesses on Google (Places API, New),
+   flags the ones with no website, only a social page, or a weak site, saves
+   them to the "Prospects" tab of the Riverbend Leads sheet, and builds a
+   Studio demo from any lead. The Google key lives in Script Properties
+   (PLACES_KEY) and is never sent back to the browser. */
+var LEADS_CENTER = { latitude: 42.5006, longitude: -90.6646 };
+var LEADS_DAILY_CAP = 300;
+var LEADS_STAGES = ['New', 'Contacted', 'Demo built', 'Pitched', 'Won', 'Lost'];
+var LEADS_FIELDS = 'places.id,places.displayName,places.formattedAddress,places.shortFormattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.primaryType,places.primaryTypeDisplayName,places.googleMapsUri,places.businessStatus,places.regularOpeningHours,places.location,nextPageToken';
+var LEADS_SOCIAL = /(^|\.)(facebook\.com|fb\.com|fb\.me|instagram\.com|linktr\.ee|yelp\.com|tiktok\.com|x\.com|twitter\.com|google\.com|goo\.gl|g\.page|business\.site|doordash\.com|grubhub\.com|ubereats\.com|toasttab\.com|order\.online|menufy\.com|slicelife\.com|beyondmenu\.com|allmenus\.com|tripadvisor\.com|nextdoor\.com|angi\.com|homeadvisor\.com|thumbtack\.com|bbb\.org|houzz\.com|booksy\.com|vagaro\.com|styleseat\.com)$/i;
+var LEADS_FREE = /(^|\.)(wixsite\.com|godaddysites\.com|weebly\.com|weeblysite\.com|carrd\.co|square\.site|mystrikingly\.com|webflow\.io|wordpress\.com|blogspot\.com|site123\.me|jimdosite\.com)$/i;
+var LEADS_HEADERS = ['Saved', 'Place ID', 'Business', 'Type', 'Phone', 'Address', 'Website', 'Lead', 'Rating', 'Reviews', 'Stage', 'Notes', 'Demo', 'Google Maps'];
+
+function leadsKey_() { return PropertiesService.getScriptProperties().getProperty('PLACES_KEY') || ''; }
+function leadsDay_() { return 'leadsCalls_' + Utilities.formatDate(new Date(), 'America/Chicago', 'yyyyMMdd'); }
+function leadsUsed_() { return Number(PropertiesService.getScriptProperties().getProperty(leadsDay_()) || 0); }
+function leadsBump_() { var p = PropertiesService.getScriptProperties(); p.setProperty(leadsDay_(), String(leadsUsed_() + 1)); }
+
+function leadsStatus_() {
+  return { ok: true, hasKey: !!leadsKey_(), usedToday: leadsUsed_(), cap: LEADS_DAILY_CAP, stages: LEADS_STAGES };
+}
+
+function leadsSetKey_(key) {
+  key = key.trim();
+  if (!/^AIza[0-9A-Za-z_\-]{30,45}$/.test(key)) return { ok: false, error: 'badkey', message: 'That does not look like a Google API key. It starts with AIza.' };
+  var r = leadsCall_(key, { textQuery: 'coffee in Dubuque, IA', pageSize: 1 }, 'places.id');
+  if (!r.ok) return r;
+  PropertiesService.getScriptProperties().setProperty('PLACES_KEY', key);
+  return { ok: true };
+}
+
+function leadsCall_(key, body, mask) {
+  if (leadsUsed_() >= LEADS_DAILY_CAP) return { ok: false, error: 'cap', message: 'Daily search limit reached (' + LEADS_DAILY_CAP + '). It resets at midnight.' };
+  var res;
+  try {
+    res = UrlFetchApp.fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': mask || LEADS_FIELDS },
+      payload: JSON.stringify(body)
+    });
+  } catch (e) { return { ok: false, error: 'google', message: 'Could not reach Google. Try again in a minute.' }; }
+  leadsBump_();
+  var j = {};
+  try { j = JSON.parse(res.getContentText() || '{}'); } catch (e) {}
+  if (res.getResponseCode() >= 400) {
+    var m = (j.error && j.error.message) || ('Google returned ' + res.getResponseCode());
+    if (/billing/i.test(m)) m = 'Google says billing is not turned on for this key yet. Add a card in Google Cloud > Billing, then try again.';
+    else if (/not been used|disabled|not enabled/i.test(m)) m = 'The Places API (New) is not turned on for this key yet. Enable it in Google Cloud, wait a minute, then try again.';
+    else if (/API key not valid|invalid/i.test(m)) m = 'Google says that key is not valid. Copy it again from Google Cloud > Credentials.';
+    return { ok: false, error: 'google', message: m };
+  }
+  return { ok: true, data: j };
+}
+
+function leadsFind_(d) {
+  var key = leadsKey_();
+  if (!key) return { ok: false, error: 'nokey' };
+  var q = clip_(d.q, 80), city = clip_(d.city || 'Dubuque, IA', 40);
+  if (!q) return { ok: false, error: 'empty' };
+  var text = q + ' in ' + city;
+  var near = /dubuque/i.test(city) || !d.city;
+  var cacheKey = 'lq_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, text.toLowerCase())).slice(0, 22);
+  var cache = CacheService.getScriptCache();
+  var places = null, hit = cache.get(cacheKey);
+  if (hit) { try { places = JSON.parse(hit); } catch (e) {} }
+  if (!places) {
+    places = [];
+    var token = '', pages = 0;
+    do {
+      var body = { textQuery: text, pageSize: 20 };
+      if (near) body.locationBias = { circle: { center: LEADS_CENTER, radius: 25000 } };
+      if (token) body.pageToken = token;
+      var r = leadsCall_(key, body);
+      if (!r.ok) { if (places.length) break; return r; }
+      places = places.concat(r.data.places || []);
+      token = r.data.nextPageToken || '';
+      pages++;
+      if (token) Utilities.sleep(300);
+    } while (token && pages < 3);
+    var json = JSON.stringify(places);
+    if (json.length < 95000) cache.put(cacheKey, json, 6 * 60 * 60);
+  }
+
+  var leads = places.filter(function (p) { return !p.businessStatus || p.businessStatus === 'OPERATIONAL'; }).map(leadFromPlace_);
+  if (near) leads = leads.filter(function (l) { return l.km < 0 || l.km <= 32; });
+  leadsCheckSites_(leads, d.check !== false);
+  var saved = {};
+  leadsSaved_().forEach(function (s) { saved[s.id] = s.stage || 'New'; });
+  leads.forEach(function (l) { if (saved[l.id]) l.saved = saved[l.id]; });
+  var rank = { none: 0, social: 1, weak: 2, chain: 4, site: 3 };
+  leads.sort(function (a, b) { return (rank[a.kind] - rank[b.kind]) || (b.reviews - a.reviews); });
+  var counts = { total: leads.length, none: 0, social: 0, weak: 0, site: 0, chain: 0 };
+  leads.forEach(function (l) { counts[l.kind]++; });
+  return { ok: true, query: text, leads: leads, counts: counts, usedToday: leadsUsed_(), cap: LEADS_DAILY_CAP };
+}
+
+function leadFromPlace_(p) {
+  var full = String(p.formattedAddress || '');
+  var parts = full.split(',').map(function (x) { return x.trim(); });
+  var city = parts.length >= 3 ? parts[parts.length - 3] + ', ' + String(parts[parts.length - 2]).split(' ')[0] : '';
+  var hours = ((p.regularOpeningHours || {}).weekdayDescriptions || []).map(function (w) {
+    return String(w).replace(/^[A-Za-z]+:\s*/, '').replace(/[\u2013\u2014]/g, '-').replace(/[\u2009\u202f\u00a0]/g, ' ').replace(/\s+/g, ' ').trim();
+  });
+  return {
+    id: String(p.id || ''), name: clip_((p.displayName || {}).text, 120), type: clip_((p.primaryTypeDisplayName || {}).text, 60),
+    ptype: String(p.primaryType || ''), phone: clip_(p.nationalPhoneNumber, 30), website: clip_(p.websiteUri, 300),
+    address: parts[0] || '', city: city, full: full, rating: Number(p.rating || 0), reviews: Number(p.userRatingCount || 0),
+    maps: clip_(p.googleMapsUri, 300), hours: hours.length === 7 ? hours : [], kind: 'site', issues: [],
+    km: p.location ? leadsKm_(p.location.latitude, p.location.longitude) : -1
+  };
+}
+function leadsKm_(lat, lng) {
+  var R = 6371, t = Math.PI / 180, a = LEADS_CENTER.latitude * t, b = Number(lat) * t;
+  var x = Math.sin((b - a) / 2), y = Math.sin((Number(lng) - LEADS_CENTER.longitude) * t / 2);
+  return Math.round(2 * R * Math.asin(Math.sqrt(x * x + Math.cos(a) * Math.cos(b) * y * y)));
+}
+
+function leadsCheckSites_(leads, deep) {
+  var year = new Date().getFullYear();
+  var toCheck = [];
+  leads.forEach(function (l) {
+    var host = hostOf_(l.website);
+    if (!l.website) { l.kind = 'none'; l.issues.push('No website on Google'); return; }
+    if (LEADS_SOCIAL.test(host)) { l.kind = 'social'; l.issues.push('Only a ' + leadsSiteName_(host) + ' page, no real website'); return; }
+    if (/\/(locations?|stores?|restaurants?)\//i.test(l.website) || /\/location\b/i.test(l.website)) { l.kind = 'chain'; l.issues.push('Chain or franchise location'); return; }
+    if (LEADS_FREE.test(host)) { l.kind = 'weak'; l.issues.push('Free builder site (' + host + ')'); }
+    if (/^http:\/\//i.test(l.website)) { l.issues.push('No secure https link'); }
+    toCheck.push(l);
+  });
+  if (deep && toCheck.length) {
+    var batch = toCheck.slice(0, 30);
+    var reqs = batch.map(function (l) {
+      return { url: l.website, muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: false,
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RiverbendLeads/1.0; +https://riverbendwebco.com)' } };
+    });
+    var res = [];
+    try { res = UrlFetchApp.fetchAll(reqs); } catch (e) { res = []; }
+    batch.forEach(function (l, i) {
+      var r = res[i];
+      if (!r) return;
+      var code = r.getResponseCode();
+      if (code >= 400) { l.issues.push('Website is down or broken (error ' + code + ')'); return; }
+      var html = '';
+      try { html = r.getContentText().slice(0, 400000); } catch (e) { return; }
+      if (!/<meta[^>]+name=["']?viewport/i.test(html)) l.issues.push('Not built for phones');
+      var ys = [], m, re = /(?:&copy;|\u00a9|copyright)\s*(?:&nbsp;|\s)*(?:(?:19|20)\d{2}\s*(?:-|&ndash;|\u2013)\s*)?((?:19|20)\d{2})/gi;
+      while ((m = re.exec(html))) ys.push(Number(m[1]));
+      if (ys.length) { var y = Math.max.apply(null, ys); if (y <= year - 3) l.issues.push('Not updated since ' + y); }
+      if (/wix\.com|wixstatic|godaddy|websitebuilder|weebly|squarespace-cdn|jimdo|site123/i.test(html) && l.kind !== 'weak') l.builder = true;
+      if (html.length < 3000 && !/<script/i.test(html)) l.issues.push('Almost empty page');
+    });
+  }
+  leads.forEach(function (l) { if (l.kind === 'site' && l.issues.length) l.kind = 'weak'; });
+}
+
+function leadsSiteName_(host) {
+  var m = { 'facebook.com': 'Facebook', 'fb.com': 'Facebook', 'fb.me': 'Facebook', 'instagram.com': 'Instagram', 'linktr.ee': 'Linktree', 'yelp.com': 'Yelp',
+    'business.site': 'old Google', 'google.com': 'Google', 'g.page': 'Google', 'toasttab.com': 'online ordering', 'order.online': 'online ordering', 'doordash.com': 'DoorDash',
+    'grubhub.com': 'Grubhub', 'ubereats.com': 'Uber Eats', 'menufy.com': 'online ordering', 'slicelife.com': 'online ordering' };
+  var k = Object.keys(m).filter(function (x) { return host === x || host.slice(-x.length - 1) === '.' + x; })[0];
+  return k ? m[k] : host;
+}
+
+function leadsSheet_() {
+  var ss = ss_();
+  var sh = ss.getSheetByName('Prospects');
+  if (!sh) {
+    sh = ss.insertSheet('Prospects');
+    sh.appendRow(LEADS_HEADERS);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, LEADS_HEADERS.length).setFontWeight('bold');
+  }
+  return sh;
+}
+
+function leadsSaved_() {
+  var sh = leadsSheet_();
+  var n = sh.getLastRow();
+  if (n < 2) return [];
+  return sh.getRange(2, 1, n - 1, LEADS_HEADERS.length).getValues().map(function (r) {
+    return { saved: r[0] ? Utilities.formatDate(new Date(r[0]), 'America/Chicago', 'MMM d') : '', id: String(r[1]), name: String(r[2]), type: String(r[3]),
+      phone: String(r[4]), address: String(r[5]), website: String(r[6]), lead: String(r[7]), rating: Number(r[8] || 0), reviews: Number(r[9] || 0),
+      stage: String(r[10] || 'New'), notes: String(r[11] || ''), demo: String(r[12] || ''), maps: String(r[13] || '') };
+  }).filter(function (x) { return x.id; }).reverse();
+}
+
+function leadsRow_(sh, id) {
+  var n = sh.getLastRow();
+  if (n < 2 || !id) return 0;
+  var ids = sh.getRange(2, 2, n - 1, 1).getValues();
+  for (var i = 0; i < ids.length; i++) if (String(ids[i][0]) === id) return i + 2;
+  return 0;
+}
+
+function leadsSave_(l) {
+  var id = clip_(l.id, 200);
+  if (!id || !clip_(l.name, 120)) return { ok: false, error: 'bad' };
+  var lock = LockService.getScriptLock(); lock.waitLock(10000);
+  try {
+    var sh = leadsSheet_();
+    if (leadsRow_(sh, id)) return { ok: true, already: true };
+    var safe = function (s) { s = String(s || ''); return /^[=+\-@]/.test(s) ? "'" + s : s; };
+    var address = [clip_(l.address, 160), clip_(l.city, 60)].filter(String).join(', ');
+    sh.appendRow([new Date(), id, safe(clip_(l.name, 120)), safe(clip_(l.type, 60)), safe(clip_(l.phone, 30)), safe(address),
+      safe(clip_(l.website, 300)), safe(clip_((l.issues || []).join('; '), 300)), Number(l.rating || 0), Number(l.reviews || 0), 'New', '', '', safe(clip_(l.maps, 300))]);
+    return { ok: true };
+  } finally { lock.releaseLock(); }
+}
+
+function leadsUpdate_(id, d) {
+  var sh = leadsSheet_();
+  var row = leadsRow_(sh, id);
+  if (!row) return { ok: false, error: 'notfound' };
+  if (d.stage !== undefined) { if (LEADS_STAGES.indexOf(String(d.stage)) < 0) return { ok: false, error: 'stage' }; sh.getRange(row, 11).setValue(String(d.stage)); }
+  if (d.notes !== undefined) { var n = clip_(d.notes, 500); sh.getRange(row, 12).setValue(/^[=+\-@]/.test(n) ? "'" + n : n); }
+  if (d.remove) sh.deleteRow(row);
+  return { ok: true };
+}
+
+function leadsDemo_(l) {
+  var name = clip_(l.name, 120);
+  if (!name) return { ok: false, error: 'bad' };
+  var host = hostOf_(l.website || '');
+  var demo = { name: name, category: clip_(l.type, 60), address: clip_(l.address, 160), city: clip_(l.city, 60) || 'Dubuque, IA',
+    phone: fmtPhone_(l.phone), hours: (l.hours || []).slice(0, 7), items: [], specials: [], photos: [], social: { facebook: '', instagram: '' },
+    website: l.website || '', style: '', private: { status: 'Draft', contact: '', contactPhone: '', notes: 'Found with riverbendwebcoleads. ' + (l.issues || []).join('; ') + (l.maps ? ' Google: ' + l.maps : '') } };
+  if (/facebook\.com|fb\.com/i.test(host)) demo.social.facebook = l.website;
+  if (/instagram\.com/i.test(host)) demo.social.instagram = l.website;
+  var scanned = false;
+  if (l.website && !LEADS_SOCIAL.test(host)) {
+    var s = scanSite_(l.website);
+    if (s.ok) {
+      var f = s.found; scanned = true;
+      ['tagline', 'about', 'email'].forEach(function (k) { if (f[k]) demo[k] = f[k]; });
+      if (f.items && f.items.length) demo.items = f.items;
+      if (f.hours && f.hours.some(String) && !demo.hours.some(String)) demo.hours = f.hours;
+      if (f.photos && f.photos.length) demo.photos = f.photos.slice(0, 12);
+      if (f.social) { if (f.social.facebook) demo.social.facebook = f.social.facebook; if (f.social.instagram) demo.social.instagram = f.social.instagram; }
+      if (f.style) demo.style = f.style;
+    }
+  }
+  if (!demo.style) {
+    var t = (name + ' ' + (l.type || '') + ' ' + (l.ptype || '')).toLowerCase();
+    demo.style = /(bbq|barbecue|barbeque|saloon|smokehouse|steak|country|western|honky)/.test(t) ? 'western' : guessStyle_(t);
+  }
+  var r = saveDemo_({ demo: demo });
+  if (!r.ok) return r;
+  var sh = leadsSheet_(), row = leadsRow_(sh, clip_(l.id, 200));
+  if (!row) { leadsSave_(l); row = leadsRow_(sh, clip_(l.id, 200)); }
+  if (row) { sh.getRange(row, 13).setValue(r.slug); if (String(sh.getRange(row, 11).getValue() || 'New') === 'New') sh.getRange(row, 11).setValue('Demo built'); }
+  return { ok: true, slug: r.slug, scanned: scanned, items: demo.items.length, photos: demo.photos.length };
 }
