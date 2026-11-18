@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -218,6 +218,7 @@ function pub(C){
 function stars(n,cls){ return h('span',{class:cls||'wx-stars','aria-hidden':'true'},Array.from({length:n||3},()=>ico('star',14,''))); }
 function western(C){
   if(C.variant==='diner') return diner(C);
+  if(C.variant==='bayou') return bayou(C);
   if(C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length) return trailhead(C);
   const G=groups(C.items,'Menu');
   const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
@@ -515,6 +516,115 @@ function heroRevRotate(C){
   const card=h('figure',{class:'hl-hero-rev'},h('div',{class:'st'},stars(5)),q,who,dots);
   restart();
   return card;
+}
+/* ===================== BAYOU (Fat Tuesday's: dim bar, Mardi Gras confetti, party gator) ===================== */
+const BY_GATOR='<svg viewBox="0 0 320 200" aria-hidden="true"><defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FB043"/><stop offset="1" stop-color="#21662A"/></linearGradient></defs>'+
+ '<path d="M20 150c10-40 50-70 110-72 30-1 60 6 90 4 30-2 55-12 80-8 12 2 18 10 14 18-4 10-20 14-40 16-30 3-60 0-84 8-26 9-40 34-80 38-40 4-80 0-90-4z" fill="url(#bg1)" stroke="#123d18" stroke-width="4"/>'+
+ '<path d="M150 112c30-2 60 2 90-2 24-3 44-8 58-4" fill="none" stroke="#123d18" stroke-width="3"/>'+
+ '<g fill="#F4F1E6">'+[160,182,204,226,248,270].map(x=>'<path d="M'+x+' 111l6 10 6-10z"/>').join('')+[170,192,214,236,258].map(x=>'<path d="M'+x+' 116l6-9 6 9z"/>').join('')+'</g>'+
+ '<circle cx="128" cy="86" r="22" fill="#4FB043" stroke="#123d18" stroke-width="4"/><circle cx="130" cy="84" r="12" fill="#fff"/><circle cx="133" cy="85" r="6" fill="#1a1020"/><circle cx="135" cy="82" r="2" fill="#fff"/>'+
+ '<path d="M100 74c6-10 22-14 36-8" fill="none" stroke="#123d18" stroke-width="4" stroke-linecap="round"/>'+
+ '<path d="M110 40l18 34-34 6z" fill="#6B2D8E" stroke="#F2C230" stroke-width="3"/><circle cx="110" cy="38" r="6" fill="#F2C230"/>'+
+ '<g>'+[40,60,80,100,120,140].map((x,i)=>'<circle cx="'+x+'" cy="'+(150+Math.sin(i)*6+8)+'" r="7" fill="'+['#6B2D8E','#F2C230','#2E9E4A'][i%3]+'" stroke="#0e0a12" stroke-width="1.5"/>').join('')+'</g>'+
+ '<g fill="#123d18" opacity=".55"><circle cx="70" cy="128" r="4"/><circle cx="90" cy="120" r="3"/><circle cx="58" cy="140" r="3"/></g></svg>';
+function byConfetti(n){ const d=h('div',{class:'by-confetti','aria-hidden':'true'}); const cols=['#F2C230','#9B4FCF','#3DBB5A','#F2C230','#E8E2F0'];
+  for(let i=0;i<n;i++){ const p=h('i'); p.style.left=(Math.random()*100)+'%'; p.style.background=cols[i%cols.length]; p.style.animationDelay=(-Math.random()*12)+'s'; p.style.animationDuration=(8+Math.random()*8)+'s'; p.style.transform='rotate('+(Math.random()*360)+'deg)'; if(i%3===0) p.style.borderRadius='50%'; d.append(p); } return d; }
+function nextFatTuesday(){ const now=new Date(); for(let y=now.getFullYear();y<now.getFullYear()+3;y++){ const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),hh=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-hh-k)%7,m=Math.floor((a+11*hh+22*l)/451),mo=Math.floor((hh+l-7*m+114)/31),da=((hh+l-7*m+114)%31)+1; const easter=new Date(y,mo-1,da); const ft=new Date(easter); ft.setDate(ft.getDate()-47); ft.setHours(15,0,0,0); if(ft>now) return ft; } return null; }
+function bayou(C){
+  const G=groups(C.items,'Menu');
+  const name=C.name, logo=okUrl(C.x.logo);
+  const sec=(id,cls,...k)=>h('section',{class:'by-sec rv '+(cls||''),id},...k);
+  const head=(kick,title,sub)=>h('div',{class:'by-head'},h('span',{class:'by-kick'},kick),h('h2',null,title),sub?h('p',null,sub):null);
+  const lk=([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l);
+  const links=[['b-drinks','Drink Nights'],['b-favs','Favorites'],['b-menu','Menu'],['b-mardi','Mardi Gras'],['b-photos','Photos'],['b-visit','Hours']];
+  const nav=h('header',{class:'by-nav'},h('div',{class:'by-nav-in'},
+    h('a',{class:'by-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('b-top');}},logo?h('img',{src:logo,alt:name}):h('b',null,name)),
+    h('nav',{class:'by-links'},links.map(lk)),
+    C.tel?h('a',{class:'by-btn by-gold by-sm',href:C.tel},ico('phone',16,''),h('span',null,C.phoneTxt)):null),
+    h('nav',{class:'by-mtabs','aria-label':'Sections'},links.map(lk)));
+
+  const openNow=C.today&&!/closed/i.test(C.today);
+  const hero=h('section',{class:'by-hero',id:'b-top'},byConfetti(46),
+    h('div',{class:'by-bulbs t','aria-hidden':'true'}),
+    h('div',{class:'by-hero-in'},
+      h('div',{class:'by-hero-t'},
+        h('span',{class:'by-kick'},'University Ave · Dubuque · Since the 90s'),
+        logo?h('img',{class:'by-logo',src:logo,alt:name}):h('h1',null,name),
+        h('h1',{class:'by-sr'},name),
+        h('p',{class:'by-tag'},C.tag),
+        h('div',{class:'by-acts'},
+          h('button',{type:'button',class:'by-btn by-gold',onclick:()=>scrollTo('b-drinks')},'Tonight\'s specials'),
+          h('button',{type:'button',class:'by-btn by-line',onclick:()=>scrollTo('b-menu')},'The menu'),
+          okUrl(C.x.order)?h('a',{class:'by-btn by-line',href:okUrl(C.x.order),target:'_blank',rel:'noopener'},'Order carry out'):null),
+        h('p',{class:'by-open'},h('i',{class:openNow?'on':''}),openNow?('Open today '+C.today):'Closed today, open Tuesday at 3pm')),
+      h('div',{class:'by-hero-pic'},bg(h('div',{class:'ph'}),C.hero),h('span',{class:'by-gator'})))
+  );
+  hero.querySelector('.by-gator').innerHTML=BY_GATOR;
+
+  const ticker=(Array.isArray(C.x.ticker)?C.x.ticker:[]).filter(t=>typeof t==='string');
+  const tick=ticker.length?h('div',{class:'by-ticker','aria-label':'Specials'},h('div',{class:'by-ticker-in'},[...ticker,...ticker].map(t=>h('span',null,t)))):null;
+
+  const nights=(Array.isArray(C.x.nights)?C.x.nights:[]).filter(n=>n&&n.day);
+  const drinks=nights.length?sec('b-drinks','by-drinks',head('Throw me something, mister','Drink Nights and Specials',C.x.nightsNote||null),
+    h('div',{class:'by-coins'},nights.map((n,ix)=>h('div',{class:'by-coin c'+(ix%3),tabindex:'0'},
+      h('div',{class:'f'},h('small',null,n.day),h('b',null,n.title),n.price?h('em',null,n.price):null),
+      h('div',{class:'b'},h('b',null,n.title),h('p',null,n.text||''))))),
+    C.tel?h('div',{class:'by-acts by-c'},h('a',{class:'by-btn by-gold',href:C.tel},ico('phone',18,''),'Call for tonight\'s special')):null):null;
+
+  const favs=(Array.isArray(C.x.favs)?C.x.favs:[]).filter(f=>f&&f.name&&okUrl(f.photo));
+  const favEl=favs.length?sec('b-favs','by-favs',head('Straight from the kitchen','House Favorites','Real plates from real nights at Fats.'),
+    h('div',{class:'by-strand','aria-hidden':'true'}),
+    h('div',{class:'by-throws'},favs.map((f,ix)=>{ const it=C.items.find(i=>i.name===f.name)||{};
+      return h('figure',{class:'by-throw',style:'--d:'+(ix%2?14:0)+'px'},
+        h('span',{class:'by-bead'}),
+        bg(h('div',{class:'ph'}),okUrl(f.photo)),
+        h('figcaption',null,h('div',{class:'r'},h('b',null,f.name),it.price?h('span',null,it.price):null),it.desc?h('p',null,it.desc):(f.note?h('p',null,f.note):null))); }))):null;
+
+  let menu=null;
+  if(C.items.length){
+    const body=h('div',{class:'by-menu-b'});
+    const show=k=>body.replaceChildren(...G.map[k].map(i=>h('div',{class:'by-mi'},h('div',{class:'r'},h('b',null,heat(i.name)),h('i'),h('span',null,i.price||'Ask')),i.desc?h('p',null,heat(i.desc)):null)));
+    const tabs=h('div',{class:'by-tabs'},G.names.map((k,ix)=>{ const b=h('button',{type:'button',class:(ix?'':'on ')+'c'+(ix%3)},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k); }); return b; }));
+    const st=Math.max(0,G.names.findIndex(k=>G.map[k].length>3)); tabs.querySelectorAll('button').forEach((x,i)=>x.classList.toggle('on',i===st)); show(G.names[st]);
+    menu=sec('b-menu','by-menu',head('Down South and up the street','The Menu','Gumbo, po\' boys, burgers and late night bites. Prices from their ordering menu.'),tabs,body,
+      okUrl(C.x.order)?h('div',{class:'by-acts by-c'},h('a',{class:'by-btn by-gold',href:okUrl(C.x.order),target:'_blank',rel:'noopener'},'Order online for pick up')):null);
+  }
+
+  const ft=nextFatTuesday();
+  let mardi=null;
+  if(ft&&C.x.mardi){
+    const nums=['days','hours','mins'].map(k=>h('div',null,h('b',{'data-k':k},'0'),h('small',null,k)));
+    const tickCd=()=>{ const ms=Math.max(0,ft-new Date()); const v={days:Math.floor(ms/864e5),hours:Math.floor(ms/36e5)%24,mins:Math.floor(ms/6e4)%60}; nums.forEach(n=>{ const b=n.querySelector('b'); b.textContent=v[b.dataset.k]; }); };
+    tickCd(); setInterval(tickCd,30000);
+    mardi=sec('b-mardi','by-mardi',byConfetti(24),
+      h('div',{class:'by-mardi-in'},
+        h('div',null,h('span',{class:'by-kick'},'The biggest night of the year'),h('h2',null,'Fat Tuesday at Fat Tuesday\'s'),
+          h('p',null,C.x.mardi),
+          h('p',{class:'by-date'},ft.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}))),
+        h('div',{class:'by-cd'},nums)));
+  }
+
+  const photos=C.own.slice(0,12);
+  const caps=Array.isArray(C.x.caps)?C.x.caps:[];
+  const gal=photos.length?sec('b-photos','by-photos',head('Around the bar','Photos'),
+    h('div',{class:'by-grid'},photos.map((u,ix)=>h('button',{type:'button',class:'by-ph g'+(ix%7),'aria-label':'Open photo',onclick:()=>gallery(photos,name,ix)},bg(h('div',{class:'ph'}),u),caps[ix]?h('span',null,caps[ix]):null)))):null;
+
+  const revs=C.reviews.length?sec('b-revs','by-revs',head('Word on University Ave','Reviews',C.reviewsSource||null),
+    h('div',{class:'by-quotes'},C.reviews.slice(0,6).map((r,ix)=>h('figure',{class:'by-q c'+(ix%3)},stars(r.stars||5),h('blockquote',null,'“'+r.text+'”'),h('figcaption',null,r.name))))):null;
+
+  const notes=(C.x.notes||[]).filter(t=>typeof t==='string');
+  const visit=sec('b-visit','by-visit',head('Pull up a stool','Hours and Location'),
+    h('div',{class:'by-vgrid'},
+      h('div',{class:'by-neon'},h('div',{class:'by-neon-h'},h('span',null,'OPEN'),h('span',null,'TIL 2')),h('div',{class:'by-hrs'},DAYS.map((d,i)=>h('div',{class:i===todayIx()?'today':null},h('span',null,d),h('span',null,C.hours[i]||'Closed'))))),
+      h('div',{class:'by-find'},h('h3',null,name),h('address',null,C.addr,h('br'),C.city),
+        notes.length?h('ul',null,notes.slice(0,6).map(t=>h('li',null,t))):null,
+        h('div',{class:'by-acts'},C.tel?h('a',{class:'by-btn by-gold by-sm',href:C.tel},ico('phone',16,''),C.phoneTxt):null,C.maps?h('a',{class:'by-btn by-line by-sm',href:C.maps,target:'_blank',rel:'noopener'},ico('map',16,''),'Directions'):null),
+        h('div',{class:'by-soc'},C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null)),
+      h('div',{class:'by-map wx-map'},mapBox('UNIVERSITY AVE',C.maps))));
+
+  const foot=h('footer',{class:'by-foot'},h('div',{class:'by-bulbs','aria-hidden':'true'}),h('div',{class:'in'},logo?h('img',{src:logo,alt:''}):h('b',null,name),
+    h('span',null,'© '+new Date().getFullYear()+' '+name+' · '+[C.addr,C.city].filter(Boolean).join(', ')),h('span',null,'Site by Riverbend Web Co.')));
+  return h('div',{class:'demo western on by'},nav,hero,tick,drinks,favEl,menu,mardi,gal,revs,visit,foot);
 }
 /* ===================== DINER (Dottie's: counter, stools, guest checks) ===================== */
 const DN_ICON={
