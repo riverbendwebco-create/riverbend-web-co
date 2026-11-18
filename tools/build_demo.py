@@ -138,6 +138,38 @@ html.os-lock,html.os-lock body{overflow:hidden}
 .os .socials{display:flex;gap:10px}.os .socials a{width:40px;height:40px;border:1px solid rgba(201,163,91,.45);border-radius:50%;color:var(--gold)}
 .os-foot{padding:54px 0 70px;text-align:center;border-top:1px solid rgba(201,163,91,.2)}
 .os-foot small{display:block;color:var(--mut);margin-top:12px}
+
+/* Osteria: modern visit section, real map, footer */
+.os-sprig{width:120px}
+.os-ico{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid rgba(201,163,91,.4);border-radius:50%;color:var(--gold)}
+.os-ico svg{width:20px;height:20px}
+.os-info{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+.os-info-c{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));border:1px solid rgba(201,163,91,.2);border-radius:14px;padding:26px 24px;display:flex;flex-direction:column;gap:10px}
+.os-info-c small{font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-top:6px}
+.os-info-c p{font-family:var(--serif);font-size:1.45rem;line-height:1.3;color:#fff}
+.os-info-c p a{color:#fff;text-decoration:none}
+.os-arrow{display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding-top:6px;background:none;border:0;color:var(--gold2);font-size:.78rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.os-arrow .os-ico{width:auto;height:auto;border:0;border-radius:0}
+.os-arrow .os-ico svg{width:16px;height:16px;transition:transform .2s}
+.os-arrow:hover .os-ico svg{transform:translateX(3px)}
+.os-hrs{display:grid;gap:7px;font-size:.92rem;color:#DDD3C3}
+.os-hrs>div{display:flex;justify-content:space-between;gap:14px}
+.os-hrs>div.on{color:var(--gold2);font-weight:600}
+.os-map{position:relative;height:420px;border-radius:14px;overflow:hidden;border:1px solid rgba(201,163,91,.2);background:#1A1411}
+.os-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:invert(.9) hue-rotate(180deg) saturate(.35) brightness(.88) contrast(.95)}
+.os-map-card{position:absolute;left:22px;bottom:22px;max-width:320px;background:rgba(20,14,11,.9);backdrop-filter:blur(8px);border:1px solid rgba(201,163,91,.3);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.os-map-card b{font-family:var(--serif);font-size:1.35rem;color:#fff}
+.os-map-card span{color:var(--mut);font-size:.9rem;margin-bottom:8px}
+.os-map-card .os-btn{align-self:flex-start;border-radius:8px}
+.os-foot{padding:56px 0 30px;text-align:left;border-top:1px solid rgba(201,163,91,.18);background:#0E0A08}
+.os-foot-in{display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap}
+.os-foot-in small{display:block;color:var(--mut);margin-top:6px;font-size:.88rem}
+.os-foot-nav{display:flex;gap:28px}
+.os-foot-nav button{background:none;border:0;color:var(--ivory);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.os-foot-nav button:hover{color:var(--gold2)}
+.os-foot-b{display:flex;justify-content:space-between;margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.06);color:var(--mut);font-size:.82rem}
+.os-foot-b a{color:var(--mut);text-decoration:none}
+@media (max-width:860px){.os-info{grid-template-columns:1fr}.os-map{height:340px}.os-map-card{left:12px;right:12px;bottom:12px;max-width:none}.os-foot-in{flex-direction:column;align-items:flex-start}.os-foot-nav{gap:18px;flex-wrap:wrap}}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
@@ -1513,7 +1545,7 @@ html = f'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src https://www.google.com https://maps.google.com">
 <title>Website Preview | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
