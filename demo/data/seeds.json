@@ -831,5 +831,295 @@
     }
    }
   }
+ },
+ {
+  "key": "holler-trailboss-1",
+  "slug": "the-holler-inn-9593e",
+  "patch": true,
+  "data": {
+   "x": {
+    "week": [
+     {
+      "day": "Tuesday",
+      "title": "Taco Tuesday",
+      "short": "Taco Tuesday",
+      "detail": "Kick off the week with tacos at The Holler. Plus $8 lunches from 11am to 2pm.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/taco-pizza.jpg"
+     },
+     {
+      "day": "Wednesday",
+      "title": "$8 Lunches",
+      "short": "$8 Lunches",
+      "time": "11am to 2pm",
+      "detail": "Quick, easy and filling lunch specials every Tuesday through Thursday.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/crispy-chicken-bowl.jpg"
+     },
+     {
+      "day": "Thursday",
+      "title": "Pizza Buffet",
+      "short": "Pizza Buffet",
+      "time": "5pm to 7pm",
+      "detail": "All the pizza you can handle, with a salad bar and dessert. At lunch, look for homestyle plates like Chicken Pot Pie over Biscuits.",
+      "note": "Seasonal. Watch Facebook for buffet dates.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/supreme-pizza.jpg"
+     },
+     {
+      "day": "Friday",
+      "title": "Friday Fish Fry",
+      "short": "Fish Fry",
+      "detail": "Golden fried fish and shrimp with all the fixings.",
+      "note": "Seasonal. Call ahead to check this week.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/fried-fish-shrimp-platter.jpg"
+     },
+     {
+      "day": "Friday",
+      "title": "Stir Fry Friday",
+      "short": "Stir Fry",
+      "time": "From 4:30pm",
+      "detail": "Sizzling stir fry plates loaded with steak, shrimp and veggies.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/stir-fry-plate.jpg"
+     },
+     {
+      "day": "Saturday",
+      "title": "Open Till 2am",
+      "short": "Open late",
+      "time": "11am to 2am",
+      "detail": "Ride in off the Cheese Country Trail for burgers, pizza and ice cold beer.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/atv-utv-parking.jpg"
+     },
+     {
+      "day": "Sunday",
+      "title": "Sunday Funday",
+      "short": "Live music",
+      "time": "Live music, 3pm to 6pm",
+      "detail": "Live bands like the Junkyard Kings, cold drinks and the Packers.",
+      "note": "Check Facebook for this week's lineup.",
+      "photo": "https://riverbendwebco.com/demo/info/holler-inn/bar-inside-trailside-sign.jpg"
+     }
+    ],
+    "banner": {
+     "title": "Monthly $1,000 Drawing",
+     "detail": "Once a month at 6:30pm. Watch our Facebook for the date."
+    },
+    "ride": {
+     "kick": "Trail riders welcome",
+     "title": "Ride Right Up to the Door",
+     "text": "The Holler sits right off Highway 11 on the Cheese Country ATV, UTV and snowmobile trail. Park out front, grab a cold one and refuel before you head back out.",
+     "photo": "https://riverbendwebco.com/demo/info/holler-inn/covered-patio.jpg",
+     "points": [
+      "On the Cheese Country Trail, off Highway 11",
+      "Room out front for ATVs and UTVs",
+      "Covered outdoor patio",
+      "Full bar and kitchen, open till 2am Fri and Sat"
+     ]
+    },
+    "feature": {
+     "kick": "Our contest burger",
+     "title": "The Trail Boss",
+     "badge": "2026 Best Burger Contest entry",
+     "photo": "https://riverbendwebco.com/demo/info/holler-inn/cheeseburger-closeup.jpg",
+     "desc": "Our signature hand mixed smashed patty topped with smoked Gouda cheese, crispy fried onion petals on our house made 'Boss Sauce', a creamy smoky sauce with just the right amount of tang and attitude.",
+     "source": "Our entry in the Green County Beef Producers' Best Burger Contest.",
+     "howTitle": "How the Best Burger Contest works",
+     "howSub": "Run by the Green County Beef Producers. Every contest burger you eat earns a stamp on your voting card.",
+     "steps": [
+      "Order the contest burger and ask your server for a voting card.",
+      "Get your card stamped before you leave. One burger is one stamp, so if you share a burger, you share the vote.",
+      "Try at least half of the contest burgers (12 of 24 in 2026) for your vote to count.",
+      "Each burger you try adds a point to your favorite. Try all of them and your #1 gets the most points.",
+      "Send your card to the Green County Beef Producers by August 6.",
+      "12 or more stamps puts you in the gift card drawing. Try every burger to enter the beef bundle grand prize drawing."
+     ],
+     "note": "Voting runs April 1 to July 31 each year. The 2027 contest starts April 1, 2027.",
+     "link": "https://www.greencountybeefproducers.com/best-burger-contest",
+     "linkText": "Contest rules"
+    }
+   },
+   "items": [
+    {
+     "group": "Appetizers",
+     "name": "Cheese Curds",
+     "price": "$9",
+     "desc": ""
+    },
+    {
+     "group": "Appetizers",
+     "name": "Deep Fried Pickles",
+     "price": "$8",
+     "desc": ""
+    },
+    {
+     "group": "Appetizers",
+     "name": "Deep Fried Ravioli",
+     "price": "$7",
+     "desc": ""
+    },
+    {
+     "group": "Appetizers",
+     "name": "Loaded Beef",
+     "price": "$7",
+     "desc": ""
+    },
+    {
+     "group": "Appetizers",
+     "name": "Onion Rings",
+     "price": "$6",
+     "desc": ""
+    },
+    {
+     "group": "Appetizers",
+     "name": "Pretzel Sticks",
+     "price": "$8",
+     "desc": ""
+    },
+    {
+     "group": "Appetizers",
+     "name": "Wings",
+     "price": "$10",
+     "desc": ""
+    },
+    {
+     "group": "Burgers",
+     "name": "Trail Boss Burger",
+     "price": "",
+     "desc": "Hand mixed smashed patty, smoked Gouda, crispy fried onion petals and our house made Boss Sauce.",
+     "photo": "https://riverbendwebco.com/demo/info/holler-inn/cheeseburger-closeup.jpg"
+    },
+    {
+     "group": "Burgers",
+     "name": "Fussy Hussy Burger",
+     "price": "$12",
+     "desc": "With our homemade Hussy Sauce"
+    },
+    {
+     "group": "Burgers",
+     "name": "Holler Back Burger",
+     "price": "$12",
+     "desc": "Fresh, never frozen"
+    },
+    {
+     "group": "Burgers",
+     "name": "1/3 Lb. Cheeseburger",
+     "price": "$9",
+     "desc": "Fresh, never frozen"
+    },
+    {
+     "group": "Burgers",
+     "name": "1/3 Lb. Hamburger",
+     "price": "$8",
+     "desc": "Fresh, never frozen"
+    },
+    {
+     "group": "Burgers",
+     "name": "Bacon Cheeseburger",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sandwiches and Wraps",
+     "name": "BLT",
+     "price": "$9",
+     "desc": ""
+    },
+    {
+     "group": "Sandwiches and Wraps",
+     "name": "Pulled Pork",
+     "price": "$9",
+     "desc": ""
+    },
+    {
+     "group": "Sandwiches and Wraps",
+     "name": "Chicken Bacon Ranch",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sandwiches and Wraps",
+     "name": "Chicken Totcho",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Salads",
+     "name": "Summertime Salad",
+     "price": "$12",
+     "desc": ""
+    },
+    {
+     "group": "Salads",
+     "name": "Taco Salad",
+     "price": "$12",
+     "desc": ""
+    },
+    {
+     "group": "Salads",
+     "name": "Side Salad",
+     "price": "$4",
+     "desc": ""
+    },
+    {
+     "group": "Pizza",
+     "name": "Supreme",
+     "price": "",
+     "desc": "Loaded with toppings. Guests call it one of the best pizzas they have ever had.",
+     "photo": "https://riverbendwebco.com/demo/info/holler-inn/supreme-pizza.jpg"
+    },
+    {
+     "group": "Pizza",
+     "name": "Taco",
+     "price": "",
+     "desc": "Taco pizza piled with lettuce, tomato, onion and black olives.",
+     "photo": "https://riverbendwebco.com/demo/info/holler-inn/taco-pizza.jpg"
+    },
+    {
+     "group": "Pizza",
+     "name": "The Sconnie",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Pizza",
+     "name": "All Meat",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Pizza",
+     "name": "Pig Pen",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sauces",
+     "name": "Homemade Hussy Sauce",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sauces",
+     "name": "Homemade Ranch",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sauces",
+     "name": "Honey Mustard",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sauces",
+     "name": "Mango Jalapeno",
+     "price": "",
+     "desc": ""
+    },
+    {
+     "group": "Sauces",
+     "name": "Roasted Garlic",
+     "price": "",
+     "desc": ""
+    }
+   ]
+  }
  }
 ]
