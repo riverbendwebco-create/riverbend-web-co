@@ -368,6 +368,7 @@ body.t-mk{background:#F8FAFC;padding-bottom:0}
 .mk-btn:hover{background:#0047B3}
 .mk-ghost{background:#fff;color:#0F172A;border-color:#CBD5E1}.mk-ghost:hover{background:#F1F5F9}
 .mk-note{color:#64748B;font-size:.85rem;margin:18px 0 60px}
+.mk-have{margin-top:26px;color:#475569}.mk-have a{color:#0052CC;font-weight:700}
 @media (max-width:760px){.mk-grid,.mk-total{grid-template-columns:1fr}.mk-total div{border-left:0;border-top:1px solid #E2E8F0}.mk-total div:first-child{border-top:0}.mk-head .mk-ghost{margin-left:0}}
 @media (max-width:640px){.rb-bar .t span{display:none}.pub-nav,.pub-foot,.lg-nav,.lg-foot,.tr-top,.tr-nav,.tr-foot,.pub-hero,.lg-hero,.tr-hero{padding-left:18px!important;padding-right:18px!important}}
 '''
