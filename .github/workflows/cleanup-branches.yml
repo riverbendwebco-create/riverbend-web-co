@@ -1,0 +1,45 @@
+# Deletes finished branches so GitHub stays tidy without anyone clicking.
+# A branch is deleted only when ALL of these are true:
+#   - it is not main
+#   - no open pull request uses it
+#   - every commit on it is already in main (nothing would be lost)
+# Runs daily, whenever main changes, and on demand from the Actions tab.
+
+name: Clean up finished branches
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: cleanup-branches
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Delete merged branches
+        run: |
+          open=$(gh api --paginate "repos/$REPO/pulls?state=open&per_page=100" --jq '.[].head.ref' | sort -u)
+          for b in $(gh api --paginate "repos/$REPO/branches?per_page=100" --jq '.[].name'); do
+            [ "$b" = "main" ] && continue
+            if printf '%s\n' "$open" | grep -qx "$b"; then echo "keep $b (open pull request)"; continue; fi
+            enc=$(printf '%s' "$b" | jq -sRr @uri)
+            ahead=$(gh api "repos/$REPO/compare/main...$enc" --jq '.ahead_by' 2>/dev/null || echo err)
+            if [ "$ahead" = "0" ]; then
+              gh api -X DELETE "repos/$REPO/git/refs/heads/$enc" && echo "deleted $b"
+            else
+              echo "keep $b ($ahead commits not in main)"
+            fi
+          done
