@@ -343,50 +343,17 @@ const MK=[
   {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:C=>C.specials.some(s=>/carry|reserve|order/i.test(s.detail||''))?'Your guests already call ahead for carry-out, so online ordering could take some of those calls.':''}
 ];
 function marketing(C){
-  const chosen=new Set(['soc1']);
   const money=n=>'$'+n.toLocaleString('en-US');
   const unit=m=>m.label||(m.per==='mo'?'per month':'one-time');
   const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const none={id:'none',name:'Not right now',price:0,per:'mo',what:'Skip social media for now. You can add it any time.',idea:()=>''};
-
-  /* Plans: a clean pricing table, one choice */
-  const planEls=MK_SOCIAL.concat([none]).map(m=>{
-    const idea=m.idea(C);
-    const box=h('input',{type:'radio',name:'mk-plan','aria-label':'Choose '+m.name});
-    box.checked=chosen.has(m.id);
-    const el=h('label',{class:'mp-plan'+(box.checked?' on':'')+(m.id==='none'?' none':'')},
-      h('div',{class:'mp-plan-top'},box,h('span',{class:'mp-plan-name'},m.name)),
-      m.id!=='none'?h('div',{class:'mp-plan-price'},h('b',null,money(m.price)),h('span',null,'/ month')):null,
-      h('p',{class:'mp-plan-what'},m.what),
-      idea?h('p',{class:'mp-plan-idea'},idea):null);
-    box.addEventListener('change',()=>{ MK_SOCIAL.forEach(x=>chosen.delete(x.id)); if(m.id!=='none') chosen.add(m.id); planEls.forEach(p=>p.classList.toggle('on',p.querySelector('input').checked)); sum(); });
-    return el;
-  });
-
-  /* Add-ons: a quiet list with a switch on each row */
-  const addEls=MK.map(m=>{
-    const idea=m.idea(C);
-    const box=h('input',{type:'checkbox',class:'mp-switch','aria-label':'Add '+m.name});
-    const row=h('label',{class:'mp-row'},
-      h('div',{class:'mp-row-b'},h('b',null,m.name),h('p',null,m.what),idea?h('p',{class:'mp-row-idea'},idea):null),
-      h('div',{class:'mp-row-r'},h('div',{class:'mp-row-price'},money(m.price),h('small',null,unit(m))),box));
-    box.addEventListener('change',()=>{ box.checked?chosen.add(m.id):chosen.delete(m.id); row.classList.toggle('on',box.checked); sum(); });
-    return row;
-  });
-
-  const all=MK_SOCIAL.concat(MK);
-  const lines=h('div',{class:'mp-lines'}), moEl=h('b'), onceEl=h('b');
-  const copy=h('button',{type:'button',class:'mp-btn mp-ghost',onclick:async e=>{ try{ await navigator.clipboard.writeText(e.currentTarget.dataset.text); e.currentTarget.textContent='Copied'; }catch(_){ e.currentTarget.textContent='Copy failed'; } }},'Copy summary');
-  function sum(){
-    const pick=all.filter(m=>chosen.has(m.id));
-    const mo=pick.filter(m=>m.per==='mo').reduce((a,m)=>a+m.price,0);
-    const once=pick.filter(m=>m.per!=='mo').reduce((a,m)=>a+m.price,0);
-    lines.replaceChildren(...(pick.length?pick.map(m=>h('div',null,h('span',null,m.name+(m.label?' (setup fee)':'')),h('span',null,money(m.price)+(m.per==='mo'?'/mo':'')))):[h('p',{class:'mp-empty'},'Nothing selected yet.')]));
-    moEl.textContent=money(mo); onceEl.textContent=money(once);
-    copy.dataset.text='Marketing proposal for '+C.name+' ('+today+')\n'+pick.map(m=>'- '+m.name+': '+money(m.price)+(m.per==='mo'?'/month':m.label?' one-time setup fee':' one-time')).join('\n')+'\nMonthly: '+money(mo)+'\nOne-time: '+money(once);
-  }
-  sum();
-
+  const offer=(m,ix,kind)=>{ const idea=m.idea(C);
+    return h('article',{class:'mo-item mo-'+kind},
+      h('div',{class:'mo-num'},String(ix+1).padStart(2,'0')),
+      h('div',{class:'mo-body'},
+        h('h3',null,m.name),
+        h('p',{class:'mo-what'},m.what),
+        idea?h('div',{class:'mo-ex'},h('span',null,'Example for '+C.name),h('p',null,idea)):null),
+      h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
   const soc=[C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null].filter(Boolean);
   return h('div',{class:'mp'},
     h('header',{class:'mp-bar'},h('div',{class:'mp-in'},
@@ -403,21 +370,16 @@ function marketing(C){
         h('div',null,h('dt',null,'Date'),h('dd',null,today)),
         soc.length?h('div',null,h('dt',null,'Pages we would manage'),h('dd',null,soc.map((a,i)=>[i?', ':'',a]))):null),
       C.logo?h('img',{class:'mp-logo',src:C.logo,alt:C.name}):null)),
-    h('main',{class:'mp-in mp-body'},
-      h('div',{class:'mp-main'},
-        h('section',null,h('div',{class:'mp-label'},h('span',null,'01'),'Social media management'),
-          h('p',{class:'mp-sub'},'Choose one plan. Month to month.'),
-          h('div',{class:'mp-plans'},planEls)),
-        h('section',null,h('div',{class:'mp-label'},h('span',null,'02'),'Optional add-ons'),
-          h('p',{class:'mp-sub'},'Add any of these to your plan.'),
-          h('div',{class:'mp-rows'},addEls))),
-      h('aside',{class:'mp-side'},h('div',{class:'mp-sum'},
-        h('div',{class:'mp-label'},h('span',null,'03'),'Your plan'),
-        lines,
-        h('div',{class:'mp-tot'},h('div',null,h('span',null,'Monthly'),moEl),h('div',null,h('span',null,'One-time'),onceEl)),
-        h('a',{class:'mp-btn',href:'https://riverbendwebco.com/#contact',target:'_blank',rel:'noopener'},'Request this plan'),
-        copy,
-        h('p',{class:'mp-fine'},'Prices are for Riverbend Web Co. services and can be added to any website plan. Ask us about terms.')))));
+    h('main',{class:'mp-in mo'},
+      h('section',null,
+        h('div',{class:'mp-label'},h('span',null,'01'),'Social media management'),
+        h('p',{class:'mp-sub'},'Monthly plans. Choose one.'),
+        h('div',{class:'mo-list'},MK_SOCIAL.map((m,i)=>offer(m,i,'plan')))),
+      h('section',null,
+        h('div',{class:'mp-label'},h('span',null,'02'),'Add-ons'),
+        h('p',{class:'mp-sub'},'Add any of these to a plan.'),
+        h('div',{class:'mo-list'},MK.map((m,i)=>offer(m,i,'add')))),
+      h('p',{class:'mp-fine mo-fine'},'Prices are for Riverbend Web Co. services and can be added to any website plan. Ask us about terms.')));
 }
 function mapBox(label,href){
   const NS='http://www.w3.org/2000/svg', s=document.createElementNS(NS,'svg'); s.setAttribute('viewBox','0 0 320 170'); s.setAttribute('aria-hidden','true');
