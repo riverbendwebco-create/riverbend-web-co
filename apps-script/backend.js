@@ -1496,7 +1496,7 @@ function humanTag_(tg) {
 function leadsVerifyFree_(leads) {
   var need = leads.filter(function (l) { return !l.website && !l.brand; });
   var cache = CacheService.getScriptCache();
-  var keyOf = function (l) { return 'ws2_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20); };
+  var keyOf = function (l) { return 'ws3_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, l.name + '|' + l.city)).slice(0, 20); };
   var todo = [];
   need.forEach(function (l) {
     var c = cache.get(keyOf(l));
@@ -1570,7 +1570,8 @@ function guessDomain_(name, city, ua, start) {
   if (slug.length < 4) return '';
   var town = String(city || 'Dubuque').split(',')[0].toLowerCase().replace(/[^a-z]/g, '');
   var short = town === 'dubuque' ? 'dbq' : '';
-  var cands = [slug + '.com', slugThe + '.com', short ? slug + short + '.com' : '', slug + town + '.com', short ? slugThe + short + '.com' : '', slugThe + town + '.com']
+  var oneWord = noThe.split(/\s+/).length < 2;
+  var cands = [oneWord ? '' : slug + '.com', oneWord ? '' : slugThe + '.com', short ? slug + short + '.com' : '', slug + town + '.com', short ? slugThe + short + '.com' : '', slugThe + town + '.com']
     .filter(function (x, i, a) { return x && a.indexOf(x) === i; });
   var words = noThe.split(/\s+/).filter(function (w) { return w.length > 2 && !/^(and|bar|grill|restaurant|pub|tap|cafe|inc|llc|company)$/.test(w); });
   if (!words.length) words = [slug];
@@ -1578,13 +1579,14 @@ function guessDomain_(name, city, ua, start) {
     var r = null;
     try { r = UrlFetchApp.fetch('https://' + cands[i] + '/', { muteHttpExceptions: true, followRedirects: true, validateHttpsCertificates: false, headers: { 'User-Agent': ua } }); } catch (x) { continue; }
     var code = r.getResponseCode();
-    if (code === 403 || code === 401) return 'https://' + cands[i] + '/';
+    if (code === 403 || code === 401) { if (/(dbq|dubuque)\.com$/.test(cands[i])) return 'https://' + cands[i] + '/'; continue; }
     if (code >= 400) continue;
     var html = String(r.getContentText()).slice(0, 200000).toLowerCase();
     if (/domain (is )?for sale|buy this domain|parked free|this domain may be for sale|godaddy\.com\/domainsearch|sedoparking|hugedomains|dan\.com/.test(html)) continue;
     var title = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || '';
     var hay = title + ' ' + html.slice(0, 60000);
-    if (words.every(function (w) { return hay.indexOf(w) >= 0; }) && (!town || hay.indexOf(town) >= 0 || hay.indexOf('iowa') >= 0 || hay.indexOf(', ia') >= 0 || hay.indexOf('563') >= 0)) return 'https://' + cands[i] + '/';
+    var hits = words.filter(function (w) { return hay.indexOf(w) >= 0; }).length;
+    if (hits >= Math.max(1, Math.ceil(words.length * 0.6)) && hay.indexOf(words[0]) >= 0 && (!town || hay.indexOf(town) >= 0 || hay.indexOf('iowa') >= 0 || hay.indexOf(', ia') >= 0 || hay.indexOf('563') >= 0)) return 'https://' + cands[i] + '/';
   }
   return '';
 }
