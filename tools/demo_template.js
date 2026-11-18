@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -219,6 +219,7 @@ function stars(n,cls){ return h('span',{class:cls||'wx-stars','aria-hidden':'tru
 function western(C){
   if(C.variant==='diner') return diner(C);
   if(C.variant==='bayou') return bayou(C);
+  if(C.variant==='buz') return buz(C);
   if(C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length) return trailhead(C);
   const G=groups(C.items,'Menu');
   const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
@@ -754,6 +755,131 @@ function bayou(C){
   return h('div',{class:'demo western on by'},nav,hero,tick,drinks,favEl,menu,gal,revs,mardi,vip,visit,foot);
 }
 /* ===================== DINER (Dottie's: counter, stools, guest checks) ===================== */
+/* ===================== BUZ (coffee + energy: bright, playful, easy menu) ===================== */
+let bzN=0;
+const BZ_CAT={'Hot':'#FF7A59','Iced':'#4CC3FF','Tea':'#3DDBA5','Energy':'#FF4FA3','Blended Drinks':'#B69CFF'};
+const BZ_KIND={'Hot':'hot','Iced':'iced','Tea':'mug','Energy':'iced','Blended Drinks':'blend'};
+const BZ_FALL=['#FF7A59','#4CC3FF','#3DDBA5','#FF4FA3','#B69CFF','#FFD23F'];
+const bzHex=v=>/^[0-9a-fA-F]{6}$/.test(v||'')?'#'+v:'';
+function bzCup(kind,c1,c2){
+  const g='bz'+(++bzN), ink='#111';
+  const grad='<defs><linearGradient id="'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>';
+  let b='';
+  if(kind==='hot'){
+    b='<path d="M24 40 L76 40 L70 120 Q69 126 63 126 L37 126 Q31 126 30 120Z" fill="#fff" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M26.6 66 L73.4 66 L71.4 96 L28.6 96Z" fill="url(#'+g+')" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><rect x="19" y="30" width="62" height="12" rx="4" fill="'+ink+'"/><rect x="38" y="23" width="24" height="8" rx="3" fill="'+ink+'"/><path d="M40 16 Q36 10 40 5 M50 16 Q46 10 50 4 M60 16 Q56 10 60 5" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".35"/>';
+  } else if(kind==='mug'){
+    b='<rect x="20" y="46" width="52" height="68" rx="10" fill="url(#'+g+')" stroke="'+ink+'" stroke-width="3"/><path d="M72 58 Q94 58 94 80 Q94 100 72 100" fill="none" stroke="'+ink+'" stroke-width="6" stroke-linecap="round"/><path d="M26 56 L26 100" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".45"/><path d="M44 46 Q50 30 62 22" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><rect x="58" y="14" width="16" height="12" rx="3" fill="#fff" stroke="'+ink+'" stroke-width="2.4" transform="rotate(25 66 20)"/><path d="M34 34 Q30 28 34 22 M46 34 Q42 28 46 20" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".35"/>';
+  } else if(kind==='blend'){
+    b='<path d="M54 16 L62 4" stroke="'+ink+'" stroke-width="5" stroke-linecap="round"/><path d="M22 52 L78 52 L72 118 Q71 124 65 124 L35 124 Q29 124 28 118Z" fill="url(#'+g+')" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M26 40 Q28 20 50 20 Q72 20 74 40 Q78 48 74 54 L26 54 Q22 48 26 40Z" fill="#fff" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M34 40 Q50 32 66 40" fill="none" stroke="'+ink+'" stroke-width="2.4" stroke-linecap="round" opacity=".3"/><g fill="'+ink+'"><circle cx="42" cy="46" r="1.8"/><circle cx="56" cy="44" r="1.8"/><circle cx="62" cy="48" r="1.8"/></g><path d="M34 62 L33 108" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".4"/>';
+  } else {
+    b='<path d="M56 30 L66 4" stroke="'+ink+'" stroke-width="5" stroke-linecap="round"/><path d="M20 34 L80 34 L72 118 Q71 124 65 124 L35 124 Q29 124 28 118Z" fill="#fff" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/><path d="M23 56 L77 56 L71.4 118 Q70.8 121 66 121 L34 121 Q29.2 121 28.6 118Z" fill="url(#'+g+')"/><g fill="#fff" opacity=".55" stroke="'+ink+'" stroke-width="1.6"><rect x="34" y="62" width="14" height="14" rx="3" transform="rotate(-12 41 69)"/><rect x="52" y="70" width="14" height="14" rx="3" transform="rotate(14 59 77)"/><rect x="38" y="86" width="14" height="14" rx="3" transform="rotate(8 45 93)"/></g><rect x="16" y="28" width="68" height="10" rx="4" fill="'+ink+'"/><path d="M32 46 L30 108" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".5"/><path d="M20 34 L80 34 L72 118 Q71 124 65 124 L35 124 Q29 124 28 118Z" fill="none" stroke="'+ink+'" stroke-width="3" stroke-linejoin="round"/>';
+  }
+  return '<svg viewBox="0 0 100 130" aria-hidden="true">'+grad+b+'</svg>';
+}
+function bzArt(kind,c1,c2,cls){ const d=h('div',{class:cls||'bz-art','aria-hidden':'true'}); d.innerHTML=bzCup(kind,c1,c2); return d; }
+function bzMark(C,cls){
+  if(C.logo) return h('span',{class:cls+' img'},h('img',{src:C.logo,alt:C.name}));
+  const d=h('span',{class:cls,role:'img','aria-label':C.name+' logo'});
+  d.innerHTML='<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#fff" stroke="#111" stroke-width="6"/><text x="60" y="76" text-anchor="middle" font-family="Archivo,Arial Black,sans-serif" font-weight="800" font-size="46" letter-spacing="-2" fill="#111">BUZ</text></svg>';
+  return d;
+}
+function bzSizes(s){ return String(s||'').split('|').map(p=>p.trim()).filter(Boolean).map(p=>{ const m=p.match(/^(.*?)\s*(\$[\d.,]+)\s*$/); return m?[m[1],m[2]]:['',p]; }); }
+function buz(C){
+  const raw=Array.isArray(C.x.menu)&&C.x.menu.length?C.x.menu.map(m=>({cat:String(m.cat||'Menu'),n:String(m.n||''),s:String(m.s||''),c:String(m.c||''),note:String(m.note||'')})):C.items.map(i=>({cat:i.group||'Menu',n:i.name,s:i.price?String(i.price):'',c:'',note:i.desc||''}));
+  const menu=raw.filter(m=>m.n);
+  const cats=[]; menu.forEach(m=>{ if(!cats.includes(m.cat)) cats.push(m.cat); });
+  const catC=(k,i)=>BZ_CAT[k]||BZ_FALL[(i||0)%BZ_FALL.length];
+  const catK=k=>BZ_KIND[k]||'iced';
+  const name=C.name||'BUZ';
+  const st=byStatus(C);
+
+  /* nav */
+  const stEl=h('span',{class:'bz-st'});
+  const paint=()=>{ const s=byStatus(C); stEl.className='bz-st '+(s.state||''); stEl.replaceChildren(...(s.label?[h('i'),h('b',null,s.label),s.hrs?h('em',null,s.hrs):null].filter(Boolean):[])); };
+  paint(); setInterval(paint,60000);
+  const links=[menu.length?['z-menu','Menu']:null,['z-about','About'],['z-visit','Hours & Map']].filter(Boolean);
+  const nav=h('header',{class:'bz-nav'},h('div',{class:'bz-nav-in'},
+    h('a',{class:'bz-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('z-top');}},bzMark(C,'bz-mk sm'),h('b',null,name)),
+    h('nav',{class:'bz-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
+    stEl,
+    C.maps?h('a',{class:'bz-btn ink sm',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',15,''),h('span',null,'Directions')):null),
+    h('nav',{class:'bz-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
+
+  /* hero */
+  const heroCups=[['hot','#FF7A59','#C2410C'],['iced','#4CC3FF','#2563EB'],['blend','#B69CFF','#7C3AED'],['mug','#3DDBA5','#059669']];
+  const hero=h('section',{class:'bz-hero',id:'z-top'},
+    h('div',{class:'bz-hero-in'},
+      h('div',{class:'bz-hero-t'},
+        bzMark(C,'bz-mk lg'),
+        h('h1',null,C.tag||('Coffee and energy in downtown Dubuque.')),
+        C.about?h('p',null,short(C.about,170)):null,
+        h('div',{class:'bz-cta'},
+          menu.length?h('button',{type:'button',class:'bz-btn ink',onclick:()=>scrollTo('z-menu')},'See the menu'):null,
+          C.maps?h('a',{class:'bz-btn line',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Get directions'):null)),
+      h('div',{class:'bz-hero-art','aria-hidden':'true'},heroCups.map(([k,a,b],i)=>bzArt(k,a,b,'bz-hc c'+i)))));
+
+  /* quick info */
+  const tiles=[
+    C.hasHours?h('div',{class:'bz-tile t1'},h('small',null,'Today'),h('b',null,st.hrs?st.hrs.replace(/^Today /,''):(C.today||'See hours')),h('span',null,st.label||'')):null,
+    C.addr?h('a',{class:'bz-tile t2',href:C.maps||null,target:C.maps?'_blank':null,rel:'noopener'},h('small',null,'Find us'),h('b',null,C.addr),h('span',null,C.city||'')):null,
+    C.phoneTxt?h('a',{class:'bz-tile t3',href:C.tel||null},h('small',null,'Call'),h('b',null,C.phoneTxt),h('span',null,'Walk-up counter')):null
+  ].filter(Boolean);
+  const info=tiles.length?h('section',{class:'bz-info'},h('div',{class:'bz-wrap bz-tiles'},tiles)):null;
+
+  /* menu */
+  let menuEl=null;
+  if(menu.length){
+    let cur='All', q='';
+    const grid=h('div',{class:'bz-grid'}), empty=h('p',{class:'bz-empty',hidden:''},'No drinks match that search.');
+    const tabs=h('div',{class:'bz-tabs',role:'group','aria-label':'Menu categories'});
+    const search=h('input',{type:'search',class:'bz-search',placeholder:'Search drinks',autocomplete:'off','aria-label':'Search drinks'});
+    const card=(m)=>{ const i=cats.indexOf(m.cat), col=catC(m.cat,i); const cc=m.c.split(',').map(bzHex);
+      return h('article',{class:'bz-card',style:'--cc:'+col},
+        bzArt(catK(m.cat),cc[0]||col,cc[1]||cc[0]||col,'bz-art'),
+        h('div',{class:'bz-card-b'},h('span',{class:'bz-cat'},m.cat),h('h4',null,m.n),m.note?h('p',null,m.note):null,
+          h('ul',{class:'bz-sz'},bzSizes(m.s).map(([a,b])=>h('li',null,a?h('span',null,a):null,h('b',null,b)))))); };
+    const draw=()=>{ const t=q.trim().toLowerCase();
+      const list=menu.filter(m=>(cur==='All'||m.cat===cur)&&(!t||m.n.toLowerCase().includes(t)||m.cat.toLowerCase().includes(t)));
+      grid.replaceChildren(...list.map(card)); empty.hidden=list.length>0;
+      [...tabs.children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===cur))); };
+    ['All',...cats].forEach((k,i)=>{ const b=h('button',{type:'button',class:'bz-tab','data-k':k,style:'--cc:'+(k==='All'?'#111':catC(k,i-1)),onclick:()=>{cur=k;draw();}},h('i'),k); tabs.append(b); });
+    search.addEventListener('input',()=>{ q=search.value; draw(); });
+    draw();
+    const tags=Array.isArray(C.x.tags)?C.x.tags.filter(t=>typeof t==='string').slice(0,12):[];
+    menuEl=h('section',{class:'bz-sec bz-menu',id:'z-menu'},h('div',{class:'bz-wrap'},
+      h('h2',null,'The Menu'),h('p',{class:'bz-sub'},'Pick a category or search. Every drink shows its sizes and prices.'),
+      h('div',{class:'bz-bar'},tabs,search),grid,empty,
+      tags.length?h('div',{class:'bz-also'},h('h3',null,'Also at the window'),h('div',{class:'bz-tags'},tags.map((t,i)=>h('span',{style:'--cc:'+BZ_FALL[i%BZ_FALL.length]},t)))):null));
+  }
+
+  /* energy band */
+  const eng=menu.filter(m=>m.cat==='Energy');
+  const band=C.x.bandTitle?h('section',{class:'bz-band'},h('div',{class:'bz-wrap bz-band-in'},
+    h('div',null,h('h2',null,C.x.bandTitle),C.x.bandText?h('p',null,String(C.x.bandText)):null),
+    eng.length?h('div',{class:'bz-cans','aria-hidden':'true'},eng.slice(0,3).map(m=>bzArt('iced',bzHex(m.c.split(',')[0])||'#FF4FA3',bzHex(m.c.split(',')[1])||'#2563EB','bz-bc'))):null)):null;
+
+  /* about */
+  const facts=Array.isArray(C.x.facts)?C.x.facts.filter(f=>f&&f.k&&f.v).slice(0,6):[];
+  const about=h('section',{class:'bz-sec',id:'z-about'},h('div',{class:'bz-wrap bz-about'},
+    h('div',null,h('h2',null,'About '+name),C.about?C.about.split(/\n+/).map(t=>h('p',null,t)):null),
+    facts.length?h('dl',{class:'bz-facts'},facts.map((f,i)=>h('div',{style:'--cc:'+BZ_FALL[i%BZ_FALL.length]},h('dt',null,String(f.k)),h('dd',null,String(f.v))))):null));
+
+  /* photos (only if the owner has real ones) */
+  const gal=C.own.length?h('section',{class:'bz-sec bz-gal'},h('div',{class:'bz-wrap'},h('h2',null,'Around BUZ'),h('div',{class:'bz-photos'},C.own.slice(0,6).map(u=>bg(h('div',{class:'bz-ph'}),u))))):null;
+
+  /* visit */
+  const visit=h('section',{class:'bz-sec bz-visit',id:'z-visit'},h('div',{class:'bz-wrap bz-vgrid'},
+    C.hasHours?h('div',{class:'bz-card2 hrs'},h('h3',null,'Hours'),h('div',{class:'bz-hrs'},hoursRows(C))):null,
+    h('div',{class:'bz-card2 loc'},h('h3',null,'Find us'),
+      h('p',{class:'bz-addr'},C.addr?h('b',null,C.addr):null,C.city?h('span',null,C.city):null),
+      C.x.note?h('p',{class:'bz-note'},String(C.x.note)):null,
+      h('div',{class:'bz-cta'},C.maps?h('a',{class:'bz-btn ink',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Get directions'):null,C.tel?h('a',{class:'bz-btn line',href:C.tel},ico('phone',16,''),C.phoneTxt):null),
+      socials(C))));
+
+  const foot=h('footer',{class:'bz-foot'},h('div',{class:'bz-wrap bz-foot-in'},bzMark(C,'bz-mk sm'),h('span',null,h('b',null,name),[C.addr,C.city].filter(Boolean).length?' · '+[C.addr,C.city].filter(Boolean).join(', '):''),socials(C)));
+  return h('div',{class:'demo bz on'},nav,hero,info,menuEl,band,about,gal,visit,foot);
+}
+
 const DN_ICON={
  gift:'<svg viewBox="0 0 64 64"><rect x="10" y="26" width="44" height="30" rx="3" fill="#fff" stroke="currentColor" stroke-width="3"/><rect x="6" y="18" width="52" height="10" rx="2" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M32 18v38" stroke="currentColor" stroke-width="5"/><path d="M32 18c-6-10-18-10-14-2 2 4 10 2 14 2zM32 18c6-10 18-10 14-2-2 4-10 2-14 2z" fill="none" stroke="currentColor" stroke-width="3"/><text x="44" y="48" font-size="14" font-weight="800" fill="currentColor" font-family="sans-serif">?</text></svg>',
  gravy:'<svg viewBox="0 0 64 64"><path d="M8 32h40c0 10-8 16-20 16S8 42 8 32z" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M48 34c6-1 9-5 10-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M16 52h24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M14 32c4-4 8 2 12-2s8 2 12-2 6 2 8 0" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M22 22c-2-4 2-6 0-10M30 22c-2-4 2-6 0-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg>',
