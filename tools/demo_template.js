@@ -92,6 +92,7 @@ function build(d){
   C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
+  if(C.variant==='osteria'){ document.body.className='t-os'; const pg=osteria(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
   if(style==='pub'&&p&&readableOnDark(p)) page.style.setProperty('--gold',p),page.style.setProperty('--gold-2',p);
   if(style==='lounge'&&p&&readableOnDark(p)) page.style.setProperty('--brass',p);
@@ -1112,6 +1113,105 @@ function heat(text){
   return out;
 }
 function rgba(hx,a){ const n=parseInt(hx.slice(1),16); return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')'; }
+
+/* ===================== OSTERIA (fine Italian: candlelit, wine and gold, plating intro) ===================== */
+function osSvg(markup,cls){ const d=h('div',{class:cls,'aria-hidden':'true'}); d.innerHTML=markup; return d; }
+const OS_SPRIG='<svg viewBox="0 0 120 24"><path d="M2 12h116" stroke="currentColor" stroke-width="1"/><g fill="currentColor"><ellipse cx="30" cy="7" rx="7" ry="2.6" transform="rotate(-25 30 7)"/><ellipse cx="44" cy="17" rx="7" ry="2.6" transform="rotate(25 44 17)"/><ellipse cx="58" cy="7" rx="7" ry="2.6" transform="rotate(-25 58 7)"/><ellipse cx="72" cy="17" rx="7" ry="2.6" transform="rotate(25 72 17)"/><ellipse cx="86" cy="7" rx="7" ry="2.6" transform="rotate(-25 86 7)"/><circle cx="98" cy="13" r="3"/></g></svg>';
+function osRibbons(){
+  const rnd=(a,b)=>a+Math.random()*(b-a); let out='';
+  for(let r=0;r<13;r++){
+    let d='', a0=rnd(0,6.28), turns=rnd(1.2,2.1), r0=rnd(6,20), r1=rnd(70,96);
+    for(let k=0;k<=60;k++){ const t=k/60, ang=a0+t*turns*6.283, rad=r0+(r1-r0)*t+Math.sin(t*14+r)*3.5;
+      const x=200+Math.cos(ang)*rad, y=200+Math.sin(ang)*rad*0.62-t*6; d+=(k?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }
+    out+='<path class="os-nd" style="--d:'+(0.5+r*0.1).toFixed(2)+'s" d="'+d+'"/><path class="os-nh" style="--d:'+(0.58+r*0.1).toFixed(2)+'s" d="'+d+'"/>';
+  }
+  return out;
+}
+function osIntroSvg(){
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  let pep='',par='';
+  for(let i=0;i<40;i++){ const a=rnd(0,6.28), r=rnd(4,86); pep+='<circle class="os-pep" style="--d:'+(2.35+i*0.02).toFixed(2)+'s" cx="'+(200+Math.cos(a)*r).toFixed(1)+'" cy="'+(198+Math.sin(a)*r*0.62).toFixed(1)+'" r="'+rnd(0.8,1.7).toFixed(1)+'"/>'; }
+  for(let i=0;i<22;i++){ const a=rnd(0,6.28), r=rnd(6,84); par+='<g class="os-par" style="--d:'+(2.55+i*0.05).toFixed(2)+'s"><rect x="'+(200+Math.cos(a)*r).toFixed(1)+'" y="'+(196+Math.sin(a)*r*0.6).toFixed(1)+'" width="'+rnd(3,5.5).toFixed(1)+'" height="'+rnd(2,3.4).toFixed(1)+'" rx="1.2" transform="rotate('+rnd(0,180).toFixed(0)+' '+(200+Math.cos(a)*r).toFixed(1)+' '+(196+Math.sin(a)*r*0.6).toFixed(1)+')"/></g>'; }
+  return '<svg viewBox="0 0 400 400" class="os-plate-svg">'+
+    '<defs><radialGradient id="osPl" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#F1EEE8"/><stop offset="1" stop-color="#D9D3C8"/></radialGradient>'+
+    '<radialGradient id="osSa" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#FFF8E4"/><stop offset=".75" stop-color="#F3E2B4"/><stop offset="1" stop-color="#E9D29A" stop-opacity="0"/></radialGradient>'+
+    '<linearGradient id="osFk" x1="0" x2="1"><stop offset="0" stop-color="#8E959E"/><stop offset=".5" stop-color="#F2F4F7"/><stop offset="1" stop-color="#9AA1AA"/></linearGradient></defs>'+
+    '<g class="os-steam"><path d="M170 120c-10-14 10-22 0-38s8-24 0-36"/><path d="M200 112c-10-14 10-22 0-38s8-24 0-36"/><path d="M230 120c-10-14 10-22 0-38s8-24 0-36"/></g>'+
+    '<g class="os-plate"><ellipse cx="200" cy="232" rx="168" ry="104" fill="rgba(0,0,0,.45)"/><ellipse cx="200" cy="210" rx="168" ry="104" fill="url(#osPl)"/>'+
+    '<ellipse cx="200" cy="210" rx="118" ry="72" fill="none" stroke="#D9D2C5" stroke-width="2"/><ellipse cx="200" cy="210" rx="158" ry="97" fill="none" stroke="#C9A35B" stroke-width="1.4" opacity=".8"/></g>'+
+    '<ellipse class="os-sauce" cx="200" cy="204" rx="116" ry="68" fill="url(#osSa)"/>'+
+    '<g class="os-nest">'+osRibbons()+'</g>'+
+    '<g class="os-pepg" fill="#2A211B">'+pep+'</g><g fill="#4F7A2E">'+par+'</g>'+
+    '<g class="os-fork"><rect x="196" y="-40" width="8" height="150" rx="4" fill="url(#osFk)"/><path d="M186 104h28v14c0 10-6 16-14 16s-14-6-14-16z" fill="url(#osFk)"/><g fill="url(#osFk)"><rect x="186" y="128" width="4" height="40" rx="2"/><rect x="194" y="128" width="4" height="44" rx="2"/><rect x="202" y="128" width="4" height="44" rx="2"/><rect x="210" y="128" width="4" height="40" rx="2"/></g></g>'+
+    '</svg>';
+}
+function osIntro(C){
+  try{ if(sessionStorage.getItem('osIntro_'+C.name)) return; }catch(e){}
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box=h('div',{class:'os-intro',role:'presentation'},
+    h('div',{class:'os-intro-in'},osSvg(osIntroSvg(),'os-plate-wrap'),
+      h('div',{class:'os-intro-txt'},h('span',{class:'os-eyebrow'},'Benvenuti'),h('b',null,C.name||'Benvenuti'),osSvg(OS_SPRIG,'os-sprig'))),
+    h('button',{type:'button',class:'os-skip'},'Skip intro'));
+  const done=()=>{ if(!box.isConnected) return; box.classList.add('out'); setTimeout(()=>box.remove(),700); document.documentElement.classList.remove('os-lock'); try{ sessionStorage.setItem('osIntro_'+C.name,'1'); }catch(e){} };
+  box.addEventListener('click',done);
+  document.documentElement.classList.add('os-lock');
+  document.body.append(box);
+  box.querySelectorAll('.os-nd,.os-nh').forEach(p=>{ const L=Math.ceil(p.getTotalLength()); p.style.strokeDasharray=L; p.style.strokeDashoffset=L; });
+  setTimeout(done,5200);
+}
+function osteria(C){
+  const G=groups(C.items,'Menu');
+  const nav=h('header',{class:'os-nav'},h('div',{class:'os-nav-in'},
+    C.logo?h('img',{src:C.logo,alt:C.name,class:'os-logo'}):h('span',{class:'os-brand'},C.name),
+    h('nav',{class:'os-links'},C.items.length?jump('os-menu','Menu'):null,C.own.length>1?jump('os-gallery','Gallery'):null,jump('os-visit','Visit')),
+    jump('os-reserve','Reserve a Table','os-btn gold sm')));
+  const city=C.city.split(',')[0];
+  const hero=bg(h('section',{class:'os-hero'},h('div',{class:'os-hero-in rv'},
+    h('span',{class:'os-eyebrow'},[C.cat||'Italian Kitchen',city].filter(Boolean).join(' · ')),
+    h('h1',null,C.name),
+    C.tag?h('p',{class:'os-tag'},C.tag):null,
+    osSvg(OS_SPRIG,'os-sprig'),
+    h('div',{class:'os-cta'},jump('os-reserve','Reserve a Table','os-btn gold'),C.items.length?jump('os-menu','View the Menu','os-btn ghost'):null),
+    C.today?h('p',{class:'os-today'},'Open today · '+C.today):null)),
+    C.hero,'linear-gradient(180deg,rgba(18,12,9,.55) 0%,rgba(18,12,9,.72) 55%,rgba(18,12,9,.96) 100%),radial-gradient(circle at 50% 35%,rgba(201,163,91,.16),rgba(0,0,0,0) 60%)');
+  const story=C.about?h('section',{class:'os-sec os-story'},h('div',{class:'os-wrap os-story-in'},
+    bg(h('div',{class:'os-story-pic rv'}),C.storyPic||C.pic(1)),
+    h('div',{class:'rv'},h('span',{class:'os-eyebrow'},'La Nostra Storia'),h('h2',null,'Welcome to the table'),
+      h('p',{class:'os-about'},C.about),C.phoneTxt?h('a',{class:'os-link',href:C.tel||null},'Call '+C.phoneTxt):null))):null;
+  let menu=null;
+  if(C.items.length){
+    const list=h('div',{class:'os-menu-list'});
+    const show=k=>list.replaceChildren(...G.map[k].map(i=>h('div',{class:'os-item'},
+      C.itemPic(i)&&i.photo?bg(h('div',{class:'os-item-pic'}),i.photo):null,
+      h('div',{class:'os-item-b'},h('div',{class:'os-item-top'},h('b',null,i.name),h('span',{class:'os-dots'}),i.price?h('span',{class:'os-price'},i.price):null),i.desc?h('p',null,i.desc):null))));
+    const tabs=G.names.length>1?h('div',{class:'os-tabs',role:'tablist'},G.names.map((k,ix)=>{ const b=h('button',{type:'button',class:ix?null:'on'},k); b.addEventListener('click',()=>{ tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); show(k); }); return b; })):null;
+    show(G.names[0]);
+    menu=h('section',{class:'os-sec os-menu',id:'os-menu'},h('div',{class:'os-wrap'},
+      h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'Il Menu'),h('h2',null,'From our kitchen'),osSvg(OS_SPRIG,'os-sprig')),tabs,list));
+  }
+  const pics=C.own.length?C.own.slice(0,7):[];
+  const gal=pics.length>1?h('section',{class:'os-sec os-gal',id:'os-gallery'},h('div',{class:'os-wrap'},
+    h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'La Sala'),h('h2',null,'A look inside')),
+    h('div',{class:'os-grid'},pics.map((u,i)=>{ const t=bg(h('button',{type:'button',class:'os-ph g'+i,'aria-label':'Open photo '+(i+1)}),u); t.addEventListener('click',()=>gallery(pics,C.name,i)); return t; })))):null;
+  const revs=C.reviews.length?h('section',{class:'os-sec os-revs'},h('div',{class:'os-wrap'},
+    h('div',{class:'os-head rv'},h('span',{class:'os-eyebrow'},'Dicono di Noi'),h('h2',null,'What guests say')),
+    h('div',{class:'os-rev-grid'},C.reviews.slice(0,3).map(r=>h('figure',{class:'os-rev rv'},h('blockquote',null,'“'+short(r.text,260)+'”'),h('figcaption',null,r.name)))),
+    C.reviewsSource?h('p',{class:'os-src'},C.reviewsSource):null)):null;
+  const ok=h('div',{class:'os-ok'},h('h3',null,'Grazie! Your request is in.'),h('p',null,'This is a preview. On your live site, reservation requests go straight to your inbox.'));
+  const form=bookingForm(C,'os-form',ok,[['Your Name','text','Jane Smith'],['Phone or Email','text','(563) 555-0100'],['Date','date',''],['Guests','text','2']]);
+  const reserve=h('section',{class:'os-sec os-reserve',id:'os-reserve'},h('div',{class:'os-wrap os-res-in'},
+    h('div',{class:'rv'},h('span',{class:'os-eyebrow'},'Prenota'),h('h2',null,'Reserve your table'),h('p',null,'Date night, family dinner or a celebration. Tell us when and we will have your table ready.'),
+      C.phoneTxt?h('a',{class:'os-btn gold',href:C.tel||null},'Or call '+C.phoneTxt):null),
+    h('div',{class:'os-card rv'},form,ok)));
+  const visit=h('section',{class:'os-sec os-visit',id:'os-visit'},h('div',{class:'os-wrap os-visit-in'},
+    h('div',{class:'rv'},h('span',{class:'os-eyebrow'},'Vieni a Trovarci'),h('h2',null,'Visit us'),
+      (C.addr||C.city)?h('p',{class:'os-addr'},[C.addr,C.city].filter(Boolean).join(', ')):null,
+      C.phoneTxt?h('p',null,h('a',{class:'os-link',href:C.tel||null},C.phoneTxt)):null,
+      C.hasHours?h('div',{class:'os-hours'},hoursRows(C)):null,socials(C)),
+    h('div',{class:'rv'},mapBox(C.name,C.maps,true))));
+  const foot=h('footer',{class:'os-foot'},h('div',{class:'os-wrap'},h('span',{class:'os-brand'},C.name),osSvg(OS_SPRIG,'os-sprig'),h('small',null,[C.addr,C.city].filter(Boolean).join(', '))));
+  return h('div',{class:'demo os'},nav,hero,story,menu,gal,revs,reserve,visit,foot);
+}
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
 const MK_SOCIAL=[
   {id:'soc1',more:["3 posts a week, shared to both your Facebook and Instagram pages", "We write the captions and make the graphics for your specials, events and drawings", "We use photos you send us from your phone, cropped and touched up", "Posts go out on a set schedule, timed for when your customers are online", "You see and approve the month's plan before anything posts", "A short report each month: reach, new followers and your best posts"],name:'Social Starter',price:90,per:'mo',what:'We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your food, specials and events. Plus a short monthly report.',idea:C=>C.specials[0]?'Posts every week for '+C.specials[0].title+', with photos.':''},
