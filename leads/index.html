@@ -87,6 +87,13 @@ svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
 .card h4{margin:0;font-size:1.02rem;font-weight:700;color:#fff;letter-spacing:-.01em}
 .card .sub{color:var(--mut);font-size:.85rem;margin-top:3px}
 .card .desc{margin:9px 0 0;font-size:.93rem;line-height:1.5;color:var(--txt)}
+.rt{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}
+.score{text-align:right;line-height:1}
+.score b{font-family:var(--disp);font-style:italic;font-weight:700;font-size:2rem;color:#fff}
+.score b.hot{color:var(--green)}.score b.mid{color:var(--amber)}.score b.low{color:var(--mut)}
+.score small{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.bar{height:4px;border-radius:2px;background:var(--line2);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:2px}
 .badge{flex:none;font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:4px;border:1px solid;white-space:nowrap}
 .b-none{color:var(--red);border-color:rgba(255,90,99,.45);background:rgba(255,90,99,.08)}
 .b-social{color:var(--orange);border-color:rgba(255,138,61,.45);background:rgba(255,138,61,.08)}
@@ -316,6 +323,7 @@ function showResults(r,it,text,where){
   const c=r.counts;
   if(!c.total) return paint(say('I could not find any '+it.q+' around '+where+'. Try another word.',text));
   const groups={best:r.leads.filter(l=>l.kind==='none'||l.kind==='social'||l.kind==='weak'),none:r.leads.filter(l=>l.kind==='none'||l.kind==='social'),weak:r.leads.filter(l=>l.kind==='weak'),all:r.leads};
+  for(const k in groups) groups[k]=groups[k].slice().sort((a,b)=>chance(b)-chance(a));
   let cur=it.mode==='none'?'none':it.mode==='weak'?'weak':it.mode==='all'?'all':'best';
   if(!groups[cur].length) cur='all';
   const list=el('div',{class:'cards'});
@@ -325,11 +333,20 @@ function showResults(r,it,text,where){
   show(cur);
   const hot=c.none+c.social;
   const biz=n=>n+(n===1?' business':' businesses'), has=n=>n===1?' has':' have';
-  paint(say('Found '+biz(c.total)+' around '+where+'. '+(hot?hot+has(hot)+' no real website and '+c.weak+has(c.weak)+' a weak one. Best leads are first.':'Most already have a website. '+c.weak+(c.weak===1?' looks':' look')+' weak.'),text),
+  paint(say('Found '+biz(c.total)+' around '+where+'. '+(hot?hot+has(hot)+' no real website and '+c.weak+has(c.weak)+' a weak one. Sorted by chance of landing them.':'Most already have a website. '+c.weak+(c.weak===1?' looks':' look')+' weak.'),text),
     el('div',{class:'stats'},boxes),list,
-    el('p',{class:'note'},r.free?'From free public map data, so a few businesses may be missing. Open their site yourself before you pitch.':'Open their site yourself before you pitch.'));
+    el('p',{class:'note'},r.free?'Chance is an estimate from the website check, phone and type of business, not a promise. From free public map data, so a few businesses may be missing. Open their site yourself before you pitch.':'Chance is an estimate from the website check, phone and type of business, not a promise. Open their site yourself before you pitch.'));
 }
 
+function chance(l){
+  let s={none:72,social:66,weak:38,site:10,chain:2}[l.kind]||20;
+  if(l.kind==='weak') s+=Math.min(4,(l.issues||[]).length)*7;
+  s+=tel(l.phone)?8:-12;
+  if(/bar|pub|tavern|restaurant|pizza|grill|cafe|coffee|bakery|salon|barber|nail|spa|repair|auto|contractor|roof|plumb|electric|hvac|landscap|clean|paint|concrete|handyman|tow|groom|tattoo|gym/i.test((l.type||'')+' '+(l.ptype||''))) s+=6;
+  if(l.reviews>=50) s+=4;
+  if(l.maps) s+=2;
+  return Math.max(1,Math.min(97,Math.round(s)));
+}
 function leadCard(l){
   const where=town(l.city)||town(l.address)||'Dubuque, IA';
   const saveBtn=el('button',{type:'button',class:'btn'+(l.saved?' saved-on':''),text:l.saved?'Saved':'Save'});
@@ -343,10 +360,12 @@ function leadCard(l){
   const demoBtn=el('button',{type:'button',class:'btn primary',text:'Build demo'});
   const card=el('div',{class:'card'});
   demoBtn.addEventListener('click',()=>buildDemo(l,demoBtn,card));
+  const pc=chance(l);
   const issues=(l.issues||[]).filter(Boolean);
   const desc=l.kind==='site'?'Has a working website'+(l.website?' ('+String(l.website).replace(/^https?:\/\/(www\.)?/,'').replace(/\/.*$/,'')+')':'')+'.':l.kind==='chain'?'Part of a chain, so the website is run by head office.':(issues.length?issues.join('. ')+'.':TAGS[l.kind]+'.');
   card.append(
-    el('div',{class:'top'},el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),el('span',{class:'badge b-'+l.kind},TAGS[l.kind]||'Lead')),
+    el('div',{class:'top'},el('div',null,el('h4',null,l.name),el('div',{class:'sub'},[l.type,where].filter(Boolean).join(' · '))),el('div',{class:'rt'},el('span',{class:'badge b-'+l.kind},TAGS[l.kind]||'Lead'),el('div',{class:'score',title:'Estimated chance of landing this lead'},el('b',{class:pc>=60?'hot':pc>=35?'mid':'low'},pc+'%'),el('small',null,'Chance')))),
+    el('div',{class:'bar'},el('i',{style:'width:'+pc+'%;background:'+(pc>=60?'var(--green)':pc>=35?'var(--amber)':'var(--dim)')})),
     el('p',{class:'desc'},desc.replace(/\.\.$/,'.')),
     el('div',{class:'foot'},
       el('div',{class:'tags'},el('span',{class:'tag hi'},where.split(',')[0]),
