@@ -345,6 +345,16 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
+.cl-blow{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.cl-blow-l{position:absolute;inset:-10% -10% -10% -20%;background-size:cover;background-position:70% 50%;mix-blend-mode:screen;transform-origin:15% 60%;opacity:0;animation:clBlow 9s cubic-bezier(.25,.6,.3,1) infinite;will-change:transform,opacity,filter}
+.cl-blow-l.b1{animation-delay:-3s;background-position:60% 40%}
+.cl-blow-l.b2{animation-delay:-6s;background-position:80% 60%;transform:scaleY(-1)}
+@keyframes clBlow{0%{opacity:0;transform:translateX(-18%) scale(.75);filter:blur(6px)}18%{opacity:.95;filter:blur(0)}65%{opacity:.75}100%{opacity:0;transform:translateX(14%) translateY(-6%) scale(1.35);filter:blur(10px)}}
+.cl-blow-l.b2{animation-name:clBlow2}
+@keyframes clBlow2{0%{opacity:0;transform:scaleY(-1) translateX(-18%) scale(.75);filter:blur(6px)}18%{opacity:.8;filter:blur(0)}65%{opacity:.6}100%{opacity:0;transform:scaleY(-1) translateX(14%) translateY(6%) scale(1.35);filter:blur(10px)}}
+.cl-hero.blowing::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,6,.85) 0%,rgba(5,5,6,.45) 40%,rgba(5,5,6,0) 70%);pointer-events:none}
+.cl-hero.blowing .cl-hero-c,.cl-hero.blowing .cl-hero-logo{position:relative;z-index:2}
+@media (prefers-reduced-motion:reduce){.cl-blow-l{animation:none;opacity:.9;transform:none}.cl-blow-l.b1,.cl-blow-l.b2{display:none}}
 .cl-smoke{position:absolute;inset:0;pointer-events:none}
 .cl-smoke svg{width:100%;height:100%;display:block}
 .cl-wisps path{stroke-dasharray:1400;animation:clWisp linear infinite}

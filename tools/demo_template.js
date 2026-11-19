@@ -1345,11 +1345,14 @@ function cloudShop(C){
     h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null)),
     h('nav',{class:'cl-w cl-cats'},jump('cl-shop','New In','on'),cats.slice(0,8).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours'),jump('cl-visit','Location')));
   const smoke=!!C.x.heroSmoke;
-  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')},smoke?clSmoke():null,h('div',{class:'cl-hero-c'},
+  const hp=(typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:'';
+  const blow=!smoke&&!!hp&&C.x.heroBlow!==false;
+  const blowLayers=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); [0,1,2].forEach(i=>{ const l=h('div',{class:'cl-blow-l b'+i}); l.style.backgroundImage=cssUrl(hp); w.append(l); }); return w; };
+  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')+(blow?' blowing':'')},smoke?clSmoke():(blow?blowLayers():null),h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
     h('h1',null,C.tag||('Your local cloud shop in '+city)),
     h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
-    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),smoke?null:((typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:C.hero),smoke?'radial-gradient(ellipse at 30% 100%,rgba(179,18,27,.22),rgba(0,0,0,0) 55%),linear-gradient(135deg,#0A0B0E 0%,#15171C 55%,#0B0C10 100%)':'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
+    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),(smoke||blow)?null:(hp||C.hero),(smoke||blow)?'linear-gradient(135deg,#050506 0%,#0B0C0E 100%)':'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
   const perks=h('section',{class:'cl-w cl-perks'},[
     ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
   ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));
