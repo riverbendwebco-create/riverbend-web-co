@@ -1234,7 +1234,7 @@ function welborn(C){
     h('span',null,String(C.x.strip||'Licensed and insured · Residential and commercial')),
     C.tel?h('a',{href:C.tel},C.phoneTxt):null));
   const nav=h('header',{class:'wb-nav'},h('div',{class:'wb-wrap wb-nav-in'},
-    h('a',{class:'wb-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');},'aria-label':name},wbLogo(C,'sm')),
+    h('a',{class:'wb-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');},'aria-label':name},wbLogo(C,'sm'),(()=>{ const u=okUrl(C.x.logoUrl); const ic=u&&/logo\.png$/.test(u)?u.replace(/logo\.png$/,'icon.png'):''; return ic?h('span',{class:'wb-brand-m'},h('img',{class:'wb-ic',src:ic,alt:''}),h('span',{class:'wb-bn'},h('b',null,'Welborn'),h('i',null,'Painting & Drywall'))):null; })()),
     h('nav',{class:'wb-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
     call('blue sm','Call')),
     h('nav',{class:'wb-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
