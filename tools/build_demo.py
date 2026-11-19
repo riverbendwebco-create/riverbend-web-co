@@ -2328,6 +2328,31 @@ body.t-mk{background:#fff;padding-bottom:0}
 }
 @media (max-width:640px){.bb-wrap{padding:0 18px}.bb-top-in span{display:none}.bb-top-in{justify-content:center}.bb-board{grid-template-columns:1fr;padding:20px;border-width:8px}.bb-why{grid-template-columns:1fr}.bb-facts ul{grid-template-columns:1fr 1fr}.bb-foot em{margin-left:0}.bb-cta .bb-btn{flex:1 1 100%}.bb-mug{width:24%}.bb-tiles{gap:8px}.bb-ti{width:64px;height:64px}.bb-ti svg{width:48px;height:48px}.bb-tile b{font-size:.84rem}.bb-tabs button{font-size:.62rem;letter-spacing:.02em}.bb-bench{padding:14px}.bb-art{height:230px}}
 /* ---- Welborn marketing page ---- */
+.mk-bigbill .mp-bar{border-bottom:4px solid #0F1914}
+.mk-bigbill .mp-brand{color:#0F1914}
+.mk-bigbill .mp-back{color:#B07A00}
+.mk-bigbill .mp-cover{background:#0F1914;border-bottom:6px solid #F5B800;padding:44px 0 40px}
+.mk-bigbill .mp-cover .mp-in{grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto;gap:26px 48px;align-items:center}
+.mk-bigbill .mp-cover-l{grid-column:1;grid-row:1}
+.mk-bigbill .mp-word{font-family:'Alfa Slab One','Rockwell',Georgia,serif;color:#F5B800;font-size:clamp(2.2rem,4.6vw,3.4rem);line-height:1.05;margin-bottom:16px;text-shadow:none}
+.mk-bigbill .mp-eyebrow{color:#F5B800}
+.mk-bigbill .mp-cover h1{color:#fff}
+.mk-bigbill .mp-cover p{color:#D3DCD6}
+.mk-bigbill .mp-meta{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin:0}
+.mk-bigbill .mp-meta dt{color:#9FB0A6}
+.mk-bigbill .mp-photo{grid-column:2;grid-row:1/span 2;margin:0}
+.mp-bbfig{background:radial-gradient(circle at 50% 35%,#2A4036,#0F1914)!important;border:3px solid #F5B800!important;outline:0!important;border-radius:10px;padding:18px 14px 12px;box-shadow:8px 8px 0 #F5B800}
+.mp-bbart{height:300px;display:grid;place-items:end center}
+.mp-bbart svg{width:100%;height:100%;display:block}
+.mp-bbfig figcaption{color:#F5B800!important;text-align:center;font-weight:700;letter-spacing:.04em;padding-top:10px;font-size:.85rem}
+.mk-bigbill .mp-label{border-top-color:#0F1914;color:#0F1914}
+.mk-bigbill .mp-label span,.mk-bigbill .mo-num{color:#B07A00}
+.mk-bigbill .mo-body h3,.mk-bigbill .mo-price b{color:#0F1914}
+.mk-bigbill .mo-more li::before{background:#F5B800}
+.mk-bigbill .mo-ex{background:#F2F5F2;border-left-color:#F5B800}
+.mk-bigbill .mo-ex span{color:#B07A00}
+@media (max-width:860px){.mk-bigbill .mp-cover .mp-in{grid-template-columns:1fr}.mk-bigbill .mp-photo{grid-column:1;grid-row:auto}.mp-bbart{height:240px}.mk-bigbill .mp-meta{grid-template-columns:1fr}.mk-bigbill .mo-item{grid-template-columns:36px 1fr}.mk-bigbill .mo-price{grid-column:2;text-align:left}}
+@media (prefers-reduced-motion:reduce){.mp-bbart .bbl{animation:none!important}}
 .mk-welborn .mp-bar{border-bottom:4px solid #0B0F14}
 .mk-welborn .mp-brand{color:#0B0F14}
 .mk-welborn .mp-back{color:#1B5FD6}
