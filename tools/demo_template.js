@@ -1374,7 +1374,7 @@ function cloudShop(C){
     C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),(smoke||blow)?null:(hp||C.hero),(smoke||blow)?'linear-gradient(135deg,#050506 0%,#0B0C0E 100%)':'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
   const perks=h('section',{class:'cl-w cl-perks'},[
     ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
-  ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));
+  ].map(([i,t,d])=>{ const href=i==='pin'?C.maps:i==='phone'?C.tel:''; const a=href?{class:'cl-perk',href}:{class:'cl-perk'}; if(href&&i==='pin'){a.target='_blank';a.rel='noopener';} return h(href?'a':'div',a,h('span',{class:'cl-perk-i'},clIco(i)),h('div',null,h('b',null,t),h('span',null,d))); }));
   const tiles=pics.length>=2?h('section',{class:'cl-w cl-tiles'},[pics[1],pics[2]||pics[0]].map((u,i)=>bg(h('div',{class:'cl-tile rv'},h('div',null,h('b',null,i?'Stop in today':'Shop in store'),h('span',null,i?(C.today?'Open today '+C.today:'See our hours below'):'Friendly staff, real advice'),i?jump('cl-visit','Hours & Directions','cl-btn white sm'):jump('cl-shop','See What’s In','cl-btn white sm'))),u,'linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.75) 100%)'))):null;
   let shop=null;
   if(C.items.length){

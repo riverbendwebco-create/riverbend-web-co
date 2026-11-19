@@ -415,12 +415,16 @@ body.t-cl{background:#fff}
 .cl-btn.sm{min-height:42px;padding:0 18px;font-size:.76rem}
 .cl-open{display:flex;align-items:center;gap:8px;margin-top:22px;font-weight:600;opacity:.9}
 .cl-open .cl-ico svg{width:18px;height:18px}
-.cl-perks{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:18px;border:1px solid var(--line);border-radius:6px}
-.cl-perk{display:flex;gap:14px;align-items:center;padding:20px 22px}
-.cl-perk+.cl-perk{border-left:1px solid var(--line)}
-.cl-perk>.cl-ico{color:var(--red)}
-.cl-perk b{display:block;font-family:var(--m);font-weight:800;font-size:.9rem;text-transform:uppercase}
-.cl-perk span{display:block;color:var(--mut);font-size:.88rem;margin-top:2px}
+.cl-perks{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:18px;background:linear-gradient(135deg,#050506 0%,#111216 100%);border-radius:6px;overflow:hidden;position:relative}
+.cl-perks::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--red)}
+.cl-perk{display:flex;gap:16px;align-items:center;padding:26px 24px;color:#fff;text-decoration:none;transition:background .2s}
+.cl-perk+.cl-perk{border-left:1px solid rgba(255,255,255,.08)}
+a.cl-perk:hover{background:rgba(255,255,255,.04)}
+.cl-perk-i{flex:none;width:44px;height:44px;border-radius:4px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center}
+.cl-perk-i .cl-ico{width:22px;height:22px}
+.cl-perk b{display:block;font-family:var(--m);font-weight:900;font-style:italic;font-size:1rem;letter-spacing:.01em;text-transform:uppercase;color:#fff}
+.cl-perk div>span{display:block;color:rgba(255,255,255,.66);font-size:.88rem;margin-top:3px;line-height:1.4}
+a.cl-perk:hover div>span{color:#fff}
 .cl-tiles{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
 .cl-tile{min-height:320px;border-radius:6px;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:30px;color:#fff}
 .cl-tile b{display:block;font-family:var(--m);font-weight:900;font-style:italic;text-transform:uppercase;font-size:2rem;line-height:1}
@@ -474,7 +478,7 @@ body.t-cl{background:#fff}
 .cl-age-b p{color:var(--mut);font-size:.92rem;line-height:1.6;margin-bottom:8px}
 .cl-age-btns{display:flex;gap:12px;justify-content:center;margin-top:18px}
 .cl-age-no{color:var(--red)!important;font-weight:600;margin-top:12px}
-@media (max-width:860px){.cl-cats{flex-wrap:nowrap;overflow-x:auto;gap:22px}.cl-cats button{white-space:nowrap}.cl-hero{min-height:440px}.cl-hero-c{padding:44px 24px}.cl-perks{grid-template-columns:1fr 1fr}.cl-perk:nth-child(3){border-left:0}.cl-perk:nth-child(n+3){border-top:1px solid var(--line)}.cl-tiles{grid-template-columns:1fr}.cl-row{grid-auto-columns:72%}.cl-grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px}.cl-rev-grid{grid-template-columns:1fr}.cl-visit-in{grid-template-columns:1fr}.cl-foot-in{grid-template-columns:1fr}.cl-name{font-size:1.3rem}}
+@media (max-width:860px){.cl-cats{flex-wrap:nowrap;overflow-x:auto;gap:22px}.cl-cats button{white-space:nowrap}.cl-hero{min-height:440px}.cl-hero-c{padding:44px 24px}.cl-perks{grid-template-columns:1fr 1fr}.cl-perk:nth-child(3){border-left:0}.cl-perk:nth-child(n+3){border-top:1px solid rgba(255,255,255,.08)}.cl-tiles{grid-template-columns:1fr}.cl-row{grid-auto-columns:72%}.cl-grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px}.cl-rev-grid{grid-template-columns:1fr}.cl-visit-in{grid-template-columns:1fr}.cl-foot-in{grid-template-columns:1fr}.cl-name{font-size:1.3rem}}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
