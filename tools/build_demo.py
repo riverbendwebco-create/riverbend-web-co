@@ -382,7 +382,7 @@ body.t-o2{background:#FBF5EC}
 .cl-carry-c b{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.5rem;line-height:1.05;color:#111114}
 .cl-carry-c small{display:block;margin-top:8px;color:#5E6068;font-size:.84rem}
 body.t-cl{background:#fff}
-.cl{--red:#B3121B;--ink:#111114;--mut:#5E6068;--line:#E6E6EA;--soft:#F5F5F7;--m:'Montserrat',Inter,sans-serif;background:#fff;color:var(--ink);font-family:var(--font-b)}
+.cl,.cl-age{--red:#B3121B;--ink:#111114;--mut:#5E6068;--line:#E6E6EA;--soft:#F5F5F7;--m:'Montserrat',Inter,sans-serif;background:#fff;color:var(--ink);font-family:var(--font-b)}
 .cl-w{max-width:1240px;margin:0 auto;padding:0 24px}
 .cl-warn{border:2px solid #111;background:#fff;color:#111;text-align:center;font-family:var(--m);font-weight:600;font-size:.86rem;padding:10px 14px;margin:8px}
 .cl-head{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
@@ -470,7 +470,7 @@ a.cl-perk:hover div>span{color:#fff}
 .cl-foot-in button:hover{color:#fff}
 .cl-foot .socials{display:flex;gap:10px;margin-top:16px}.cl-foot .socials a{width:38px;height:38px;border:1px solid #3A3B42;border-radius:50%;color:#fff}
 .cl-copy{margin-top:40px;padding-top:18px;border-top:1px solid #26272D;font-size:.8rem;color:#80828C}
-.cl-age{position:fixed;inset:0;z-index:120;background:rgba(17,17,20,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:16px}
+.cl-age{font-family:Inter,sans-serif;color:#111114;position:fixed;inset:0;z-index:120;background:rgba(17,17,20,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:16px}
 .cl-age-card{width:100%;max-width:520px;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35)}
 .cl-age-top{background:var(--red);color:#fff;text-align:center;font-family:var(--m);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.84rem;padding:12px}
 .cl-age-b{padding:26px 28px;text-align:center}

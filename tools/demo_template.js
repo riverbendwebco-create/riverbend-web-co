@@ -51,14 +51,19 @@ function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h(
 const slug=new URLSearchParams(location.search).get('d')||'';
 if(!/^[a-z0-9-]{3,80}$/.test(slug)){ fail('Preview not found','Check the link and try again.'); return; }
 const fromApi=s=>fetch(API+'?action=demo&slug='+encodeURIComponent(s)).then(r=>r.json()).then(r=>r&&r.ok?r.demo:null);
+const CLK='rbCloud:'+slug; let clBuilt='';
+try{ const c=localStorage.getItem(CLK); if(c){ const cd=JSON.parse(c); if(cd&&cd.variant==='cloud'){ clAge({name:cd.name||''}); build(cd); clBuilt=c; } } }catch(e){}
 fetch('data/'+slug+'.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(local=>{
   if(!local) return fromApi(slug);
   if(!local.base||!/^[a-z0-9-]{3,80}$/.test(local.base)) return local;
   return fromApi(local.base).then(b=>Object.assign({},b||{},local));
 }).then(d=>{
-  if(!d){ fail('Preview not found','This preview may have been removed.'); return; }
+  if(!d){ if(!clBuilt) fail('Preview not found','This preview may have been removed.'); return; }
+  let js=''; try{ js=JSON.stringify(d); }catch(e){}
+  if(d.variant==='cloud'){ try{ localStorage.setItem(CLK,js); }catch(e){} } else { try{ localStorage.removeItem(CLK); }catch(e){} }
+  if(clBuilt&&js===clBuilt) return;
   build(d);
-}).catch(()=>fail('Couldn’t load this preview','Check your connection and refresh.'));
+}).catch(()=>{ if(!clBuilt) fail('Couldn’t load this preview','Check your connection and refresh.'); });
 
 function build(d){
   const style=['pub','lounge','trade','western'].includes(d.style)?d.style:'pub';
@@ -92,7 +97,7 @@ function build(d){
   C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
-  if(C.variant==='cloud'){ document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); clAge(C); return; }
+  if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
   if(style==='pub'&&p&&readableOnDark(p)) page.style.setProperty('--gold',p),page.style.setProperty('--gold-2',p);
@@ -1436,7 +1441,10 @@ const CL_CAT={
 };
 function clCatIco(k){ const t=String(k).toLowerCase(); const key=/vape|disposable|pod|device|e-?liquid|juice|mod/.test(t)?'vape':/cigar(?!ette)/.test(t)?'cigar':/cigarette|tobacco|smoke/.test(t)?'cigarette':/beverage|drink|soda|energy|water/.test(t)?'beverage':'other'; const d=h('span',{class:'cl-carry-ico','aria-hidden':'true'}); d.innerHTML=CL_CAT[key]; return d; }
 function clIco(k){ const d=h('span',{class:'cl-ico','aria-hidden':'true'}); d.innerHTML=CL_ICO[k]; return d; }
+let clAgeOk=false;
 function clAge(C){
+  if(clAgeOk) return;
+  const ex=document.querySelector('.cl-age'); if(ex){ const n=ex.querySelector('.cl-age-name'); if(n&&C.name) n.textContent=C.name; return; }
   const box=h('div',{class:'cl-age',role:'dialog','aria-modal':'true','aria-label':'Age verification'});
   const yes=h('button',{type:'button',class:'cl-btn red'},'Yes, I am 21 or older');
   const no=h('button',{type:'button',class:'cl-btn line'},'No');
@@ -1444,7 +1452,7 @@ function clAge(C){
   box.append(h('div',{class:'cl-age-card'},h('div',{class:'cl-age-top'},'Age Verification'),h('div',{class:'cl-age-b'},
     h('b',{class:'cl-age-name'},C.name),h('p',null,'Products sold at '+C.name+' are age-restricted and intended for adults of legal smoking age only.'),
     h('p',null,'By entering, you confirm you are 21 years of age or older.'),h('div',{class:'cl-age-btns'},yes,no),msg)));
-  yes.addEventListener('click',()=>{ box.remove(); document.documentElement.classList.remove('os-lock'); });
+  yes.addEventListener('click',()=>{ clAgeOk=true; box.remove(); document.documentElement.classList.remove('os-lock'); });
   no.addEventListener('click',()=>{ msg.textContent='Sorry, you must be 21 or older to view this site.'; });
   document.documentElement.classList.add('os-lock');
   document.body.append(box);
