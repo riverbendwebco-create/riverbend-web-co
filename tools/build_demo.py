@@ -1585,6 +1585,26 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mp-pick-t{display:flex;justify-content:space-between;gap:16px;padding-top:12px;font-weight:700}
 .mp-pick-t b{font-size:1.15rem}
 .mp-pick-n{font-size:.85rem!important;margin-top:10px!important;opacity:.85}
+.mp-pick-go{margin-top:14px;background:none;border:0;padding:0;color:inherit;font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.mk-play{display:grid;gap:22px}
+.mk-pl{border:1px solid #E2E8F0;border-radius:6px;padding:26px 26px 22px;background:#fff}
+.mk-pl.pick{border-color:#0F172A;box-shadow:inset 4px 0 0 #0F172A}
+.mk-pl-h{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding-bottom:16px;border-bottom:1px solid #E2E8F0}
+.mk-pl-h h3{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.mk-pl-h p{color:#475569;margin-top:6px;font-size:.95rem;max-width:640px}
+.mk-tag{display:inline-block;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;background:#0F172A;color:#fff;padding:5px 9px;border-radius:3px;margin-bottom:10px}
+.mk-pl-p{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;white-space:nowrap}
+.mk-pl-g{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-top:18px}
+.mk-pc h4{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#64748B;margin-bottom:10px}
+.mk-pc ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.mk-pc li{font-size:.92rem;line-height:1.5;color:#1E293B;padding-left:16px;position:relative}
+.mk-pc li:before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;background:#0F172A}
+.mk-pc.ex li{font-style:italic;color:#334155}
+.mk-pc.ex li:before{background:none;border:1px solid #0F172A}
+.mk-play-n{margin-top:16px;font-size:.88rem;color:#475569;max-width:760px}
+.mk-realty .mk-pl.pick{border-color:#000;box-shadow:inset 4px 0 0 #000}
+.mk-realty .mk-tag{background:#000}
+@media (max-width:900px){.mk-pl-g{grid-template-columns:1fr}.mk-pl-h{flex-direction:column}}
 /* realty: black and white, matches the realtor site */
 .mk-realty .mp-bar{border-bottom:1px solid #E2E2E2}
 .mk-realty .mp-brand{color:#000}

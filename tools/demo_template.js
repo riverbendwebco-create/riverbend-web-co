@@ -2446,7 +2446,21 @@ function marketing(C){
     return h('div',{class:'mp-pick'},h('div',{class:'mp-pick-h'},typeof C.x.mkPickTitle==='string'&&C.x.mkPickTitle?C.x.mkPickTitle:'Recommended starting plan'),
       h('ul',null,items.map(m=>h('li',null,h('span',null,ovr('mkName',m.id)||m.name),h('b',null,money(m.price)+(m.per==='mo'?'/mo':' one-time'))))),
       h('div',{class:'mp-pick-t'},h('span',null,'Total'),h('b',null,(mo?money(mo)+'/mo':'')+(mo&&once?' + ':'')+(once?money(once)+' one-time':''))),
-      typeof C.x.mkPickNote==='string'&&C.x.mkPickNote?h('p',{class:'mp-pick-n'},C.x.mkPickNote):null); };
+      typeof C.x.mkPickNote==='string'&&C.x.mkPickNote?h('p',{class:'mp-pick-n'},C.x.mkPickNote):null,
+      playList().length?h('button',{type:'button',class:'mp-pick-go',onclick:()=>{ const t=document.getElementById('mk-play'); if(t) t.scrollIntoView({behavior:'smooth'}); }},'See what we will do for each package'):null); };
+  /* plan-by-plan playbook: what we do, a sample month and real examples */
+  const playList=()=>(Array.isArray(C.x.mkPlay)?C.x.mkPlay:[]).filter(p=>p&&typeof p.id==='string'&&typeof p.t==='string');
+  const playSec=()=>{ const list=playList(); if(!list.length) return null; const all=MK_WEB.concat(MK_SOCIAL,MK); const picks=Array.isArray(C.x.mkPick)?C.x.mkPick:[];
+    const L=v=>typeof v==='string'?v.split('|').map(t=>t.trim()).filter(Boolean):[];
+    const col=(title,items,cls)=>items.length?h('div',{class:'mk-pc '+(cls||'')},h('h4',null,title),h('ul',null,items.map(t=>{ const m=t.match(/^([^:]{2,24}):\s*(.+)$/); return h('li',null,m&&cls==='month'?[h('b',null,m[1]),' ',m[2]]:t); }))):null;
+    return h('section',{id:'mk-play'},
+      h('div',{class:'mp-label'},h('span',null,num()),typeof C.x.mkPlayTitle==='string'&&C.x.mkPlayTitle?C.x.mkPlayTitle:'What we will do for you'),
+      h('p',{class:'mp-sub'},typeof C.x.mkPlaySub==='string'&&C.x.mkPlaySub?C.x.mkPlaySub:'Plan by plan: what comes with each package, what a month looks like and real examples.'),
+      h('div',{class:'mk-play'},list.map(p=>{ const m=all.find(x=>x.id===p.id); const price=m?money(m.price)+(m.per==='mo'?'/mo':' one-time'):'';
+        return h('article',{class:'mk-pl'+(picks.indexOf(p.id)>=0?' pick':'')},
+          h('div',{class:'mk-pl-h'},h('div',null,picks.indexOf(p.id)>=0?h('span',{class:'mk-tag'},'In the recommended plan'):null,h('h3',null,p.t),typeof p.w==='string'&&p.w?h('p',null,p.w):null),price?h('b',{class:'mk-pl-p'},price):null),
+          h('div',{class:'mk-pl-g'},col('What we do',L(p.d),'do'),col('A sample month',L(p.m),'month'),col('Real examples',L(p.e),'ex'))); })),
+      typeof C.x.mkPlayNote==='string'&&C.x.mkPlayNote?h('p',{class:'mk-play-n'},C.x.mkPlayNote):null); };
   return h('div',{class:'mp'+(/^[a-z]{3,20}$/.test(C.variant||'')?' mk-'+C.variant:'')},
     h('header',{class:'mp-bar'},h('div',{class:'mp-in'},
       h('span',{class:'mp-brand'},'Riverbend Web Co.'),
@@ -2468,6 +2482,7 @@ function marketing(C){
       C.variant==='bigbill'?bbMkArt():null,
       okUrl(C.x.mkPhoto)?h('figure',{class:'mp-photo'},bg(h('div',{class:'ph'}),okUrl(C.x.mkPhoto)),typeof C.x.mkCap==='string'&&C.x.mkCap?h('figcaption',null,C.x.mkCap):null):null)),
     h('main',{class:'mp-in mo'},
+      playSec(),
       webs.length?h('section',null,
         h('div',{class:'mp-label'},h('span',null,num()),'Website plans'),
         h('p',{class:'mp-sub'},'Hosting, security and a real person handling updates come with every plan. Choose one.'),
