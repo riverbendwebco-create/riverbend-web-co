@@ -2200,89 +2200,107 @@ function realty(C){
   const site=okUrl(C.x.searchUrl)||'';
   const digits=C.phone.replace(/\D/g,'').slice(-10);
   const sms=digits.length===10?'sms:+1'+digits:'';
-  const mail=(subj)=>C.email?'mailto:'+C.email+(subj?'?subject='+encodeURIComponent(subj):''):'';
+  const mail=(subj,body)=>C.email?'mailto:'+C.email+'?subject='+encodeURIComponent(subj||'')+(body?'&body='+encodeURIComponent(body):''):'';
   const F=(C.x.follow&&typeof C.x.follow==='object')?C.x.follow:{};
+  const A=k=>Array.isArray(C.x[k])?C.x[k]:[];
+  const facts=A('facts').filter(f=>f&&f.v&&f.k).slice(0,4);
+  const areas=A('areas').filter(a=>typeof a==='string').slice(0,8);
   const links=[['r-buy','Buy'],['r-sell','Sell'],['r-about','About'],['r-follow','Follow'],['r-contact','Contact']];
-  const btn=(cls,href,label,icon,ext)=>href?h('a',Object.assign({class:'rt-btn '+cls,href},ext?{target:'_blank',rel:'noopener'}:{}),icon||null,label):null;
+  const go=id=>()=>scrollTo(id);
+  const btn=(cls,href,label,ext,onclick)=>href?h('a',Object.assign({class:'rt-btn '+cls,href},ext?{target:'_blank',rel:'noopener'}:{}),label):h('button',{type:'button',class:'rt-btn '+cls,onclick},label);
 
   const nav=h('header',{class:'rt-nav'},h('div',{class:'rt-wrap rt-nav-in'},
-    h('a',{class:'rt-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('r-top');}},h('b',null,name),h('span',null,[C.cat,firm].filter(Boolean).join(' | '))),
-    h('nav',{class:'rt-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
-    btn('red sm',C.tel,'Call '+first,ico('phone',15,''))),
-    h('nav',{class:'rt-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
-
-  const card=(icon,title,text,label,href,onclick,ext)=>h('div',{class:'rt-card'},rtIco(icon,26),h('h3',null,title),h('p',null,text),
-    href?h('a',Object.assign({class:'rt-card-go',href},ext?{target:'_blank',rel:'noopener'}:{}),label,ico('arrow',14,'')):h('button',{type:'button',class:'rt-card-go',onclick},label,ico('arrow',14,'')));
+    h('a',{class:'rt-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('r-top');}},h('b',null,name),h('span',null,[C.cat,firm].filter(Boolean).join('  |  '))),
+    h('nav',{class:'rt-links'},site?h('a',{href:site,target:'_blank',rel:'noopener'},'Search'):null,links.map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    C.tel?h('a',{class:'rt-navcall',href:C.tel},C.phoneTxt):null),
+    h('nav',{class:'rt-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))));
 
   const hero=h('section',{class:'rt-hero',id:'r-top'},
-    h('div',{class:'rt-fx','aria-hidden':'true'},h('i',{class:'rt-orb a'}),h('i',{class:'rt-orb b'}),h('i',{class:'rt-grid'}),h('i',{class:'rt-stars'})),
-    h('div',{class:'rt-wrap rt-hero-g'},
-    h('div',{class:'rt-hero-t'},
-      h('div',{class:'rt-eyebrow'},[firm,C.city].filter(Boolean).join(' · ')),
-      h('h1',null,h('span',{class:'rt-grad'},name)),
-      h('div',{class:'rt-role'},C.cat||'REALTOR'),
-      h('p',{class:'rt-lead'},C.tag||''),
-      h('div',{class:'rt-cta'},btn('red',C.tel,'Call '+C.phoneTxt,ico('phone',16,'')),btn('line',sms,'Send a text',ico('chat',16,'')))),
-    photo?h('figure',{class:'rt-photo'},h('div',{class:'rt-holo'},h('img',{src:photo,alt:name}),h('i',{class:'rt-scan','aria-hidden':'true'}),['tl','tr','bl','br'].map(k=>h('b',{class:'rt-corner '+k,'aria-hidden':'true'}))),
-      h('figcaption',null,h('span',null,C.cat||'REALTOR'),h('span',null,typeof C.x.license==='string'?C.x.license:''))):null),
-    h('div',{class:'rt-wrap rt-cards'},
-      card('home','Buy a home','Tell '+first+' what you are looking for and get new listings that fit, before you spend a weekend driving around.','Start your search',site,null,true),
-      card('sign','Sell your home','Pricing, prep and marketing for your home, with a plan you see before anything goes live.','Talk about selling',null,()=>scrollTo('r-contact')),
-      card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get my estimate',mail('Home value estimate')||sms,null)));
+    photo?h('div',{class:'rt-hero-ph','aria-hidden':'true'},h('img',{src:photo,alt:''})):null,
+    h('div',{class:'rt-wrap rt-hero-in'},
+      h('h1',null,name),
+      h('div',{class:'rt-sub'},[C.cat,firm].filter(Boolean).join('  |  ')),
+      C.tag?h('p',{class:'rt-lead'},C.tag):null,
+      h('div',{class:'rt-hero-btns'},
+        btn('solid',null,'Buy',false,go('r-buy')),
+        btn('solid',null,'Sell',false,go('r-sell')),
+        btn('solid',mail('Home value estimate','Hi '+first+', I would like a free estimate of what my home is worth. My address is: ')||sms,'Home Value'))));
 
-  const steps=(id,title,sub,list,cta)=>h('section',{class:'rt-sec '+(id==='r-sell'?'alt':''),id},h('div',{class:'rt-wrap'},
-    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},title),h('h2',null,sub)),
+  const icon=k=>{ const d=h('span',{class:'rt-cic','aria-hidden':'true'}); d.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(RT_SVG[k]||'')+'</svg>'; return d; };
+  const card=(k,t,p,label,href,ext,onclick)=>h('div',{class:'rt-card'},h('div',{class:'rt-card-top'},icon(k),h('div',null,h('h3',null,t),h('p',null,p))),btn('outline',href,label,ext,onclick));
+  const cards=h('section',{class:'rt-cards-sec'},h('div',{class:'rt-wrap rt-cards'},
+    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Buy a Home',site,true,go('r-buy')),
+    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell')),
+    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',mail('Home value estimate','Hi '+first+', I would like a free estimate of what my home is worth. My address is: ')||sms,false)));
+
+  const factsRow=facts.length?h('section',{class:'rt-facts-sec'},h('div',{class:'rt-wrap rt-facts-g'},
+    h('h2',null,'Why ',h('br'),first),
+    facts.map(f=>h('div',{class:'rt-fact rv'},h('b',null,String(f.v)),h('span',null,String(f.k)))))):null;
+
+  const about=h('section',{class:'rt-sec',id:'r-about'},h('div',{class:'rt-wrap rt-about'},
+    h('div',{class:'rv'},h('h2',null,'Work with a dedicated REALTOR® today.'),
+      h('p',{class:'rt-about-t'},C.about||''),
+      h('div',{class:'rt-row'},btn('dark',null,'Start Your Journey Today',false,go('r-contact')))),
+    photo?h('img',{class:'rt-about-ph rv',src:photo,alt:name}):null));
+
+  const steps=(id,kick,title,list,cta)=>h('section',{class:'rt-sec '+(id==='r-sell'?'gray':''),id},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},kick),h('h2',null,title)),
     h('ol',{class:'rt-steps'},list.map((t,i)=>h('li',{class:'rv'},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,t[0]),h('p',null,t[1])))),
-    cta));
+    cta?h('div',{class:'rt-row'},cta):null));
   const buy=steps('r-buy','Buying','A clear path from first showing to closing day.',[
     ['Plan','Talk through your budget, timeline and must-haves, and get connected with a lender if you need one.'],
     ['Search','See homes that match what you want, and tour the ones worth your time.'],
     ['Offer','Write a strong offer, negotiate the details and get through inspection and appraisal.'],
-    ['Close','Sign, get your keys and move in.']],
-    site?h('div',{class:'rt-row'},btn('red',site,'Search homes for sale',rtIco('search',16),true)):null);
+    ['Close','Sign, get your keys and move in.']],site?btn('dark',site,'Search Homes for Sale',true):null);
   const sell=steps('r-sell','Selling','Get your home ready, priced right and in front of buyers.',[
     ['Price','Review recent sales nearby to set a price that brings in buyers.'],
     ['Prepare','Simple fixes and staging tips that help your home show well.'],
     ['Market','Photos, listing and social media posts to put your home in front of local buyers.'],
-    ['Close','Review offers, negotiate and handle the paperwork through closing.']],
-    h('div',{class:'rt-row'},btn('red',mail('Selling my home')||C.tel,'Talk about selling',null)));
+    ['Close','Review offers, negotiate and handle the paperwork through closing.']],btn('dark',mail('Selling my home')||C.tel,'Talk About Selling'));
 
-  const about=C.about?h('section',{class:'rt-sec',id:'r-about'},h('div',{class:'rt-wrap rt-about'},
-    photo?h('img',{class:'rt-about-ph rv',src:photo,alt:''}):null,
-    h('div',{class:'rv'},h('span',{class:'rt-kick'},'About'),h('h2',null,'Meet '+first),h('p',{class:'rt-about-t'},C.about),
-      firm?h('dl',{class:'rt-facts'},h('div',null,h('dt',null,'Brokerage'),h('dd',null,firm)),C.addr?h('div',null,h('dt',null,'Office'),h('dd',null,[C.addr,C.city].filter(Boolean).join(', '))):null,typeof C.x.license==='string'?h('div',null,h('dt',null,'License'),h('dd',null,C.x.license)):null):null))):null;
+  const areasSec=areas.length?h('section',{class:'rt-sec dark'},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-head rv'},h('h2',null,'Search Listings By Area')),
+    h('div',{class:'rt-areas'},areas.map((a,i)=>h(site?'a':'div',Object.assign({class:'rt-area rv'},site?{href:site,target:'_blank',rel:'noopener'}:{}),
+      h('span',{class:'rt-area-n','aria-hidden':'true'},String(i+1).padStart(2,'0')),
+      h('div',null,h('small',null,'Explore'),h('b',null,a),h('em',null,'Search Listings ',ico('arrow',13,'')))))))):null;
 
-  const tile=(cls,icon,label,url,handle)=>{ const u=okUrl(url); const inner=[h('span',{class:'rt-soc-ic'},icon),h('b',null,label),h('span',null,u?(typeof handle==='string'&&handle?handle:'Follow '+first):'Link coming soon')];
-    return u?h('a',{class:'rt-soc '+cls,href:u,target:'_blank',rel:'noopener'},inner):h('div',{class:'rt-soc '+cls+' off'},inner); };
-  const follow=h('section',{class:'rt-sec dark',id:'r-follow'},h('div',{class:'rt-wrap'},
-    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},'Follow along'),h('h2',null,'New listings, open houses and local market updates'),h('p',null,'Follow '+first+' for homes as they hit the market, open house times and quick tips for buyers and sellers.')),
-    h('div',{class:'rt-socs rv'},
-      tile('fb',ico('i-fb',24,''),'Facebook',F.facebook,F.facebookName),
-      tile('ig',ico('i-ig',24,''),'Instagram',F.instagram,F.instagramName),
-      tile('tt',rtIco('tiktok',24),'TikTok',F.tiktok,F.tiktokName))));
+  const socIc=k=>k==='tt'?(()=>{ const d=h('span',{class:'rt-sic'}); d.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+RT_SVG.tiktok+'</svg>'; return d; })():h('span',{class:'rt-sic'},ico(k==='fb'?'i-fb':'i-ig',26,''));
+  const tile=(k,label,url,handle)=>{ const u=okUrl(url); const kids=[socIc(k),h('b',null,label),h('span',null,u?(typeof handle==='string'&&handle?handle:'Follow '+first):'Link coming soon')];
+    return u?h('a',{class:'rt-soc rv',href:u,target:'_blank',rel:'noopener'},kids):h('div',{class:'rt-soc rv off'},kids); };
+  const follow=h('section',{class:'rt-sec',id:'r-follow'},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},'Follow Along'),h('h2',null,'New listings, open houses and local market updates'),h('p',null,'Follow '+first+' for homes as they hit the market, open house times and quick tips for buyers and sellers.')),
+    h('div',{class:'rt-socs'},tile('fb','Facebook',F.facebook,F.facebookName),tile('ig','Instagram',F.instagram,F.instagramName),tile('tt','TikTok',F.tiktok,F.tiktokName))));
 
-  const contact=h('section',{class:'rt-sec',id:'r-contact'},h('div',{class:'rt-wrap'},
-    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},'Contact'),h('h2',null,'Ready when you are'),h('p',null,'Call, text or email '+first+' with any question about buying or selling.')),
-    h('div',{class:'rt-contact rv'},
-      C.tel?h('a',{class:'rt-ct',href:C.tel},ico('phone',20,''),h('span',null,'Call'),h('b',null,C.phoneTxt)):null,
-      sms?h('a',{class:'rt-ct',href:sms},ico('chat',20,''),h('span',null,'Text'),h('b',null,C.phoneTxt)):null,
-      C.email?h('a',{class:'rt-ct',href:mail('')},rtIco('mail',20),h('span',null,'Email'),h('b',null,C.email)):null,
-      C.maps?h('a',{class:'rt-ct',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',20,''),h('span',null,'Office'),h('b',null,[C.addr,C.city].filter(Boolean).join(', '))):null)));
+  /* contact form: opens the visitor's own email or text app with the message filled in */
+  const fName=h('input',{type:'text',placeholder:'First Name *',required:true,autocomplete:'given-name'});
+  const lName=h('input',{type:'text',placeholder:'Last Name',autocomplete:'family-name'});
+  const fMail=h('input',{type:'email',placeholder:'Email',autocomplete:'email'});
+  const fPhone=h('input',{type:'tel',placeholder:'Phone *',required:true,autocomplete:'tel'});
+  const fMsg=h('textarea',{rows:'4',placeholder:'Message'});
+  const form=h('form',{class:'rt-form',onsubmit:e=>{ e.preventDefault(); const body=[fMsg.value,'',[fName.value,lName.value].join(' ').trim(),fPhone.value,fMail.value].filter((v,i)=>i<2||v).join('\n'); const u=mail('Website message from '+(fName.value||'a visitor'),body)||(sms?sms+'?&body='+encodeURIComponent(body):''); if(u) location.href=u; }},
+    h('div',{class:'rt-f2'},fName,lName),h('div',{class:'rt-f2'},fMail,fPhone),fMsg,
+    h('button',{type:'submit',class:'rt-btn dark'},'Send'));
+  const contact=h('section',{class:'rt-sec gray',id:'r-contact'},h('div',{class:'rt-wrap rt-contact'},
+    h('div',{class:'rv'},h('h2',null,'Your '+(C.x.areaName||'local')+' REALTOR® for buying and selling'),
+      h('ul',{class:'rt-cl'},
+        C.tel?h('li',null,h('small',null,'Phone'),h('a',{href:C.tel},C.phoneTxt)):null,
+        C.email?h('li',null,h('small',null,'Email'),h('a',{href:mail('')},C.email)):null,
+        (C.addr||C.city)?h('li',null,h('small',null,'Office'),h('a',{href:C.maps,target:'_blank',rel:'noopener'},[firm,C.addr,C.city].filter(Boolean).join(', '))):null)),
+    h('div',{class:'rv'},h('h2',null,'Connect with '+first),h('p',{class:'rt-cp'},'Questions about buying, selling or what your home is worth? Send a message and '+first+' will get back to you.'),form)));
 
+  const col=(t,items)=>h('div',null,h('h4',null,t),h('ul',null,items.filter(Boolean)));
   const foot=h('footer',{class:'rt-foot'},h('div',{class:'rt-wrap'},
-    h('b',null,name+(C.cat?', '+C.cat:'')),
-    firm?h('p',null,firm+(C.addr?', '+[C.addr,C.city].filter(Boolean).join(', '):'')):null,
-    h('p',{class:'rt-legal'},[typeof C.x.license==='string'?C.x.license+'.':'',typeof C.x.legal==='string'?C.x.legal:''].filter(Boolean).join(' '))));
+    h('div',{class:'rt-foot-g'},
+      h('div',{class:'rt-foot-b'},h('b',null,name),h('span',null,[C.cat,firm].filter(Boolean).join('  |  '))),
+      col('Buy',[h('li',null,h('button',{type:'button',onclick:go('r-buy')},'Buy with '+first)),site?h('li',null,h('a',{href:site,target:'_blank',rel:'noopener'},'Homes for Sale')):null]),
+      col('Sell',[h('li',null,h('button',{type:'button',onclick:go('r-sell')},'Sell with '+first)),h('li',null,h('button',{type:'button',onclick:go('r-top')},'Home Value'))]),
+      col('Contact',[C.tel?h('li',null,h('a',{href:C.tel},C.phoneTxt)):null,C.email?h('li',null,h('a',{href:mail('')},C.email)):null,C.addr?h('li',null,[C.addr,C.city].filter(Boolean).join(', ')):null])),
+    h('p',{class:'rt-legal'},[firm?firm+'.':'',typeof C.x.license==='string'?C.x.license+'.':'',typeof C.x.legal==='string'?C.x.legal:''].filter(Boolean).join(' '))));
 
-  const page=h('div',{class:'rt'},nav,hero,buy,sell,about,follow,contact,foot);
-  /* glass panels light up where the pointer is */
-  page.addEventListener('pointermove',e=>{ const el=e.target.closest&&e.target.closest('.rt-card,.rt-steps li,.rt-soc,.rt-ct'); if(!el) return; const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); },{passive:true});
-  /* headshot tilts slightly with the pointer */
-  const holo=page.querySelector('.rt-holo');
-  if(holo&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&matchMedia('(pointer:fine)').matches){
-    hero.addEventListener('pointermove',e=>{ const r=hero.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5; holo.style.transform='perspective(900px) rotateY('+(x*10).toFixed(2)+'deg) rotateX('+(-y*8).toFixed(2)+'deg)'; },{passive:true});
-    hero.addEventListener('pointerleave',()=>{ holo.style.transform=''; });
-  }
+  const page=h('div',{class:'rt'},nav,hero,cards,factsRow,about,buy,sell,areasSec,follow,contact,foot);
+  /* header turns solid black once you scroll past the top */
+  const onScroll=()=>{ if(!nav.isConnected){ removeEventListener('scroll',onScroll); return; } nav.classList.toggle('solid',scrollY>60); };
+  addEventListener('scroll',onScroll,{passive:true});
   return page;
 }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
