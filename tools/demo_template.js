@@ -1348,12 +1348,16 @@ function cloudShop(C){
   const hp=(typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:'';
   const hv=(typeof C.x.heroVideo==='string'&&/^https:\/\/assets\.mixkit\.co\/videos\/\d+\/\d+-720\.mp4$/.test(C.x.heroVideo))?C.x.heroVideo:'';
   const blow=!smoke&&(!!hv||(!!hp&&C.x.heroBlow!==false));
-  const vidLayer=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); const v=h('video',{class:'cl-vid',muted:'',autoplay:'',playsinline:'',preload:'auto'}); v.muted=true; v.src=hv; if(hp) v.poster=hp;
-    const seg=+C.x.heroVideoSeg||6.5;
-    v.addEventListener('timeupdate',()=>{ if(v.currentTime>seg-0.7&&!v.classList.contains('fade')){ v.classList.add('fade'); setTimeout(()=>{ v.currentTime=0; v.play().catch(()=>{}); v.classList.remove('fade'); },650); } });
-    v.addEventListener('ended',()=>{ v.currentTime=0; v.play().catch(()=>{}); });
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ v.removeAttribute('autoplay'); v.addEventListener('loadeddata',()=>{ v.currentTime=1.2; },{once:true}); }
-    w.append(v); return w; };
+  const vidLayer=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'});
+    const rate=+C.x.heroVideoRate||0.8, seg=+C.x.heroVideoSeg||7, xf=1.6;
+    const mk=()=>{ const v=h('video',{class:'cl-vid',muted:'',playsinline:'',preload:'auto'}); v.muted=true; v.src=hv; v.playbackRate=rate; v.addEventListener('loadedmetadata',()=>{ v.playbackRate=rate; }); return v; };
+    const A=mk(), B=mk(); B.classList.add('off'); w.append(A,B);
+    let cur=A, nxt=B, busy=false;
+    const tick=()=>{ if(!busy&&cur.currentTime>=seg-xf*rate){ busy=true; nxt.currentTime=0; nxt.playbackRate=rate; nxt.play().catch(()=>{}); nxt.classList.remove('off'); cur.classList.add('off'); const old=cur; setTimeout(()=>{ old.pause(); busy=false; },xf*1000+100); cur=nxt; nxt=old; } };
+    [A,B].forEach(v=>v.addEventListener('timeupdate',()=>{ if(v===cur) tick(); }));
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ A.addEventListener('loadeddata',()=>{ A.currentTime=1.2; },{once:true}); }
+    else { A.autoplay=true; A.play().catch(()=>{}); }
+    return w; };
   const blowLayers=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); [0,1,2].forEach(i=>{ const l=h('div',{class:'cl-blow-l b'+i}); l.style.backgroundImage=cssUrl(hp); w.append(l); }); return w; };
   const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')+(blow?' blowing':'')},smoke?clSmoke():(blow?(hv?vidLayer():blowLayers()):null),h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),

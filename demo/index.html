@@ -592,8 +592,8 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
-.cl-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);filter:brightness(.72) contrast(1.15) grayscale(1);mix-blend-mode:screen;opacity:1;transition:opacity .65s ease}
-.cl-vid.fade{opacity:0}
+.cl-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);filter:brightness(.72) contrast(1.15) grayscale(1);mix-blend-mode:screen;opacity:1;transition:opacity 1.6s ease-in-out}
+.cl-vid.off{opacity:0}
 .cl-blow{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .cl-blow-l{position:absolute;inset:-10% -10% -10% -20%;-webkit-mask-image:radial-gradient(ellipse 60% 55% at 62% 50%,#000 35%,rgba(0,0,0,0) 78%);mask-image:radial-gradient(ellipse 60% 55% at 62% 50%,#000 35%,rgba(0,0,0,0) 78%);background-size:cover;background-position:70% 50%;mix-blend-mode:screen;transform-origin:15% 60%;opacity:0;animation:clBlow 9s cubic-bezier(.25,.6,.3,1) infinite;will-change:transform,opacity,filter}
 .cl-blow-l.b1{animation-delay:-3s;background-position:60% 40%}
@@ -3487,12 +3487,16 @@ function cloudShop(C){
   const hp=(typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:'';
   const hv=(typeof C.x.heroVideo==='string'&&/^https:\/\/assets\.mixkit\.co\/videos\/\d+\/\d+-720\.mp4$/.test(C.x.heroVideo))?C.x.heroVideo:'';
   const blow=!smoke&&(!!hv||(!!hp&&C.x.heroBlow!==false));
-  const vidLayer=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); const v=h('video',{class:'cl-vid',muted:'',autoplay:'',playsinline:'',preload:'auto'}); v.muted=true; v.src=hv; if(hp) v.poster=hp;
-    const seg=+C.x.heroVideoSeg||6.5;
-    v.addEventListener('timeupdate',()=>{ if(v.currentTime>seg-0.7&&!v.classList.contains('fade')){ v.classList.add('fade'); setTimeout(()=>{ v.currentTime=0; v.play().catch(()=>{}); v.classList.remove('fade'); },650); } });
-    v.addEventListener('ended',()=>{ v.currentTime=0; v.play().catch(()=>{}); });
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ v.removeAttribute('autoplay'); v.addEventListener('loadeddata',()=>{ v.currentTime=1.2; },{once:true}); }
-    w.append(v); return w; };
+  const vidLayer=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'});
+    const rate=+C.x.heroVideoRate||0.8, seg=+C.x.heroVideoSeg||7, xf=1.6;
+    const mk=()=>{ const v=h('video',{class:'cl-vid',muted:'',playsinline:'',preload:'auto'}); v.muted=true; v.src=hv; v.playbackRate=rate; v.addEventListener('loadedmetadata',()=>{ v.playbackRate=rate; }); return v; };
+    const A=mk(), B=mk(); B.classList.add('off'); w.append(A,B);
+    let cur=A, nxt=B, busy=false;
+    const tick=()=>{ if(!busy&&cur.currentTime>=seg-xf*rate){ busy=true; nxt.currentTime=0; nxt.playbackRate=rate; nxt.play().catch(()=>{}); nxt.classList.remove('off'); cur.classList.add('off'); const old=cur; setTimeout(()=>{ old.pause(); busy=false; },xf*1000+100); cur=nxt; nxt=old; } };
+    [A,B].forEach(v=>v.addEventListener('timeupdate',()=>{ if(v===cur) tick(); }));
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ A.addEventListener('loadeddata',()=>{ A.currentTime=1.2; },{once:true}); }
+    else { A.autoplay=true; A.play().catch(()=>{}); }
+    return w; };
   const blowLayers=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); [0,1,2].forEach(i=>{ const l=h('div',{class:'cl-blow-l b'+i}); l.style.backgroundImage=cssUrl(hp); w.append(l); }); return w; };
   const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')+(blow?' blowing':'')},smoke?clSmoke():(blow?(hv?vidLayer():blowLayers()):null),h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
