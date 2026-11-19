@@ -1187,18 +1187,22 @@ function wbFinder(C,call,fbBtn){
     p2.classList.toggle('dim',!prob);
     const stage=!prob?0:!room?1:2;
     steps.forEach((li,i)=>{ li.classList.toggle('now',i===stage); li.classList.toggle('done',i<stage); });
-    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Call or message Tyler and mention it.';
+    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Send it to Tyler with one tap.';
     if(stage<2){ result.hidden=true; result.replaceChildren(); return; }
     const svc=(room==='Store or office'&&prob.svc!=='Drywall')?prob.svc+' and Commercial':prob.svc;
     const summary='Hi, I found you on your website. Problem: '+prob.t+'. Room: '+room+'. Can I get an estimate? My name is ';
     const copied=h('span',{class:'wb-fcopied',role:'status'});
-    const copy=h('button',{type:'button',class:'wb-btn line',onclick:()=>{ const done=()=>{ copied.textContent='Copied. Paste it into a text or message.'; }; try{ navigator.clipboard.writeText(summary).then(done,()=>{ copied.textContent='Copy not available. Please type it in your message.'; }); }catch(e){ copied.textContent='Copy not available. Please type it in your message.'; } }},'Copy my request');
+    const enc=encodeURIComponent(summary);
+    const textBtn=C.tel?h('a',{class:'wb-btn blue',href:C.tel.replace(/^tel:/,'sms:')+'?&body='+enc},ico('chat',16,''),'Text Tyler'):null;
+    const mailBtn=C.email?h('a',{class:'wb-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request: '+prob.t)+'&body='+enc},'Email Tyler'):null;
+    const copy=h('button',{type:'button',class:'wb-fcopy',onclick:()=>{ const done=()=>{ copied.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(done,()=>{ copied.textContent='Copy not available. Please type it in your message.'; }); }catch(e){ copied.textContent='Copy not available. Please type it in your message.'; } }},'Copy my request to paste');
     result.hidden=false;
     result.replaceChildren(
-      h('div',{class:'wb-fres-l'},h('span',{class:'wb-tape light'},'Your match'),h('h3',null,svc),h('p',null,h('b',null,'You picked: '),prob.t+' in '+room.toLowerCase()+'.'),h('p',null,prob.why),(room==='Store or office')?h('p',null,'We also do commercial work, including storefronts and offices.'):null,h('p',{class:'wb-ftip'},'Tip: take a photo of the problem before you call. It helps.')),
-      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Next step'),h('div',{class:'wb-cta'},call('blue','Call Tyler'),copy,fbBtn('line','Message on Facebook')),copied,
-        h('button',{type:'button',class:'wb-freset',onclick:()=>{ prob=null; room=null; render(); }},'Start over'),
-        h('p',{class:'wb-fdemo'},'In the finished site, this sends your request and photos straight to Tyler.')));
+      h('div',{class:'wb-fres-l'},h('span',{class:'wb-tape light'},'Your match'),h('h3',null,svc),h('p',null,h('b',null,'You picked: '),prob.t+' in '+room.toLowerCase()+'.'),h('p',null,prob.why),(room==='Store or office')?h('p',null,'We also do commercial work, including storefronts and offices.'):null,h('p',{class:'wb-ftip'},'Tip: add a photo of the problem when you message. It helps.')),
+      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Send it to Tyler'),h('p',{class:'wb-fsub'},'Text is the fastest. Your picks are filled in for you.'),
+        h('div',{class:'wb-cta'},textBtn,fbBtn('line','Message on Facebook'),mailBtn),
+        h('div',{class:'wb-fmore'},copy,h('button',{type:'button',class:'wb-freset',onclick:()=>{ prob=null; room=null; render(); }},'Start over')),copied,
+        h('p',{class:'wb-fdemo'},'In the finished site, you can also attach photos here and send straight to Tyler.')));
     if(stage===2&&!matchMedia('(prefers-reduced-motion: reduce)').matches) result.scrollIntoView({block:'nearest',behavior:'smooth'});
   }
   const sec=h('section',{class:'wb-sec wb-mist wb-finder',id:'w-finder'},h('div',{class:'wb-wrap'},
