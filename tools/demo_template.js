@@ -76,6 +76,7 @@ function build(d){
     items:(d.items||[]).filter(i=>i&&i.name).map(i=>Object.assign({},i,{photo:okUrl(i.photo)})), specials:(d.specials||[]).filter(i=>i&&i.title).map(i=>Object.assign({},i,{photos:(i.photos||[]).map(okUrl).filter(Boolean).slice(0,8)})),
     fb:okUrl(String((d.social||{}).facebook||'').replace(/^http:\/\//i,'https://')), ig:okUrl(String((d.social||{}).instagram||'').replace(/^http:\/\//i,'https://'))
   };
+  if(C.x.hideLogo===true) C.logo='';
   C.items=cleanItems(C.items,C);
   while(C.hours.length<7) C.hours.push('');
   C.hasHours=C.hours.some(Boolean);
@@ -97,6 +98,7 @@ function build(d){
   C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
+  if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
@@ -2179,6 +2181,97 @@ function cloudShop(C){
     h('div',{class:'cl-legal'},h('b',null,'21+ Only'),h('p',null,'You must be 21 or older to purchase. Valid ID required. Products may contain nicotine, an addictive chemical.'))),
     h('div',{class:'cl-w cl-copy'},'© '+new Date().getFullYear()+' '+C.name));
   return h('div',{class:'demo cl'},warn,head,hero,perks,tiles,shop,gal,revs,visit,foot);
+}
+/* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
+const RT_SVG={
+  mail:'<path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/>',
+  tiktok:'<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2.2 4.4 5 4.6"/>',
+  home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  sign:'<path d="M5 21V4"/><path d="M5 6h13v7H5"/><path d="M9 13v3M15 13v3"/>',
+  value:'<path d="M4 20h16"/><path d="M6 16l4-5 3 3 5-7"/><path d="M15 7h3v3"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>'
+};
+function rtIco(k,size){ const s=h('span',{class:'rt-ic','aria-hidden':'true'}); s.innerHTML='<svg viewBox="0 0 24 24" width="'+(size||22)+'" height="'+(size||22)+'" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(RT_SVG[k]||'')+'</svg>'; return s; }
+function realty(C){
+  const name=C.name||'Your Name';
+  const first=name.split(/\s+/)[0];
+  const firm=typeof C.x.brokerage==='string'?C.x.brokerage:'';
+  const photo=okUrl(C.x.photo);
+  const site=okUrl(C.x.searchUrl)||'';
+  const digits=C.phone.replace(/\D/g,'').slice(-10);
+  const sms=digits.length===10?'sms:+1'+digits:'';
+  const mail=(subj)=>C.email?'mailto:'+C.email+(subj?'?subject='+encodeURIComponent(subj):''):'';
+  const F=(C.x.follow&&typeof C.x.follow==='object')?C.x.follow:{};
+  const links=[['r-buy','Buy'],['r-sell','Sell'],['r-about','About'],['r-follow','Follow'],['r-contact','Contact']];
+  const btn=(cls,href,label,icon,ext)=>href?h('a',Object.assign({class:'rt-btn '+cls,href},ext?{target:'_blank',rel:'noopener'}:{}),icon||null,label):null;
+
+  const nav=h('header',{class:'rt-nav'},h('div',{class:'rt-wrap rt-nav-in'},
+    h('a',{class:'rt-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('r-top');}},h('b',null,name),h('span',null,[C.cat,firm].filter(Boolean).join(' | '))),
+    h('nav',{class:'rt-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
+    btn('red sm',C.tel,'Call '+first,ico('phone',15,''))),
+    h('nav',{class:'rt-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
+
+  const card=(icon,title,text,label,href,onclick,ext)=>h('div',{class:'rt-card'},rtIco(icon,26),h('h3',null,title),h('p',null,text),
+    href?h('a',Object.assign({class:'rt-card-go',href},ext?{target:'_blank',rel:'noopener'}:{}),label,ico('arrow',14,'')):h('button',{type:'button',class:'rt-card-go',onclick},label,ico('arrow',14,'')));
+
+  const hero=h('section',{class:'rt-hero',id:'r-top'},h('div',{class:'rt-wrap rt-hero-g'},
+    h('div',{class:'rt-hero-t'},
+      h('div',{class:'rt-eyebrow'},[firm,C.city].filter(Boolean).join(' · ')),
+      h('h1',null,name),
+      h('div',{class:'rt-role'},C.cat||'REALTOR'),
+      h('p',{class:'rt-lead'},C.tag||''),
+      h('div',{class:'rt-cta'},btn('red',C.tel,'Call '+C.phoneTxt,ico('phone',16,'')),btn('line',sms,'Send a text',ico('chat',16,'')))),
+    photo?h('figure',{class:'rt-photo'},h('img',{src:photo,alt:name})):null),
+    h('div',{class:'rt-wrap rt-cards'},
+      card('home','Buy a home','Tell '+first+' what you are looking for and get new listings that fit, before you spend a weekend driving around.','Start your search',site,null,true),
+      card('sign','Sell your home','Pricing, prep and marketing for your home, with a plan you see before anything goes live.','Talk about selling',null,()=>scrollTo('r-contact')),
+      card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get my estimate',mail('Home value estimate')||sms,null)));
+
+  const steps=(id,title,sub,list,cta)=>h('section',{class:'rt-sec '+(id==='r-sell'?'alt':''),id},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},title),h('h2',null,sub)),
+    h('ol',{class:'rt-steps'},list.map((t,i)=>h('li',{class:'rv'},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,t[0]),h('p',null,t[1])))),
+    cta));
+  const buy=steps('r-buy','Buying','A clear path from first showing to closing day.',[
+    ['Plan','Talk through your budget, timeline and must-haves, and get connected with a lender if you need one.'],
+    ['Search','See homes that match what you want, and tour the ones worth your time.'],
+    ['Offer','Write a strong offer, negotiate the details and get through inspection and appraisal.'],
+    ['Close','Sign, get your keys and move in.']],
+    site?h('div',{class:'rt-row'},btn('red',site,'Search homes for sale',rtIco('search',16),true)):null);
+  const sell=steps('r-sell','Selling','Get your home ready, priced right and in front of buyers.',[
+    ['Price','Review recent sales nearby to set a price that brings in buyers.'],
+    ['Prepare','Simple fixes and staging tips that help your home show well.'],
+    ['Market','Photos, listing and social media posts to put your home in front of local buyers.'],
+    ['Close','Review offers, negotiate and handle the paperwork through closing.']],
+    h('div',{class:'rt-row'},btn('red',mail('Selling my home')||C.tel,'Talk about selling',null)));
+
+  const about=C.about?h('section',{class:'rt-sec',id:'r-about'},h('div',{class:'rt-wrap rt-about'},
+    photo?h('img',{class:'rt-about-ph rv',src:photo,alt:''}):null,
+    h('div',{class:'rv'},h('span',{class:'rt-kick'},'About'),h('h2',null,'Meet '+first),h('p',{class:'rt-about-t'},C.about),
+      firm?h('dl',{class:'rt-facts'},h('div',null,h('dt',null,'Brokerage'),h('dd',null,firm)),C.addr?h('div',null,h('dt',null,'Office'),h('dd',null,[C.addr,C.city].filter(Boolean).join(', '))):null,typeof C.x.license==='string'?h('div',null,h('dt',null,'License'),h('dd',null,C.x.license)):null):null))):null;
+
+  const tile=(cls,icon,label,url,handle)=>{ const u=okUrl(url); const inner=[h('span',{class:'rt-soc-ic'},icon),h('b',null,label),h('span',null,u?(typeof handle==='string'&&handle?handle:'Follow '+first):'Link coming soon')];
+    return u?h('a',{class:'rt-soc '+cls,href:u,target:'_blank',rel:'noopener'},inner):h('div',{class:'rt-soc '+cls+' off'},inner); };
+  const follow=h('section',{class:'rt-sec dark',id:'r-follow'},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},'Follow along'),h('h2',null,'New listings, open houses and local market updates'),h('p',null,'Follow '+first+' for homes as they hit the market, open house times and quick tips for buyers and sellers.')),
+    h('div',{class:'rt-socs rv'},
+      tile('fb',ico('i-fb',24,''),'Facebook',F.facebook,F.facebookName),
+      tile('ig',ico('i-ig',24,''),'Instagram',F.instagram,F.instagramName),
+      tile('tt',rtIco('tiktok',24),'TikTok',F.tiktok,F.tiktokName))));
+
+  const contact=h('section',{class:'rt-sec',id:'r-contact'},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},'Contact'),h('h2',null,'Ready when you are'),h('p',null,'Call, text or email '+first+' with any question about buying or selling.')),
+    h('div',{class:'rt-contact rv'},
+      C.tel?h('a',{class:'rt-ct',href:C.tel},ico('phone',20,''),h('span',null,'Call'),h('b',null,C.phoneTxt)):null,
+      sms?h('a',{class:'rt-ct',href:sms},ico('chat',20,''),h('span',null,'Text'),h('b',null,C.phoneTxt)):null,
+      C.email?h('a',{class:'rt-ct',href:mail('')},rtIco('mail',20),h('span',null,'Email'),h('b',null,C.email)):null,
+      C.maps?h('a',{class:'rt-ct',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',20,''),h('span',null,'Office'),h('b',null,[C.addr,C.city].filter(Boolean).join(', '))):null)));
+
+  const foot=h('footer',{class:'rt-foot'},h('div',{class:'rt-wrap'},
+    h('b',null,name+(C.cat?', '+C.cat:'')),
+    firm?h('p',null,firm+(C.addr?', '+[C.addr,C.city].filter(Boolean).join(', '):'')):null,
+    h('p',{class:'rt-legal'},[typeof C.x.license==='string'?C.x.license+'.':'',typeof C.x.legal==='string'?C.x.legal:''].filter(Boolean).join(' '))));
+
+  return h('div',{class:'rt'},nav,hero,buy,sell,about,follow,contact,foot);
 }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
 /* Website plans: keep in step with the Pricing section of index.html */
