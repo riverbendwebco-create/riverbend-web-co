@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -228,6 +228,7 @@ function western(C){
   if(C.variant==='bayou') return bayou(C);
   if(C.variant==='buz') return buz(C);
   if(C.variant==='fade') return fade(C);
+  if(C.variant==='welborn') return welborn(C);
   if(C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length) return trailhead(C);
   const G=groups(C.items,'Menu');
   const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
@@ -1142,6 +1143,138 @@ function fade(C){
   const foot=h('footer',{class:'fd-foot'},h('div',{class:'fd-wrap fd-foot-in'},fdMark(C,'sm'),h('span',null,h('b',null,name),[C.addr,C.city].filter(Boolean).length?' · '+[C.addr,C.city].filter(Boolean).join(', '):''),socials(C)),
     h('div',{class:'fd-wrap fd-legal'},h('span',null,'© '+new Date().getFullYear()+' '+name),h('span',null,'Site by Riverbend Web Co.')));
   return h('div',{class:'demo fd on'},nav,hero,brands,about,services,gal,band,faqEl,visit,foot);
+}
+
+/* ===================== WELBORN (painting + drywall contractor) ===================== */
+function wbLogo(C,cls){ const u=okUrl(C.x.logoUrl); return u?h('img',{class:'wb-logo '+(cls||''),src:u,alt:C.name||'Logo'}):h('b',{class:'wb-logo-t'},C.name||''); }
+function welborn(C){
+  const name=C.name||'Welborn Painting & Drywall';
+  const A=k=>Array.isArray(C.x[k])?C.x[k]:[];
+  const svc=A('svc').filter(s=>s&&s.g&&s.t).slice(0,4).map(s=>({g:String(s.g),d:s.d?String(s.d):'',t:String(s.t).split('|').map(t=>t.trim()).filter(Boolean)}));
+  const stats=A('stats').filter(f=>f&&f.k&&f.v).slice(0,4);
+  const revs=A('rev').filter(r=>r&&r.t&&r.n).slice(0,3);
+  const faq=A('faq').filter(f=>f&&f.q&&f.a).slice(0,8);
+  const caps=A('caps').map(t=>typeof t==='string'?t:'');
+  const tags=A('tags').map(t=>typeof t==='string'?t:'');
+  const own=C.own;
+  const heroIx=A('hero').filter(n=>Number.isInteger(n)&&own[n]).slice(0,3);
+  const headParts=String(C.x.headline||'Smooth walls.|Clean lines.').split('|');
+  const links=[svc.length?['w-services','Services']:null,own.length?['w-work','Our work']:null,revs.length?['w-reviews','Reviews']:null,faq.length?['w-faq','FAQ']:null,['w-contact','Contact']].filter(Boolean);
+  const call=(cls,label)=>C.tel?h('a',{class:'wb-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
+  const fbBtn=(cls,label)=>C.fb?h('a',{class:'wb-btn '+cls,href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',16,''),label||'Message us on Facebook'):null;
+
+  const top=h('div',{class:'wb-top'},h('div',{class:'wb-wrap wb-top-in'},
+    h('span',null,String(C.x.strip||'Licensed and insured · Residential and commercial')),
+    C.tel?h('a',{href:C.tel},C.phoneTxt):null));
+  const nav=h('header',{class:'wb-nav'},h('div',{class:'wb-wrap wb-nav-in'},
+    h('a',{class:'wb-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');},'aria-label':name},wbLogo(C,'sm')),
+    h('nav',{class:'wb-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
+    call('blue sm','Call')),
+    h('nav',{class:'wb-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
+
+  /* hero: headline with a painted stroke, photo collage with a roller wipe */
+  const hero=h('section',{class:'wb-hero',id:'w-top'},h('div',{class:'wb-wrap wb-hero-g'},
+    h('div',{class:'wb-hero-t'},
+      h('span',{class:'wb-tape'},C.cat||'Painting and drywall'),
+      h('h1',null,h('span',null,headParts[0]),headParts[1]?[h('br'),h('span',{class:'wb-stroke'},headParts[1])]:null),
+      h('p',{class:'wb-lead'},C.tag||''),
+      h('div',{class:'wb-cta'},call('blue'),fbBtn('line')),
+      stats.length?h('ul',{class:'wb-trust'},stats.slice(0,3).map(s=>h('li',null,h('b',null,String(s.v)),h('span',null,String(s.k))))):null),
+    heroIx.length?h('div',{class:'wb-hero-ph','aria-hidden':'true'},
+      h('div',{class:'wb-hp wb-hp-a'},bg(h('span'),own[heroIx[0]]),h('i',{class:'wb-roll'})),
+      heroIx[1]!=null?h('div',{class:'wb-hp wb-hp-b'},bg(h('span'),own[heroIx[1]])):null,
+      heroIx[2]!=null?h('div',{class:'wb-hp wb-hp-c'},bg(h('span'),own[heroIx[2]])):null,
+      h('div',{class:'wb-corner'})):null));
+
+  /* band */
+  const words=A('band').filter(t=>typeof t==='string'&&t).slice(0,9);
+  const band=words.length?h('section',{class:'wb-band','aria-hidden':'true'},h('div',{class:'wb-wrap wb-band-in'},words.map((t,i)=>[i?h('i'):null,h('span',null,t)]))):null;
+
+  /* services: paint chip cards */
+  const chipCols=['#3981F0','#0B0F14','#6B7A90','#1B5FD6'];
+  const services=svc.length?h('section',{class:'wb-sec wb-mist',id:'w-services'},h('div',{class:'wb-wrap'},
+    h('div',{class:'wb-sh'},h('span',{class:'wb-tape'},'What we do'),h('h2',null,C.x.svcTitle?String(C.x.svcTitle):'Pick your finish'),C.x.svcSub?h('p',null,String(C.x.svcSub)):null),
+    h('div',{class:'wb-chips'},svc.map((s,i)=>h('article',{class:'wb-chip'},
+      h('div',{class:'wb-chip-top',style:'background:'+chipCols[i%chipCols.length]},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,s.g)),
+      h('div',{class:'wb-chip-body'},s.d?h('p',null,s.d):null,h('ul',null,s.t.map(t=>h('li',null,t))),C.tel?h('a',{class:'wb-chip-call',href:C.tel},'Call for an estimate'):null)))))):null;
+
+  /* work: gallery that slides on its own */
+  let work=null;
+  if(own.length){
+    const all=own.slice(0,12).map((u,i)=>i);
+    const ordered=all.filter(i=>!heroIx.includes(i)).concat(all.filter(i=>heroIx.includes(i)));
+    const list=ordered.map(i=>own[i]), gcaps=ordered.map(i=>caps[i]||''), gtags=ordered.map(i=>tags[i]||'');
+    const n=list.length, EX=3;
+    const slide=(i,clone)=>h('figure',{class:'wb-slide','aria-hidden':clone?'true':null},
+      h('button',{type:'button',tabindex:clone?'-1':null,'aria-label':'Open photo '+(i+1)+(gcaps[i]?': '+gcaps[i]:''),onclick:()=>bzLightbox(list,gcaps,i)},bg(h('span',{class:'wb-ph'}),list[i])),
+      (gtags[i]||gcaps[i])?h('figcaption',null,gtags[i]?h('em',null,gtags[i]):null,gcaps[i]?h('b',null,gcaps[i]):null):null);
+    const track=h('div',{class:'wb-track'});
+    for(let i=0;i<n;i++) track.append(slide(i,false));
+    for(let i=0;i<EX;i++) track.append(slide(i%n,true));
+    const view=h('div',{class:'wb-view',tabindex:'0','aria-label':'Photo slider'},track);
+    const cnt=h('span',{class:'wb-cnt'});
+    const dots=h('div',{class:'wb-dots'},list.map((u,i)=>h('button',{type:'button','aria-label':'Show photo '+(i+1),onclick:()=>{ go(i); user(); }})));
+    let idx=0, per=3, paused=matchMedia('(prefers-reduced-motion: reduce)').matches, hold=false, timer=null;
+    const place=()=>{ track.style.transform='translateX(-'+(idx*100/(n+EX))+'%)'; const a=((idx%n)+n)%n; cnt.textContent=String(a+1).padStart(2,'0')+' / '+String(n).padStart(2,'0'); [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===a)); };
+    const size=()=>{ per=innerWidth<700?1:innerWidth<1060?2:3; track.style.width=((n+EX)*100/per)+'%'; [...track.children].forEach(s=>s.style.flexBasis=(100/(n+EX))+'%'); };
+    const anim=on=>{ track.style.transition=on?'transform .8s cubic-bezier(.65,0,.3,1)':'none'; };
+    function go(i){ anim(true); idx=i; place(); }
+    track.addEventListener('transitionend',e=>{ if(e.target!==track) return; if(idx>=n){ anim(false); idx-=n; place(); void track.offsetWidth; } });
+    const next=()=>go(idx+1);
+    const prev=()=>{ if(idx<=0){ anim(false); idx=n; place(); void track.offsetWidth; } go(idx-1); };
+    const pbtn=h('button',{type:'button',class:'wb-pause','aria-pressed':String(paused)},paused?'Play':'Pause');
+    const setPaused=v=>{ paused=v; pbtn.setAttribute('aria-pressed',String(v)); pbtn.textContent=v?'Play':'Pause'; };
+    const user=()=>{ if(!paused) restart(); };
+    const restart=()=>{ clearInterval(timer); timer=setInterval(()=>{ if(!paused&&!hold&&!document.hidden) next(); },3800); };
+    pbtn.addEventListener('click',()=>setPaused(!paused));
+    view.addEventListener('mouseenter',()=>{ hold=true; }); view.addEventListener('mouseleave',()=>{ hold=false; });
+    view.addEventListener('focusin',()=>{ hold=true; }); view.addEventListener('focusout',()=>{ hold=false; });
+    let sx=null; view.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; hold=true; },{passive:true});
+    view.addEventListener('touchend',e=>{ hold=false; if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; sx=null; if(Math.abs(dx)>45){ dx<0?next():prev(); user(); } });
+    view.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){ next(); user(); } else if(e.key==='ArrowLeft'){ prev(); user(); } });
+    size(); place(); addEventListener('resize',size); restart();
+    work=h('section',{class:'wb-sec wb-ink wb-work',id:'w-work'},
+      h('div',{class:'wb-wrap wb-work-h'},
+        h('div',null,h('span',{class:'wb-tape'},'Recent jobs'),h('h2',null,C.x.workTitle?String(C.x.workTitle):'Our work'),h('p',{class:'wb-sub'},C.x.workSub?String(C.x.workSub):'Photos from our jobs. They change on their own, or use the arrows. Tap a photo to see it full size.')),
+        h('div',{class:'wb-ctl'},cnt,h('button',{type:'button',class:'wb-arw','aria-label':'Previous photo',onclick:()=>{ prev(); user(); }},'‹'),h('button',{type:'button',class:'wb-arw','aria-label':'Next photo',onclick:()=>{ next(); user(); }},'›'),pbtn)),
+      h('div',{class:'wb-wrap wb-wide'},view),
+      h('div',{class:'wb-wrap'},dots),
+      C.fb?h('div',{class:'wb-wrap'},h('div',{class:'wb-follow'},h('b',null,'See more jobs on Facebook'),fbBtn('blue','Welborn on Facebook'))):null);
+  }
+
+  /* reviews */
+  const reviews=revs.length?h('section',{class:'wb-sec',id:'w-reviews'},h('div',{class:'wb-wrap'},
+    h('div',{class:'wb-sh'},h('span',{class:'wb-tape'},'Customer reviews'),h('h2',null,C.x.revTitle?String(C.x.revTitle):'What customers say'),C.x.revNote?h('p',null,String(C.x.revNote)):null),
+    h('div',{class:'wb-revs'},revs.map(r=>h('figure',{class:'wb-rev'},h('blockquote',null,String(r.t)),h('figcaption',null,h('b',null,String(r.n)),r.w?h('span',null,String(r.w)):null)))))):null;
+
+  /* about + stats */
+  const paras=String(C.about||'').split(/\n+/).filter(Boolean);
+  const about=h('section',{class:'wb-sec wb-mist wb-about',id:'w-about'},h('div',{class:'wb-wrap wb-ab-g'},
+    h('div',null,h('span',{class:'wb-tape'},'About'),h('h2',null,C.x.aboutTitle?String(C.x.aboutTitle):('About '+name)),paras.map(t=>h('p',null,t)),h('div',{class:'wb-cta'},call('blue'),fbBtn('line'))),
+    stats.length?h('dl',{class:'wb-facts'},stats.map(f=>h('div',null,h('dd',null,String(f.v)),h('dt',null,String(f.k))))):null));
+
+  /* faq */
+  const faqEl=faq.length?h('section',{class:'wb-sec',id:'w-faq'},h('div',{class:'wb-wrap wb-faq-g'},
+    h('div',null,h('span',{class:'wb-tape'},'Good to know'),h('h2',null,'Common questions')),
+    h('div',{class:'wb-qa'},faq.map((f,i)=>h('details',i===0?{open:''}:null,h('summary',null,String(f.q)),h('p',null,String(f.a))))))):null;
+
+  /* contact */
+  const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
+  const contact=h('section',{class:'wb-contact',id:'w-contact'},
+    h('div',{class:'wb-wrap wb-ct-g'},
+      h('div',{class:'wb-ct-card'},
+        h('span',{class:'wb-tape light'},'Get an estimate'),
+        h('h2',null,C.x.ctTitle?String(C.x.ctTitle):'Tell us about your walls.'),
+        h('p',null,C.x.ctText?String(C.x.ctText):'Call or message us about your project.'),
+        C.tel?h('a',{class:'wb-phone',href:C.tel},C.phoneTxt):null,
+        h('div',{class:'wb-cta'},fbBtn('light'),C.maps?h('a',{class:'wb-btn ghostl',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Map'):null),
+        C.x.note?h('p',{class:'wb-note'},String(C.x.note)):null,
+        socials(C)),
+      (C.city||C.addr)?h('div',{class:'wb-map'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map of '+(C.city||name),loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
+
+  const foot=h('footer',{class:'wb-foot'},h('div',{class:'wb-wrap wb-foot-in'},h('span',{class:'wb-plate'},wbLogo(C,'sm')),h('span',null,[C.cat,C.city].filter(Boolean).join(' · ')),socials(C)),
+    h('div',{class:'wb-wrap wb-legalw'},h('div',{class:'wb-legal'},h('span',null,'© '+new Date().getFullYear()+' '+name),h('span',null,'Site by Riverbend Web Co.'))));
+  return h('div',{class:'demo wb on'},top,nav,hero,band,services,work,reviews,about,faqEl,contact,foot);
 }
 
 const DN_ICON={
