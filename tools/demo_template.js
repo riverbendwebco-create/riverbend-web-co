@@ -1291,6 +1291,14 @@ const CL_ICO={
   id:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M14 10h4M14 14h4"/></svg>',
   arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
 };
+const CL_CAT={
+  vape:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="14" width="16" height="30" rx="5"/><path d="M20 14V8a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6"/><path d="M22 6V3h4v3"/><circle cx="24" cy="34" r="2.5"/><path d="M20 22h8"/></svg>',
+  cigar:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 30l28-12a5 5 0 0 1 4 9.2L10 39"/><path d="M6 30a5 5 0 0 0 4 9"/><path d="M26 21.5l3 7"/><path d="M30 19.8l3 7"/><path d="M39 14c0-3 3-3 3-6M43 17c0-2 2-2 2-4"/></svg>',
+  cigarette:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="27" width="36" height="7" rx="1.5"/><path d="M30 27v7"/><path d="M40 27h4v7h-4"/><path d="M36 21c0-3 3-3 3-6s-3-3-3-6M42 22c0-2 2-2 2-4"/></svg>',
+  beverage:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 9h18l-1 3H16z"/><path d="M16 12c-1 2-2 4-2 7v20a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V19c0-3-1-5-2-7"/><path d="M14 22h20M14 34h20"/><path d="M22 6h4"/></svg>',
+  other:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h28l-2 26H12z"/><path d="M18 16v-3a6 6 0 0 1 12 0v3"/></svg>'
+};
+function clCatIco(k){ const t=String(k).toLowerCase(); const key=/vape|disposable|pod|device|e-?liquid|juice|mod/.test(t)?'vape':/cigar(?!ette)/.test(t)?'cigar':/cigarette|tobacco|smoke/.test(t)?'cigarette':/beverage|drink|soda|energy|water/.test(t)?'beverage':'other'; const d=h('span',{class:'cl-carry-ico','aria-hidden':'true'}); d.innerHTML=CL_CAT[key]; return d; }
 function clIco(k){ const d=h('span',{class:'cl-ico','aria-hidden':'true'}); d.innerHTML=CL_ICO[k]; return d; }
 function clAge(C){
   try{ if(sessionStorage.getItem('clAge')) return; }catch(e){}
@@ -1376,7 +1384,7 @@ function cloudShop(C){
     shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Trending In Store'),row,
       h('p',{class:'cl-note'},'Stock changes often. Call ahead to check if your favorite is in.')));
   } else {
-    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>h('div',{class:'cl-carry-c rv'},h('span',{class:'cl-carry-n'},String(i+1).padStart(2,'0')),h('b',null,k),h('small',null,'In store now'))))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
+    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>h('div',{class:'cl-carry-c rv'},clCatIco(k),h('b',null,k),h('small',null,'In store now'))))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
       h('p',null,'New products come in all the time. Stop in, or call and ask what is in stock today.'),C.tel?h('a',{class:'cl-btn red',href:C.tel},'Call '+C.phoneTxt):null));
   }
   const gal=pics.length>3?h('section',{class:'cl-sec cl-gal'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Inside the Shop'),

@@ -618,7 +618,9 @@ body.t-o2{background:#FBF5EC}
 .cl-carry{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:60px}
 .cl-carry-c{position:relative;border:1px solid #E6E6EA;border-radius:6px;padding:26px 22px;background:#fff;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .cl-carry-c:hover{border-color:#B3121B;box-shadow:0 14px 34px rgba(17,17,20,.08)}
-.cl-carry-c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#B3121B}
+.cl-carry-ico{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#F6E7E8;color:#B3121B;margin-bottom:16px}
+.cl-carry-ico svg{width:36px;height:36px}
+.cl-carry-c{text-align:left}
 .cl-carry-n{display:block;font-family:'Montserrat',sans-serif;font-weight:800;color:#C9C9CF;font-size:.9rem;margin-bottom:10px}
 .cl-carry-c b{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.5rem;line-height:1.05;color:#111114}
 .cl-carry-c small{display:block;margin-top:8px;color:#5E6068;font-size:.84rem}
@@ -640,7 +642,7 @@ body.t-cl{background:#fff}
 .cl-cats button:hover,.cl-cats button.on{color:var(--ink);border-bottom-color:var(--red)}
 .cl-hero-wrap{padding-top:18px}
 .cl-hero{min-height:500px;border-radius:6px;background-size:cover;background-position:center;display:flex;align-items:center;overflow:hidden;position:relative}
-.cl-hero::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--red)}
+
 .cl-hero-c{padding:60px 56px;max-width:640px;color:#fff}
 .cl-hero-c small{display:inline-block;font-family:var(--m);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;background:var(--red);padding:6px 12px;border-radius:3px}
 .cl-hero-c h1{font-family:var(--m);font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.98;letter-spacing:-.02em;margin:18px 0 26px;text-shadow:0 4px 30px rgba(0,0,0,.4)}
@@ -3430,6 +3432,14 @@ const CL_ICO={
   id:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M14 10h4M14 14h4"/></svg>',
   arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
 };
+const CL_CAT={
+  vape:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="14" width="16" height="30" rx="5"/><path d="M20 14V8a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6"/><path d="M22 6V3h4v3"/><circle cx="24" cy="34" r="2.5"/><path d="M20 22h8"/></svg>',
+  cigar:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 30l28-12a5 5 0 0 1 4 9.2L10 39"/><path d="M6 30a5 5 0 0 0 4 9"/><path d="M26 21.5l3 7"/><path d="M30 19.8l3 7"/><path d="M39 14c0-3 3-3 3-6M43 17c0-2 2-2 2-4"/></svg>',
+  cigarette:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="27" width="36" height="7" rx="1.5"/><path d="M30 27v7"/><path d="M40 27h4v7h-4"/><path d="M36 21c0-3 3-3 3-6s-3-3-3-6M42 22c0-2 2-2 2-4"/></svg>',
+  beverage:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 9h18l-1 3H16z"/><path d="M16 12c-1 2-2 4-2 7v20a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V19c0-3-1-5-2-7"/><path d="M14 22h20M14 34h20"/><path d="M22 6h4"/></svg>',
+  other:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h28l-2 26H12z"/><path d="M18 16v-3a6 6 0 0 1 12 0v3"/></svg>'
+};
+function clCatIco(k){ const t=String(k).toLowerCase(); const key=/vape|disposable|pod|device|e-?liquid|juice|mod/.test(t)?'vape':/cigar(?!ette)/.test(t)?'cigar':/cigarette|tobacco|smoke/.test(t)?'cigarette':/beverage|drink|soda|energy|water/.test(t)?'beverage':'other'; const d=h('span',{class:'cl-carry-ico','aria-hidden':'true'}); d.innerHTML=CL_CAT[key]; return d; }
 function clIco(k){ const d=h('span',{class:'cl-ico','aria-hidden':'true'}); d.innerHTML=CL_ICO[k]; return d; }
 function clAge(C){
   try{ if(sessionStorage.getItem('clAge')) return; }catch(e){}
@@ -3515,7 +3525,7 @@ function cloudShop(C){
     shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Trending In Store'),row,
       h('p',{class:'cl-note'},'Stock changes often. Call ahead to check if your favorite is in.')));
   } else {
-    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>h('div',{class:'cl-carry-c rv'},h('span',{class:'cl-carry-n'},String(i+1).padStart(2,'0')),h('b',null,k),h('small',null,'In store now'))))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
+    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>h('div',{class:'cl-carry-c rv'},clCatIco(k),h('b',null,k),h('small',null,'In store now'))))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
       h('p',null,'New products come in all the time. Stop in, or call and ask what is in stock today.'),C.tel?h('a',{class:'cl-btn red',href:C.tel},'Call '+C.phoneTxt):null));
   }
   const gal=pics.length>3?h('section',{class:'cl-sec cl-gal'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Inside the Shop'),
