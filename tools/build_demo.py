@@ -346,7 +346,7 @@ body.t-o2{background:#FBF5EC}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
 .cl-blow{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.cl-blow-l{position:absolute;inset:-10% -10% -10% -20%;background-size:cover;background-position:70% 50%;mix-blend-mode:screen;transform-origin:15% 60%;opacity:0;animation:clBlow 9s cubic-bezier(.25,.6,.3,1) infinite;will-change:transform,opacity,filter}
+.cl-blow-l{position:absolute;inset:-10% -10% -10% -20%;-webkit-mask-image:radial-gradient(ellipse 60% 55% at 62% 50%,#000 35%,rgba(0,0,0,0) 78%);mask-image:radial-gradient(ellipse 60% 55% at 62% 50%,#000 35%,rgba(0,0,0,0) 78%);background-size:cover;background-position:70% 50%;mix-blend-mode:screen;transform-origin:15% 60%;opacity:0;animation:clBlow 9s cubic-bezier(.25,.6,.3,1) infinite;will-change:transform,opacity,filter}
 .cl-blow-l.b1{animation-delay:-3s;background-position:60% 40%}
 .cl-blow-l.b2{animation-delay:-6s;background-position:80% 60%;transform:scaleY(-1)}
 @keyframes clBlow{0%{opacity:0;transform:translateX(-18%) scale(.75);filter:blur(6px)}18%{opacity:.95;filter:blur(0)}65%{opacity:.75}100%{opacity:0;transform:translateX(14%) translateY(-6%) scale(1.35);filter:blur(10px)}}
