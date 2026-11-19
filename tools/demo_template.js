@@ -1440,7 +1440,44 @@ function bbSvg(s,cls){
     L('<path d="M42 '+y+'V'+(yy+30)+'Q42 '+yy+' 150 '+yy+'Q258 '+yy+' 258 '+(yy+30)+'V'+y+'z" fill="'+hgrad(bc)+'"/><path d="M42 '+y+'V'+(yy+30)+'Q42 '+yy+' 150 '+yy+'Q258 '+yy+' 258 '+(yy+30)+'V'+y+'z" fill="'+grad(bc,.2,.3)+'" opacity=".55"/>'+ex+'<path d="M64 '+(yy+20)+'Q100 '+(yy+4)+' 160 '+(yy+4)+'" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".3"/><path d="M42 '+y+'h216" stroke="'+dk(bc,.4)+'" stroke-width="3" opacity=".5"/>',h2);
   }
   const top=y, vb=Math.min(top-12,150);
-  return '<svg class="'+(cls||'')+'" viewBox="0 '+vb+' '+W+' '+(268-vb)+'" role="img" aria-label="Your sandwich"><defs>'+defs.join('')+'<radialGradient id="'+id+'sh"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><ellipse cx="150" cy="255" rx="130" ry="9" fill="url(#'+id+'sh)"/>'+out.join('')+'</svg>';
+  return '<svg class="'+(cls||'')+'" viewBox="0 '+vb+' '+W+' '+(268-vb)+'" role="img" aria-label="Your sandwich" preserveAspectRatio="xMidYMax meet"><defs>'+defs.join('')+'<radialGradient id="'+id+'sh"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><ellipse cx="150" cy="255" rx="130" ry="9" fill="url(#'+id+'sh)"/>'+out.join('')+'</svg>';
+}
+function bbShade(c,t){ const v=[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)); const k=t>0?255:0, a=Math.abs(t); return '#'+v.map(x=>Math.round(x+(k-x)*a).toString(16).padStart(2,'0')).join(''); }
+function bbIcon(g,n){
+  const o=(BB_OPT[g].find(q=>q[0]===n)||[])[1]||'#999', D=t=>bbShade(o,-t), Lg=t=>bbShade(o,t);
+  const wrap=b=>'<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">'+b+'</svg>';
+  const hl=(d,w)=>'<path d="'+d+'" fill="none" stroke="#fff" stroke-width="'+(w||3)+'" stroke-linecap="round" opacity=".4"/>';
+  if(g==='bread'){
+    if(n==='Pretzel roll') return wrap('<path d="M7 46V34Q7 13 32 13Q57 13 57 34V46Q57 52 51 52H13Q7 52 7 46Z" fill="'+o+'"/><path d="M7 44h50" stroke="'+D(.35)+'" stroke-width="3" opacity=".5"/>'+hl('M14 32Q22 20 36 19',4)+'<g fill="#fff">'+[[24,28],[34,24],[43,30],[30,34],[46,38],[20,38]].map(p=>'<rect x="'+p[0]+'" y="'+p[1]+'" width="4" height="2.4" rx="1" transform="rotate('+(p[0]*7%90)+' '+p[0]+' '+p[1]+')"/>').join('')+'</g>');
+    if(n==='Croissant') return wrap('<path d="M4 42Q6 18 32 14Q58 18 60 42Q52 32 46 40Q39 28 32 38Q25 28 18 40Q12 32 4 42Z" fill="'+o+'"/><g fill="none" stroke="'+D(.32)+'" stroke-width="2" opacity=".7"><path d="M18 40Q18 26 24 18"/><path d="M26 36Q26 24 29 16"/><path d="M38 36Q38 24 35 16"/><path d="M46 40Q46 26 40 18"/></g>'+hl('M10 34Q14 24 24 19',3));
+    if(n==='Bagel') return wrap('<path fill-rule="evenodd" d="M32 8a24 24 0 1 0 .01 0ZM32 24a8 8 0 1 1-.01 0Z" fill="'+o+'"/><circle cx="32" cy="32" r="8" fill="none" stroke="'+D(.3)+'" stroke-width="2" opacity=".6"/>'+hl('M14 24Q20 14 32 12',3)+'<g fill="#FFF4D2">'+[[16,34],[20,46],[44,46],[48,32],[40,14],[22,18],[30,52],[50,40]].map(p=>'<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="2.8" ry="1.4" transform="rotate('+(p[0]*11%180)+' '+p[0]+' '+p[1]+')"/>').join('')+'</g>');
+    const crumb=n==='White'?'#FBF1D6':'#D9B27A';
+    return wrap('<path d="M10 56V28Q4 26 6 16Q8 6 22 6H42Q56 6 58 16Q60 26 54 28V56Z" fill="'+D(.28)+'"/><path d="M15 52V27Q11 25 12 18Q14 11 23 11H41Q50 11 52 18Q53 25 49 27V52Z" fill="'+crumb+'"/><g fill="'+bbShade(crumb,-.2)+'" opacity=".4"><circle cx="26" cy="22" r="1.2"/><circle cx="38" cy="30" r="1.3"/><circle cx="30" cy="40" r="1.2"/><circle cx="42" cy="44" r="1"/><circle cx="22" cy="36" r="1"/></g>');
+  }
+  if(g==='meat'){
+    if(n==='Chicken salad') return wrap('<path d="M6 48Q4 32 18 28Q20 14 34 18Q50 14 52 30Q62 36 58 48Z" fill="'+o+'"/><path d="M6 48h52" stroke="'+D(.3)+'" stroke-width="3" opacity=".4"/><g>'+[[18,38,'#fff'],[28,30,'#D9BF7A'],[38,40,'#fff'],[46,34,'#B02A3A'],[24,44,'#B02A3A'],[34,26,'#8FBF5A'],[48,44,'#D9BF7A'],[14,44,'#8FBF5A']].map(p=>'<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="4" ry="2.6" fill="'+p[2]+'" opacity=".92"/>').join('')+'</g>');
+    if(n==='Veggie') return wrap('<path d="M32 6C48 12 54 30 46 46Q40 58 32 58Q24 58 18 46C10 30 16 12 32 6Z" fill="#3F6B26"/><path d="M32 11C44 16 48 30 42 43Q38 53 32 53Q26 53 22 43C16 30 20 16 32 11Z" fill="#B7D366"/><circle cx="32" cy="40" r="9" fill="#7A4A22"/><circle cx="29" cy="37" r="2.6" fill="#fff" opacity=".35"/>');
+    const fat=n==='Corned beef'?'<g fill="none" stroke="#FFD9DF" stroke-width="2" stroke-linecap="round" opacity=".7"><path d="M14 30q6 -4 12 0"/><path d="M30 38q8 -5 14 0"/><path d="M40 28q5 -3 10 0"/></g>':n==='Turkey'?'<g fill="none" stroke="#fff" stroke-width="1.8" opacity=".5"><path d="M18 26q5 6 0 14"/><path d="M34 24q5 6 0 16"/><path d="M48 26q5 6 0 14"/></g>':'<path d="M8 42Q18 52 30 44T58 42" fill="none" stroke="'+D(.45)+'" stroke-width="3" opacity=".45"/>';
+    return wrap('<path d="M5 28Q15 14 27 26T49 26T60 24V42Q50 56 38 44T16 44T5 44Z" fill="'+o+'"/><path d="M5 28Q15 14 27 26T49 26T60 24V42Q50 56 38 44T16 44T5 44Z" fill="none" stroke="'+D(.4)+'" stroke-width="2" opacity=".6"/>'+fat+hl('M10 28Q16 20 25 27',2.5));
+  }
+  if(g==='cheese'){
+    if(n==='No cheese') return wrap('<circle cx="32" cy="32" r="20" fill="none" stroke="#9AA8A0" stroke-width="4"/><path d="M18 46L46 18" stroke="#9AA8A0" stroke-width="4" stroke-linecap="round"/>');
+    const holes=n==='Swiss'?'<g fill="'+D(.28)+'" opacity=".75"><ellipse cx="24" cy="26" rx="4.5" ry="3.6"/><ellipse cx="40" cy="36" rx="3.5" ry="3"/><ellipse cx="26" cy="42" rx="2.6" ry="2.2"/></g>':'';
+    return wrap('<path d="M8 20L52 14L58 40L14 50Z" fill="'+o+'"/><path d="M8 20L52 14L58 40L14 50Z" fill="none" stroke="'+D(.3)+'" stroke-width="2"/><path d="M52 14L58 40L46 36Z" fill="'+D(.16)+'" opacity=".7"/>'+holes+hl('M12 22L50 17',2.5));
+  }
+  if(g==='tops'){
+    if(n==='Lettuce') return wrap('<path d="M8 40Q4 30 12 24Q10 14 22 14Q28 6 38 12Q52 10 52 24Q62 30 54 40Q58 52 44 52Q34 60 24 52Q10 54 8 40Z" fill="'+o+'"/><path d="M32 52Q30 34 34 18M32 40Q22 34 18 28M32 34Q42 28 46 22" fill="none" stroke="#E8F7C8" stroke-width="2.2" stroke-linecap="round" opacity=".75"/>');
+    if(n==='Tomato') return wrap('<circle cx="32" cy="32" r="24" fill="'+D(.12)+'"/><circle cx="32" cy="32" r="20" fill="'+bbShade(o,.2)+'"/><circle cx="32" cy="32" r="5" fill="#F9C9B8"/><g fill="#FFE7A8">'+[[22,24],[42,24],[22,42],[42,42],[32,17],[32,47]].map(p=>'<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="4" ry="2.6"/>').join('')+'</g>'+hl('M16 24Q20 14 30 11',3));
+    if(n==='Onion') return wrap('<ellipse cx="32" cy="32" rx="24" ry="22" fill="#E9D3F0" stroke="'+o+'" stroke-width="3"/><ellipse cx="32" cy="32" rx="17" ry="15" fill="none" stroke="'+o+'" stroke-width="2.6"/><ellipse cx="32" cy="32" rx="10" ry="8" fill="none" stroke="'+o+'" stroke-width="2.4"/><ellipse cx="32" cy="32" rx="3.4" ry="2.4" fill="'+o+'"/>');
+    if(n==='Pickles') return wrap('<circle cx="32" cy="32" r="24" fill="#4F7A1E"/><circle cx="32" cy="32" r="19" fill="#B7D366"/><circle cx="32" cy="32" r="9" fill="#DDEBA6"/><g fill="#FFF8C9">'+[[32,24],[24,34],[40,34],[32,41],[27,28],[38,28]].map(p=>'<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="2" ry="1.3"/>').join('')+'</g>');
+    if(n==='Sauerkraut') return wrap('<g fill="none" stroke-linecap="round"><path d="M8 20Q20 10 30 20T56 18" stroke="#E4EAB8" stroke-width="6"/><path d="M6 32Q18 22 30 32T58 30" stroke="#D3DB9A" stroke-width="6"/><path d="M8 44Q20 34 32 44T56 42" stroke="#E4EAB8" stroke-width="6"/><path d="M12 54Q24 46 34 54T54 52" stroke="#C9D186" stroke-width="5"/></g>');
+    return wrap('<circle cx="32" cy="32" r="22" fill="none" stroke="#D63A2A" stroke-width="9"/><circle cx="32" cy="32" r="22" fill="none" stroke="#fff" stroke-width="2" opacity=".25" stroke-dasharray="30 120"/><circle cx="32" cy="32" r="9" fill="none" stroke="#3F9B3F" stroke-width="5"/>');
+  }
+  if(g==='sauce'){
+    return wrap('<path d="M25 26h14l4 8v20Q43 58 39 58H25Q21 58 21 54V34Z" fill="'+o+'" stroke="'+D(.35)+'" stroke-width="2"/><path d="M28 26V14l2-6h4l2 6v12" fill="'+D(.2)+'" stroke="'+D(.45)+'" stroke-width="2" stroke-linejoin="round"/><rect x="24" y="36" width="16" height="12" rx="2" fill="#fff" opacity=".55"/>'+hl('M25 38v12',2.5));
+  }
+  if(n==='Toasted') return wrap('<path d="M32 4C36 16 50 22 50 38A18 18 0 0 1 14 38C14 30 20 26 22 18C26 22 28 24 28 28C32 22 32 12 32 4Z" fill="#F5792A"/><path d="M32 30C34 36 42 38 42 46A10 10 0 0 1 22 46C22 42 26 40 28 36C30 38 30 38 30 40C32 38 32 34 32 30Z" fill="#FFC93B"/>');
+  return wrap('<g stroke="#5AA9E6" stroke-width="4" stroke-linecap="round" fill="none"><path d="M32 6V58M9.5 19L54.5 45M9.5 45L54.5 19"/><path d="M26 10l6 5 6-5M26 54l6-5 6 5M8 25l8 1-2 8M56 39l-8-1 2-8M8 39l8-1-2-8M56 25l-8 1 2 8" stroke-width="3"/></g>');
 }
 function bigbill(C){
   const name=C.name||"Big Bill's Sandwich Shop and Coffee Bar";
@@ -1473,30 +1510,45 @@ function bigbill(C){
     art));
   const band=h('section',{class:'bb-band','aria-hidden':'true'},h('div',{class:'bb-wrap bb-band-in'},A('band').filter(t=>typeof t==='string'&&t).slice(0,8).map((t,i)=>[i?h('i'):null,h('span',null,t)])));
 
-  /* the builder */
+  /* the builder: a stage with the sandwich on a board, and a one-step-at-a-time workbench */
   const S={bread:DEF.bread,meat:DEF.meat,cheese:DEF.cheese,tops:DEF.tops.slice(),sauce:DEF.sauce,heat:DEF.heat};
-  const mini=h('div',{class:'bb-mini','aria-hidden':'true'});
-  const sel=h('div',{class:'bb-sel'},mini), tk=h('aside',{class:'bb-ticket'}), notice=h('span',{class:'bb-copied',role:'status'});
-  const groups=[['bread','1','Pick a bread',false],['meat','2','Pick a meat',false],['cheese','3','Add cheese',false],['tops','4','Pile on toppings',true],['sauce','5','Choose a spread',false],['heat','6','Toasted or cold',false]];
-  const phrase=()=>{ const b=S.bread.toLowerCase(), m=S.meat==='Veggie'?'Veggie':S.meat; const parts=[m+' on '+(/roll|bagel|croissant/.test(b)?'a '+b:b)];
+  const STEPS=[['bread','Bread','Pick a bread',false],['meat','Meat','Pick a meat',false],['cheese','Cheese','Add cheese',false],['tops','Toppings','Pile on the toppings',true],['sauce','Spread','Choose a spread',false],['heat','Finish','Toasted or cold?',false]];
+  let step=0;
+  const phrase=()=>{ const b=S.bread.toLowerCase(); const parts=[S.meat+' on '+(/roll|bagel|croissant/.test(b)?'a '+b:b)];
     if(S.cheese!=='No cheese') parts.push(S.cheese.toLowerCase()); S.tops.forEach(t=>parts.push(t.toLowerCase())); if(S.sauce) parts.push(S.sauce.toLowerCase()); parts.push(S.heat.toLowerCase()); return parts; };
   const sname=()=>'The '+S.meat+' '+(S.bread==='Pretzel roll'?'Pretzel':S.bread==='Croissant'?'Croissant':S.bread==='Bagel'?'Bagel':'Stack');
+  const mini=h('div',{class:'bb-mini','aria-hidden':'true'});
+  const tabs=h('ol',{class:'bb-tabs'});
+  const panel=h('div',{class:'bb-panel'}), navb=h('div',{class:'bb-bnav'});
+  const stage=h('aside',{class:'bb-stage'}), notice=h('span',{class:'bb-copied',role:'status'});
+  const pick=(g,v,multi)=>{ if(multi){ const i=S.tops.indexOf(v); if(i>=0) S.tops.splice(i,1); else S.tops.push(v); } else S[g]=v; draw(); };
+  const drawBench=()=>{
+    tabs.replaceChildren(...STEPS.map((s,i)=>h('li',null,h('button',{type:'button',class:(i===step?'on ':'')+(i<step?'done':''),'aria-current':i===step?'step':null,onclick:()=>{ step=i; drawBench(); }},h('span',null,i<step?'\u2713':String(i+1)),s[1]))));
+    const [g,,title,multi]=STEPS[step];
+    panel.replaceChildren(h('h3',null,title,multi?h('small',null,'pick as many as you like'):null),
+      h('div',{class:'bb-tiles',role:multi?'group':'radiogroup','aria-label':title},BB_OPT[g].map(o=>{ const on=g==='tops'?S.tops.includes(o[0]):S[g]===o[0];
+        const t=h('button',{type:'button',class:'bb-tile'+(on?' on':''),role:multi?'checkbox':'radio','aria-checked':String(on),onclick:()=>pick(g,o[0],multi)},h('span',{class:'bb-ti'}),h('b',null,o[0]),h('i',{class:'bb-ck','aria-hidden':'true'},'\u2713'));
+        t.firstChild.innerHTML=bbIcon(g,o[0]); return t; })));
+    navb.replaceChildren(
+      step>0?h('button',{type:'button',class:'bb-btn line dark',onclick:()=>{ step--; drawBench(); }},'Back'):h('span'),
+      step<STEPS.length-1?h('button',{type:'button',class:'bb-btn mu',onclick:()=>{ step++; drawBench(); }},'Next: '+STEPS[step+1][1]):h('button',{type:'button',class:'bb-btn mu',onclick:()=>{ stage.scrollIntoView({behavior:'smooth',block:'center'}); }},'See my ticket'));
+  };
   const draw=()=>{
-    sel.querySelectorAll('button[data-g]').forEach(b=>{ const g=b.dataset.g, v=b.dataset.v; const on=g==='tops'?S.tops.includes(v):S[g]===v; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); });
     const summary="Hi, I'd like to order: "+phrase().join(', ')+". My name is ";
-    const art2=h('div',{class:'bb-tart'}); art2.innerHTML=bbSvg(S,'bb-live');
     notice.textContent='';
     mini.innerHTML=bbSvg(S,'bb-minisvg')+'<b></b>'; mini.lastChild.textContent=sname();
-    tk.replaceChildren(h('div',{class:'bb-tk-h'},h('span',null,'Your ticket'),h('i',null,'Sample')),art2,h('h3',null,sname()),h('ul',{class:'bb-tk-l'},phrase().map((t,i)=>h('li',null,t.charAt(0).toUpperCase()+t.slice(1)))),
+    const art=h('div',{class:'bb-art'}); art.innerHTML=bbSvg(S,'bb-live');
+    stage.replaceChildren(h('div',{class:'bb-st-h'},h('span',null,'Your sandwich'),h('i',null,'Sample')),
+      h('div',{class:'bb-plate'},art,h('div',{class:'bb-cutb','aria-hidden':'true'})),
+      h('h3',null,sname()),h('ul',{class:'bb-tk-l'},phrase().map(t=>h('li',null,t.charAt(0).toUpperCase()+t.slice(1)))),
       h('div',{class:'bb-tk-a'},call('mu','Call it in'),fbBtn('line','Message us'),
         h('button',{type:'button',class:'bb-copy',onclick:()=>{ const ok=()=>{ notice.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(ok,()=>{ notice.textContent='Copy not available. Read it out when you call.'; }); }catch(e){ notice.textContent='Copy not available. Read it out when you call.'; } }},'Copy my order')),notice,
       h('p',{class:'bb-fine'},'Sample builder for this demo. Ingredients are examples; ask the shop what is fresh today. In the finished site, this sends your order straight to the counter.'));
+    drawBench();
   };
-  groups.forEach(([g,n,t,multi])=>sel.append(h('div',{class:'bb-grp'},h('h3',null,h('span',null,n),t,multi?h('small',null,'pick any'):null),
-    h('div',{class:'bb-chips'},BB_OPT[g].map(o=>h('button',{type:'button','data-g':g,'data-v':o[0],class:'bb-chipb','aria-pressed':'false',onclick:()=>{ if(multi){ const i=S.tops.indexOf(o[0]); if(i>=0) S.tops.splice(i,1); else S.tops.push(o[0]); } else S[g]=o[0]; draw(); }},(o[1]?h('i',{style:'background:'+o[1]}):null),o[0]))))));
   const build=h('section',{class:'bb-sec bb-build',id:'b-build'},h('div',{class:'bb-wrap'},
-    h('div',{class:'bb-sh'},h('span',{class:'bb-tag'},'Build your own'),h('h2',null,C.x.buildTitle?String(C.x.buildTitle):'Stack your own sandwich'),h('p',null,C.x.buildSub?String(C.x.buildSub):'Tap a choice in each step. Your sandwich builds on the ticket, then call it in or message it to the shop.')),
-    h('div',{class:'bb-bg'},sel,tk)));
+    h('div',{class:'bb-sh'},h('span',{class:'bb-tag'},'Build your own'),h('h2',null,C.x.buildTitle?String(C.x.buildTitle):'Stack your own sandwich'),h('p',null,'Pick one step at a time. Your sandwich builds on the board while you choose, then call it in or message it to the shop.')),
+    h('div',{class:'bb-bg'},h('div',{class:'bb-bench'},mini,tabs,panel,navb),stage)));
   draw();
 
   /* menu board */
