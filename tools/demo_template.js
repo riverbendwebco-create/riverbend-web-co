@@ -2201,17 +2201,46 @@ function realty(C){
   const digits=C.phone.replace(/\D/g,'').slice(-10);
   const sms=digits.length===10?'sms:+1'+digits:'';
   const mail=(subj,body)=>C.email?'mailto:'+C.email+'?subject='+encodeURIComponent(subj||'')+(body?'&body='+encodeURIComponent(body):''):'';
+  /* every form opens the visitor's own email app (or texts) with the details filled in */
+  const send=(subj,lines)=>{ const body=lines.filter(Boolean).join('\n'); const u=mail(subj,body)||(sms?sms+'?&body='+encodeURIComponent(subj+'\n'+body):''); if(u) location.href=u; };
   const F=(C.x.follow&&typeof C.x.follow==='object')?C.x.follow:{};
   const A=k=>Array.isArray(C.x[k])?C.x[k]:[];
+  const S=v=>typeof v==='string'?v:'';
   const facts=A('facts').filter(f=>f&&f.v&&f.k).slice(0,4);
-  const areas=A('areas').filter(a=>typeof a==='string').slice(0,8);
-  const links=[['r-buy','Buy'],['r-sell','Sell'],['r-about','About'],['r-follow','Follow'],['r-contact','Contact']];
+  const guides=A('areaGuide').filter(g=>g&&S(g.n)).slice(0,8);
+  const areas=guides.length?guides.map(g=>S(g.n)):A('areas').filter(a=>typeof a==='string').slice(0,8);
+  const before=A('before').filter(b=>b&&S(b.t)).slice(0,4);
+  const langs=A('langs').filter(l=>l&&S(l.n)).slice(0,4);
+  const sold=A('sold').filter(x=>x&&S(x.a)).slice(0,8);
+  const guide=A('guide').filter(x=>typeof x==='string').slice(0,8);
+  const links=[['r-buy','Buy'],['r-sell','Sell'],['r-value','Home Value'],['r-areas','Areas'],['r-about','About'],['r-contact','Contact']].filter(([id])=>id!=='r-areas'||areas.length);
   const go=id=>()=>scrollTo(id);
   const btn=(cls,href,label,ext,onclick)=>href?h('a',Object.assign({class:'rt-btn '+cls,href},ext?{target:'_blank',rel:'noopener'}:{}),label):h('button',{type:'button',class:'rt-btn '+cls,onclick},label);
+  const svg=(k,n)=>{ const d=h('span',{class:'rt-cic','aria-hidden':'true'}); d.innerHTML='<svg viewBox="0 0 24 24" width="'+(n||22)+'" height="'+(n||22)+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(RT_SVG[k]||'')+'</svg>'; return d; };
+  const head=(kick,title,sub,cls)=>h('div',{class:'rt-head rv '+(cls||'')},kick?h('span',{class:'rt-kick'},kick):null,h('h2',null,title),sub?h('p',null,sub):null);
+  const money=n=>'$'+Math.round(n).toLocaleString('en-US');
 
+  /* ---------- small form helpers ---------- */
+  const field=(label,el,wide)=>h('label',{class:'rt-fl'+(wide?' wide':'')},h('span',null,label),el);
+  const inp=(type,ph,req,extra)=>h('input',Object.assign({type,placeholder:ph||''},req?{required:true}:{},extra||{}));
+  const sel=(opts,extra)=>h('select',extra||null,opts.map(o=>h('option',{value:o},o)));
+  const toggles=(list,multi)=>{ const box=h('div',{class:'rt-tg'}); list.forEach(t=>{ const b=h('button',{type:'button','aria-pressed':'false'},t); b.onclick=()=>{ if(!multi) box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true'); }; box.append(b); }); box.val=()=>[...box.querySelectorAll('[aria-pressed="true"]')].map(b=>b.textContent).join(', '); return box; };
+  /* a form shown one step at a time, with a progress bar */
+  const stepper=(title,panels,onDone,doneMsg)=>{
+    let i=0; const bar=h('i'); const count=h('span',{class:'rt-sp-n'}); const err=h('p',{class:'rt-err',role:'alert'});
+    const back=h('button',{type:'button',class:'rt-btn outline'},'Back'), next=h('button',{type:'submit',class:'rt-btn dark'},'Next');
+    const done=h('div',{class:'rt-done',hidden:true},h('b',null,'Thanks, your message is ready to send.'),h('p',null,doneMsg));
+    const show=()=>{ panels.forEach((p,k)=>p.hidden=k!==i); bar.style.width=((i+1)/panels.length*100)+'%'; count.textContent='Step '+(i+1)+' of '+panels.length; back.hidden=i===0; next.textContent=i===panels.length-1?'Send':'Next'; err.textContent=''; };
+    const form=h('form',{class:'rt-sp',novalidate:true,onsubmit:e=>{ e.preventDefault(); const bad=[...panels[i].querySelectorAll('[required]')].find(x=>!String(x.value).trim()); if(bad){ err.textContent='Please fill in the required fields.'; bad.focus(); return; } if(i<panels.length-1){ i++; show(); return; } onDone(); form.hidden=true; done.hidden=false; }},
+      h('div',{class:'rt-sp-top'},h('b',null,title),count),h('div',{class:'rt-sp-bar'},bar),...panels,err,h('div',{class:'rt-sp-nav'},back,next));
+    back.onclick=()=>{ if(i>0){ i--; show(); } };
+    show(); return h('div',{class:'rt-tool rv'},form,done);
+  };
+
+  /* ---------- top ---------- */
   const nav=h('header',{class:'rt-nav'},h('div',{class:'rt-wrap rt-nav-in'},
     h('a',{class:'rt-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('r-top');}},h('b',null,name),h('span',null,[C.cat,firm].filter(Boolean).join('  |  '))),
-    h('nav',{class:'rt-links'},site?h('a',{href:site,target:'_blank',rel:'noopener'},'Search'):null,links.map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('nav',{class:'rt-links'},links.map(([id,l])=>h('button',{type:'button',onclick:go(id)},l)),site?h('a',{href:site,target:'_blank',rel:'noopener'},'Search'):null),
     C.tel?h('a',{class:'rt-navcall',href:C.tel},C.phoneTxt):null),
     h('nav',{class:'rt-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))));
 
@@ -2221,85 +2250,149 @@ function realty(C){
       h('h1',null,name),
       h('div',{class:'rt-sub'},[C.cat,firm].filter(Boolean).join('  |  ')),
       C.tag?h('p',{class:'rt-lead'},C.tag):null,
-      h('div',{class:'rt-hero-btns'},
-        btn('solid',null,'Buy',false,go('r-buy')),
-        btn('solid',null,'Sell',false,go('r-sell')),
-        btn('solid',mail('Home value estimate','Hi '+first+', I would like a free estimate of what my home is worth. My address is: ')||sms,'Home Value'))));
+      langs.length?h('div',{class:'rt-langs'},h('span',null,'Speaks'),langs.map(l=>h('b',{lang:S(l.code)||null},S(l.native)||S(l.n)))):null,
+      h('div',{class:'rt-hero-btns'},btn('solid',null,'Buy',false,go('r-buy')),btn('solid',null,'Sell',false,go('r-sell')),btn('solid',null,'Home Value',false,go('r-value')))));
 
-  const icon=k=>{ const d=h('span',{class:'rt-cic','aria-hidden':'true'}); d.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(RT_SVG[k]||'')+'</svg>'; return d; };
-  const card=(k,t,p,label,href,ext,onclick)=>h('div',{class:'rt-card'},h('div',{class:'rt-card-top'},icon(k),h('div',null,h('h3',null,t),h('p',null,p))),btn('outline',href,label,ext,onclick));
+  const card=(k,t,p,label,href,ext,onclick)=>h('div',{class:'rt-card'},h('div',{class:'rt-card-top'},svg(k),h('div',null,h('h3',null,t),h('p',null,p))),btn('outline',href,label,ext,onclick));
   const cards=h('section',{class:'rt-cards-sec'},h('div',{class:'rt-wrap rt-cards'},
-    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Buy a Home',site,true,go('r-buy')),
+    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Start My Search',null,false,go('r-search')),
     card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell')),
-    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',mail('Home value estimate','Hi '+first+', I would like a free estimate of what my home is worth. My address is: ')||sms,false)));
+    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'))));
 
   const factsRow=facts.length?h('section',{class:'rt-facts-sec'},h('div',{class:'rt-wrap rt-facts-g'},
-    h('h2',null,'Why ',h('br'),first),
-    facts.map(f=>h('div',{class:'rt-fact rv'},h('b',null,String(f.v)),h('span',null,String(f.k)))))):null;
+    h('h2',null,'Why ',h('br'),first),facts.map(f=>h('div',{class:'rt-fact rv'},h('b',null,String(f.v)),h('span',null,String(f.k)))))):null;
 
-  const about=h('section',{class:'rt-sec',id:'r-about'},h('div',{class:'rt-wrap rt-about'},
-    h('div',{class:'rv'},h('h2',null,'Work with a dedicated REALTOR® today.'),
-      h('p',{class:'rt-about-t'},C.about||''),
-      h('div',{class:'rt-row'},btn('dark',null,'Start Your Journey Today',false,go('r-contact')))),
-    photo?h('img',{class:'rt-about-ph rv',src:photo,alt:name}):null));
+  /* ---------- about: story, background, languages ---------- */
+  const about=h('section',{class:'rt-sec',id:'r-about'},h('div',{class:'rt-wrap'},
+    h('div',{class:'rt-about'},
+      h('div',{class:'rv'},h('span',{class:'rt-kick'},'About '+first),h('h2',null,'Work with a dedicated REALTOR® today.'),
+        h('p',{class:'rt-about-t'},C.about||''),
+        h('div',{class:'rt-row'},btn('dark',null,'Start Your Journey Today',false,go('r-contact')))),
+      photo?h('img',{class:'rt-about-ph rv',src:photo,alt:name}):null),
+    (before.length||langs.length)?h('div',{class:'rt-why'},
+      before.length?h('div',{class:'rt-before rv'},h('h3',null,S(C.x.beforeTitle)||'Before real estate'),h('ul',null,before.map(b=>h('li',null,h('b',null,S(b.t)),S(b.d)?h('span',null,S(b.d)):null)))):null,
+      langs.length?h('div',{class:'rt-lang rv'},h('h3',null,'Speaks your language'),h('p',null,first+' can work with you in '+langs.map(l=>S(l.n)).join(', ').replace(/, ([^,]*)$/,' or $1')+'.'),
+        h('ul',null,langs.map(l=>h('li',null,h('b',{lang:S(l.code)||null},S(l.hello)||S(l.native)||S(l.n)),h('span',null,S(l.n)))))):null):null));
 
-  const steps=(id,kick,title,list,cta)=>h('section',{class:'rt-sec '+(id==='r-sell'?'gray':''),id},h('div',{class:'rt-wrap'},
-    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},kick),h('h2',null,title)),
-    h('ol',{class:'rt-steps'},list.map((t,i)=>h('li',{class:'rv'},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,t[0]),h('p',null,t[1])))),
-    cta?h('div',{class:'rt-row'},cta):null));
-  const buy=steps('r-buy','Buying','A clear path from first showing to closing day.',[
-    ['Plan','Talk through your budget, timeline and must-haves, and get connected with a lender if you need one.'],
-    ['Search','See homes that match what you want, and tour the ones worth your time.'],
-    ['Offer','Write a strong offer, negotiate the details and get through inspection and appraisal.'],
-    ['Close','Sign, get your keys and move in.']],site?btn('dark',site,'Search Homes for Sale',true):null);
-  const sell=steps('r-sell','Selling','Get your home ready, priced right and in front of buyers.',[
-    ['Price','Review recent sales nearby to set a price that brings in buyers.'],
-    ['Prepare','Simple fixes and staging tips that help your home show well.'],
-    ['Market','Photos, listing and social media posts to put your home in front of local buyers.'],
-    ['Close','Review offers, negotiate and handle the paperwork through closing.']],btn('dark',mail('Selling my home')||C.tel,'Talk About Selling'));
+  /* ---------- buyers: steps, search questionnaire, payment calculator, guide ---------- */
+  const steps=list=>h('ol',{class:'rt-steps'},list.map((t,i)=>h('li',{class:'rv'},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,t[0]),h('p',null,t[1]))));
+  const qTowns=toggles(areas.length?areas.concat(['Not sure yet']):['Not sure yet'],true);
+  const qPrice=sel(['Under $200,000','$200,000 to $300,000','$300,000 to $400,000','$400,000 to $550,000','Over $550,000','Not sure yet']);
+  const qBeds=sel(['Any','2+','3+','4+','5+']), qBaths=sel(['Any','1+','2+','3+']);
+  const qWhen=toggles(['As soon as possible','1 to 3 months','3 to 6 months','Just looking'],false);
+  const qLoan=toggles(['Yes','Not yet','Paying cash'],false);
+  const qName=inp('text','Your name',true,{autocomplete:'name'}), qPhone=inp('tel','Best phone',true,{autocomplete:'tel'}), qMail=inp('email','Email (optional)',false,{autocomplete:'email'}), qNote=h('textarea',{rows:'3',placeholder:'Must-haves, like a garage, yard or first-floor bedroom'});
+  const search=stepper('Start my home search',[
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Where would you like to live?'),qTowns),
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'What are you looking for?'),h('div',{class:'rt-fg'},field('Price range',qPrice,true),field('Bedrooms',qBeds),field('Bathrooms',qBaths)),field('Anything else?',qNote,true)),
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'When would you like to move?'),qWhen,h('p',{class:'rt-q'},'Are you pre-approved for a loan?'),qLoan),
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Where should '+first+' send matching homes?'),h('div',{class:'rt-fg'},field('Name',qName),field('Phone',qPhone),field('Email',qMail,true)))],
+    ()=>send('Home search request from '+qName.value,['I am looking for a home.','Towns: '+(qTowns.val()||'Not sure'),'Price range: '+qPrice.value,'Bedrooms: '+qBeds.value+'  Bathrooms: '+qBaths.value,'Moving: '+(qWhen.val()||'Not sure'),'Pre-approved: '+(qLoan.val()||'Not sure'),qNote.value?'Notes: '+qNote.value:'','',qName.value,qPhone.value,qMail.value]),
+    first+' will reach out with homes that match what you are looking for.');
+  search.id='r-search';
 
-  const areasSec=areas.length?h('section',{class:'rt-sec dark'},h('div',{class:'rt-wrap'},
-    h('div',{class:'rt-head rv'},h('h2',null,'Search Listings By Area')),
-    h('div',{class:'rt-areas'},areas.map((a,i)=>h(site?'a':'div',Object.assign({class:'rt-area rv'},site?{href:site,target:'_blank',rel:'noopener'}:{}),
+  const cPrice=inp('number','',false,{value:'300000',min:'0',step:'1000',inputmode:'numeric'}), cDown=inp('number','',false,{value:'10',min:'0',max:'100',step:'1',inputmode:'decimal'}), cRate=inp('number','',false,{value:'6.5',min:'0',max:'20',step:'0.125',inputmode:'decimal'}), cTerm=sel(['30 years','20 years','15 years']), cTax=inp('number','',false,{placeholder:'0',min:'0',step:'100',inputmode:'numeric'}), cIns=inp('number','',false,{placeholder:'0',min:'0',step:'100',inputmode:'numeric'});
+  const oTotal=h('b',{class:'rt-calc-big'}), oPI=h('span'), oTI=h('span'), oLoan=h('span');
+  const calc=()=>{ const P=Math.max(0,+cPrice.value||0), d=Math.min(100,Math.max(0,+cDown.value||0)), L=P*(1-d/100), r=(+cRate.value||0)/1200, n=parseInt(cTerm.value,10)*12; const pi=r?L*r/(1-Math.pow(1+r,-n)):L/n; const ti=((+cTax.value||0)+(+cIns.value||0))/12; oTotal.textContent=money(pi+ti)+'/mo'; oPI.textContent=money(pi); oTI.textContent=money(ti); oLoan.textContent=money(L); };
+  [cPrice,cDown,cRate,cTerm,cTax,cIns].forEach(x=>{ x.addEventListener('input',calc); x.addEventListener('change',calc); });
+  const calcBox=h('div',{class:'rt-tool rt-calc rv'},
+    h('div',{class:'rt-sp-top'},h('b',null,'Estimate your monthly payment')),
+    h('div',{class:'rt-fg'},field('Home price ($)',cPrice,true),field('Down payment (%)',cDown),field('Interest rate (%)',cRate),field('Loan term',cTerm),field('Property tax per year ($)',cTax),field('Insurance per year ($)',cIns)),
+    h('div',{class:'rt-calc-out'},h('small',null,'Estimated payment'),oTotal,h('dl',null,h('div',null,h('dt',null,'Loan amount'),h('dd',null,oLoan)),h('div',null,h('dt',null,'Principal and interest'),h('dd',null,oPI)),h('div',null,h('dt',null,'Taxes and insurance'),h('dd',null,oTI)))),
+    h('p',{class:'rt-fine'},'Estimate only. The rate shown is an example, not a quote. Rates change daily, so talk to a lender for real numbers.'),
+    btn('dark',null,'Talk to '+first+' about buying',false,go('r-search')));
+  calc();
+
+  const gName=inp('text','Your name',true,{autocomplete:'name'}), gMail=inp('email','Email',true,{autocomplete:'email'});
+  const gDone=h('p',{class:'rt-done-line',hidden:true},'Thanks. Your request is ready to send, and '+first+' will email you the guide.');
+  const guideBox=guide.length?h('div',{class:'rt-guide rv'},
+    h('div',null,h('span',{class:'rt-kick'},'Free download'),h('h3',null,S(C.x.guideTitle)||'The First-Time Home Buyer Guide'),h('p',null,'A simple guide to buying your first home in the '+(S(C.x.areaName)||'local')+' market. Inside:'),h('ol',null,guide.map(t=>h('li',null,t)))),
+    h('form',{class:'rt-guide-f',onsubmit:e=>{ e.preventDefault(); if(!gName.value.trim()||!gMail.value.trim()) return; send('Please send me the first-time buyer guide',['Hi '+first+', please email me your first-time home buyer guide.','',gName.value,gMail.value]); gDone.hidden=false; }},
+      field('Name',gName,true),field('Email',gMail,true),h('button',{type:'submit',class:'rt-btn solid'},'Send Me the Guide'),gDone)):null;
+
+  const buy=h('section',{class:'rt-sec',id:'r-buy'},h('div',{class:'rt-wrap'},
+    head('For buyers','A clear path from first showing to closing day.'),
+    steps([['Plan','Talk through your budget, timeline and must-haves, and get connected with a lender if you need one.'],['Search','See homes that match what you want, and tour the ones worth your time.'],['Offer','Write a strong offer, negotiate the details and get through inspection and appraisal.'],['Close','Sign, get your keys and move in.']]),
+    h('div',{class:'rt-tools'},search,calcBox),
+    guideBox,
+    site?h('div',{class:'rt-row'},btn('outline',site,'Browse All Homes for Sale',true)):null));
+
+  /* ---------- sellers: steps + home value form ---------- */
+  const vAddr=inp('text','Street address',true,{autocomplete:'street-address'}), vCity=inp('text','City',true,{autocomplete:'address-level2'});
+  const vType=toggles(['House','Townhome','Condo','Land or lot','Other'],false);
+  const vBeds=sel(['1','2','3','4','5+']), vBaths=sel(['1','1.5','2','2.5','3+']), vSq=inp('number','About how many square feet?',false,{min:'0',inputmode:'numeric'});
+  const vCond=toggles(['Move-in ready','Needs a few updates','Needs work'],false);
+  const vWhen=toggles(['Within 3 months','3 to 6 months','6 to 12 months','Just curious'],false);
+  const vName=inp('text','Your name',true,{autocomplete:'name'}), vPhone=inp('tel','Best phone',true,{autocomplete:'tel'}), vMail=inp('email','Email (optional)',false,{autocomplete:'email'});
+  const value=stepper('What is my home worth?',[
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Which home?'),h('div',{class:'rt-fg'},field('Address',vAddr,true),field('City',vCity,true)),h('p',{class:'rt-q'},'Type of home'),vType),
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Tell '+first+' a little about it'),h('div',{class:'rt-fg'},field('Bedrooms',vBeds),field('Bathrooms',vBaths),field('Square feet',vSq,true)),h('p',{class:'rt-q'},'Condition'),vCond),
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'When might you sell?'),vWhen,h('div',{class:'rt-fg'},field('Name',vName),field('Phone',vPhone),field('Email',vMail,true)))],
+    ()=>send('Home value request: '+vAddr.value,['Please send me a free estimate of what my home is worth.','Address: '+vAddr.value+', '+vCity.value,'Type: '+(vType.val()||'Not given'),'Bedrooms: '+vBeds.value+'  Bathrooms: '+vBaths.value+(vSq.value?'  About '+vSq.value+' sq ft':''),'Condition: '+(vCond.val()||'Not given'),'Selling: '+(vWhen.val()||'Not sure'),'',vName.value,vPhone.value,vMail.value]),
+    first+' will look at recent sales near you and get back to you with an estimate.');
+  const sell=h('section',{class:'rt-sec gray',id:'r-sell'},h('div',{class:'rt-wrap'},
+    head('For sellers','Get your home ready, priced right and in front of buyers.'),
+    steps([['Price','Review recent sales nearby to set a price that brings in buyers.'],['Prepare','Simple fixes and staging tips that help your home show well.'],['Market','Photos, listing and social media posts to put your home in front of local buyers.'],['Close','Review offers, negotiate and handle the paperwork through closing.']]),
+    h('div',{class:'rt-value',id:'r-value'},
+      h('div',{class:'rv'},h('span',{class:'rt-kick'},'Free home value'),h('h2',null,'What is your home worth?'),h('p',{class:'rt-cp'},'Answer a few quick questions. '+first+' will compare your home with recent sales nearby and send you a free estimate. No pressure and no obligation.'),
+        h('ul',{class:'rt-checks'},['Takes about a minute','Based on real local sales','Free, with no obligation to list'].map(t=>h('li',null,t)))),
+      value)));
+
+  /* ---------- proof: just sold and reviews, shown only when there are real ones ---------- */
+  const revs=C.reviews.slice(0,6);
+  const proof=(sold.length||revs.length)?h('section',{class:'rt-sec',id:'r-proof'},h('div',{class:'rt-wrap'},
+    sold.length?[head('Recent results','Just sold'),h('div',{class:'rt-sold'},sold.map(x=>h('div',{class:'rt-sold-i rv'},okUrl(x.p)?h('img',{src:okUrl(x.p),alt:'',loading:'lazy'}):h('div',{class:'rt-sold-ph'}),h('span',{class:'rt-sold-tag'},S(x.s)||'Sold'),h('b',null,S(x.a)),S(x.d)?h('small',null,S(x.d)):null)))]:null,
+    revs.length?[head('Reviews','What clients say',C.reviewsSource||'',sold.length?'rt-mt':''),h('div',{class:'rt-revs'},revs.map(r=>h('figure',{class:'rt-rev rv'},h('div',{class:'rt-stars','aria-label':r.stars+' out of 5 stars'},'★'.repeat(r.stars||5)),h('blockquote',null,r.text),h('figcaption',null,r.name))))]:null)):null;
+
+  /* ---------- areas with short guides ---------- */
+  const panel=h('div',{class:'rt-ag',hidden:true,'aria-live':'polite'});
+  const openGuide=(g,tile)=>{ const was=tile.getAttribute('aria-expanded')==='true'; areasWrap.querySelectorAll('.rt-area').forEach(t=>t.setAttribute('aria-expanded','false')); if(was){ panel.hidden=true; return; } tile.setAttribute('aria-expanded','true');
+    const pts=S(g.p).split('|').map(t=>t.trim()).filter(Boolean);
+    panel.replaceChildren(h('div',{class:'rt-ag-in'},h('div',null,h('small',null,'Area guide'),h('h3',null,S(g.n)),h('p',null,S(g.t))),pts.length?h('ul',null,pts.map(t=>h('li',null,t))):null,
+      h('div',{class:'rt-ag-btns'},site?btn('solid',site,'See Homes in '+S(g.n),true):null,btn('line',null,'Ask '+first+' about '+S(g.n),false,()=>send('Question about '+S(g.n),['Hi '+first+', I have a question about living in '+S(g.n)+'.',''])))));
+    panel.hidden=false; panel.scrollIntoView({behavior:'smooth',block:'nearest'}); };
+  const areasWrap=h('div',{class:'rt-areas'},areas.map((a,i)=>{ const g=guides[i]; const t=h(g?'button':(site?'a':'div'),Object.assign({class:'rt-area rv'},g?{type:'button','aria-expanded':'false'}:(site?{href:site,target:'_blank',rel:'noopener'}:{})),
       h('span',{class:'rt-area-n','aria-hidden':'true'},String(i+1).padStart(2,'0')),
-      h('div',null,h('small',null,'Explore'),h('b',null,a),h('em',null,'Search Listings ',ico('arrow',13,'')))))))):null;
+      h('div',null,h('small',null,'Explore'),h('b',null,a),h('em',null,g?'Area guide ':'Search Listings ',ico('arrow',13,''))));
+    if(g) t.onclick=()=>openGuide(g,t); return t; }));
+  const areasSec=areas.length?h('section',{class:'rt-sec dark',id:'r-areas'},h('div',{class:'rt-wrap'},
+    head('Neighborhoods','Search Listings By Area',guides.length?'Tap a town for a quick guide and homes for sale.':''),areasWrap,panel)):null;
 
+  /* ---------- follow ---------- */
   const socIc=k=>k==='tt'?(()=>{ const d=h('span',{class:'rt-sic'}); d.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+RT_SVG.tiktok+'</svg>'; return d; })():h('span',{class:'rt-sic'},ico(k==='fb'?'i-fb':'i-ig',26,''));
   const tile=(k,label,url,handle)=>{ const u=okUrl(url); const kids=[socIc(k),h('b',null,label),h('span',null,u?(typeof handle==='string'&&handle?handle:'Follow '+first):'Link coming soon')];
     return u?h('a',{class:'rt-soc rv',href:u,target:'_blank',rel:'noopener'},kids):h('div',{class:'rt-soc rv off'},kids); };
-  const follow=h('section',{class:'rt-sec',id:'r-follow'},h('div',{class:'rt-wrap'},
-    h('div',{class:'rt-head rv'},h('span',{class:'rt-kick'},'Follow Along'),h('h2',null,'New listings, open houses and local market updates'),h('p',null,'Follow '+first+' for homes as they hit the market, open house times and quick tips for buyers and sellers.')),
+  const follow=h('section',{class:'rt-sec gray',id:'r-follow'},h('div',{class:'rt-wrap'},
+    head('Follow along','New listings, open houses and local market updates','Follow '+first+' for homes as they hit the market, open house times and quick tips for buyers and sellers.'),
     h('div',{class:'rt-socs'},tile('fb','Facebook',F.facebook,F.facebookName),tile('ig','Instagram',F.instagram,F.instagramName),tile('tt','TikTok',F.tiktok,F.tiktokName))));
 
-  /* contact form: opens the visitor's own email or text app with the message filled in */
-  const fName=h('input',{type:'text',placeholder:'First Name *',required:true,autocomplete:'given-name'});
-  const lName=h('input',{type:'text',placeholder:'Last Name',autocomplete:'family-name'});
-  const fMail=h('input',{type:'email',placeholder:'Email',autocomplete:'email'});
-  const fPhone=h('input',{type:'tel',placeholder:'Phone *',required:true,autocomplete:'tel'});
-  const fMsg=h('textarea',{rows:'4',placeholder:'Message'});
-  const form=h('form',{class:'rt-form',onsubmit:e=>{ e.preventDefault(); const body=[fMsg.value,'',[fName.value,lName.value].join(' ').trim(),fPhone.value,fMail.value].filter((v,i)=>i<2||v).join('\n'); const u=mail('Website message from '+(fName.value||'a visitor'),body)||(sms?sms+'?&body='+encodeURIComponent(body):''); if(u) location.href=u; }},
-    h('div',{class:'rt-f2'},fName,lName),h('div',{class:'rt-f2'},fMail,fPhone),fMsg,
-    h('button',{type:'submit',class:'rt-btn dark'},'Send'));
-  const contact=h('section',{class:'rt-sec gray',id:'r-contact'},h('div',{class:'rt-wrap rt-contact'},
-    h('div',{class:'rv'},h('h2',null,'Your '+(C.x.areaName||'local')+' REALTOR® for buying and selling'),
+  /* ---------- contact ---------- */
+  const fName=inp('text','First Name *',true,{autocomplete:'given-name'}), lName=inp('text','Last Name',false,{autocomplete:'family-name'}), fMail=inp('email','Email',false,{autocomplete:'email'}), fPhone=inp('tel','Phone *',true,{autocomplete:'tel'}), fMsg=h('textarea',{rows:'4',placeholder:'Message'});
+  const form=h('form',{class:'rt-form',onsubmit:e=>{ e.preventDefault(); send('Website message from '+(fName.value||'a visitor'),[fMsg.value,'',[fName.value,lName.value].join(' ').trim(),fPhone.value,fMail.value]); }},
+    h('div',{class:'rt-f2'},fName,lName),h('div',{class:'rt-f2'},fMail,fPhone),fMsg,h('button',{type:'submit',class:'rt-btn dark'},'Send'));
+  const contact=h('section',{class:'rt-sec',id:'r-contact'},h('div',{class:'rt-wrap rt-contact'},
+    h('div',{class:'rv'},h('span',{class:'rt-kick'},'Contact'),h('h2',null,'Your '+(S(C.x.areaName)||'local')+' REALTOR® for buying and selling'),
       h('ul',{class:'rt-cl'},
-        C.tel?h('li',null,h('small',null,'Phone'),h('a',{href:C.tel},C.phoneTxt)):null,
+        C.tel?h('li',null,h('small',null,'Call or text'),h('a',{href:C.tel},C.phoneTxt)):null,
         C.email?h('li',null,h('small',null,'Email'),h('a',{href:mail('')},C.email)):null,
         (C.addr||C.city)?h('li',null,h('small',null,'Office'),h('a',{href:C.maps,target:'_blank',rel:'noopener'},[firm,C.addr,C.city].filter(Boolean).join(', '))):null)),
     h('div',{class:'rv'},h('h2',null,'Connect with '+first),h('p',{class:'rt-cp'},'Questions about buying, selling or what your home is worth? Send a message and '+first+' will get back to you.'),form)));
 
   const col=(t,items)=>h('div',null,h('h4',null,t),h('ul',null,items.filter(Boolean)));
+  const fb=(label,id)=>h('li',null,h('button',{type:'button',onclick:go(id)},label));
   const foot=h('footer',{class:'rt-foot'},h('div',{class:'rt-wrap'},
     h('div',{class:'rt-foot-g'},
       h('div',{class:'rt-foot-b'},h('b',null,name),h('span',null,[C.cat,firm].filter(Boolean).join('  |  '))),
-      col('Buy',[h('li',null,h('button',{type:'button',onclick:go('r-buy')},'Buy with '+first)),site?h('li',null,h('a',{href:site,target:'_blank',rel:'noopener'},'Homes for Sale')):null]),
-      col('Sell',[h('li',null,h('button',{type:'button',onclick:go('r-sell')},'Sell with '+first)),h('li',null,h('button',{type:'button',onclick:go('r-top')},'Home Value'))]),
+      col('Buy',[fb('Start my home search','r-search'),fb('Payment calculator','r-buy'),guide.length?fb('First-time buyer guide','r-buy'):null,site?h('li',null,h('a',{href:site,target:'_blank',rel:'noopener'},'Homes for sale')):null]),
+      col('Sell',[fb('Sell with '+first,'r-sell'),fb('What is my home worth?','r-value')]),
       col('Contact',[C.tel?h('li',null,h('a',{href:C.tel},C.phoneTxt)):null,C.email?h('li',null,h('a',{href:mail('')},C.email)):null,C.addr?h('li',null,[C.addr,C.city].filter(Boolean).join(', ')):null])),
     h('p',{class:'rt-legal'},[firm?firm+'.':'',typeof C.x.license==='string'?C.x.license+'.':'',typeof C.x.legal==='string'?C.x.legal:''].filter(Boolean).join(' '))));
 
-  const page=h('div',{class:'rt'},nav,hero,cards,factsRow,about,buy,sell,areasSec,follow,contact,foot);
-  /* header turns solid black once you scroll past the top */
-  const onScroll=()=>{ if(!nav.isConnected){ removeEventListener('scroll',onScroll); return; } nav.classList.toggle('solid',scrollY>60); };
+  /* text button that stays on screen on phones */
+  const fab=sms?h('a',{class:'rt-fab',href:sms+'?&body='+encodeURIComponent('Hi '+first+', I found you on your website. ')},ico('chat',18,''),'Text '+first):null;
+
+  const page=h('div',{class:'rt'},nav,hero,cards,factsRow,about,buy,sell,proof,areasSec,follow,contact,foot,fab);
+  const onScroll=()=>{ if(!nav.isConnected){ removeEventListener('scroll',onScroll); return; } nav.classList.toggle('solid',scrollY>60); if(fab) fab.classList.toggle('on',scrollY>400); };
   addEventListener('scroll',onScroll,{passive:true});
   return page;
 }
