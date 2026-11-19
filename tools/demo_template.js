@@ -92,6 +92,7 @@ function build(d){
   C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
+  if(C.variant==='cloud'){ document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); clAge(C); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
   if(style==='pub'&&p&&readableOnDark(p)) page.style.setProperty('--gold',p),page.style.setProperty('--gold-2',p);
@@ -1278,6 +1279,81 @@ function osteria2(C){
       h('div',null,h('small',null,'Explore'),h('div',{class:'o2-foot-nav'},items.map(([,sub,id])=>jump(id,sub))))),
     socials(C),h('small',{class:'o2-copy'},'© '+new Date().getFullYear()+' '+C.name)));
   return h('div',{class:'demo o2'},hero,bar,intro,trio,rule(),menu,gal,revs,res,visit,foot);
+}
+
+/* ===================== CLOUD (vape / smoke shop retail, clean e-commerce look) ===================== */
+const CL_ICO={
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 4.5-2 1.2a11 11 0 0 0 6.8 6.8l1.2-2L20 16v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  bag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  id:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M14 10h4M14 14h4"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
+};
+function clIco(k){ const d=h('span',{class:'cl-ico','aria-hidden':'true'}); d.innerHTML=CL_ICO[k]; return d; }
+function clAge(C){
+  try{ if(sessionStorage.getItem('clAge')) return; }catch(e){}
+  const box=h('div',{class:'cl-age',role:'dialog','aria-modal':'true','aria-label':'Age verification'});
+  const yes=h('button',{type:'button',class:'cl-btn red'},'Yes, I am 21 or older');
+  const no=h('button',{type:'button',class:'cl-btn line'},'No');
+  const msg=h('p',{class:'cl-age-no'});
+  box.append(h('div',{class:'cl-age-card'},h('div',{class:'cl-age-top'},'Age Verification'),h('div',{class:'cl-age-b'},
+    h('b',{class:'cl-age-name'},C.name),h('p',null,'Products sold at '+C.name+' are age-restricted and intended for adults of legal smoking age only.'),
+    h('p',null,'By entering, you confirm you are 21 years of age or older.'),h('div',{class:'cl-age-btns'},yes,no),msg)));
+  yes.addEventListener('click',()=>{ box.remove(); document.documentElement.classList.remove('os-lock'); try{ sessionStorage.setItem('clAge','1'); }catch(e){} });
+  no.addEventListener('click',()=>{ msg.textContent='Sorry, you must be 21 or older to view this site.'; });
+  document.documentElement.classList.add('os-lock');
+  document.body.append(box);
+}
+function cloudShop(C){
+  const city=C.city.split(',')[0];
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
+  const G=groups(C.items,'In Store');
+  const pics=C.own.slice();
+  const cats=G.names.filter(k=>k!=='In Store'||G.names.length===1);
+  const warn=h('div',{class:'cl-warn'},'WARNING: This product contains nicotine. Nicotine is an addictive chemical.');
+  const head=h('header',{class:'cl-head'},h('div',{class:'cl-w cl-head-in'},
+    C.logo?h('img',{src:C.logo,alt:C.name,class:'cl-logo'}):h('span',{class:'cl-name'},C.name),
+    h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null,jump('cl-shop',clIco('bag'),'cl-ic-btn'))),
+    h('nav',{class:'cl-w cl-cats'},jump('cl-shop','New In','on'),cats.slice(0,8).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours'),jump('cl-visit','Location')));
+  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'},h('div',{class:'cl-hero-c'},
+    h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
+    h('h1',null,C.tag||('Your local cloud shop in '+city)),
+    h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
+    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null)),C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
+  const perks=h('section',{class:'cl-w cl-perks'},[
+    ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
+  ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));
+  const tiles=pics.length>=2?h('section',{class:'cl-w cl-tiles'},[pics[1],pics[2]||pics[0]].map((u,i)=>bg(h('div',{class:'cl-tile rv'},h('div',null,h('b',null,i?'Stop in today':'Shop in store'),h('span',null,i?(C.today?'Open today '+C.today:'See our hours below'):'Friendly staff, real advice'),i?jump('cl-visit','Hours & Directions','cl-btn white sm'):jump('cl-shop','See What’s In','cl-btn white sm'))),u,'linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.75) 100%)'))):null;
+  let shop=null;
+  if(C.items.length){
+    const row=h('div',{class:'cl-row'},C.items.slice(0,16).map(i=>h('div',{class:'cl-prod rv'},
+      h('div',{class:'cl-prod-pic'},i.photo?h('img',{src:i.photo,alt:i.name,loading:'lazy'}):h('span',null,(i.group||C.name).slice(0,18))),
+      h('small',null,i.group||''),h('b',null,i.name),i.desc?h('p',null,short(i.desc,70)):null,i.price?h('span',{class:'cl-price'},i.price):null)));
+    shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Trending In Store'),row,
+      h('p',{class:'cl-note'},'Stock changes often. Call ahead to check if your favorite is in.')));
+  } else {
+    shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},'Shop In Store'),
+      h('p',null,'New products come in all the time. Stop in, or call and ask what is in stock today.'),C.tel?h('a',{class:'cl-btn red',href:C.tel},'Call '+C.phoneTxt):null));
+  }
+  const gal=pics.length>3?h('section',{class:'cl-sec cl-gal'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Inside the Shop'),
+    h('div',{class:'cl-grid'},pics.slice(0,8).map((u,i)=>{ const b=bg(h('button',{type:'button',class:'cl-ph','aria-label':'Open photo '+(i+1)}),u); b.addEventListener('click',()=>gallery(pics,C.name,i)); return b; })))):null;
+  const revs=C.reviews.length?h('section',{class:'cl-sec cl-revs'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What Customers Say'),
+    h('div',{class:'cl-rev-grid'},C.reviews.slice(0,3).map(r=>h('figure',{class:'rv'},h('div',{class:'cl-stars'},'★★★★★'),h('blockquote',null,short(r.text,200)),h('figcaption',null,r.name)))),
+    C.reviewsSource?h('p',{class:'cl-note'},C.reviewsSource):null)):null;
+  const visit=h('section',{class:'cl-sec cl-visit',id:'cl-visit'},h('div',{class:'cl-w cl-visit-in'},
+    h('div',null,h('h2',{class:'cl-h left'},'Visit '+C.name),addrTxt?h('p',{class:'cl-addr'},addrTxt):null,
+      C.hasHours?h('div',{class:'cl-hrs'},osHours(C).map(r=>h('div',{class:r.today?'on':null},h('span',null,r.days),h('span',null,r.v)))):null,
+      h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn red',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions'):null,C.tel?h('a',{class:'cl-btn line',href:C.tel},'Call '+C.phoneTxt):null)),
+    addrTxt?h('div',{class:'cl-map'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+C.name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
+  const foot=h('footer',{class:'cl-foot'},h('div',{class:'cl-w cl-foot-in'},
+    h('div',null,h('span',{class:'cl-name light'},C.name),addrTxt?h('p',null,addrTxt):null,C.phoneTxt?h('p',null,h('a',{href:C.tel||null},C.phoneTxt)):null,socials(C)),
+    h('div',null,h('b',null,'Shop'),cats.slice(0,6).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours & Location')),
+    h('div',{class:'cl-legal'},h('b',null,'21+ Only'),h('p',null,'You must be 21 or older to purchase. Valid ID required. Products may contain nicotine, an addictive chemical.'))),
+    h('div',{class:'cl-w cl-copy'},'© '+new Date().getFullYear()+' '+C.name));
+  return h('div',{class:'demo cl'},warn,head,hero,perks,tiles,shop,gal,revs,visit,foot);
 }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
 const MK_SOCIAL=[

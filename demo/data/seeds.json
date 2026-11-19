@@ -2893,5 +2893,21 @@
     "data": {
       "variant": "osteria"
     }
+  },
+  {
+    "key": "drbobs-cloud-1",
+    "matchName": "Dr Bob's Cloud Shop",
+    "patch": true,
+    "data": {
+      "variant": "cloud"
+    }
+  },
+  {
+    "key": "drbobs-cloud-2",
+    "matchName": "Dr Bobs Cloud Shoppe",
+    "patch": true,
+    "data": {
+      "variant": "cloud"
+    }
   }
 ]

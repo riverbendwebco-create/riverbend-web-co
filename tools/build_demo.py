@@ -343,6 +343,102 @@ body.t-o2{background:#FBF5EC}
 .o2-hero{justify-content:center}
 .o2-hnav{position:absolute;top:0;left:50%;transform:translateX(-50%)}
 .o2-hero-c{padding:0 20px}
+
+/* ===== CLOUD: vape / smoke shop retail ===== */
+body.t-cl{background:#fff}
+.cl{--red:#B3121B;--ink:#111114;--mut:#5E6068;--line:#E6E6EA;--soft:#F5F5F7;--m:'Montserrat',Inter,sans-serif;background:#fff;color:var(--ink);font-family:var(--font-b)}
+.cl-w{max-width:1240px;margin:0 auto;padding:0 24px}
+.cl-warn{border:2px solid #111;background:#fff;color:#111;text-align:center;font-family:var(--m);font-weight:600;font-size:.86rem;padding:10px 14px;margin:8px}
+.cl-head{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.cl-head-in{display:flex;align-items:center;justify-content:space-between;padding-top:16px;padding-bottom:14px}
+.cl-name{font-family:var(--m);font-weight:900;font-style:italic;font-size:1.7rem;letter-spacing:-.01em;text-transform:uppercase;color:var(--ink)}
+.cl-name.light{color:#fff}
+.cl-logo{height:48px;width:auto;max-width:220px;object-fit:contain}
+.cl-head-ic{display:flex;gap:18px;align-items:center}
+.cl-head-ic a,.cl-ic-btn{color:var(--ink);background:none;border:0;cursor:pointer;padding:0;display:inline-flex}
+.cl-ico{display:inline-grid;place-items:center}
+.cl-ico svg{width:22px;height:22px}
+.cl-cats{display:flex;gap:6px 26px;flex-wrap:wrap;padding-bottom:12px;padding-top:2px;border-top:1px solid var(--line);padding-top:12px}
+.cl-cats button{background:none;border:0;cursor:pointer;font-family:var(--m);font-weight:700;font-size:.84rem;text-transform:uppercase;color:#2A2B30;padding:4px 0;border-bottom:2px solid transparent}
+.cl-cats button:hover,.cl-cats button.on{color:var(--ink);border-bottom-color:var(--red)}
+.cl-hero-wrap{padding-top:18px}
+.cl-hero{min-height:500px;border-radius:6px;background-size:cover;background-position:center;display:flex;align-items:center;overflow:hidden;position:relative}
+.cl-hero::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--red)}
+.cl-hero-c{padding:60px 56px;max-width:640px;color:#fff}
+.cl-hero-c small{display:inline-block;font-family:var(--m);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;background:var(--red);padding:6px 12px;border-radius:3px}
+.cl-hero-c h1{font-family:var(--m);font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.98;letter-spacing:-.02em;margin:18px 0 26px;text-shadow:0 4px 30px rgba(0,0,0,.4)}
+.cl-hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.cl-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 24px;border-radius:4px;font-family:var(--m);font-weight:800;font-size:.86rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:2px solid transparent;transition:transform .15s,background .15s}
+.cl-btn:hover{transform:translateY(-1px)}
+.cl-btn .cl-ico svg{width:16px;height:16px}
+.cl-btn.white{background:#fff;color:var(--ink)}
+.cl-btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+.cl-btn.red{background:var(--red);color:#fff}
+.cl-btn.red:hover{background:#930E16}
+.cl-btn.line{background:#fff;color:var(--ink);border-color:var(--ink)}
+.cl-btn.sm{min-height:42px;padding:0 18px;font-size:.76rem}
+.cl-open{display:flex;align-items:center;gap:8px;margin-top:22px;font-weight:600;opacity:.9}
+.cl-open .cl-ico svg{width:18px;height:18px}
+.cl-perks{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:18px;border:1px solid var(--line);border-radius:6px}
+.cl-perk{display:flex;gap:14px;align-items:center;padding:20px 22px}
+.cl-perk+.cl-perk{border-left:1px solid var(--line)}
+.cl-perk>.cl-ico{color:var(--red)}
+.cl-perk b{display:block;font-family:var(--m);font-weight:800;font-size:.9rem;text-transform:uppercase}
+.cl-perk span{display:block;color:var(--mut);font-size:.88rem;margin-top:2px}
+.cl-tiles{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.cl-tile{min-height:320px;border-radius:6px;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:30px;color:#fff}
+.cl-tile b{display:block;font-family:var(--m);font-weight:900;font-style:italic;text-transform:uppercase;font-size:2rem;line-height:1}
+.cl-tile span{display:block;margin:8px 0 16px;opacity:.9}
+.cl-sec{padding:70px 0}
+.cl-h{font-family:var(--m);font-weight:800;text-transform:uppercase;text-align:center;font-size:clamp(1.6rem,3vw,2.1rem);letter-spacing:.02em;margin:0 0 34px}
+.cl-h.left{text-align:left;margin-bottom:16px}
+.cl-row{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 72px)/4);gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px}
+.cl-prod{scroll-snap-align:start;border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px;background:#fff;transition:box-shadow .2s,border-color .2s}
+.cl-prod:hover{border-color:#cfcfd5;box-shadow:0 14px 34px rgba(17,17,20,.08)}
+.cl-prod-pic{aspect-ratio:1;border-radius:4px;background:var(--soft);display:grid;place-items:center;overflow:hidden;margin-bottom:6px}
+.cl-prod-pic img{width:100%;height:100%;object-fit:cover}
+.cl-prod-pic span{font-family:var(--m);font-weight:900;font-style:italic;text-transform:uppercase;color:#C9C9CF;font-size:1.1rem;text-align:center;padding:10px}
+.cl-prod small{font-family:var(--m);font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+.cl-prod b{font-family:var(--m);font-weight:700;font-size:1rem;line-height:1.3}
+.cl-prod p{color:var(--mut);font-size:.86rem;line-height:1.45}
+.cl-price{margin-top:auto;font-family:var(--m);font-weight:800;font-size:1.1rem}
+.cl-note{text-align:center;color:var(--mut);font-size:.88rem;margin-top:18px}
+.cl-empty{text-align:center;max-width:640px}
+.cl-empty p{color:var(--mut);margin-bottom:22px;line-height:1.7}
+.cl-gal{background:var(--soft)}
+.cl-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:220px;gap:14px}
+.cl-ph{border:0;padding:0;border-radius:6px;background-size:cover;background-position:center;cursor:zoom-in}
+.cl-rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.cl-rev-grid figure{border:1px solid var(--line);border-radius:6px;padding:24px;margin:0}
+.cl-stars{color:var(--red);letter-spacing:2px;margin-bottom:10px}
+.cl-rev-grid blockquote{line-height:1.6}
+.cl-rev-grid figcaption{margin-top:12px;font-family:var(--m);font-weight:700;font-size:.82rem;text-transform:uppercase}
+.cl-visit{border-top:1px solid var(--line)}
+.cl-visit-in{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:center}
+.cl-addr{font-size:1.1rem;font-weight:600;margin-bottom:18px}
+.cl-hrs{display:grid;gap:8px;max-width:380px;margin-bottom:26px}
+.cl-hrs>div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px;font-size:.95rem}
+.cl-hrs>div.on{color:var(--red);font-weight:700}
+.cl-map{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.cl-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.cl-foot{background:#111114;color:#C9CAD1;padding:56px 0 24px}
+.cl-foot-in{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:40px}
+.cl-foot-in p{margin-top:8px;font-size:.92rem}
+.cl-foot-in a{color:#C9CAD1;text-decoration:none}
+.cl-foot-in b{display:block;font-family:var(--m);font-weight:800;text-transform:uppercase;color:#fff;font-size:.86rem;margin-bottom:12px}
+.cl-foot-in button{display:block;background:none;border:0;color:#C9CAD1;padding:4px 0;cursor:pointer;text-align:left;font-size:.92rem}
+.cl-foot-in button:hover{color:#fff}
+.cl-foot .socials{display:flex;gap:10px;margin-top:16px}.cl-foot .socials a{width:38px;height:38px;border:1px solid #3A3B42;border-radius:50%;color:#fff}
+.cl-copy{margin-top:40px;padding-top:18px;border-top:1px solid #26272D;font-size:.8rem;color:#80828C}
+.cl-age{position:fixed;inset:0;z-index:120;background:rgba(17,17,20,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:16px}
+.cl-age-card{width:100%;max-width:520px;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.cl-age-top{background:var(--red);color:#fff;text-align:center;font-family:var(--m);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.84rem;padding:12px}
+.cl-age-b{padding:26px 28px;text-align:center}
+.cl-age-name{display:block;font-family:var(--m);font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.6rem;margin-bottom:12px}
+.cl-age-b p{color:var(--mut);font-size:.92rem;line-height:1.6;margin-bottom:8px}
+.cl-age-btns{display:flex;gap:12px;justify-content:center;margin-top:18px}
+.cl-age-no{color:var(--red)!important;font-weight:600;margin-top:12px}
+@media (max-width:860px){.cl-cats{flex-wrap:nowrap;overflow-x:auto;gap:22px}.cl-cats button{white-space:nowrap}.cl-hero{min-height:440px}.cl-hero-c{padding:44px 24px}.cl-perks{grid-template-columns:1fr 1fr}.cl-perk:nth-child(3){border-left:0}.cl-perk:nth-child(n+3){border-top:1px solid var(--line)}.cl-tiles{grid-template-columns:1fr}.cl-row{grid-auto-columns:72%}.cl-grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px}.cl-rev-grid{grid-template-columns:1fr}.cl-visit-in{grid-template-columns:1fr}.cl-foot-in{grid-template-columns:1fr}.cl-name{font-size:1.3rem}}
 /* Intro: real plated fettuccine Alfredo, slow push-in, then fade into the site */
 .os-intro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#0E0907;display:grid;place-items:center;transition:opacity .3s ease,visibility .3s;cursor:pointer}
 .os-intro.out{opacity:0;visibility:hidden}
@@ -1722,7 +1818,7 @@ html = f'''<!DOCTYPE html>
 <title>Website Preview | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alfa+Slab+One&family=Pacifico&family=Work+Sans:wght@400;600;700;800&family=Archivo:wght@400;600;800&family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&family=Bebas+Neue&family=Bitter:wght@500;700;800&family=Rye&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Allura&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alfa+Slab+One&family=Pacifico&family=Work+Sans:wght@400;600;700;800&family=Archivo:wght@400;600;800&family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&family=Bebas+Neue&family=Bitter:wght@500;700;800&family=Rye&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Allura&family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,800;1,900&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <!-- Generated by tools/build_demo.py from the demo designs in index.html. Do not edit by hand. -->
 <style>
 {demo_css}
