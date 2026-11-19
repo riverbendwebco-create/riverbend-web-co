@@ -530,19 +530,23 @@ body.t-o2{background:#FBF5EC}
 .o2-big{font-family:var(--serif);font-size:clamp(1.35rem,2.4vw,1.85rem);line-height:1.55;color:var(--ink);max-width:760px}
 .o2-menu-split{display:grid;grid-template-columns:1fr 1.05fr;gap:60px;align-items:start}
 .o2-menu-pic{position:sticky;top:90px;aspect-ratio:4/5;background-size:cover;background-position:center;border-radius:3px}
-.o2-g{border-bottom:1px solid #E7DAC8;padding:18px 0}
-.o2-g-head{display:block;width:100%;text-align:left;background:none;border:0;cursor:pointer;padding:0;color:var(--ink)}
-.o2-g-head i{display:block;font-family:var(--script);font-style:normal;font-size:1.75rem;line-height:1;color:var(--ink);margin-bottom:-4px}
-.o2-g-t{display:inline-flex;align-items:center;gap:14px;font-family:var(--serif);font-size:clamp(2rem,3.4vw,2.6rem);color:var(--rust);padding-left:12px}
-.o2-g-t em{font-style:normal;font-size:1.4rem;transition:transform .25s}
-.o2-g.open .o2-g-t em{transform:rotate(90deg)}
-.o2-g-head small{display:block;padding-left:12px;margin-top:4px;color:var(--mut);font-size:.88rem}
-.o2-items{display:none;padding:16px 0 6px 12px}
-.o2-g.open .o2-items{display:grid;gap:16px}
-.o2-it-top{display:flex;justify-content:space-between;gap:18px;align-items:baseline}
-.o2-it-top b{font-family:var(--serif);font-weight:500;font-size:1.15rem;color:var(--ink)}
-.o2-it-top span{font-family:var(--serif);color:var(--rust);white-space:nowrap}
-.o2-it p{color:var(--mut);font-size:.93rem;line-height:1.55;margin-top:3px}
+.o2-menu-box{max-width:1080px}
+.o2-tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 30px;border-bottom:1px solid var(--line);margin-bottom:40px}
+.o2-tab{background:none;border:0;cursor:pointer;padding:14px 2px;font-family:var(--disp);font-size:1.3rem;font-weight:500;letter-spacing:.04em;color:var(--mut);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s}
+.o2-tab:hover{color:var(--ink)}
+.o2-tab.on{color:var(--rust);border-bottom-color:var(--rust)}
+.o2-panel{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+.o2-panel.in{opacity:1;transform:none}
+.o2-panel-h{text-align:center;margin-bottom:30px}
+.o2-panel-h i{display:block;font-family:var(--script);font-style:normal;font-size:1.9rem;line-height:1;color:var(--ink)}
+.o2-panel-h h3{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,3.4vw,2.6rem);color:var(--rust);margin:0}
+.o2-items{display:grid;grid-template-columns:1fr 1fr;gap:26px 60px}
+.o2-it-top{display:flex;gap:10px;align-items:baseline}
+.o2-it-top b{font-family:var(--serif);font-weight:500;font-size:1.12rem;color:var(--ink)}
+.o2-dots{flex:1;border-bottom:1px dotted #BFAE97;transform:translateY(-4px);min-width:20px}
+.o2-it-top span:last-child:not(.o2-dots){font-family:var(--serif);color:var(--rust);white-space:nowrap}
+.o2-it p{color:var(--mut);font-size:.93rem;line-height:1.55;margin-top:4px}
+@media (max-width:760px){.o2-tabs{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;gap:24px;scrollbar-width:none;margin:0 -20px 30px;padding:0 20px}.o2-tabs::-webkit-scrollbar{display:none}.o2-tab{white-space:nowrap;font-size:1.15rem}.o2-items{grid-template-columns:1fr;gap:20px}}
 .o2-gal{padding-top:40px}
 .o2-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:260px;gap:16px}
 .o2-grid .g0{grid-column:span 2;grid-row:span 2}
@@ -3682,16 +3686,21 @@ function osteria2(C){
   let menu=null;
   if(C.items.length){
     const leads=['Start with','Enjoy','Savor','Share','Save room for','Sip on','Try our'];
-    const list=h('div',{class:'o2-groups'},G.names.map((k,ix)=>{
+    const tabs=h('div',{class:'o2-tabs',role:'tablist'});
+    const panel=h('div',{class:'o2-panel',role:'tabpanel'});
+    const show=(k,ix)=>{
       const lead=/dessert|dolci|sweet/i.test(k)?'Save room for':/drink|wine|cocktail|bar|beer/i.test(k)?'Sip on':leads[ix%5];
-      const body=h('div',{class:'o2-items'},G.map[k].map(i=>h('div',{class:'o2-it'},h('div',{class:'o2-it-top'},h('b',null,i.name),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null)));
-      const head=h('button',{type:'button',class:'o2-g-head','aria-expanded':ix?'false':'true'},h('i',null,lead),h('span',{class:'o2-g-t'},k,h('em',{'aria-hidden':'true'},'→')),h('small',null,G.map[k].length+(G.map[k].length===1?' dish':' dishes')));
-      const g=h('div',{class:'o2-g'+(ix?'':' open')},head,body);
-      head.addEventListener('click',()=>{ const o=!g.classList.contains('open'); g.classList.toggle('open',o); head.setAttribute('aria-expanded',o?'true':'false'); });
-      return g; }));
+      [...tabs.children].forEach((t,j)=>{ t.classList.toggle('on',j===ix); t.setAttribute('aria-selected',j===ix?'true':'false'); });
+      panel.classList.remove('in');
+      panel.replaceChildren(h('div',{class:'o2-panel-h'},h('i',null,lead),h('h3',null,k)),
+        h('div',{class:'o2-items'},G.map[k].map(i=>h('div',{class:'o2-it'},h('div',{class:'o2-it-top'},h('b',null,i.name),h('span',{class:'o2-dots','aria-hidden':'true'}),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null))));
+      requestAnimationFrame(()=>panel.classList.add('in'));
+    };
+    G.names.forEach((k,ix)=>{ const t=h('button',{type:'button',role:'tab',class:'o2-tab'},k); t.addEventListener('click',()=>{ show(k,ix); if(tabs.scrollWidth>tabs.clientWidth) t.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'}); }); tabs.append(t); });
+    show(G.names[0],0);
     menu=h('section',{class:'o2-sec',id:'o2-menu'},
       h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Our Menu'),h('p',{class:'o2-big'},paras[1]||('From handmade pasta to the last sweet bite, here is what '+C.name+' is serving.'))),
-      h('div',{class:'o2-w o2-menu-split'},pics.length?bg(h('div',{class:'o2-menu-pic rv'}),pics[3]||pics[1]||pics[0]):null,list));
+      h('div',{class:'o2-w o2-menu-box rv'},G.names.length>1?tabs:null,panel));
   }
   const gal=pics.length>1?h('section',{class:'o2-sec o2-gal',id:'o2-gal'},
     h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Gallery'),h('p',{class:'o2-big'},'A look inside '+C.name+'.')),

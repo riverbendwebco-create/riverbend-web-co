@@ -1384,16 +1384,21 @@ function osteria2(C){
   let menu=null;
   if(C.items.length){
     const leads=['Start with','Enjoy','Savor','Share','Save room for','Sip on','Try our'];
-    const list=h('div',{class:'o2-groups'},G.names.map((k,ix)=>{
+    const tabs=h('div',{class:'o2-tabs',role:'tablist'});
+    const panel=h('div',{class:'o2-panel',role:'tabpanel'});
+    const show=(k,ix)=>{
       const lead=/dessert|dolci|sweet/i.test(k)?'Save room for':/drink|wine|cocktail|bar|beer/i.test(k)?'Sip on':leads[ix%5];
-      const body=h('div',{class:'o2-items'},G.map[k].map(i=>h('div',{class:'o2-it'},h('div',{class:'o2-it-top'},h('b',null,i.name),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null)));
-      const head=h('button',{type:'button',class:'o2-g-head','aria-expanded':ix?'false':'true'},h('i',null,lead),h('span',{class:'o2-g-t'},k,h('em',{'aria-hidden':'true'},'→')),h('small',null,G.map[k].length+(G.map[k].length===1?' dish':' dishes')));
-      const g=h('div',{class:'o2-g'+(ix?'':' open')},head,body);
-      head.addEventListener('click',()=>{ const o=!g.classList.contains('open'); g.classList.toggle('open',o); head.setAttribute('aria-expanded',o?'true':'false'); });
-      return g; }));
+      [...tabs.children].forEach((t,j)=>{ t.classList.toggle('on',j===ix); t.setAttribute('aria-selected',j===ix?'true':'false'); });
+      panel.classList.remove('in');
+      panel.replaceChildren(h('div',{class:'o2-panel-h'},h('i',null,lead),h('h3',null,k)),
+        h('div',{class:'o2-items'},G.map[k].map(i=>h('div',{class:'o2-it'},h('div',{class:'o2-it-top'},h('b',null,i.name),h('span',{class:'o2-dots','aria-hidden':'true'}),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null))));
+      requestAnimationFrame(()=>panel.classList.add('in'));
+    };
+    G.names.forEach((k,ix)=>{ const t=h('button',{type:'button',role:'tab',class:'o2-tab'},k); t.addEventListener('click',()=>{ show(k,ix); if(tabs.scrollWidth>tabs.clientWidth) t.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'}); }); tabs.append(t); });
+    show(G.names[0],0);
     menu=h('section',{class:'o2-sec',id:'o2-menu'},
       h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Our Menu'),h('p',{class:'o2-big'},paras[1]||('From handmade pasta to the last sweet bite, here is what '+C.name+' is serving.'))),
-      h('div',{class:'o2-w o2-menu-split'},pics.length?bg(h('div',{class:'o2-menu-pic rv'}),pics[3]||pics[1]||pics[0]):null,list));
+      h('div',{class:'o2-w o2-menu-box rv'},G.names.length>1?tabs:null,panel));
   }
   const gal=pics.length>1?h('section',{class:'o2-sec o2-gal',id:'o2-gal'},
     h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Gallery'),h('p',{class:'o2-big'},'A look inside '+C.name+'.')),
