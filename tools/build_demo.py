@@ -337,6 +337,8 @@ body.t-o2{background:#FBF5EC}
 .o2-foot .socials{display:flex;gap:10px}.o2-foot .socials a{width:40px;height:40px;border:1px solid rgba(251,245,236,.35);border-radius:50%;color:#FBF5EC}
 .o2-copy{color:#8F7A63;font-size:.8rem}
 @media (max-width:860px){.o2-hnav{grid-template-columns:repeat(2,1fr);gap:8px;padding-top:16px}.o2-hnav i{font-size:1.6rem}.o2-bar-nav{display:none}.o2-bar-in{justify-content:space-between}.o2-pill{margin-left:auto}.o2-w{padding:0 20px}.o2-intro{padding:80px 0 40px}.o2-trio{grid-template-columns:1fr 1fr}.o2-trio .o2-ph{height:200px}.o2-trio .t1{grid-column:1/-1;order:-1;height:260px}.o2-two{grid-template-columns:1fr;gap:10px;margin-bottom:36px}.o2-sec{padding:70px 0}.o2-menu-split,.o2-res-in,.o2-visit{grid-template-columns:1fr;gap:36px}.o2-menu-pic{position:relative;top:0;aspect-ratio:16/10}.o2-grid{grid-template-columns:1fr 1fr;grid-auto-rows:160px}.o2-revs{grid-template-columns:1fr}.o2-form{grid-template-columns:1fr}.o2-foot-cols{grid-template-columns:1fr;gap:26px}}
+/* Osteria v2: menu photo stays put (no sticky scroll) */
+.o2-menu-pic{position:relative;top:0;border-radius:4px;box-shadow:0 24px 50px rgba(43,26,18,.18)}
 /* Osteria v2: hero name centered */
 .o2-hero{justify-content:center}
 .o2-hnav{position:absolute;top:0;left:50%;transform:translateX(-50%)}
