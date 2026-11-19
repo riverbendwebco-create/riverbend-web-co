@@ -3359,10 +3359,12 @@ function fade(C){
   /* 1. gallery as a big swipe strip */
   let gal=null;
   if(C.own.length){
-    const list=C.own.slice(0,12);
+    const all=C.own.slice(0,12).map((u,i)=>i), front=sideDefs.map(d=>d.idx[0]);
+    const ordered=all.filter(i=>!front.includes(i)).concat(all.filter(i=>front.includes(i)));
+    const list=ordered.map(i=>C.own[i]), gcaps=ordered.map(i=>caps[i]||'');
     const track=h('div',{class:'fd-strip',tabindex:'0','aria-label':'Photo strip, scroll sideways'},list.map((u,i)=>h('figure',{class:'fd-slide'},
-      h('button',{type:'button','aria-label':'Open photo '+(i+1)+(caps[i]?': '+caps[i]:''),onclick:()=>bzLightbox(list,caps,i)},bg(h('span'),u)),
-      caps[i]?h('figcaption',null,caps[i]):null)));
+      h('button',{type:'button','aria-label':'Open photo '+(i+1)+(gcaps[i]?': '+gcaps[i]:''),onclick:()=>bzLightbox(list,gcaps,i)},bg(h('span'),u)),
+      gcaps[i]?h('figcaption',null,gcaps[i]):null)));
     const go=d=>track.scrollBy({left:d*Math.max(280,track.clientWidth*0.8),behavior:'smooth'});
     gal=h('section',{class:'fd-sec fd-dark fd-gal',id:'f-gallery'},h('div',{class:'fd-wrap'},
       h('div',{class:'fd-gal-h'},h('div',null,h('h2',null,'The work'),h('p',{class:'fd-sub'},'Recent cuts and color from the chair. Swipe or use the arrows, tap a photo for full size.')),
