@@ -345,6 +345,8 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
+.cl-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);filter:brightness(.72) contrast(1.15) grayscale(1);mix-blend-mode:screen;opacity:1;transition:opacity .65s ease}
+.cl-vid.fade{opacity:0}
 .cl-blow{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .cl-blow-l{position:absolute;inset:-10% -10% -10% -20%;-webkit-mask-image:radial-gradient(ellipse 60% 55% at 62% 50%,#000 35%,rgba(0,0,0,0) 78%);mask-image:radial-gradient(ellipse 60% 55% at 62% 50%,#000 35%,rgba(0,0,0,0) 78%);background-size:cover;background-position:70% 50%;mix-blend-mode:screen;transform-origin:15% 60%;opacity:0;animation:clBlow 9s cubic-bezier(.25,.6,.3,1) infinite;will-change:transform,opacity,filter}
 .cl-blow-l.b1{animation-delay:-3s;background-position:60% 40%}
@@ -1842,7 +1844,7 @@ html = f'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src https://www.google.com https://maps.google.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; media-src https://assets.mixkit.co; frame-src https://www.google.com https://maps.google.com">
 <title>Website Preview | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">

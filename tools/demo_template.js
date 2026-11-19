@@ -1346,9 +1346,16 @@ function cloudShop(C){
     h('nav',{class:'cl-w cl-cats'},jump('cl-shop','New In','on'),cats.slice(0,8).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours'),jump('cl-visit','Location')));
   const smoke=!!C.x.heroSmoke;
   const hp=(typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:'';
-  const blow=!smoke&&!!hp&&C.x.heroBlow!==false;
+  const hv=(typeof C.x.heroVideo==='string'&&/^https:\/\/assets\.mixkit\.co\/videos\/\d+\/\d+-720\.mp4$/.test(C.x.heroVideo))?C.x.heroVideo:'';
+  const blow=!smoke&&(!!hv||(!!hp&&C.x.heroBlow!==false));
+  const vidLayer=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); const v=h('video',{class:'cl-vid',muted:'',autoplay:'',playsinline:'',preload:'auto'}); v.muted=true; v.src=hv; if(hp) v.poster=hp;
+    const seg=+C.x.heroVideoSeg||6.5;
+    v.addEventListener('timeupdate',()=>{ if(v.currentTime>seg-0.7&&!v.classList.contains('fade')){ v.classList.add('fade'); setTimeout(()=>{ v.currentTime=0; v.play().catch(()=>{}); v.classList.remove('fade'); },650); } });
+    v.addEventListener('ended',()=>{ v.currentTime=0; v.play().catch(()=>{}); });
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ v.removeAttribute('autoplay'); v.addEventListener('loadeddata',()=>{ v.currentTime=1.2; },{once:true}); }
+    w.append(v); return w; };
   const blowLayers=()=>{ const w=h('div',{class:'cl-blow','aria-hidden':'true'}); [0,1,2].forEach(i=>{ const l=h('div',{class:'cl-blow-l b'+i}); l.style.backgroundImage=cssUrl(hp); w.append(l); }); return w; };
-  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')+(blow?' blowing':'')},smoke?clSmoke():(blow?blowLayers():null),h('div',{class:'cl-hero-c'},
+  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')+(blow?' blowing':'')},smoke?clSmoke():(blow?(hv?vidLayer():blowLayers()):null),h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
     h('h1',null,C.tag||('Your local cloud shop in '+city)),
     h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
