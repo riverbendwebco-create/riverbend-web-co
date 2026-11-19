@@ -3086,5 +3086,35 @@
         }
       }
     }
+  },
+  {
+    "key": "drbobs-cloudlab-9",
+    "matchName": "Dr. Bob's Cloud Lab",
+    "patch": true,
+    "data": {
+      "x": {
+        "cats": [
+          "Vapes",
+          "Cigars",
+          "Cigarettes",
+          "Beverages"
+        ],
+        "logoUrl": "https://drbobscloudlabs.com/wp-content/uploads/2026/01/DR.BOB-png-849x1024.png",
+        "heroPhoto": "https://images.unsplash.com/photo-1696255400336-05e8eb84f01a?auto=format&fit=crop&w=2000&q=75",
+        "heroVideo": "https://assets.mixkit.co/videos/50947/50947-720.mp4",
+        "extraPhotos": [
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLcuyrKwm-ohrrW-pIJrwkyIlA78qkUK39wsegeAF6cpIJh2ihuzZe-SzyAtyywsnfuohLLEda5hAn9k4MQKYuJYedoF3rlhgQIXgOgI2LAE49kircA-TuxcfQcyNGLW3ZAsxaJvWE6vdiMq=w1600-h1200-p-k-no"
+        ],
+        "catPhotos": {
+          "Vapes": "https://lh3.googleusercontent.com/grass-cs/AABkmLcuyrKwm-ohrrW-pIJrwkyIlA78qkUK39wsegeAF6cpIJh2ihuzZe-SzyAtyywsnfuohLLEda5hAn9k4MQKYuJYedoF3rlhgQIXgOgI2LAE49kircA-TuxcfQcyNGLW3ZAsxaJvWE6vdiMq=w1600-h1200-p-k-no",
+          "Cigars": "https://images.unsplash.com/photo-1547652577-b4fe2f34d7ee?auto=format&fit=crop&w=800&h=600&q=75",
+          "Cigarettes": "https://images.unsplash.com/photo-1783000852180-17be4ed9b63e?auto=format&fit=crop&w=800&h=600&q=75",
+          "Beverages": "https://images.unsplash.com/photo-1551870573-6f5e93e660fd?auto=format&fit=crop&w=800&h=600&q=75"
+        },
+        "catPos": {
+          "Vapes": "55% 12% 210%"
+        }
+      }
+    }
   }
 ]
