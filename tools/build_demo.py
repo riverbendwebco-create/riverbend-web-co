@@ -1807,7 +1807,7 @@ body.t-mk{background:#fff;padding-bottom:0}
 .fd-slide button{display:block;width:100%;padding:0;border:0;border-radius:4px;overflow:hidden;aspect-ratio:4/5;cursor:pointer;background:#222}
 .fd-slide button span{display:block;width:100%;height:100%;background-size:cover;background-position:center;transition:transform .35s}.fd-slide button:hover span{transform:scale(1.05)}
 .fd-slide figcaption{margin:14px 2px 0;font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.76rem;color:#D1D5DB}
-.fd-follow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;margin-top:44px;padding:22px 24px;border:1px solid rgba(255,255,255,.35);border-radius:6px}
+.fd-follow{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:12px 28px;margin-top:44px;padding:22px 24px;border:1px solid rgba(255,255,255,.35);border-radius:6px}
 .fd-follow b{font-family:var(--hf);font-weight:700;font-size:1.3rem}.fd-follow .fd-cta{margin:0}
 .fd-pole{height:12px;background:repeating-linear-gradient(-45deg,var(--rd) 0 16px,#fff 16px 32px,#2b2b2b 32px 48px)}
 .fd-band{background:var(--rd);color:#fff}
