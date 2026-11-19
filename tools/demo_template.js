@@ -2214,14 +2214,17 @@ function realty(C){
   const card=(icon,title,text,label,href,onclick,ext)=>h('div',{class:'rt-card'},rtIco(icon,26),h('h3',null,title),h('p',null,text),
     href?h('a',Object.assign({class:'rt-card-go',href},ext?{target:'_blank',rel:'noopener'}:{}),label,ico('arrow',14,'')):h('button',{type:'button',class:'rt-card-go',onclick},label,ico('arrow',14,'')));
 
-  const hero=h('section',{class:'rt-hero',id:'r-top'},h('div',{class:'rt-wrap rt-hero-g'},
+  const hero=h('section',{class:'rt-hero',id:'r-top'},
+    h('div',{class:'rt-fx','aria-hidden':'true'},h('i',{class:'rt-orb a'}),h('i',{class:'rt-orb b'}),h('i',{class:'rt-grid'}),h('i',{class:'rt-stars'})),
+    h('div',{class:'rt-wrap rt-hero-g'},
     h('div',{class:'rt-hero-t'},
       h('div',{class:'rt-eyebrow'},[firm,C.city].filter(Boolean).join(' · ')),
-      h('h1',null,name),
+      h('h1',null,h('span',{class:'rt-grad'},name)),
       h('div',{class:'rt-role'},C.cat||'REALTOR'),
       h('p',{class:'rt-lead'},C.tag||''),
       h('div',{class:'rt-cta'},btn('red',C.tel,'Call '+C.phoneTxt,ico('phone',16,'')),btn('line',sms,'Send a text',ico('chat',16,'')))),
-    photo?h('figure',{class:'rt-photo'},h('img',{src:photo,alt:name})):null),
+    photo?h('figure',{class:'rt-photo'},h('div',{class:'rt-holo'},h('img',{src:photo,alt:name}),h('i',{class:'rt-scan','aria-hidden':'true'}),['tl','tr','bl','br'].map(k=>h('b',{class:'rt-corner '+k,'aria-hidden':'true'}))),
+      h('figcaption',null,h('span',null,C.cat||'REALTOR'),h('span',null,typeof C.x.license==='string'?C.x.license:''))):null),
     h('div',{class:'rt-wrap rt-cards'},
       card('home','Buy a home','Tell '+first+' what you are looking for and get new listings that fit, before you spend a weekend driving around.','Start your search',site,null,true),
       card('sign','Sell your home','Pricing, prep and marketing for your home, with a plan you see before anything goes live.','Talk about selling',null,()=>scrollTo('r-contact')),
@@ -2271,7 +2274,16 @@ function realty(C){
     firm?h('p',null,firm+(C.addr?', '+[C.addr,C.city].filter(Boolean).join(', '):'')):null,
     h('p',{class:'rt-legal'},[typeof C.x.license==='string'?C.x.license+'.':'',typeof C.x.legal==='string'?C.x.legal:''].filter(Boolean).join(' '))));
 
-  return h('div',{class:'rt'},nav,hero,buy,sell,about,follow,contact,foot);
+  const page=h('div',{class:'rt'},nav,hero,buy,sell,about,follow,contact,foot);
+  /* glass panels light up where the pointer is */
+  page.addEventListener('pointermove',e=>{ const el=e.target.closest&&e.target.closest('.rt-card,.rt-steps li,.rt-soc,.rt-ct'); if(!el) return; const r=el.getBoundingClientRect(); el.style.setProperty('--mx',(e.clientX-r.left)+'px'); el.style.setProperty('--my',(e.clientY-r.top)+'px'); },{passive:true});
+  /* headshot tilts slightly with the pointer */
+  const holo=page.querySelector('.rt-holo');
+  if(holo&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&matchMedia('(pointer:fine)').matches){
+    hero.addEventListener('pointermove',e=>{ const r=hero.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5; holo.style.transform='perspective(900px) rotateY('+(x*10).toFixed(2)+'deg) rotateX('+(-y*8).toFixed(2)+'deg)'; },{passive:true});
+    hero.addEventListener('pointerleave',()=>{ holo.style.transform=''; });
+  }
+  return page;
 }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
 /* Website plans: keep in step with the Pricing section of index.html */
