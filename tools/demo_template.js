@@ -1362,6 +1362,7 @@ const BB_OPT={
   tops:[['Lettuce','#5BAE4C'],['Tomato','#E0432F'],['Onion','#B67BC9'],['Pickles','#7FA53A'],['Sauerkraut','#E4EAB8'],['Peppers','#D63A2A']],
   sauce:[['Mustard','#E8B400'],['Mayo','#FFFEF2'],['Horseradish','#EEF1E4'],['Thousand Island','#F08A5D'],['Honey mustard','#E9A81A']],
   heat:[['Toasted'],['Cold']]};
+const BB_PRICE_DEF={meat:{'Corned beef':9.5,'Roast beef':9.5,'Turkey':9,'Chicken salad':8.75,'Veggie':8},bread:{'Pretzel roll':1,'Croissant':1,'Bagel':.75,'Wheat':0,'White':0},cheese:{'Swiss':.75,'Cheddar':.75,'Provolone':.75,'No cheese':0},tops:{'Lettuce':0,'Tomato':0,'Onion':0,'Pickles':0,'Sauerkraut':.5,'Peppers':.5},sauce:{},heat:{}};
 let BB_UID=0;
 function bbSvg(s,cls){
   const id='bb'+(++BB_UID)+'_', W=300, defs=[]; let y=252, n=0; const out=[];
@@ -1514,6 +1515,12 @@ function bigbill(C){
   const S={bread:DEF.bread,meat:DEF.meat,cheese:DEF.cheese,tops:DEF.tops.slice(),sauce:DEF.sauce,heat:DEF.heat};
   const STEPS=[['bread','Bread','Pick a bread',false],['meat','Meat','Pick a meat',false],['cheese','Cheese','Add cheese',false],['tops','Toppings','Pile on the toppings',true],['sauce','Spread','Choose a spread',false],['heat','Finish','Toasted or cold?',false]];
   let step=0;
+  const PR=(()=>{ const o={}; Object.keys(BB_PRICE_DEF).forEach(g=>{ o[g]=Object.assign({},BB_PRICE_DEF[g]); const x=C.x.prices&&typeof C.x.prices==='object'?C.x.prices[g]:null; if(x&&typeof x==='object') Object.keys(x).forEach(k=>{ if(typeof x[k]==='number'&&x[k]>=0&&x[k]<100) o[g][k]=x[k]; }); }); return o; })();
+  const money=n=>'$'+n.toFixed(2);
+  const pOf=(g,v)=>(PR[g]&&PR[g][v])||0;
+  const lines=()=>{ const L=[[S.meat+' sandwich',pOf('meat',S.meat)]]; if(pOf('bread',S.bread)) L.push([S.bread,pOf('bread',S.bread)]); if(S.cheese!=='No cheese'&&pOf('cheese',S.cheese)) L.push([S.cheese+' cheese',pOf('cheese',S.cheese)]); S.tops.forEach(t=>{ if(pOf('tops',t)) L.push([t,pOf('tops',t)]); }); return L; };
+  const total=()=>lines().reduce((a,l)=>a+l[1],0);
+  const tag=(g,v)=>{ const p=pOf(g,v); if(g==='meat') return money(p); if(g==='sauce'||g==='heat') return 'Free'; return p?'+'+money(p):'Free'; };
   const phrase=()=>{ const b=S.bread.toLowerCase(); const parts=[S.meat+' on '+(/roll|bagel|croissant/.test(b)?'a '+b:b)];
     if(S.cheese!=='No cheese') parts.push(S.cheese.toLowerCase()); S.tops.forEach(t=>parts.push(t.toLowerCase())); if(S.sauce) parts.push(S.sauce.toLowerCase()); parts.push(S.heat.toLowerCase()); return parts; };
   const sname=()=>'The '+S.meat+' '+(S.bread==='Pretzel roll'?'Pretzel':S.bread==='Croissant'?'Croissant':S.bread==='Bagel'?'Bagel':'Stack');
@@ -1527,23 +1534,24 @@ function bigbill(C){
     const [g,,title,multi]=STEPS[step];
     panel.replaceChildren(h('h3',null,title,multi?h('small',null,'pick as many as you like'):null),
       h('div',{class:'bb-tiles',role:multi?'group':'radiogroup','aria-label':title},BB_OPT[g].map(o=>{ const on=g==='tops'?S.tops.includes(o[0]):S[g]===o[0];
-        const t=h('button',{type:'button',class:'bb-tile'+(on?' on':''),role:multi?'checkbox':'radio','aria-checked':String(on),onclick:()=>pick(g,o[0],multi)},h('span',{class:'bb-ti'}),h('b',null,o[0]),h('i',{class:'bb-ck','aria-hidden':'true'},'\u2713'));
+        const t=h('button',{type:'button',class:'bb-tile'+(on?' on':''),role:multi?'checkbox':'radio','aria-checked':String(on),onclick:()=>pick(g,o[0],multi)},h('span',{class:'bb-ti'}),h('b',null,o[0]),h('em',{class:'bb-tp'},tag(g,o[0])),h('i',{class:'bb-ck','aria-hidden':'true'},'\u2713'));
         t.firstChild.innerHTML=bbIcon(g,o[0]); return t; })));
     navb.replaceChildren(
       step>0?h('button',{type:'button',class:'bb-btn line dark',onclick:()=>{ step--; drawBench(); }},'Back'):h('span'),
       step<STEPS.length-1?h('button',{type:'button',class:'bb-btn mu',onclick:()=>{ step++; drawBench(); }},'Next: '+STEPS[step+1][1]):h('button',{type:'button',class:'bb-btn mu',onclick:()=>{ stage.scrollIntoView({behavior:'smooth',block:'center'}); }},'See my ticket'));
   };
   const draw=()=>{
-    const summary="Hi, I'd like to order: "+phrase().join(', ')+". My name is ";
+    const summary="Hi, I'd like to order: "+phrase().join(', ')+". Estimated "+money(total())+" before tax. My name is ";
     notice.textContent='';
-    mini.innerHTML=bbSvg(S,'bb-minisvg')+'<b></b>'; mini.lastChild.textContent=sname();
+    mini.innerHTML=bbSvg(S,'bb-minisvg')+'<b></b><em></em>'; mini.children[1].textContent=sname(); mini.children[2].textContent=money(total());
     const art=h('div',{class:'bb-art'}); art.innerHTML=bbSvg(S,'bb-live');
     stage.replaceChildren(h('div',{class:'bb-st-h'},h('span',null,'Your sandwich'),h('i',null,'Sample')),
       h('div',{class:'bb-plate'},art,h('div',{class:'bb-cutb','aria-hidden':'true'})),
       h('h3',null,sname()),h('ul',{class:'bb-tk-l'},phrase().map(t=>h('li',null,t.charAt(0).toUpperCase()+t.slice(1)))),
+      h('div',{class:'bb-price'},h('ul',null,lines().map(l=>h('li',null,h('span',null,l[0]),h('b',null,money(l[1]))))),h('div',{class:'bb-total'},h('span',null,'Your total'),h('b',null,money(total())))),
       h('div',{class:'bb-tk-a'},call('mu','Call it in'),fbBtn('line','Message us'),
         h('button',{type:'button',class:'bb-copy',onclick:()=>{ const ok=()=>{ notice.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(ok,()=>{ notice.textContent='Copy not available. Read it out when you call.'; }); }catch(e){ notice.textContent='Copy not available. Read it out when you call.'; } }},'Copy my order')),notice,
-      h('p',{class:'bb-fine'},'Sample builder for this demo. Ingredients are examples; ask the shop what is fresh today. In the finished site, this sends your order straight to the counter.'));
+      h('p',{class:'bb-fine'},'Sample builder with sample prices, before tax. Real menu prices and ingredients are set with the owner. In the finished site, this sends your order straight to the counter.'));
     drawBench();
   };
   const build=h('section',{class:'bb-sec bb-build',id:'b-build'},h('div',{class:'bb-wrap'},

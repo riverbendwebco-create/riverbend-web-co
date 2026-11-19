@@ -2489,7 +2489,7 @@ body.t-mk{background:#fff;padding-bottom:0}
 .bb-tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px 12px;background:#fff;border:2px solid #D5DDD8;border-radius:10px;cursor:pointer;font-family:var(--bf);color:#14201A;transition:transform .15s,box-shadow .15s,border-color .15s}
 .bb-tile:hover{transform:translateY(-3px);border-color:var(--bk);box-shadow:0 6px 0 rgba(15,25,20,.12)}
 .bb-ti{display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#E7EDE9)}.bb-ti svg{width:60px;height:60px}
-.bb-tile b{font:800 .95rem/1.15 var(--bf);text-align:center}
+.bb-tile b{font:800 .95rem/1.15 var(--bf);text-align:center}.bb-tp{font:700 .8rem var(--bf);font-style:normal;color:#5C6B63;background:#EEF2EF;border-radius:20px;padding:2px 10px}.bb-tile.on .bb-tp{background:var(--mu);color:#14201A}
 .bb-ck{position:absolute;top:8px;right:8px;display:none;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--tm);color:#fff;font-style:normal;font-weight:800;font-size:.85rem}
 .bb-tile.on{background:var(--bk);border-color:var(--bk);color:#fff;box-shadow:0 5px 0 var(--mu);transform:translateY(-2px)}.bb-tile.on .bb-ti{background:radial-gradient(circle at 35% 30%,#fff,#DCE5DF)}.bb-tile.on .bb-ck{display:grid}
 .bb-tile:focus-visible,.bb-tabs button:focus-visible{outline:3px solid var(--mu);outline-offset:2px}
@@ -2503,6 +2503,7 @@ body.t-mk{background:#fff;padding-bottom:0}
 .bb-cutb{height:30px;border-radius:40px/16px;background:repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 2px,transparent 2px 9px),linear-gradient(180deg,#C48B52,#94622F);box-shadow:0 12px 0 #5E3D1C,0 18px 20px rgba(0,0,0,.45),inset 0 3px 0 rgba(255,255,255,.28);position:relative;z-index:1}
 .bb-stage h3{font:400 1.6rem var(--hf);color:#fff;text-align:center;margin:24px 0 10px}
 .bb-tk-l{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 8px;margin-bottom:16px}.bb-tk-l li{padding:4px 12px;border:1.5px solid rgba(234,240,236,.35);border-radius:20px;font:700 .85rem var(--bf);color:#D4E0D9;background:rgba(255,255,255,.05)}
+.bb-price{margin:14px 0 16px;border-top:2px dashed rgba(234,240,236,.3);padding-top:12px}.bb-price ul{display:grid;gap:4px;margin-bottom:8px}.bb-price li{display:flex;justify-content:space-between;gap:12px;font-weight:600;font-size:.95rem;color:#C9D6CF}.bb-price li b{font-weight:700;color:#fff}.bb-total{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid rgba(234,240,236,.3);padding-top:10px}.bb-total span{font:800 .85rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--mu)}.bb-total b{font:400 2rem var(--hf);color:#fff}
 .bb-tk-a{display:flex;flex-wrap:wrap;gap:10px}.bb-tk-a .bb-btn{flex:1 1 150px}
 .bb-copy{background:none;border:0;color:#C9D6CF;text-decoration:underline;font:700 .95rem var(--bf);padding:10px 0;cursor:pointer;flex:1 1 100%;text-align:left}.bb-copy:hover{color:#fff}
 .bb-copied{display:block;min-height:1.2em;color:var(--mu);font-weight:700;font-size:.9rem}
@@ -2519,7 +2520,7 @@ body.t-mk{background:#fff;padding-bottom:0}
 .bb-visit .socials a{background:var(--bk);color:#fff}
 .bb-map{border:4px solid var(--bk);border-radius:6px;overflow:hidden;box-shadow:8px 8px 0 var(--mu);min-height:340px}.bb-map iframe{display:block;width:100%;height:100%;min-height:340px;border:0}
 .bb-foot{background:var(--bk);color:#C9D6CF;padding:26px 0 24px;font-size:.92rem}.bb-foot-in{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px}.bb-foot b{font:400 1.15rem var(--hf);color:var(--mu)}.bb-foot a{color:#fff}.bb-foot em{margin-left:auto;font-style:normal;color:#8FA399}
-@media (max-width:1000px){.bb-bg{grid-template-columns:1fr}.bb-stage{position:static}.bb-bench{box-shadow:6px 6px 0 var(--bk)}.bb-mini{display:flex;align-items:center;gap:12px;position:sticky;top:104px;z-index:5;background:var(--bk);color:#fff;border-radius:8px;padding:6px 14px;box-shadow:0 6px 0 var(--mu)}.bb-minisvg{height:84px;width:120px;flex:none}.bb-mini{margin:-6px -6px 14px;box-shadow:none;border-radius:8px}.bb-mini b{font:400 1.05rem/1.15 var(--hf);color:var(--mu)}.bb-board{grid-template-columns:1fr 1fr}.bb-why{grid-template-columns:1fr 1fr}}
+@media (max-width:1000px){.bb-bg{grid-template-columns:1fr}.bb-stage{position:static}.bb-bench{box-shadow:6px 6px 0 var(--bk)}.bb-mini{display:flex;align-items:center;gap:12px;position:sticky;top:104px;z-index:5;background:var(--bk);color:#fff;border-radius:8px;padding:6px 14px;box-shadow:0 6px 0 var(--mu)}.bb-minisvg{height:84px;width:120px;flex:none}.bb-mini{margin:-6px -6px 14px;box-shadow:none;border-radius:8px}.bb-mini b{font:400 1.05rem/1.15 var(--hf);color:var(--mu);flex:1}.bb-mini em{font:400 1.3rem var(--hf);font-style:normal;color:#fff}.bb-board{grid-template-columns:1fr 1fr}.bb-why{grid-template-columns:1fr 1fr}}
 @media (max-width:900px){
  .bb-links{display:none}.bb-nav-in .bb-btn{margin-left:auto}.bb-nav-in{gap:10px}
  .bb-mlinks{display:flex;justify-content:space-between;padding:0 10px 4px;border-top:1px solid rgba(234,240,236,.15)}.bb-mlinks button{white-space:nowrap;padding:9px 4px;font-size:clamp(.66rem,3.1vw,.86rem);letter-spacing:.05em}
@@ -3969,6 +3970,7 @@ const BB_OPT={
   tops:[['Lettuce','#5BAE4C'],['Tomato','#E0432F'],['Onion','#B67BC9'],['Pickles','#7FA53A'],['Sauerkraut','#E4EAB8'],['Peppers','#D63A2A']],
   sauce:[['Mustard','#E8B400'],['Mayo','#FFFEF2'],['Horseradish','#EEF1E4'],['Thousand Island','#F08A5D'],['Honey mustard','#E9A81A']],
   heat:[['Toasted'],['Cold']]};
+const BB_PRICE_DEF={meat:{'Corned beef':9.5,'Roast beef':9.5,'Turkey':9,'Chicken salad':8.75,'Veggie':8},bread:{'Pretzel roll':1,'Croissant':1,'Bagel':.75,'Wheat':0,'White':0},cheese:{'Swiss':.75,'Cheddar':.75,'Provolone':.75,'No cheese':0},tops:{'Lettuce':0,'Tomato':0,'Onion':0,'Pickles':0,'Sauerkraut':.5,'Peppers':.5},sauce:{},heat:{}};
 let BB_UID=0;
 function bbSvg(s,cls){
   const id='bb'+(++BB_UID)+'_', W=300, defs=[]; let y=252, n=0; const out=[];
@@ -4121,6 +4123,12 @@ function bigbill(C){
   const S={bread:DEF.bread,meat:DEF.meat,cheese:DEF.cheese,tops:DEF.tops.slice(),sauce:DEF.sauce,heat:DEF.heat};
   const STEPS=[['bread','Bread','Pick a bread',false],['meat','Meat','Pick a meat',false],['cheese','Cheese','Add cheese',false],['tops','Toppings','Pile on the toppings',true],['sauce','Spread','Choose a spread',false],['heat','Finish','Toasted or cold?',false]];
   let step=0;
+  const PR=(()=>{ const o={}; Object.keys(BB_PRICE_DEF).forEach(g=>{ o[g]=Object.assign({},BB_PRICE_DEF[g]); const x=C.x.prices&&typeof C.x.prices==='object'?C.x.prices[g]:null; if(x&&typeof x==='object') Object.keys(x).forEach(k=>{ if(typeof x[k]==='number'&&x[k]>=0&&x[k]<100) o[g][k]=x[k]; }); }); return o; })();
+  const money=n=>'$'+n.toFixed(2);
+  const pOf=(g,v)=>(PR[g]&&PR[g][v])||0;
+  const lines=()=>{ const L=[[S.meat+' sandwich',pOf('meat',S.meat)]]; if(pOf('bread',S.bread)) L.push([S.bread,pOf('bread',S.bread)]); if(S.cheese!=='No cheese'&&pOf('cheese',S.cheese)) L.push([S.cheese+' cheese',pOf('cheese',S.cheese)]); S.tops.forEach(t=>{ if(pOf('tops',t)) L.push([t,pOf('tops',t)]); }); return L; };
+  const total=()=>lines().reduce((a,l)=>a+l[1],0);
+  const tag=(g,v)=>{ const p=pOf(g,v); if(g==='meat') return money(p); if(g==='sauce'||g==='heat') return 'Free'; return p?'+'+money(p):'Free'; };
   const phrase=()=>{ const b=S.bread.toLowerCase(); const parts=[S.meat+' on '+(/roll|bagel|croissant/.test(b)?'a '+b:b)];
     if(S.cheese!=='No cheese') parts.push(S.cheese.toLowerCase()); S.tops.forEach(t=>parts.push(t.toLowerCase())); if(S.sauce) parts.push(S.sauce.toLowerCase()); parts.push(S.heat.toLowerCase()); return parts; };
   const sname=()=>'The '+S.meat+' '+(S.bread==='Pretzel roll'?'Pretzel':S.bread==='Croissant'?'Croissant':S.bread==='Bagel'?'Bagel':'Stack');
@@ -4134,23 +4142,24 @@ function bigbill(C){
     const [g,,title,multi]=STEPS[step];
     panel.replaceChildren(h('h3',null,title,multi?h('small',null,'pick as many as you like'):null),
       h('div',{class:'bb-tiles',role:multi?'group':'radiogroup','aria-label':title},BB_OPT[g].map(o=>{ const on=g==='tops'?S.tops.includes(o[0]):S[g]===o[0];
-        const t=h('button',{type:'button',class:'bb-tile'+(on?' on':''),role:multi?'checkbox':'radio','aria-checked':String(on),onclick:()=>pick(g,o[0],multi)},h('span',{class:'bb-ti'}),h('b',null,o[0]),h('i',{class:'bb-ck','aria-hidden':'true'},'\u2713'));
+        const t=h('button',{type:'button',class:'bb-tile'+(on?' on':''),role:multi?'checkbox':'radio','aria-checked':String(on),onclick:()=>pick(g,o[0],multi)},h('span',{class:'bb-ti'}),h('b',null,o[0]),h('em',{class:'bb-tp'},tag(g,o[0])),h('i',{class:'bb-ck','aria-hidden':'true'},'\u2713'));
         t.firstChild.innerHTML=bbIcon(g,o[0]); return t; })));
     navb.replaceChildren(
       step>0?h('button',{type:'button',class:'bb-btn line dark',onclick:()=>{ step--; drawBench(); }},'Back'):h('span'),
       step<STEPS.length-1?h('button',{type:'button',class:'bb-btn mu',onclick:()=>{ step++; drawBench(); }},'Next: '+STEPS[step+1][1]):h('button',{type:'button',class:'bb-btn mu',onclick:()=>{ stage.scrollIntoView({behavior:'smooth',block:'center'}); }},'See my ticket'));
   };
   const draw=()=>{
-    const summary="Hi, I'd like to order: "+phrase().join(', ')+". My name is ";
+    const summary="Hi, I'd like to order: "+phrase().join(', ')+". Estimated "+money(total())+" before tax. My name is ";
     notice.textContent='';
-    mini.innerHTML=bbSvg(S,'bb-minisvg')+'<b></b>'; mini.lastChild.textContent=sname();
+    mini.innerHTML=bbSvg(S,'bb-minisvg')+'<b></b><em></em>'; mini.children[1].textContent=sname(); mini.children[2].textContent=money(total());
     const art=h('div',{class:'bb-art'}); art.innerHTML=bbSvg(S,'bb-live');
     stage.replaceChildren(h('div',{class:'bb-st-h'},h('span',null,'Your sandwich'),h('i',null,'Sample')),
       h('div',{class:'bb-plate'},art,h('div',{class:'bb-cutb','aria-hidden':'true'})),
       h('h3',null,sname()),h('ul',{class:'bb-tk-l'},phrase().map(t=>h('li',null,t.charAt(0).toUpperCase()+t.slice(1)))),
+      h('div',{class:'bb-price'},h('ul',null,lines().map(l=>h('li',null,h('span',null,l[0]),h('b',null,money(l[1]))))),h('div',{class:'bb-total'},h('span',null,'Your total'),h('b',null,money(total())))),
       h('div',{class:'bb-tk-a'},call('mu','Call it in'),fbBtn('line','Message us'),
         h('button',{type:'button',class:'bb-copy',onclick:()=>{ const ok=()=>{ notice.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(ok,()=>{ notice.textContent='Copy not available. Read it out when you call.'; }); }catch(e){ notice.textContent='Copy not available. Read it out when you call.'; } }},'Copy my order')),notice,
-      h('p',{class:'bb-fine'},'Sample builder for this demo. Ingredients are examples; ask the shop what is fresh today. In the finished site, this sends your order straight to the counter.'));
+      h('p',{class:'bb-fine'},'Sample builder with sample prices, before tax. Real menu prices and ingredients are set with the owner. In the finished site, this sends your order straight to the counter.'));
     drawBench();
   };
   const build=h('section',{class:'bb-sec bb-build',id:'b-build'},h('div',{class:'bb-wrap'},
