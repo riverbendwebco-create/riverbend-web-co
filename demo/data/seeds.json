@@ -3088,7 +3088,7 @@
     }
   },
   {
-    "key": "drbobs-cloudlab-9",
+    "key": "drbobs-cloudlab-10",
     "matchName": "Dr. Bob's Cloud Lab",
     "patch": true,
     "data": {
@@ -3112,7 +3112,7 @@
           "Beverages": "https://images.unsplash.com/photo-1551870573-6f5e93e660fd?auto=format&fit=crop&w=800&h=600&q=75"
         },
         "catPos": {
-          "Vapes": "55% 12% 210%"
+          "Vapes": "84% 50% 320%"
         }
       }
     }
