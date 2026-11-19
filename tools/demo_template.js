@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -229,6 +229,7 @@ function western(C){
   if(C.variant==='buz') return buz(C);
   if(C.variant==='fade') return fade(C);
   if(C.variant==='welborn') return welborn(C);
+  if(C.variant==='bigbill') return bigbill(C);
   if(C.variant==='trail'&&Array.isArray(C.x.week)&&C.x.week.length) return trailhead(C);
   const G=groups(C.items,'Menu');
   const lines=sentences(C.tag).slice(0,3); const head=lines.length?lines:[C.name];
@@ -1351,6 +1352,123 @@ function welborn(C){
   const foot=h('footer',{class:'wb-foot'},h('div',{class:'wb-wrap wb-foot-in'},h('span',{class:'wb-plate'},wbLogo(C,'sm')),h('span',null,[C.cat,C.city].filter(Boolean).join(' · ')),socials(C)),
     h('div',{class:'wb-wrap wb-legalw'},h('div',{class:'wb-legal'},h('span',null,'© '+new Date().getFullYear()+' '+name),h('span',null,'Site by Riverbend Web Co.'))));
   return h('div',{class:'demo wb on'},top,nav,hero,finder,band,services,work,reviews,about,faqEl,contact,foot);
+}
+
+/* ===================== BIG BILL'S: chalkboard deli with a sandwich builder ===================== */
+const BB_OPT={
+  bread:[['Pretzel roll','#8A4B22'],['Croissant','#E2A33B'],['Bagel','#C98F4E'],['Wheat','#A8733A'],['White','#F0D9A6']],
+  meat:[['Corned beef','#C45A68'],['Roast beef','#9A3B33'],['Turkey','#E9B9A2'],['Chicken salad','#F3E6B5'],['Veggie','']],
+  cheese:[['Swiss','#F6D45E'],['Cheddar','#F0A238'],['Provolone','#FFF0B5'],['No cheese','']],
+  tops:[['Lettuce','#5BAE4C'],['Tomato','#E0432F'],['Onion','#B67BC9'],['Pickles','#7FA53A'],['Sauerkraut','#E4EAB8'],['Peppers','#D63A2A']],
+  sauce:[['Mustard','#E8B400'],['Mayo','#FFFEF2'],['Horseradish','#EEF1E4'],['Thousand Island','#F08A5D'],['Honey mustard','#E9A81A']],
+  heat:[['Toasted'],['Cold']]};
+function bbSvg(s,cls){
+  const W=300; let y=250; const L=[]; const lay=(h2,fn)=>{ y-=h2; L.push(fn(y,h2)); };
+  const col=(g,n)=>{ const f=BB_OPT[g].find(o=>o[0]===n); return f?f[1]:'#999'; };
+  const bc=col('bread',s.bread);
+  const rect=(c,x0,x1)=>(yy,hh)=>'<rect x="'+x0+'" y="'+yy+'" width="'+(x1-x0)+'" height="'+hh+'" rx="'+Math.min(8,hh/2)+'" fill="'+c+'"/>';
+  const dots=(c,yy,hh,n,r)=>Array.from({length:n},(_,i)=>'<circle cx="'+(58+i*(184/(n-1)))+'" cy="'+(yy+hh/2)+'" r="'+r+'" fill="'+c+'"/>').join('');
+  /* bottom bread */
+  lay(26,(yy,hh)=>'<path d="M44 '+yy+'h212v'+(hh-12)+'a14 14 0 0 1-14 14H58a14 14 0 0 1-14-14z" fill="'+bc+'"/><path d="M44 '+yy+'h212v6H44z" fill="#000" opacity=".12"/>');
+  const sauce=col('sauce',s.sauce);
+  if(s.sauce) lay(8,(yy,hh)=>rect(sauce,50,250)(yy,hh));
+  if(s.meat==='Veggie'){ lay(14,(yy,hh)=>'<path d="M48 '+yy+' q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 v'+hh+'H48z" fill="#79B64E"/>'); }
+  else if(s.meat==='Chicken salad') lay(22,(yy,hh)=>'<g fill="'+col('meat',s.meat)+'"><rect x="46" y="'+yy+'" width="208" height="'+hh+'" rx="10"/></g><g fill="#fff" opacity=".55">'+[60,90,120,150,180,210,235].map((x,i)=>'<circle cx="'+x+'" cy="'+(yy+6+(i%3)*5)+'" r="4"/>').join('')+'</g><g fill="#E58A8A">'+[75,135,195].map(x=>'<circle cx="'+x+'" cy="'+(yy+15)+'" r="3"/>').join('')+'</g>');
+  else lay(24,(yy,hh)=>rect(col('meat',s.meat),42,258)(yy,hh)+'<path d="M42 '+(yy+8)+'q18 8 36 0t36 0t36 0t36 0t36 0t36 0" stroke="#000" stroke-width="3" opacity=".14" fill="none"/>');
+  if(s.cheese!=='No cheese'){ const cc=col('cheese',s.cheese); lay(12,(yy,hh)=>'<path d="M48 '+yy+'h204l-14 '+(hh+8)+'-18 -4 -20 6 -22 -6 -24 4 -22 -4 -24 6 -22 -6 -18 4z" fill="'+cc+'"/>'+(s.cheese==='Swiss'?'<g fill="#fff" opacity=".6"><circle cx="90" cy="'+(yy+3)+'" r="2.5"/><circle cx="160" cy="'+(yy+4)+'" r="2"/><circle cx="215" cy="'+(yy+3)+'" r="2.5"/></g>':'')); }
+  s.tops.forEach(t=>{ const c=col('tops',t);
+    if(t==='Lettuce') lay(16,(yy,hh)=>'<path d="M42 '+(yy+hh)+' q9 -'+(hh+4)+' 18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 v-2H42z" fill="'+c+'"/>');
+    else if(t==='Tomato') lay(14,(yy,hh)=>'<rect x="50" y="'+yy+'" width="200" height="'+hh+'" rx="7" fill="'+c+'"/><g fill="#FF8A78" opacity=".7">'+[75,115,155,195,225].map(x=>'<ellipse cx="'+x+'" cy="'+(yy+hh/2)+'" rx="7" ry="3"/>').join('')+'</g>');
+    else if(t==='Onion') lay(9,(yy,hh)=>'<rect x="54" y="'+yy+'" width="192" height="'+hh+'" rx="4" fill="'+c+'"/><rect x="54" y="'+(yy+2)+'" width="192" height="2" fill="#fff" opacity=".6"/>');
+    else if(t==='Pickles') lay(16,(yy,hh)=>dots(c,yy,hh,7,8)+dots('#A6C85C',yy,hh,7,3.5));
+    else if(t==='Sauerkraut') lay(14,(yy,hh)=>'<rect x="50" y="'+yy+'" width="200" height="'+hh+'" rx="6" fill="'+c+'"/><path d="M60 '+(yy+3)+'q8 6 16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0" stroke="#C9D18F" stroke-width="2" fill="none"/>');
+    else if(t==='Peppers') lay(14,(yy,hh)=>dots(c,yy,hh,5,6.5)+dots('#3F9B3F',yy,hh,4,5).replace(/cx="(\d+(\.\d+)?)"/g,(m,v)=>'cx="'+(+v+22)+'"'));
+  });
+  /* top bread */
+  lay(48,(yy,hh)=>'<path d="M44 '+(yy+hh)+'V'+(yy+30)+'a106 '+(hh-4)+' 0 0 1 212 0V'+(yy+hh)+'z" fill="'+bc+'"/><path d="M70 '+(yy+14)+'q80 -30 160 0" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".25" fill="none"/>'+(s.bread==='Pretzel roll'?'<g fill="#fff" opacity=".85">'+[[105,18],[140,10],[175,14],[205,24],[125,30],[160,28]].map(p=>'<rect x="'+p[0]+'" y="'+(yy+p[1])+'" width="6" height="3" rx="1"/>').join('')+'</g>':s.bread==='Bagel'?'<g fill="#F7E8C8">'+[[110,16],[150,9],[190,16],[130,28],[170,26]].map(p=>'<ellipse cx="'+p[0]+'" cy="'+(yy+p[1])+'" rx="4" ry="2" transform="rotate(-20 '+p[0]+' '+(yy+p[1])+')"/>').join('')+'</g>':''));
+  const top=y, vb=Math.min(top-26,150);
+  const svg='<svg class="'+(cls||'')+'" viewBox="0 '+vb+' '+W+' '+(264-vb)+'" role="img" aria-label="Your sandwich"><ellipse cx="150" cy="252" rx="125" ry="6" fill="#000" opacity=".25"/>'+L.join('')+'</svg>';
+  return svg;
+}
+function bigbill(C){
+  const name=C.name||"Big Bill's Sandwich Shop and Coffee Bar";
+  const A=k=>Array.isArray(C.x[k])?C.x[k]:[];
+  const facts=A('facts').filter(f=>f&&f.k&&f.v).slice(0,4);
+  const menu=A('menu').filter(m=>m&&m.g&&m.t).slice(0,6).map(m=>({g:String(m.g),n:m.n?String(m.n):'',t:String(m.t).split('|').map(t=>t.trim()).filter(Boolean)}));
+  const why=A('why').filter(w=>w&&w.k&&w.t).slice(0,4);
+  const heads=String(C.x.headline||'Big sandwiches.|Real coffee.').split('|');
+  const call=(cls,label)=>C.tel?h('a',{class:'bb-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
+  const fbBtn=(cls,label)=>C.fb?h('a',{class:'bb-btn '+cls,href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',16,''),label||'Message on Facebook'):null;
+  const links=[['b-build','Build one'],menu.length?['b-menu','Menu']:null,why.length?['b-why','Why Bill’s']:null,['b-visit','Visit']].filter(Boolean);
+  const logoU=okUrl(C.x.logoUrl);
+  const mark=()=>logoU?h('img',{class:'bb-logo',src:logoU,alt:name}):h('span',{class:'bb-word'},h('b',null,'Big Bill’s'),h('i',null,'Sandwich Shop & Coffee Bar'));
+  const top=h('div',{class:'bb-top'},h('div',{class:'bb-wrap bb-top-in'},h('span',null,String(C.x.strip||'Breakfast and lunch in downtown Galena')),C.tel?h('a',{href:C.tel},C.phoneTxt):null));
+  const nav=h('header',{class:'bb-nav'},h('div',{class:'bb-wrap bb-nav-in'},
+    h('a',{class:'bb-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('b-top');},'aria-label':name},mark()),
+    h('nav',{class:'bb-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
+    call('mu sm','Call')),
+    h('nav',{class:'bb-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
+  const DEF={bread:'Pretzel roll',meat:'Corned beef',cheese:'Swiss',tops:['Lettuce','Pickles'],sauce:'Mustard',heat:'Toasted'};
+  const art=h('div',{class:'bb-heroart','aria-hidden':'true'});
+  art.innerHTML=bbSvg(DEF,'bb-stack')+'<svg class="bb-mug" viewBox="0 0 120 120"><path class="bb-steam" d="M40 28c-8 8 8 10 0 20M60 24c-8 8 8 10 0 20M80 28c-8 8 8 10 0 20" fill="none" stroke="#EAF0EC" stroke-width="4" stroke-linecap="round" opacity=".7"/><path d="M24 56h72v28a26 26 0 0 1-26 26H50a26 26 0 0 1-26-26z" fill="#F5B800"/><path d="M96 64h8a14 14 0 0 1 0 28h-10" fill="none" stroke="#F5B800" stroke-width="8"/><rect x="24" y="56" width="72" height="9" fill="#000" opacity=".12"/></svg>';
+  const hero=h('section',{class:'bb-hero',id:'b-top'},h('div',{class:'bb-wrap bb-hero-g'},
+    h('div',{class:'bb-hero-t'},
+      h('span',{class:'bb-tag'},C.cat||'Sandwich shop and coffee bar'),
+      h('h1',null,h('span',null,heads[0]),heads[1]?[h('br'),h('em',null,heads[1])]:null),
+      h('p',{class:'bb-lead'},C.tag||''),
+      h('div',{class:'bb-cta'},h('button',{type:'button',class:'bb-btn mu',onclick:()=>scrollTo('b-build')},'Build your sandwich'),call('ghost')),
+      C.today?h('p',{class:'bb-open'},h('b',null,'Open today '),C.today):h('p',{class:'bb-open'},'Closed Tuesdays')),
+    art));
+  const band=h('section',{class:'bb-band','aria-hidden':'true'},h('div',{class:'bb-wrap bb-band-in'},A('band').filter(t=>typeof t==='string'&&t).slice(0,8).map((t,i)=>[i?h('i'):null,h('span',null,t)])));
+
+  /* the builder */
+  const S={bread:DEF.bread,meat:DEF.meat,cheese:DEF.cheese,tops:DEF.tops.slice(),sauce:DEF.sauce,heat:DEF.heat};
+  const mini=h('div',{class:'bb-mini','aria-hidden':'true'});
+  const sel=h('div',{class:'bb-sel'},mini), tk=h('aside',{class:'bb-ticket'}), notice=h('span',{class:'bb-copied',role:'status'});
+  const groups=[['bread','1','Pick a bread',false],['meat','2','Pick a meat',false],['cheese','3','Add cheese',false],['tops','4','Pile on toppings',true],['sauce','5','Choose a spread',false],['heat','6','Toasted or cold',false]];
+  const phrase=()=>{ const b=S.bread.toLowerCase(), m=S.meat==='Veggie'?'Veggie':S.meat; const parts=[m+' on '+(/roll|bagel|croissant/.test(b)?'a '+b:b)];
+    if(S.cheese!=='No cheese') parts.push(S.cheese.toLowerCase()); S.tops.forEach(t=>parts.push(t.toLowerCase())); if(S.sauce) parts.push(S.sauce.toLowerCase()); parts.push(S.heat.toLowerCase()); return parts; };
+  const sname=()=>'The '+S.meat+' '+(S.bread==='Pretzel roll'?'Pretzel':S.bread==='Croissant'?'Croissant':S.bread==='Bagel'?'Bagel':'Stack');
+  const draw=()=>{
+    sel.querySelectorAll('button[data-g]').forEach(b=>{ const g=b.dataset.g, v=b.dataset.v; const on=g==='tops'?S.tops.includes(v):S[g]===v; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); });
+    const summary="Hi, I'd like to order: "+phrase().join(', ')+". My name is ";
+    const art2=h('div',{class:'bb-tart'}); art2.innerHTML=bbSvg(S,'bb-live');
+    notice.textContent='';
+    mini.innerHTML=bbSvg(S,'bb-minisvg')+'<b></b>'; mini.lastChild.textContent=sname();
+    tk.replaceChildren(h('div',{class:'bb-tk-h'},h('span',null,'Your ticket'),h('i',null,'Sample')),art2,h('h3',null,sname()),h('ul',{class:'bb-tk-l'},phrase().map((t,i)=>h('li',null,t.charAt(0).toUpperCase()+t.slice(1)))),
+      h('div',{class:'bb-tk-a'},call('mu','Call it in'),fbBtn('line','Message us'),
+        h('button',{type:'button',class:'bb-copy',onclick:()=>{ const ok=()=>{ notice.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(ok,()=>{ notice.textContent='Copy not available. Read it out when you call.'; }); }catch(e){ notice.textContent='Copy not available. Read it out when you call.'; } }},'Copy my order')),notice,
+      h('p',{class:'bb-fine'},'Sample builder for this demo. Ingredients are examples; ask the shop what is fresh today. In the finished site, this sends your order straight to the counter.'));
+  };
+  groups.forEach(([g,n,t,multi])=>sel.append(h('div',{class:'bb-grp'},h('h3',null,h('span',null,n),t,multi?h('small',null,'pick any'):null),
+    h('div',{class:'bb-chips'},BB_OPT[g].map(o=>h('button',{type:'button','data-g':g,'data-v':o[0],class:'bb-chipb','aria-pressed':'false',onclick:()=>{ if(multi){ const i=S.tops.indexOf(o[0]); if(i>=0) S.tops.splice(i,1); else S.tops.push(o[0]); } else S[g]=o[0]; draw(); }},(o[1]?h('i',{style:'background:'+o[1]}):null),o[0]))))));
+  const build=h('section',{class:'bb-sec bb-build',id:'b-build'},h('div',{class:'bb-wrap'},
+    h('div',{class:'bb-sh'},h('span',{class:'bb-tag'},'Build your own'),h('h2',null,C.x.buildTitle?String(C.x.buildTitle):'Stack your own sandwich'),h('p',null,C.x.buildSub?String(C.x.buildSub):'Tap a choice in each step. Your sandwich builds on the ticket, then call it in or message it to the shop.')),
+    h('div',{class:'bb-bg'},sel,tk)));
+  draw();
+
+  /* menu board */
+  const board=menu.length?h('section',{class:'bb-sec bb-menu',id:'b-menu'},h('div',{class:'bb-wrap'},
+    h('div',{class:'bb-sh light'},h('span',{class:'bb-tag'},'On the board'),h('h2',null,C.x.menuTitle?String(C.x.menuTitle):'What people order'),h('p',null,C.x.menuSub?String(C.x.menuSub):'Favorites customers mention. Ask at the counter for today’s full menu and prices.')),
+    h('div',{class:'bb-board'},menu.map(m=>h('article',{class:'bb-col'},h('h3',null,m.g),m.n?h('p',{class:'bb-cn'},m.n):null,h('ul',null,m.t.map(t=>h('li',null,t)))))))):null;
+
+  const whyEl=why.length?h('section',{class:'bb-sec',id:'b-why'},h('div',{class:'bb-wrap'},
+    h('div',{class:'bb-sh'},h('span',{class:'bb-tag'},'Why Bill’s'),h('h2',null,C.x.whyTitle?String(C.x.whyTitle):'Why people keep coming back'),C.x.whySub?h('p',null,String(C.x.whySub)):null),
+    h('div',{class:'bb-why'},why.map((w,i)=>h('article',{class:'bb-wc'},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,String(w.k)),h('p',null,String(w.t))))))):null;
+  const stats=facts.length?h('section',{class:'bb-facts'},h('div',{class:'bb-wrap'},h('ul',null,facts.map(f=>h('li',null,h('b',null,String(f.v)),h('span',null,String(f.k))))))):null;
+
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
+  const visit=h('section',{class:'bb-sec bb-visit',id:'b-visit'},h('div',{class:'bb-wrap bb-visit-g'},
+    h('div',null,h('span',{class:'bb-tag'},'Visit'),h('h2',null,C.x.visitTitle?String(C.x.visitTitle):'Come on in'),
+      C.x.visitText?h('p',null,String(C.x.visitText)):null,
+      addrTxt?h('p',{class:'bb-addr'},addrTxt):null,
+      C.hasHours?h('div',{class:'bb-hrs'},osHours(C).map(r=>h('div',{class:r.today?'on':null},h('span',null,r.days),h('span',null,r.v)))):null,
+      h('div',{class:'bb-cta'},call('mu'),C.maps?h('a',{class:'bb-btn line',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Get directions'):null),
+      socials(C)),
+    addrTxt?h('div',{class:'bb-map'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+C.name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
+  const foot=h('footer',{class:'bb-foot'},h('div',{class:'bb-wrap bb-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'demo bb on'},top,nav,hero,band,build,board,stats,whyEl,visit,foot);
 }
 
 const DN_ICON={
