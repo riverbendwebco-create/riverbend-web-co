@@ -1153,6 +1153,62 @@ const WB_ART={
  shop:'<svg viewBox="0 0 120 96" stroke="#fff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none"><rect x="12" y="8" width="96" height="16" fill="rgba(255,255,255,.2)"/><path d="M8 26h104l-8 16H16z" fill="#fff" stroke="none"/><path d="M36 26l-4 16M60 26v16M84 26l4 16" stroke="rgba(0,0,0,.35)" stroke-width="3"/><rect x="14" y="46" width="92" height="42" fill="rgba(255,255,255,.12)"/><rect x="22" y="53" width="34" height="35" fill="rgba(255,255,255,.2)"/><rect x="68" y="53" width="28" height="35" fill="#fff" stroke="none"/><circle cx="73" cy="72" r="2" fill="#0B0F14" stroke="none"/></svg>'
 };
 const WB_ART_ORDER=['drywall','repair','paint','shop'];
+const WB_FIND_ICO={
+ crack:'<rect x="6" y="6" width="36" height="36"/><path d="M20 6l5 9-6 7 7 8-4 12"/>',
+ water:'<path d="M24 6c8 10 12 16 12 22a12 12 0 0 1-24 0c0-6 4-12 12-22z"/><path d="M18 30a6 6 0 0 0 6 6"/>',
+ hole:'<rect x="6" y="6" width="36" height="36"/><circle cx="24" cy="24" r="8" stroke-dasharray="4 3"/><path d="M12 38l6-6M36 12l-4 4"/>',
+ peel:'<path d="M6 6h24l12 12v24H6z"/><path d="M30 6v12h12"/><path d="M14 30h14M14 37h20"/>',
+ color:'<rect x="8" y="8" width="30" height="12" rx="3"/><path d="M38 14h4v12H22v6"/><rect x="19" y="32" width="6" height="12" rx="2"/>',
+ walls:'<path d="M6 32l20-5 16 5-20 5z"/><path d="M6 24l20-5 16 5-20 5z"/><path d="M6 16l20-5 16 5-20 5z"/>'
+};
+const WB_PROBLEMS=[
+ {k:'crack',t:'Cracks or seams',svc:'Repairs',why:'Cracks and taped seams are fixed as a drywall repair.'},
+ {k:'water',t:'Water stain or damage',svc:'Repairs',why:'Stains and damaged ceilings are a repair job. Customers have had ceilings fixed after water damage, including vaulted ceilings.'},
+ {k:'hole',t:'Holes or dents',svc:'Repairs',why:'Holes and dents are patched and finished as a drywall repair.'},
+ {k:'peel',t:'Peeling or worn paint',svc:'Interior paint',why:'Peeling or worn paint is an interior painting job.'},
+ {k:'color',t:'Fresh coat or new color',svc:'Interior paint',why:'A fresh coat or new color is an interior painting job, including trim and ceilings.'},
+ {k:'walls',t:'New walls or a remodel',svc:'Drywall',why:'New walls are hung, taped and finished as drywall work, and can be painted by the same crew.'}
+];
+const WB_ROOMS=['Living room','Kitchen','Bedroom','Bathroom','Stairs or hallway','Garage or basement','High or vaulted ceiling','Store or office'];
+function wbFinder(C,call,fbBtn){
+  let prob=null, room=null;
+  const intro=[['1','Tap the problem'],['2','Tap the room'],['3','Get your match']];
+  const steps=intro.map(([n,t])=>h('li',null,h('b',null,n),h('span',null,t)));
+  const stepsEl=h('ol',{class:'wb-fsteps','aria-label':'How it works'},steps);
+  const hint=h('p',{class:'wb-fhint','aria-live':'polite'});
+  const pBtns=WB_PROBLEMS.map(p=>{ const ic=h('span',{class:'wb-fic','aria-hidden':'true'}); ic.innerHTML='<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">'+WB_FIND_ICO[p.k]+'</svg>';
+    const b=h('button',{type:'button',class:'wb-fp','aria-pressed':'false',onclick:()=>{ prob=p; render(); }},ic,h('span',null,p.t)); b._p=p; return b; });
+  const rBtns=WB_ROOMS.map(r=>{ const b=h('button',{type:'button',class:'wb-fr','aria-pressed':'false',onclick:()=>{ room=r; render(); }},r); b._r=r; return b; });
+  const result=h('div',{class:'wb-fres',hidden:'','aria-live':'polite'});
+  const p2=h('div',{class:'wb-fblock'},h('h3',null,h('span',null,'2'),'Which room?'),h('div',{class:'wb-frs'},rBtns));
+  function render(){
+    pBtns.forEach(b=>{ const on=prob&&b._p===prob; b.classList.toggle('on',!!on); b.setAttribute('aria-pressed',String(!!on)); });
+    rBtns.forEach(b=>{ const on=room===b._r; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); });
+    p2.classList.toggle('dim',!prob);
+    const stage=!prob?0:!room?1:2;
+    steps.forEach((li,i)=>{ li.classList.toggle('now',i===stage); li.classList.toggle('done',i<stage); });
+    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Call or message Tyler and mention it.';
+    if(stage<2){ result.hidden=true; result.replaceChildren(); return; }
+    const svc=(room==='Store or office'&&prob.svc!=='Drywall')?prob.svc+' and Commercial':prob.svc;
+    const summary='Hi, I found you on your website. Problem: '+prob.t+'. Room: '+room+'. Can I get an estimate? My name is ';
+    const copied=h('span',{class:'wb-fcopied',role:'status'});
+    const copy=h('button',{type:'button',class:'wb-btn line',onclick:()=>{ const done=()=>{ copied.textContent='Copied. Paste it into a text or message.'; }; try{ navigator.clipboard.writeText(summary).then(done,()=>{ copied.textContent='Copy not available. Please type it in your message.'; }); }catch(e){ copied.textContent='Copy not available. Please type it in your message.'; } }},'Copy my request');
+    result.hidden=false;
+    result.replaceChildren(
+      h('div',{class:'wb-fres-l'},h('span',{class:'wb-tape light'},'Your match'),h('h3',null,svc),h('p',null,h('b',null,'You picked: '),prob.t+' in '+room.toLowerCase()+'.'),h('p',null,prob.why),(room==='Store or office')?h('p',null,'We also do commercial work, including storefronts and offices.'):null,h('p',{class:'wb-ftip'},'Tip: take a photo of the problem before you call. It helps.')),
+      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Next step'),h('div',{class:'wb-cta'},call('blue','Call Tyler'),copy,fbBtn('line','Message on Facebook')),copied,
+        h('button',{type:'button',class:'wb-freset',onclick:()=>{ prob=null; room=null; render(); }},'Start over'),
+        h('p',{class:'wb-fdemo'},'In the finished site, this sends your request and photos straight to Tyler.')));
+    if(stage===2&&!matchMedia('(prefers-reduced-motion: reduce)').matches) result.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
+  const sec=h('section',{class:'wb-sec wb-mist wb-finder',id:'w-finder'},h('div',{class:'wb-wrap'},
+    h('div',{class:'wb-sh'},h('span',{class:'wb-tape'},'Fix-it finder'),h('h2',null,'What needs fixing?'),h('p',null,'Answer two quick questions and we will show you the right service. It takes about ten seconds.')),
+    stepsEl,hint,
+    h('div',{class:'wb-fblock'},h('h3',null,h('span',null,'1'),'What is the problem?'),h('div',{class:'wb-fps'},pBtns)),
+    p2,result));
+  render();
+  return sec;
+}
 function wbLogo(C,cls){ const u=okUrl(C.x.logoUrl); return u?h('img',{class:'wb-logo '+(cls||''),src:u,alt:C.name||'Logo'}):h('b',{class:'wb-logo-t'},C.name||''); }
 function welborn(C){
   const name=C.name||'Welborn Painting & Drywall';
@@ -1166,7 +1222,7 @@ function welborn(C){
   const own=C.own;
   const heroIx=A('hero').filter(n=>Number.isInteger(n)&&own[n]).slice(0,3);
   const headParts=String(C.x.headline||'Smooth walls.|Clean lines.').split('|');
-  const links=[svc.length?['w-services','Services']:null,own.length?['w-work','Our work']:null,revs.length?['w-reviews','Reviews']:null,faq.length?['w-faq','FAQ']:null,['w-contact','Contact']].filter(Boolean);
+  const links=[C.x.finder===false?null:['w-finder','Fix-it finder'],svc.length?['w-services','Services']:null,own.length?['w-work','Our work']:null,revs.length?['w-reviews','Reviews']:null,faq.length?['w-faq','FAQ']:null,['w-contact','Contact']].filter(Boolean);
   const call=(cls,label)=>C.tel?h('a',{class:'wb-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
   const fbBtn=(cls,label)=>C.fb?h('a',{class:'wb-btn '+cls,href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',16,''),label||'Message us on Facebook'):null;
 
@@ -1192,6 +1248,8 @@ function welborn(C){
       heroIx[1]!=null?h('div',{class:'wb-hp wb-hp-b'},bg(h('span'),own[heroIx[1]])):null,
       heroIx[2]!=null?h('div',{class:'wb-hp wb-hp-c'},bg(h('span'),own[heroIx[2]])):null,
       h('div',{class:'wb-corner'})):null));
+
+  const finder=C.x.finder===false?null:wbFinder(C,call,fbBtn);
 
   /* band */
   const words=A('band').filter(t=>typeof t==='string'&&t).slice(0,9);
@@ -1281,7 +1339,7 @@ function welborn(C){
 
   const foot=h('footer',{class:'wb-foot'},h('div',{class:'wb-wrap wb-foot-in'},h('span',{class:'wb-plate'},wbLogo(C,'sm')),h('span',null,[C.cat,C.city].filter(Boolean).join(' · ')),socials(C)),
     h('div',{class:'wb-wrap wb-legalw'},h('div',{class:'wb-legal'},h('span',null,'© '+new Date().getFullYear()+' '+name),h('span',null,'Site by Riverbend Web Co.'))));
-  return h('div',{class:'demo wb on'},top,nav,hero,band,services,work,reviews,about,faqEl,contact,foot);
+  return h('div',{class:'demo wb on'},top,nav,hero,finder,band,services,work,reviews,about,faqEl,contact,foot);
 }
 
 const DN_ICON={
