@@ -2172,6 +2172,16 @@ const MK=[
   {id:'qr',more:["Table tents designed to match your logo and colors", "The QR code opens your live website menu, so price changes never mean reprinting", "Links to your specials and your Facebook page in the same scan", "Print-ready files you can take to any printer"],name:'QR menu and table tents',price:60,per:'one-time',what:'Table tents with a QR code that opens your menu, specials and social pages.',idea:()=>''},
   {id:'order',name:'Online ordering or reservations setup',price:150,per:'one-time',label:'one-time setup fee',more:["Carry-out ordering right from your website, with orders sent to you by email or text", "Or we connect DoorDash, Grubhub and Uber Eats so they show up on your site", "Reservations or call-ahead requests instead, if that fits you better", "We set it up, test it and walk your staff through it"],what:'We connect online ordering, carry-out or reservations to your website. One-time $150 setup fee.',idea:()=>'We can connect apps like DoorDash, Grubhub and Uber Eats, so customers can order from your website.'}
 ];
+function bbMkArt(){
+  const L=[['Corned beef on wheat',{bread:'Wheat',meat:'Corned beef',cheese:'Swiss',tops:['Sauerkraut'],sauce:'Thousand Island',heat:'Toasted'}],
+    ['Roast beef on a pretzel roll',{bread:'Pretzel roll',meat:'Roast beef',cheese:'Cheddar',tops:['Onion','Lettuce'],sauce:'Horseradish',heat:'Toasted'}],
+    ['Chicken salad croissant',{bread:'Croissant',meat:'Chicken salad',cheese:'Provolone',tops:['Lettuce','Tomato'],sauce:'Mayo',heat:'Cold',side:'Homemade chips'}],
+    ['Garden veggie on a bagel',{bread:'Bagel',meat:'Veggie',cheese:'Provolone',tops:['Lettuce','Tomato','Onion','Peppers','Pickles'],sauce:'Honey mustard',heat:'Cold',drink:'Cold brew'}]];
+  const art=h('div',{class:'mp-bbart'}), cap=h('figcaption',null,''); let i=0;
+  const show=()=>{ if(!art.isConnected&&i>0){ clearInterval(t); return; } const e=L[i%L.length]; art.innerHTML=bbSvg(Object.assign({side:'No side',drink:'No drink'},e[1]),'bb-stack',false); cap.textContent='Now building: '+e[0]; i++; };
+  const t=setInterval(show,4600); show();
+  return h('figure',{class:'mp-photo mp-bbfig'},art,cap);
+}
 function marketing(C){
   const money=n=>'$'+n.toLocaleString('en-US');
   const unit=m=>m.label||(m.per==='mo'?'per month':'one-time');
@@ -2206,6 +2216,7 @@ function marketing(C){
         h('div',null,h('dt',null,'Date'),h('dd',null,today)),
         soc.length?h('div',null,h('dt',null,'Pages we would manage'),h('dd',null,soc.map((a,i)=>[i?', ':'',a]))):null),
       C.logo?h('img',{class:'mp-logo',src:C.logo,alt:C.name}):null,
+      C.variant==='bigbill'?bbMkArt():null,
       okUrl(C.x.mkPhoto)?h('figure',{class:'mp-photo'},bg(h('div',{class:'ph'}),okUrl(C.x.mkPhoto)),typeof C.x.mkCap==='string'&&C.x.mkCap?h('figcaption',null,C.x.mkCap):null):null)),
     h('main',{class:'mp-in mo'},
       h('section',null,
