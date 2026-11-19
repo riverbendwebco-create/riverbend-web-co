@@ -1717,6 +1717,24 @@ function bigbill(C){
   const stats=facts.length?h('section',{class:'bb-facts'},h('div',{class:'bb-wrap'},h('ul',null,facts.map(f=>h('li',null,h('b',null,String(f.v)),h('span',null,String(f.k))))))):null;
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
+  const gpics=A('gallery').map(g=>g&&okUrl(g.u)?{u:okUrl(g.u),c:String(g.c||'')}:null).filter(Boolean).slice(0,10);
+  let gal=null;
+  if(gpics.length>1){
+    const track=h('div',{class:'bb-gtrack',tabindex:'0','aria-label':'Photos from the shop'}), step=()=>{ const f=track.firstElementChild; return f?f.getBoundingClientRect().width+14:300; };
+    const lb=h('div',{class:'bb-lb',role:'dialog','aria-label':'Photo'},h('button',{type:'button',class:'bb-lbx','aria-label':'Close photo'},'Close'),h('img',{alt:''}),h('p',null,''));
+    const closeLb=()=>{ lb.classList.remove('on'); };
+    lb.addEventListener('click',closeLb); document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLb(); });
+    gpics.forEach(g=>{ const im=h('img',{src:g.u,alt:g.c||'Photo from '+name,loading:'lazy'});
+      track.append(h('figure',{class:'bb-gi'},h('button',{type:'button','aria-label':'Enlarge photo: '+(g.c||'photo'),onclick:()=>{ lb.querySelector('img').src=g.u; lb.querySelector('img').alt=g.c||''; lb.querySelector('p').textContent=g.c; lb.classList.add('on'); }},im),g.c?h('figcaption',null,g.c):null)); });
+    const go=d=>{ const max=track.scrollWidth-track.clientWidth; if(d>0&&track.scrollLeft>=max-4) track.scrollTo({left:0,behavior:'smooth'}); else if(d<0&&track.scrollLeft<=4) track.scrollTo({left:max,behavior:'smooth'}); else track.scrollBy({left:d*step(),behavior:'smooth'}); };
+    let hold=false; const stop=()=>{ hold=true; };
+    ['mouseenter','focusin','touchstart','pointerdown'].forEach(ev=>track.addEventListener(ev,stop,{passive:true}));
+    if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){ const tm=setInterval(()=>{ if(!track.isConnected){ clearInterval(tm); return; } if(!hold) go(1); },4200); }
+    gal=h('section',{class:'bb-sec bb-gal',id:'b-gallery'},h('div',{class:'bb-wrap'},
+      h('div',{class:'bb-gh'},h('div',null,h('span',{class:'bb-tag'},'Around the shop'),h('h2',null,'Fresh out of the kitchen')),
+        h('div',{class:'bb-garr'},h('button',{type:'button','aria-label':'Previous photo',onclick:()=>{ stop(); go(-1); }},'\u2039'),h('button',{type:'button','aria-label':'Next photo',onclick:()=>{ stop(); go(1); }},'\u203A'))),
+      track),lb);
+  }
   const visit=h('section',{class:'bb-sec bb-visit',id:'b-visit'},h('div',{class:'bb-wrap bb-visit-g'},
     h('div',null,h('span',{class:'bb-tag'},'Visit'),h('h2',null,C.x.visitTitle?String(C.x.visitTitle):'Come on in'),
       st?h('p',{class:'bb-open dark'},h('span',{class:'bb-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,
@@ -1727,7 +1745,7 @@ function bigbill(C){
       socials(C)),
     addrTxt?h('div',{class:'bb-map'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+C.name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
   const foot=h('footer',{class:'bb-foot'},h('div',{class:'bb-wrap bb-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
-  return h('div',{class:'demo bb on'},top,nav,hero,band,build,coffee,board,groups,stats,whyEl,visit,foot);
+  return h('div',{class:'demo bb on'},top,nav,hero,band,build,coffee,board,gal,groups,stats,whyEl,visit,foot);
 }
 
 const DN_ICON={
