@@ -2220,10 +2220,10 @@ body.t-mk{background:#fff;padding-bottom:0}
 .bb-hero h1{font:400 clamp(2.6rem,6.4vw,5rem)/1.02 var(--hf);color:#fff;margin:20px 0 16px}.bb-hero h1 em{font-style:normal;color:var(--mu)}
 .bb-lead{font-size:1.2rem;max-width:34em;color:#C9D6CF}.bb-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.bb-open{margin-top:22px;font-size:.98rem;color:#C9D6CF}.bb-open b{color:var(--mu)}
 .bb-heroart{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:0;min-height:340px}.bb-stack{width:76%;height:auto;filter:drop-shadow(0 24px 24px rgba(0,0,0,.45))}.bb-mug{flex:none;width:22%;max-width:120px;margin-left:-2%;margin-bottom:6px;filter:drop-shadow(0 12px 12px rgba(0,0,0,.4))}
-.bb-stack>*{animation:bbDrop .7s cubic-bezier(.2,.8,.3,1) both}.bb-stack>*:nth-child(2){animation-delay:.08s}.bb-stack>*:nth-child(3){animation-delay:.16s}.bb-stack>*:nth-child(4){animation-delay:.24s}.bb-stack>*:nth-child(5){animation-delay:.32s}.bb-stack>*:nth-child(6){animation-delay:.4s}.bb-stack>*:nth-child(7){animation-delay:.48s}
+.bb-stack .bbl,.bb-live .bbl{animation:bbDrop .5s cubic-bezier(.2,.8,.3,1) both;animation-delay:calc(var(--i)*55ms)}
 @keyframes bbDrop{from{transform:translateY(-70px);opacity:0}to{transform:none;opacity:1}}
 .bb-steam{animation:bbSteam 3.2s ease-in-out infinite}@keyframes bbSteam{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-6px);opacity:.8}}
-@media (prefers-reduced-motion:reduce){.bb-stack>*,.bb-steam{animation:none}}
+@media (prefers-reduced-motion:reduce){.bb-stack .bbl,.bb-live .bbl,.bb-steam{animation:none}}
 .bb-band{background:var(--mu);color:#14201A}.bb-band-in{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 22px;padding-top:14px;padding-bottom:14px;font:400 1.15rem var(--hf);letter-spacing:.03em}.bb-band-in i{width:9px;height:9px;background:var(--tm);transform:rotate(45deg);flex:none}
 .bb-sec{padding:76px 0}.bb-sh{margin-bottom:34px;max-width:46em}.bb-sh h2{font:400 clamp(2rem,4.4vw,3.1rem)/1.08 var(--hf);margin:16px 0 10px}.bb-sh p{color:#4A5A52;font-size:1.08rem}.bb-sh.light h2{color:#fff}.bb-sh.light p{color:#C9D6CF}
 /* builder */

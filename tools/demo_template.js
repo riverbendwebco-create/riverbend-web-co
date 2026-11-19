@@ -1362,33 +1362,85 @@ const BB_OPT={
   tops:[['Lettuce','#5BAE4C'],['Tomato','#E0432F'],['Onion','#B67BC9'],['Pickles','#7FA53A'],['Sauerkraut','#E4EAB8'],['Peppers','#D63A2A']],
   sauce:[['Mustard','#E8B400'],['Mayo','#FFFEF2'],['Horseradish','#EEF1E4'],['Thousand Island','#F08A5D'],['Honey mustard','#E9A81A']],
   heat:[['Toasted'],['Cold']]};
+let BB_UID=0;
 function bbSvg(s,cls){
-  const W=300; let y=250; const L=[]; const lay=(h2,fn)=>{ y-=h2; L.push(fn(y,h2)); };
-  const col=(g,n)=>{ const f=BB_OPT[g].find(o=>o[0]===n); return f?f[1]:'#999'; };
-  const bc=col('bread',s.bread);
-  const rect=(c,x0,x1)=>(yy,hh)=>'<rect x="'+x0+'" y="'+yy+'" width="'+(x1-x0)+'" height="'+hh+'" rx="'+Math.min(8,hh/2)+'" fill="'+c+'"/>';
-  const dots=(c,yy,hh,n,r)=>Array.from({length:n},(_,i)=>'<circle cx="'+(58+i*(184/(n-1)))+'" cy="'+(yy+hh/2)+'" r="'+r+'" fill="'+c+'"/>').join('');
-  /* bottom bread */
-  lay(26,(yy,hh)=>'<path d="M44 '+yy+'h212v'+(hh-12)+'a14 14 0 0 1-14 14H58a14 14 0 0 1-14-14z" fill="'+bc+'"/><path d="M44 '+yy+'h212v6H44z" fill="#000" opacity=".12"/>');
-  const sauce=col('sauce',s.sauce);
-  if(s.sauce) lay(8,(yy,hh)=>rect(sauce,50,250)(yy,hh));
-  if(s.meat==='Veggie'){ lay(14,(yy,hh)=>'<path d="M48 '+yy+' q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 v'+hh+'H48z" fill="#79B64E"/>'); }
-  else if(s.meat==='Chicken salad') lay(22,(yy,hh)=>'<g fill="'+col('meat',s.meat)+'"><rect x="46" y="'+yy+'" width="208" height="'+hh+'" rx="10"/></g><g fill="#fff" opacity=".55">'+[60,90,120,150,180,210,235].map((x,i)=>'<circle cx="'+x+'" cy="'+(yy+6+(i%3)*5)+'" r="4"/>').join('')+'</g><g fill="#E58A8A">'+[75,135,195].map(x=>'<circle cx="'+x+'" cy="'+(yy+15)+'" r="3"/>').join('')+'</g>');
-  else lay(24,(yy,hh)=>rect(col('meat',s.meat),42,258)(yy,hh)+'<path d="M42 '+(yy+8)+'q18 8 36 0t36 0t36 0t36 0t36 0t36 0" stroke="#000" stroke-width="3" opacity=".14" fill="none"/>');
-  if(s.cheese!=='No cheese'){ const cc=col('cheese',s.cheese); lay(12,(yy,hh)=>'<path d="M48 '+yy+'h204l-14 '+(hh+8)+'-18 -4 -20 6 -22 -6 -24 4 -22 -4 -24 6 -22 -6 -18 4z" fill="'+cc+'"/>'+(s.cheese==='Swiss'?'<g fill="#fff" opacity=".6"><circle cx="90" cy="'+(yy+3)+'" r="2.5"/><circle cx="160" cy="'+(yy+4)+'" r="2"/><circle cx="215" cy="'+(yy+3)+'" r="2.5"/></g>':'')); }
+  const id='bb'+(++BB_UID)+'_', W=300, defs=[]; let y=252, n=0; const out=[];
+  const clamp=v=>Math.max(0,Math.min(255,Math.round(v)));
+  const rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const hx=a=>'#'+a.map(v=>clamp(v).toString(16).padStart(2,'0')).join('');
+  const mix=(a,b,t)=>{ const A=rgb(a),B=rgb(b); return hx(A.map((v,i)=>v+(B[i]-v)*t)); };
+  const lt=(c,t)=>mix(c,'#ffffff',t), dk=(c,t)=>mix(c,'#000000',t);
+  let gi=0;
+  const grad=(c,a,b)=>{ const g=id+'g'+(gi++); defs.push('<linearGradient id="'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+lt(c,a==null?.22:a)+'"/><stop offset=".55" stop-color="'+c+'"/><stop offset="1" stop-color="'+dk(c,b==null?.24:b)+'"/></linearGradient>'); return 'url(#'+g+')'; };
+  const hgrad=(c)=>{ const g=id+'g'+(gi++); defs.push('<linearGradient id="'+g+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+dk(c,.18)+'"/><stop offset=".3" stop-color="'+lt(c,.12)+'"/><stop offset=".7" stop-color="'+c+'"/><stop offset="1" stop-color="'+dk(c,.2)+'"/></linearGradient>'); return 'url(#'+g+')'; };
+  let rs=7; const rnd=()=>{ rs=(rs*9301+49297)%233280; return rs/233280; };
+  const col=(g,nm)=>{ const f=BB_OPT[g].find(o=>o[0]===nm); return f?f[1]:'#999'; };
+  const wave=(x0,x1,yy,amp,k,ph,steps)=>{ const P=[]; steps=steps||44; for(let i=0;i<=steps;i++){ const t=i/steps; P.push([x0+(x1-x0)*t,yy+amp*Math.sin(ph+t*Math.PI*2*k)]); } return P; };
+  const pts=P=>P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L');
+  const band=(yy,hh,amp,k,ph,x0,x1)=>{ const T=wave(x0,x1,yy,amp,k,ph), B=wave(x0,x1,yy+hh,amp,k,ph+1.7).reverse(); return {d:'M'+pts(T)+' Q'+(x1+7)+','+(yy+hh/2)+' '+B[0][0]+','+B[0][1]+' L'+pts(B)+' Q'+(x0-7)+','+(yy+hh/2)+' '+T[0][0]+','+T[0][1]+'Z', top:'M'+pts(T), bot:'M'+pts(B.slice().reverse())}; };
+  const L=(inner,h2)=>{ out.push('<g class="bbl" style="--i:'+(n++)+'">'+inner+'</g>'); y-=h2; };
+  const shine=(top)=>'<path d="'+top+'" fill="none" stroke="#fff" stroke-width="1.6" opacity=".38" stroke-linecap="round"/>';
+  const toasted=s.heat==='Toasted';
+  const bc0=col('bread',s.bread), bc=toasted?mix(bc0,'#8A4B12',.22):bc0;
+  const sliced=(s.bread==='Wheat'||s.bread==='White'), crumb=s.bread==='White'?'#FBF1D6':'#D9B27A';
+  /* heel */
+  if(sliced){
+    const h2=22, yy=y-h2; L('<rect x="44" y="'+yy+'" width="212" height="'+h2+'" rx="7" fill="'+grad(dk(bc,.25),.1,.3)+'"/><rect x="49" y="'+(yy+3)+'" width="202" height="'+(h2-7)+'" rx="4" fill="'+(toasted?mix(crumb,'#B07A2E',.45):crumb)+'"/><g fill="'+dk(crumb,.18)+'" opacity=".35">'+Array.from({length:14},()=>'<circle cx="'+(56+rnd()*188).toFixed(0)+'" cy="'+(yy+5+rnd()*(h2-10)).toFixed(0)+'" r="'+(0.8+rnd()*1.2).toFixed(1)+'"/>').join('')+'</g>',h2);
+  } else {
+    const h2=30, yy=y-h2; let ex='';
+    if(s.bread==='Croissant') ex='<g fill="none" stroke="'+dk(bc,.3)+'" stroke-width="2" opacity=".55">'+[70,100,130,160,190,220].map(x=>'<path d="M'+x+' '+(yy+2)+' q-6 '+(h2/2)+' 4 '+(h2-4)+'"/>').join('')+'</g>';
+    L('<path d="M42 '+yy+'h216v'+(h2-16)+'q0 '+16+' -18 16H60q-18 0-18-16z" fill="'+grad(dk(bc,.12),.12,.3)+'"/>'+ex+'<path d="M52 '+(yy+h2-10)+'h196" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".16"/><path d="M42 '+yy+'h216" stroke="'+dk(bc,.35)+'" stroke-width="3" opacity=".5"/>',h2);
+  }
+  /* spread */
+  if(s.sauce){ const c=col('sauce',s.sauce), b=band(y-8,7,1.6,5,.4,38,262); const drips=[62,118,188,236].map((x,i)=>'<path d="M'+x+' '+(y-3)+'q3 '+(7+i%2*5)+' 6 0z" fill="'+grad(c,.1,.15)+'"/>').join('');
+    L('<path d="'+b.d+'" fill="'+grad(c,.3,.2)+'"/>'+drips+shine(b.top),6); }
+  /* meat */
+  if(s.meat==='Veggie'){
+    const h2=14, b=band(y-h2,h2,2,6,1,40,260); const av='#8DBE4F';
+    let cuc=''; for(let i=0;i<6;i++){ const cx=66+i*34; cuc+='<ellipse cx="'+cx+'" cy="'+(y-h2-3)+'" rx="17" ry="6.5" fill="'+grad('#5E9B3A',.1,.3)+'"/><ellipse cx="'+cx+'" cy="'+(y-h2-4)+'" rx="12" ry="3.6" fill="#CFE6A0" opacity=".8"/>'; }
+    L('<path d="'+b.d+'" fill="'+grad(av,.2,.28)+'"/><path d="'+b.top+'" stroke="#3F6B26" stroke-width="2.5" fill="none" opacity=".5"/>'+cuc,h2+4);
+  } else if(s.meat==='Chicken salad'){
+    const h2=28, yy=y-h2, c=col('meat',s.meat); let bump='<path d="M44 '+y+'Q34 '+(y-h2/2)+' 44 '+(yy+12)+'';
+    for(let x=44;x<256;x+=17.6) bump+=' q8.8 -'+(10+rnd()*6).toFixed(0)+' 17.6 0';
+    bump+=' Q266 '+(y-h2/2)+' 256 '+y+'z" fill="'+grad(c,.2,.26)+'"/>';
+    let chunks=''; for(let i=0;i<34;i++){ const r=rnd(), cx=48+rnd()*204, cy=yy+10+rnd()*(h2-8), t=r<.5?['#FFFBEA',.9]:r<.75?['#D9BF7A',.8]:r<.88?['#8FBF5A',.9]:['#B02A3A',.95]; chunks+=t[0]==='#8FBF5A'?'<rect x="'+cx.toFixed(0)+'" y="'+cy.toFixed(0)+'" width="6" height="3" rx="1" fill="'+t[0]+'" opacity="'+t[1]+'"/>':'<ellipse cx="'+cx.toFixed(0)+'" cy="'+cy.toFixed(0)+'" rx="'+(3+rnd()*3).toFixed(1)+'" ry="'+(2+rnd()*2).toFixed(1)+'" fill="'+t[0]+'" opacity="'+t[1]+'"/>'; }
+    L(bump+chunks,h2-4);
+  } else {
+    const nm=s.meat, c=col('meat',nm), amp=nm==='Turkey'?4:3, k=nm==='Turkey'?4:3, h2=15;
+    let g='';
+    [[y-h2-8,0.2],[y-h2+2,1.9]].forEach(([yy,ph],i)=>{ const b=band(yy,h2,amp,k,ph,36+i*4,264-i*4); g+='<path d="'+b.d+'" fill="'+grad(i?dk(c,.08):c,.2,.28)+'"/><path d="'+b.d+'" fill="none" stroke="'+dk(c,.4)+'" stroke-width="1.8" opacity=".55"/>'+shine(b.top);
+      if(nm==='Corned beef') g+='<g fill="none" stroke="#FFD9DF" stroke-width="1.8" stroke-linecap="round" opacity=".55">'+[0,1,2,3].map(j=>'<path d="M'+(56+j*52+i*20)+' '+(yy+5+j%2*4)+' q12 -5 26 2"/>').join('')+'</g>';
+      if(nm==='Roast beef') g+='<path d="M44 '+(yy+h2)+'H256" stroke="#5A2620" stroke-width="3" opacity=".35"/><g fill="#C46A5E" opacity=".35">'+[70,120,180,230].map(x=>'<ellipse cx="'+x+'" cy="'+(yy+6)+'" rx="12" ry="2.5"/>').join('')+'</g>';
+      if(nm==='Turkey') g+='<g fill="none" stroke="#fff" stroke-width="1.4" opacity=".4">'+[0,1,2,3,4].map(j=>'<path d="M'+(50+j*44)+' '+(yy+4)+' q8 6 0 11"/>').join('')+'</g>'; });
+    L(g,h2+9);
+  }
+  /* cheese */
+  if(s.cheese!=='No cheese'){ const c=col('cheese',s.cheese), h2=8, b=band(y-h2,h2,0.8,2,.6,36,264);
+    const dl='<path d="M36 '+y+'q-1 12 5 16 4-8 8-16z" fill="'+grad(c,.1,.2)+'"/><path d="M264 '+y+'q1 11 -5 15 -4-8 -8-15z" fill="'+grad(c,.1,.2)+'"/><path d="M142 '+y+'q4 9 10 11 4-6 6-11z" fill="'+grad(c,.1,.2)+'"/>';
+    let holes=''; if(s.cheese==='Swiss') holes='<g fill="'+dk(c,.28)+'" opacity=".75">'+[[78,4.5],[130,3.5],[190,5],[232,3.5]].map(p=>'<ellipse cx="'+p[0]+'" cy="'+(y-4)+'" rx="'+p[1]+'" ry="'+(p[1]*.8)+'"/>').join('')+'</g>';
+    L('<path d="'+b.d+'" fill="'+grad(c,.3,.22)+'"/>'+dl+holes+shine(b.top),h2-1); }
+  /* toppings in the order picked */
   s.tops.forEach(t=>{ const c=col('tops',t);
-    if(t==='Lettuce') lay(16,(yy,hh)=>'<path d="M42 '+(yy+hh)+' q9 -'+(hh+4)+' 18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 v-2H42z" fill="'+c+'"/>');
-    else if(t==='Tomato') lay(14,(yy,hh)=>'<rect x="50" y="'+yy+'" width="200" height="'+hh+'" rx="7" fill="'+c+'"/><g fill="#FF8A78" opacity=".7">'+[75,115,155,195,225].map(x=>'<ellipse cx="'+x+'" cy="'+(yy+hh/2)+'" rx="7" ry="3"/>').join('')+'</g>');
-    else if(t==='Onion') lay(9,(yy,hh)=>'<rect x="54" y="'+yy+'" width="192" height="'+hh+'" rx="4" fill="'+c+'"/><rect x="54" y="'+(yy+2)+'" width="192" height="2" fill="#fff" opacity=".6"/>');
-    else if(t==='Pickles') lay(16,(yy,hh)=>dots(c,yy,hh,7,8)+dots('#A6C85C',yy,hh,7,3.5));
-    else if(t==='Sauerkraut') lay(14,(yy,hh)=>'<rect x="50" y="'+yy+'" width="200" height="'+hh+'" rx="6" fill="'+c+'"/><path d="M60 '+(yy+3)+'q8 6 16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0" stroke="#C9D18F" stroke-width="2" fill="none"/>');
-    else if(t==='Peppers') lay(14,(yy,hh)=>dots(c,yy,hh,5,6.5)+dots('#3F9B3F',yy,hh,4,5).replace(/cx="(\d+(\.\d+)?)"/g,(m,v)=>'cx="'+(+v+22)+'"'));
+    if(t==='Lettuce'){ const h2=16; const b1=band(y-h2-3,h2,5,7,0,34,266), b2=band(y-h2+2,h2-4,4,6,2.2,38,262);
+      L('<path d="'+b1.d+'" fill="'+grad(dk(c,.15),.1,.3)+'"/><path d="'+b2.d+'" fill="'+grad(lt(c,.1),.3,.2)+'"/><g fill="none" stroke="#E8F7C8" stroke-width="1.3" opacity=".55">'+[60,110,160,210].map(x=>'<path d="M'+x+' '+(y-h2+4)+' q5 5 2 10"/>').join('')+'</g>'+shine(b2.top),h2-2);
+    } else if(t==='Tomato'){ const h2=13; let g=''; for(let i=0;i<4;i++){ const x=46+i*48+(i%2)*4, yy=y-h2+(i%2?1:-1); g+='<rect x="'+x+'" y="'+yy+'" width="56" height="'+h2+'" rx="6.5" fill="'+grad(c,.18,.3)+'"/><rect x="'+(x+3)+'" y="'+(yy+3)+'" width="50" height="'+(h2-6)+'" rx="3.5" fill="#F26A4F" opacity=".7"/><g fill="#FFE7A8" opacity=".9"><ellipse cx="'+(x+16)+'" cy="'+(yy+h2/2)+'" rx="2.4" ry="1.4"/><ellipse cx="'+(x+30)+'" cy="'+(yy+h2/2+.5)+'" rx="2.4" ry="1.4"/><ellipse cx="'+(x+43)+'" cy="'+(yy+h2/2)+'" rx="2.4" ry="1.4"/></g>'; } L(g,h2);
+    } else if(t==='Onion'){ const h2=9; let g='<path d="'+band(y-h2,h2,1,5,0,44,256).d+'" fill="'+grad('#E9D3F0',.3,.2)+'"/>'; g+='<g fill="none" stroke="'+dk(c,.05)+'" stroke-width="1.8" opacity=".85">'+[56,92,128,164,200,232].map((x,i)=>'<path d="M'+x+' '+(y-h2+1)+' q'+(8+i%2*3)+' -'+(7+i%3*2)+' '+(18)+' 2"/>').join('')+'</g>'; L(g,h2-1);
+    } else if(t==='Pickles'){ const h2=13; let g=''; for(let i=0;i<7;i++){ const cx=58+i*31, yy=y-h2/2+(i%2?-1:1); g+='<ellipse cx="'+cx+'" cy="'+yy+'" rx="17" ry="'+(h2/2)+'" fill="'+grad('#5B8A22',.05,.3)+'"/><ellipse cx="'+cx+'" cy="'+(yy-.5)+'" rx="13.5" ry="'+(h2/2-2)+'" fill="#B7D366"/><ellipse cx="'+cx+'" cy="'+(yy-.5)+'" rx="7" ry="2" fill="#E6F2B8" opacity=".8"/>'; } L(g,h2-1);
+    } else if(t==='Sauerkraut'){ const h2=14, b=band(y-h2,h2,3,6,.8,40,260); let g='<path d="'+b.d+'" fill="'+grad('#DDE59E',.2,.25)+'"/><g fill="none" stroke="#F3F7C8" stroke-width="2" stroke-linecap="round" opacity=".9">'; for(let i=0;i<14;i++){ const x=48+i*15.5; g+='<path d="M'+x+' '+(y-h2+3+(i%3)*3)+' q6 -4 12 1 t10 -1"/>'; } g+='</g><path d="'+b.bot+'" stroke="#A9B35C" stroke-width="1.6" fill="none" opacity=".6"/>'; L(g,h2-2);
+    } else if(t==='Peppers'){ const h2=12; let g=''; for(let i=0;i<7;i++){ const x=50+i*30, cc=i%2?'#3F9B3F':'#D63A2A'; g+='<path d="M'+x+' '+(y-1)+'q10 -'+(h2+2)+' 26 0l-7 0q-6 -'+(h2-5)+' -12 0z" fill="'+grad(cc,.2,.3)+'" transform="rotate('+((i%3)-1)*4+' '+(x+13)+' '+y+')"/>'; } L(g,h2-5);
+    }
   });
-  /* top bread */
-  lay(48,(yy,hh)=>'<path d="M44 '+(yy+hh)+'V'+(yy+30)+'a106 '+(hh-4)+' 0 0 1 212 0V'+(yy+hh)+'z" fill="'+bc+'"/><path d="M70 '+(yy+14)+'q80 -30 160 0" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".25" fill="none"/>'+(s.bread==='Pretzel roll'?'<g fill="#fff" opacity=".85">'+[[105,18],[140,10],[175,14],[205,24],[125,30],[160,28]].map(p=>'<rect x="'+p[0]+'" y="'+(yy+p[1])+'" width="6" height="3" rx="1"/>').join('')+'</g>':s.bread==='Bagel'?'<g fill="#F7E8C8">'+[[110,16],[150,9],[190,16],[130,28],[170,26]].map(p=>'<ellipse cx="'+p[0]+'" cy="'+(yy+p[1])+'" rx="4" ry="2" transform="rotate(-20 '+p[0]+' '+(yy+p[1])+')"/>').join('')+'</g>':''));
-  const top=y, vb=Math.min(top-26,150);
-  const svg='<svg class="'+(cls||'')+'" viewBox="0 '+vb+' '+W+' '+(264-vb)+'" role="img" aria-label="Your sandwich"><ellipse cx="150" cy="252" rx="125" ry="6" fill="#000" opacity=".25"/>'+L.join('')+'</svg>';
-  return svg;
+  /* top */
+  if(sliced){ const h2=34, yy=y-h2; L('<path d="M44 '+y+'V'+(yy+16)+'q0 -16 20 -16h172q20 0 20 16V'+y+'z" fill="'+grad(dk(bc,.25),.12,.3)+'"/><rect x="50" y="'+(yy+6)+'" width="200" height="'+(h2-9)+'" rx="6" fill="'+(toasted?mix(crumb,'#B07A2E',.45):crumb)+'"/><path d="M60 '+(yy+4)+'q90 -6 180 0" stroke="#fff" stroke-width="3" opacity=".3" fill="none" stroke-linecap="round"/><g fill="'+dk(crumb,.18)+'" opacity=".35">'+Array.from({length:16},()=>'<circle cx="'+(58+rnd()*184).toFixed(0)+'" cy="'+(yy+9+rnd()*(h2-18)).toFixed(0)+'" r="'+(0.8+rnd()*1.2).toFixed(1)+'"/>').join('')+'</g>',h2);
+  } else {
+    const h2=52, yy=y-h2; let ex='';
+    if(s.bread==='Pretzel roll') ex='<g fill="none" stroke="'+lt(bc,.28)+'" stroke-width="3" stroke-linecap="round" opacity=".75"><path d="M105 '+(yy+14)+'l14 16M140 '+(yy+9)+'l14 20M176 '+(yy+14)+'l14 16"/></g><g fill="#fff" opacity=".92">'+Array.from({length:22},()=>{ const px=82+rnd()*136, py=yy+10+rnd()*28; return '<rect x="'+px.toFixed(0)+'" y="'+py.toFixed(0)+'" width="'+(3+rnd()*2).toFixed(1)+'" height="2.2" rx=".8" transform="rotate('+(rnd()*90).toFixed(0)+' '+px.toFixed(0)+' '+py.toFixed(0)+')"/>'; }).join('')+'</g>';
+    if(s.bread==='Croissant') ex='<g fill="none" stroke="'+dk(bc,.32)+'" stroke-width="2.2" opacity=".6">'+[72,100,128,156,184,212].map(x=>'<path d="M'+x+' '+(yy+h2-2)+' q-'+(10+(x%3)*2)+' -'+(h2-12)+' '+(x<150?12:-4)+' -'+(h2-6)+'"/>').join('')+'</g><g fill="none" stroke="'+lt(bc,.35)+'" stroke-width="2" opacity=".5">'+[86,114,142,170,198].map(x=>'<path d="M'+x+' '+(yy+h2-3)+' q-8 -'+(h2-16)+' 4 -'+(h2-10)+'"/>').join('')+'</g>';
+    if(s.bread==='Bagel') ex='<g fill="#FFF4D2">'+Array.from({length:26},()=>{ const px=84+rnd()*132, py=yy+12+rnd()*26; return '<ellipse cx="'+px.toFixed(0)+'" cy="'+py.toFixed(0)+'" rx="3.2" ry="1.6" transform="rotate('+(rnd()*180).toFixed(0)+' '+px.toFixed(0)+' '+py.toFixed(0)+')"/>'; }).join('')+'</g>';
+    L('<path d="M42 '+y+'V'+(yy+30)+'Q42 '+yy+' 150 '+yy+'Q258 '+yy+' 258 '+(yy+30)+'V'+y+'z" fill="'+hgrad(bc)+'"/><path d="M42 '+y+'V'+(yy+30)+'Q42 '+yy+' 150 '+yy+'Q258 '+yy+' 258 '+(yy+30)+'V'+y+'z" fill="'+grad(bc,.2,.3)+'" opacity=".55"/>'+ex+'<path d="M64 '+(yy+20)+'Q100 '+(yy+4)+' 160 '+(yy+4)+'" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".3"/><path d="M42 '+y+'h216" stroke="'+dk(bc,.4)+'" stroke-width="3" opacity=".5"/>',h2);
+  }
+  const top=y, vb=Math.min(top-12,150);
+  return '<svg class="'+(cls||'')+'" viewBox="0 '+vb+' '+W+' '+(268-vb)+'" role="img" aria-label="Your sandwich"><defs>'+defs.join('')+'<radialGradient id="'+id+'sh"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><ellipse cx="150" cy="255" rx="130" ry="9" fill="url(#'+id+'sh)"/>'+out.join('')+'</svg>';
 }
 function bigbill(C){
   const name=C.name||"Big Bill's Sandwich Shop and Coffee Bar";
