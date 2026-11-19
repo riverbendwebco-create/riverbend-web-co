@@ -1002,7 +1002,7 @@ function fade(C){
   const stEl=h('span',{class:'fd-st'});
   const paint=()=>{ const s=fdStatus(C); stEl.className='fd-st '+(s.state||''); stEl.replaceChildren(...(s.label?[h('i'),h('b',null,s.label),s.hrs?h('em',null,s.hrs):null].filter(Boolean):[])); };
   paint(); setInterval(paint,60000);
-  const links=[svc.length?['f-services','Services']:null,C.own.length?['f-gallery','Work']:null,prods.length||perks.length?['f-shop','In the shop']:null,['f-about','About'],['f-visit','Visit']].filter(Boolean);
+  const links=[svc.length?['f-split','Services']:null,C.own.length?['f-gallery','Work']:null,prods.length||perks.length?['f-shop','In the shop']:null,['f-about','About'],['f-visit','Visit']].filter(Boolean);
   const nav=h('header',{class:'fd-nav'},h('div',{class:'fd-nav-in'},
     h('a',{class:'fd-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('f-top');}},fdMark(C,'sm'),h('b',null,name)),
     h('nav',{class:'fd-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
@@ -1010,31 +1010,48 @@ function fade(C){
     C.tel?h('a',{class:'fd-btn red sm',href:C.tel},ico('phone',15,''),h('span',null,'Call')):null),
     h('nav',{class:'fd-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
 
-  const hero=h('section',{class:'fd-hero',id:'f-top'},
+  const intro=h('section',{class:'fd-hero',id:'f-top'},
     h('div',{class:'fd-pole','aria-hidden':'true'}),
-    h('div',{class:'fd-wrap fd-hero-in'},
-      h('div',{class:'fd-hero-t'},
-        h('span',{class:'fd-kick'},C.category||'Barbershop and hair studio'),
-        h('h1',null,name),
-        h('p',{class:'fd-lead'},C.tag||'Family oriented barbershop and hair studio in downtown Bellevue, Iowa.'),
-        h('p',{class:'fd-walk'},'Walk-ins and appointments available.'),
-        h('div',{class:'fd-cta'},
-          C.tel?h('a',{class:'fd-btn red',href:C.tel},ico('phone',16,''),'Call '+C.phoneTxt):null,
-          C.maps?h('a',{class:'fd-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Get directions'):null)),
-      C.own.length>=3?h('div',{class:'fd-hero-art'},C.own.slice(0,3).map((u,i)=>h('button',{type:'button',class:'fd-hp p'+i,'aria-label':'See the work',onclick:()=>scrollTo('f-gallery')},bg(h('span'),u)))):null));
+    h('div',{class:'fd-wrap fd-intro'},
+      h('span',{class:'fd-kick'},C.category||'Barbershop and hair studio'),
+      h('h1',null,name),
+      h('p',{class:'fd-lead'},C.tag||'Family oriented barbershop and hair studio in downtown Bellevue, Iowa.'),
+      svc.length>=2?h('p',{class:'fd-walk'},'Pick your chair'):h('p',{class:'fd-walk'},'Walk-ins and appointments available.')));
 
-  const tiles=[
-    C.hasHours?h('div',{class:'fd-tile'},h('small',null,'Today'),h('b',null,st.hrs?st.hrs.replace(/^Today /,''):(C.today||'See hours')),h('span',null,st.label||'')):null,
-    h('div',{class:'fd-tile'},h('small',null,'How it works'),h('b',null,'Walk-ins welcome'),h('span',null,'Appointments optional')),
-    C.addr?h('a',{class:'fd-tile',href:C.maps||null,target:C.maps?'_blank':null,rel:'noopener'},h('small',null,'Find us'),h('b',null,C.addr),h('span',null,C.city||'')):null
-  ].filter(Boolean);
-  const info=h('section',{class:'fd-info'},h('div',{class:'fd-wrap fd-tiles'},tiles));
-
-  const services=svc.length?h('section',{class:'fd-sec',id:'f-services'},h('div',{class:'fd-wrap'},
-    h('h2',null,'Services'),h('p',{class:'fd-sub'},'Call or stop in for pricing and to book.'),
-    h('div',{class:'fd-svc'},svc.map((s,i)=>h('article',{class:'fd-card'},
-      h('span',{class:'fd-num'},String(i+1).padStart(2,'0')),h('h3',null,s.g),s.d?h('p',null,s.d):null,
-      h('ul',null,s.t.map(t=>h('li',null,t)))))))):null;
+  /* split-screen front door: barbershop | hair studio */
+  const idxA=Array.isArray(C.x.pa)?C.x.pa.filter(n=>Number.isInteger(n)&&C.own[n]):C.own.map((u,i)=>i).filter(i=>i%2===0);
+  const idxB=Array.isArray(C.x.pb)?C.x.pb.filter(n=>Number.isInteger(n)&&C.own[n]):C.own.map((u,i)=>i).filter(i=>i%2===1);
+  const sideDefs=svc.length>=2?[{k:'a',g:svc.slice(0,1),idx:idxA},{k:'b',g:svc.slice(1),idx:idxB}]:[];
+  let split=null;
+  if(sideDefs.length){
+    const els=[];
+    const setOpen=k=>{ split.dataset.open=k||''; els.forEach(e=>{ const on=e.k===k; e.btn.setAttribute('aria-expanded',String(on)); e.btn.textContent=on?'Close':e.label; e.more.hidden=!on; e.pn.classList.toggle('on',on); });
+      if(k){ const open=els.find(e=>e.k===k); setTimeout(()=>{ const r=open.pn.getBoundingClientRect(); if(r.top<0||r.top>innerHeight*0.5) scrollTo('f-split'); },60); } };
+    const panel=(d,i)=>{ const main=d.g[0], more=d.g.slice(1);
+      const pic=C.own[d.idx[0]];
+      const id='fd-more-'+d.k, label=d.k==='a'?'See barbershop services':'See studio services';
+      const btn=h('button',{type:'button',class:'fd-btn '+(d.k==='a'?'red':'light'),'aria-expanded':'false','aria-controls':id},label);
+      const moreEl=h('div',{class:'fd-pn-more',id,hidden:''},
+        h('ul',{class:'fd-pn-ul'},main.t.map(t=>h('li',null,t))),
+        more.map(m=>h('div',{class:'fd-pn-sub'},h('h3',null,m.g),m.d?h('p',null,m.d):null,h('ul',{class:'fd-pn-ul'},m.t.map(t=>h('li',null,t))))),
+        d.idx.length?h('div',{class:'fd-pn-thumbs'},d.idx.slice(0,4).map(n=>h('button',{type:'button','aria-label':'Open photo: '+(caps[n]||('photo '+(n+1))),onclick:()=>bzLightbox(C.own.slice(0,12),caps,n)},bg(h('span'),C.own[n])))):null,
+        C.tel?h('a',{class:'fd-btn '+(d.k==='a'?'red':'light'),href:C.tel},ico('phone',16,''),'Call '+C.phoneTxt):null);
+      const pn=h('article',{class:'fd-pn '+d.k},
+        bg(h('div',{class:'fd-pn-bg','aria-hidden':'true'}),pic),
+        h('div',{class:'fd-pn-in'},
+          h('span',{class:'fd-pn-n'},'0'+(i+1)),
+          h('h2',null,main.g),
+          main.d?h('p',{class:'fd-pn-d'},main.d):null,
+          btn,moreEl));
+      const rec={k:d.k,btn,more:moreEl,pn,label};
+      btn.addEventListener('click',()=>setOpen(split.dataset.open===d.k?'':d.k));
+      els.push(rec); return pn; };
+    split=h('section',{class:'fd-split',id:'f-split','data-open':''},sideDefs.map(panel));
+  }
+  const bar=h('section',{class:'fd-bar'},h('div',{class:'fd-wrap fd-bar-in'},
+    h('span',null,h('b',null,'Walk-ins welcome.'),' Appointments optional.'),
+    C.addr?h('a',{href:C.maps||null,target:C.maps?'_blank':null,rel:'noopener'},ico('pin',15,''),C.addr+(C.city?', '+C.city:'')):null,
+    C.tel?h('a',{href:C.tel},ico('phone',15,''),C.phoneTxt):null));
 
   const gal=C.own.length?h('section',{class:'fd-sec fd-dark',id:'f-gallery'},h('div',{class:'fd-wrap'},
     h('h2',null,'The work'),h('p',{class:'fd-sub'},'Recent cuts and color from the chair. Tap a photo to see it full size.'),
@@ -1060,7 +1077,7 @@ function fade(C){
 
   const foot=h('footer',{class:'fd-foot'},h('div',{class:'fd-wrap fd-foot-in'},fdMark(C,'sm'),h('span',null,h('b',null,name),[C.addr,C.city].filter(Boolean).length?' · '+[C.addr,C.city].filter(Boolean).join(', '):''),socials(C)),
     h('div',{class:'fd-wrap fd-legal'},h('span',null,'© '+new Date().getFullYear()+' '+name),h('span',null,'Site by Riverbend Web Co.')));
-  return h('div',{class:'demo fd on'},nav,hero,info,services,gal,shop,about,visit,foot);
+  return h('div',{class:'demo fd on'},nav,intro,split,bar,gal,shop,about,visit,foot);
 }
 
 const DN_ICON={
