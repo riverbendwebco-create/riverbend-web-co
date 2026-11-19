@@ -1053,31 +1053,66 @@ function fade(C){
     C.addr?h('a',{href:C.maps||null,target:C.maps?'_blank':null,rel:'noopener'},ico('pin',15,''),C.addr+(C.city?', '+C.city:'')):null,
     C.tel?h('a',{href:C.tel},ico('phone',15,''),C.phoneTxt):null));
 
-  const gal=C.own.length?h('section',{class:'fd-sec fd-dark',id:'f-gallery'},h('div',{class:'fd-wrap'},
-    h('h2',null,'The work'),h('p',{class:'fd-sub'},'Recent cuts and color from the chair. Tap a photo to see it full size.'),
-    h('div',{class:'fd-photos'},C.own.slice(0,12).map((u,i)=>h('button',{type:'button',class:'fd-gt','aria-label':'Open photo '+(i+1)+(caps[i]?': '+caps[i]:''),onclick:()=>bzLightbox(C.own.slice(0,12),caps,i)},bg(h('span',{class:'fd-ph'}),u),caps[i]?h('em',null,caps[i]):null))),
-    (C.fb||C.ig)?h('div',{class:'fd-follow'},h('b',null,'See more on social'),h('div',{class:'fd-cta'},C.ig?h('a',{class:'fd-btn red',href:C.ig,target:'_blank',rel:'noopener'},ico('i-ig',18,''),'Instagram'):null,C.fb?h('a',{class:'fd-btn ghost',href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',18,''),'Facebook'):null)):null)):null;
+  /* 1. gallery as a big swipe strip */
+  let gal=null;
+  if(C.own.length){
+    const list=C.own.slice(0,12);
+    const track=h('div',{class:'fd-strip',tabindex:'0','aria-label':'Photo strip, scroll sideways'},list.map((u,i)=>h('figure',{class:'fd-slide'},
+      h('button',{type:'button','aria-label':'Open photo '+(i+1)+(caps[i]?': '+caps[i]:''),onclick:()=>bzLightbox(list,caps,i)},bg(h('span'),u)),
+      caps[i]?h('figcaption',null,caps[i]):null)));
+    const go=d=>track.scrollBy({left:d*Math.max(280,track.clientWidth*0.8),behavior:'smooth'});
+    gal=h('section',{class:'fd-sec fd-dark fd-gal',id:'f-gallery'},h('div',{class:'fd-wrap'},
+      h('div',{class:'fd-gal-h'},h('div',null,h('h2',null,'The work'),h('p',{class:'fd-sub'},'Recent cuts and color from the chair. Swipe or use the arrows, tap a photo for full size.')),
+        h('div',{class:'fd-arrows'},h('button',{type:'button','aria-label':'Previous photos',onclick:()=>go(-1)},'\u2039'),h('button',{type:'button','aria-label':'Next photos',onclick:()=>go(1)},'\u203A')))),
+      track,
+      (C.fb||C.ig)?h('div',{class:'fd-wrap'},h('div',{class:'fd-follow'},h('b',null,'See more on social'),h('div',{class:'fd-cta'},C.ig?h('a',{class:'fd-btn red',href:C.ig,target:'_blank',rel:'noopener'},ico('i-ig',18,''),'Instagram'):null,C.fb?h('a',{class:'fd-btn ghost',href:C.fb,target:'_blank',rel:'noopener'},ico('i-fb',18,''),'Facebook'):null))):null);
+  }
 
-  const shop=(perks.length||prods.length)?h('section',{class:'fd-sec',id:'f-shop'},h('div',{class:'fd-wrap'},
-    h('h2',null,'In the shop'),
-    perks.length?h('div',{class:'fd-perks'},perks.map(p=>h('div',{class:'fd-perk'},h('b',null,String(p.t)),p.d?h('span',null,String(p.d)):null))):null,
-    prods.length?h('div',{class:'fd-prods'},h('h3',null,'Products we use and carry'),h('div',{class:'fd-ptags'},prods.map(t=>h('span',null,t))),C.x.prodNote?h('p',null,String(C.x.prodNote)):null):null)):null;
+  /* 2. ticker band for perks + product shelf */
+  const pole=()=>h('div',{class:'fd-pole','aria-hidden':'true'});
+  const band=perks.length?h('section',{class:'fd-band',id:'f-shop'},pole(),
+    h('div',{class:'fd-wrap fd-band-in'},perks.map((p,i)=>[i?h('i',{'aria-hidden':'true'}):null,h('span',null,String(p.t))])),pole()):null;
+  const shelf=prods.length?h('section',{class:'fd-sec fd-shelf'},h('div',{class:'fd-wrap'},
+    h('h3',null,'On our shelf'),h('div',{class:'fd-ptags'},prods.map(t=>h('span',null,t))),C.x.prodNote?h('p',null,String(C.x.prodNote)):null)):null;
 
-  const about=h('section',{class:'fd-sec fd-soft',id:'f-about'},h('div',{class:'fd-wrap fd-about'},
-    h('div',null,h('h2',null,'About '+name),C.about?C.about.split(/\n+/).map(t=>h('p',null,t)):null),
-    facts.length?h('dl',{class:'fd-facts'},facts.map(f=>h('div',null,h('dt',null,String(f.k)),h('dd',null,String(f.v))))):null));
+  /* 3. your visit in three steps */
+  const steps=perks.length?[
+    ['Walk in','No appointment needed. Appointments are available too.'],
+    ['Settle in',perks.map(p=>String(p.t)).join('. ')+'.'],
+    ['Hop in the chair',svc.length?'Cuts, color, waxing and more.':'']
+  ]:[];
+  const stepsEl=steps.length?h('section',{class:'fd-sec fd-dark fd-steps',id:'f-steps'},h('div',{class:'fd-wrap'},
+    h('h2',null,'Your visit'),
+    h('ol',{class:'fd-steps-l'},steps.map(([t,d],i)=>h('li',null,h('b',null,String(i+1)),h('h3',null,t),d?h('p',null,d):null))))):null;
 
-  const visit=h('section',{class:'fd-sec',id:'f-visit'},h('div',{class:'fd-wrap fd-vgrid'},
-    C.hasHours?h('div',{class:'fd-box hrs'},h('h3',null,'Hours'),h('div',{class:'fd-hrs'},hoursRows(C))):null,
-    h('div',{class:'fd-box loc'},h('h3',null,'Find us'),
-      h('p',{class:'fd-addr'},C.addr?h('b',null,C.addr):null,C.city?h('span',null,C.city):null),
+  /* 4. about as big type */
+  const parts=String(C.about||'').split(/\n+/);
+  const first=(parts[0]||'').match(/^[^.]+\.?/);
+  const lead=first?first[0]:'';
+  const rest=[ (parts[0]||'').slice(lead.length).trim(), ...parts.slice(1) ].filter(Boolean);
+  const about=h('section',{class:'fd-sec fd-about2',id:'f-about'},h('div',{class:'fd-wrap'},
+    h('span',{class:'fd-kick'},'About '+name),
+    lead?h('p',{class:'fd-big'},lead):null,
+    rest.length?h('div',{class:'fd-about-p'},rest.map(t=>h('p',null,t))):null,
+    facts.length?h('dl',{class:'fd-nums'},facts.map(f=>h('div',null,h('dt',null,String(f.k)),h('dd',null,String(f.v))))):null));
+
+  /* 5. week strip over a real map */
+  const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
+  const short=v=>{ const t=String(v||'').trim(); if(!t) return ['Closed','']; if(/appoint/i.test(t)) return ['By','appt.']; const m=t.match(/(\d{1,2}(?::\d{2})?\s*[ap]m)\s*(?:-|to|\u2013)\s*(\d{1,2}(?::\d{2})?\s*[ap]m)/i); return m?[m[1].replace(/\s/g,''),m[2].replace(/\s/g,'')]:[t,'']; };
+  const visit=h('section',{class:'fd-visit',id:'f-visit'},
+    C.addr?h('div',{class:'fd-map'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null,
+    h('div',{class:'fd-wrap fd-vwrap'},h('div',{class:'fd-vcard'},
+      h('h2',null,'Visit'),
+      C.hasHours?h('div',{class:'fd-week',role:'list','aria-label':'Weekly hours'},DAYS.map((day,i)=>{ const [o,c]=short(C.hours[i]); return h('div',{class:'fd-day'+(i===todayIx()?' today':'')+(/appoint/i.test(String(C.hours[i]||''))?' appt':''),role:'listitem'},h('small',null,SHORT[i]),h('b',null,o),c?h('span',null,c):null); })):null,
+      h('div',{class:'fd-vrow'},
+        h('p',{class:'fd-addr'},C.addr?h('b',null,C.addr):null,C.city?h('span',null,C.city):null),
+        h('div',{class:'fd-cta'},C.maps?h('a',{class:'fd-btn red',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Directions'):null,C.tel?h('a',{class:'fd-btn line',href:C.tel},ico('phone',16,''),C.phoneTxt):null)),
       C.x.note?h('p',{class:'fd-note'},String(C.x.note)):null,
-      h('div',{class:'fd-cta'},C.maps?h('a',{class:'fd-btn red',href:C.maps,target:'_blank',rel:'noopener'},ico('pin',16,''),'Get directions'):null,C.tel?h('a',{class:'fd-btn line',href:C.tel},ico('phone',16,''),C.phoneTxt):null),
       socials(C))));
 
   const foot=h('footer',{class:'fd-foot'},h('div',{class:'fd-wrap fd-foot-in'},fdMark(C,'sm'),h('span',null,h('b',null,name),[C.addr,C.city].filter(Boolean).length?' · '+[C.addr,C.city].filter(Boolean).join(', '):''),socials(C)),
     h('div',{class:'fd-wrap fd-legal'},h('span',null,'© '+new Date().getFullYear()+' '+name),h('span',null,'Site by Riverbend Web Co.')));
-  return h('div',{class:'demo fd on'},nav,intro,split,bar,gal,shop,about,visit,foot);
+  return h('div',{class:'demo fd on'},nav,intro,split,bar,gal,band,shelf,stepsEl,about,visit,foot);
 }
 
 const DN_ICON={
