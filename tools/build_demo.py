@@ -2208,6 +2208,7 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mk-welborn .mp-photo{grid-column:2;grid-row:1/span 2;margin:0}
 .mk-welborn .mp-photo .ph{aspect-ratio:4/5;max-height:430px;width:100%;background-size:cover;background-position:center;border-radius:6px;border:3px solid #fff;box-shadow:8px 8px 0 #3981F0}
 .mk-welborn .mp-photo figcaption{color:#A1A1AA;font-size:.8rem;margin-top:12px}
+.mk-welborn .mp-photo .ph{background-image:url(https://riverbendwebco.com/demo/info/welborn-painting/logo.png)!important;background-color:#fff;background-size:contain;background-repeat:no-repeat;background-position:center;aspect-ratio:4/3;max-height:none;padding:24px;background-origin:content-box}
 .mk-welborn .mp-label{border-top-color:#0B0F14;color:#0B0F14}
 .mk-welborn .mp-label span,.mk-welborn .mo-num{color:#1B5FD6}
 .mk-welborn .mo-body h3,.mk-welborn .mo-price b{color:#0B0F14}
