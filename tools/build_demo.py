@@ -345,6 +345,13 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
+.cl-smoke{position:absolute;inset:0;pointer-events:none}
+.cl-smoke svg{width:100%;height:100%;display:block}
+.cl-wisps path{stroke-dasharray:1400;animation:clWisp linear infinite}
+@keyframes clWisp{0%{stroke-dashoffset:1400;opacity:0}15%{opacity:1}70%{opacity:.9}100%{stroke-dashoffset:-1400;opacity:0}}
+.cl-hero.smoke .cl-hero-c{position:relative;z-index:1}
+.cl-hero.smoke::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,11,14,.75) 0%,rgba(10,11,14,.25) 45%,rgba(10,11,14,0) 70%);pointer-events:none}
+.cl-hero.smoke .cl-hero-c,.cl-hero.smoke .cl-hero-logo{z-index:2}
 .cl-brand{display:flex;align-items:center;gap:12px}
 .cl-hero{justify-content:space-between;gap:30px}
 .cl-hero-logo{position:relative;z-index:1;height:min(400px,78%);max-height:400px;width:auto;max-width:38%;object-fit:contain;margin-right:56px;filter:drop-shadow(0 18px 40px rgba(0,0,0,.55))}

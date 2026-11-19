@@ -1306,6 +1306,30 @@ function clAge(C){
   document.documentElement.classList.add('os-lock');
   document.body.append(box);
 }
+
+function clSmoke(){
+  const W=[
+    ['M862 318 C 880 250 950 230 990 170 S 1080 70 1190 40 S 1330 10 1420 -10',90,.22,0],
+    ['M862 318 C 840 240 900 190 960 150 S 1010 60 980 -10',70,.18,1.2],
+    ['M862 318 C 900 280 990 290 1060 250 S 1200 190 1300 200 S 1400 170 1460 140',80,.16,2.1],
+    ['M862 318 C 870 270 920 250 950 210 S 1000 150 1050 120 S 1130 60 1150 0',44,.32,.6],
+    ['M862 318 C 860 285 890 260 915 240 S 960 200 1000 190 S 1080 160 1120 120',26,.42,1.6],
+    ['M862 318 C 880 290 930 285 975 270 S 1050 250 1100 230',18,.5,.3]
+  ].map(([d,w,o,del],i)=>'<path d="'+d+'" stroke="url(#clSw)" stroke-width="'+w+'" stroke-linecap="round" fill="none" opacity="'+o+'" style="animation-delay:-'+del+'s;animation-duration:'+(9+i*1.7)+'s"/>').join('');
+  const d=h('div',{class:'cl-smoke','aria-hidden':'true'});
+  d.innerHTML='<svg viewBox="0 0 1400 620" preserveAspectRatio="xMidYMid slice">'+
+   '<defs><linearGradient id="clSw" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset=".5" stop-color="#DDE2EA" stop-opacity=".55"/><stop offset="1" stop-color="#C9CFDA" stop-opacity="0"/></linearGradient>'+
+   '<filter id="clSf" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.022" numOctaves="3" seed="4"><animate attributeName="baseFrequency" dur="20s" values="0.006 0.022;0.009 0.017;0.006 0.022" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="70" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="5"/></filter>'+
+   '<filter id="clSb"><feGaussianBlur stdDeviation="18"/></filter>'+
+   '<linearGradient id="clPod" x1="0" x2="1"><stop offset="0" stop-color="#08090B"/><stop offset=".42" stop-color="#2E3138"/><stop offset=".52" stop-color="#6A6F7A"/><stop offset=".62" stop-color="#2A2D33"/><stop offset="1" stop-color="#0C0D10"/></linearGradient>'+
+   '<linearGradient id="clTip" x1="0" x2="1"><stop offset="0" stop-color="#121317"/><stop offset=".5" stop-color="#555A64"/><stop offset="1" stop-color="#101114"/></linearGradient>'+
+   '<radialGradient id="clLed"><stop offset="0" stop-color="#FF4A52"/><stop offset="1" stop-color="#B3121B" stop-opacity="0"/></radialGradient></defs>'+
+   '<ellipse cx="1000" cy="200" rx="260" ry="120" fill="#C9CFDA" opacity=".07" filter="url(#clSb)"/>'+
+   '<g class="cl-wisps" filter="url(#clSf)">'+W+'</g>'+
+   '<g transform="translate(720 640) rotate(26)"><rect x="-40" y="-300" width="80" height="290" rx="26" fill="url(#clPod)"/><rect x="-26" y="-366" width="52" height="76" rx="16" fill="url(#clTip)"/><rect x="-12" y="-382" width="24" height="20" rx="7" fill="#0A0B0D"/><rect x="-35" y="-290" width="5" height="268" rx="2.5" fill="#fff" opacity=".1"/><circle cx="0" cy="-70" r="20" fill="url(#clLed)"><animate attributeName="opacity" dur="2.4s" values=".55;1;.55" repeatCount="indefinite"/></circle><circle cx="0" cy="-70" r="4.5" fill="#FF7A80"/></g>'+
+   '</svg>';
+  return d;
+}
 function cloudShop(C){
   const city=C.city.split(',')[0];
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
@@ -1320,11 +1344,12 @@ function cloudShop(C){
     h('div',{class:'cl-brand'},logo?h('img',{src:logo,alt:'',class:'cl-logo'}):null,h('span',{class:'cl-name'},C.name)),
     h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null)),
     h('nav',{class:'cl-w cl-cats'},jump('cl-shop','New In','on'),cats.slice(0,8).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours'),jump('cl-visit','Location')));
-  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'},h('div',{class:'cl-hero-c'},
+  const smoke=!!C.x.heroSmoke;
+  const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'+(smoke?' smoke':'')},smoke?clSmoke():null,h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
     h('h1',null,C.tag||('Your local cloud shop in '+city)),
     h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
-    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),(typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
+    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),smoke?null:((typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:C.hero),smoke?'radial-gradient(ellipse at 30% 100%,rgba(179,18,27,.22),rgba(0,0,0,0) 55%),linear-gradient(135deg,#0A0B0E 0%,#15171C 55%,#0B0C10 100%)':'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
   const perks=h('section',{class:'cl-w cl-perks'},[
     ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
   ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));

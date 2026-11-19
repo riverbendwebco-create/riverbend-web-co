@@ -2984,5 +2984,22 @@
         "heroPhoto": "https://drbobscloudlabs.com/wp-content/uploads/2026/01/inside-1024x1024.jpg"
       }
     }
+  },
+  {
+    "key": "drbobs-cloudlab-4",
+    "matchName": "Dr. Bob's Cloud Lab",
+    "patch": true,
+    "data": {
+      "x": {
+        "cats": [
+          "Vapes",
+          "Cigars",
+          "Cigarettes",
+          "Beverages"
+        ],
+        "logoUrl": "https://drbobscloudlabs.com/wp-content/uploads/2026/01/DR.BOB-png-849x1024.png",
+        "heroSmoke": true
+      }
+    }
   }
 ]
