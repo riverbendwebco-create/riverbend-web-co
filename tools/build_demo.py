@@ -2187,7 +2187,8 @@ body.t-mk{background:#fff;padding-bottom:0}
 .wb-fres .wb-cta{margin-top:12px}
 .wb-fres .wb-btn.line{border-color:#fff;color:#fff}.wb-fres .wb-btn.line:hover{background:#fff;color:var(--ink)}
 .wb-fcopied{display:block;margin-top:12px;font-size:.92rem;color:#7FB0FF;min-height:1.2em}
-.wb-freset{margin-top:6px;background:none;border:0;padding:8px 0;color:#CBD5E1;font:600 .95rem var(--bf);text-decoration:underline;cursor:pointer}
+.wb-fsub{margin:0 0 4px}.wb-fmore{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:14px}
+.wb-fcopy,.wb-freset{background:none;border:0;padding:8px 0;color:#CBD5E1;font:600 .95rem var(--bf);text-decoration:underline;cursor:pointer}.wb-fcopy:hover,.wb-freset:hover{color:#fff}
 .wb-fdemo{margin-top:18px!important;font-size:.85rem;color:#94A3B8!important;border-top:1px dashed #334155;padding-top:14px}
 @media (max-width:900px){.wb-fps{grid-template-columns:repeat(2,1fr)}.wb-fres{grid-template-columns:1fr}.wb-fres-r{border-left:0;border-top:1px solid #1F2937}.wb-fres{box-shadow:8px 8px 0 var(--bl)}}
 @media (max-width:560px){.wb-fsteps{grid-template-columns:1fr}.wb-fsteps li{padding:10px 14px}.wb-fps{grid-template-columns:1fr}.wb-fres-l,.wb-fres-r{padding:26px 22px}.wb-finder{padding-top:52px}}

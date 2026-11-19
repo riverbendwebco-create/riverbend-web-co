@@ -2434,7 +2434,8 @@ body.t-mk{background:#fff;padding-bottom:0}
 .wb-fres .wb-cta{margin-top:12px}
 .wb-fres .wb-btn.line{border-color:#fff;color:#fff}.wb-fres .wb-btn.line:hover{background:#fff;color:var(--ink)}
 .wb-fcopied{display:block;margin-top:12px;font-size:.92rem;color:#7FB0FF;min-height:1.2em}
-.wb-freset{margin-top:6px;background:none;border:0;padding:8px 0;color:#CBD5E1;font:600 .95rem var(--bf);text-decoration:underline;cursor:pointer}
+.wb-fsub{margin:0 0 4px}.wb-fmore{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:14px}
+.wb-fcopy,.wb-freset{background:none;border:0;padding:8px 0;color:#CBD5E1;font:600 .95rem var(--bf);text-decoration:underline;cursor:pointer}.wb-fcopy:hover,.wb-freset:hover{color:#fff}
 .wb-fdemo{margin-top:18px!important;font-size:.85rem;color:#94A3B8!important;border-top:1px dashed #334155;padding-top:14px}
 @media (max-width:900px){.wb-fps{grid-template-columns:repeat(2,1fr)}.wb-fres{grid-template-columns:1fr}.wb-fres-r{border-left:0;border-top:1px solid #1F2937}.wb-fres{box-shadow:8px 8px 0 var(--bl)}}
 @media (max-width:560px){.wb-fsteps{grid-template-columns:1fr}.wb-fsteps li{padding:10px 14px}.wb-fps{grid-template-columns:1fr}.wb-fres-l,.wb-fres-r{padding:26px 22px}.wb-finder{padding-top:52px}}
@@ -3705,18 +3706,22 @@ function wbFinder(C,call,fbBtn){
     p2.classList.toggle('dim',!prob);
     const stage=!prob?0:!room?1:2;
     steps.forEach((li,i)=>{ li.classList.toggle('now',i===stage); li.classList.toggle('done',i<stage); });
-    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Call or message Tyler and mention it.';
+    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Send it to Tyler with one tap.';
     if(stage<2){ result.hidden=true; result.replaceChildren(); return; }
     const svc=(room==='Store or office'&&prob.svc!=='Drywall')?prob.svc+' and Commercial':prob.svc;
     const summary='Hi, I found you on your website. Problem: '+prob.t+'. Room: '+room+'. Can I get an estimate? My name is ';
     const copied=h('span',{class:'wb-fcopied',role:'status'});
-    const copy=h('button',{type:'button',class:'wb-btn line',onclick:()=>{ const done=()=>{ copied.textContent='Copied. Paste it into a text or message.'; }; try{ navigator.clipboard.writeText(summary).then(done,()=>{ copied.textContent='Copy not available. Please type it in your message.'; }); }catch(e){ copied.textContent='Copy not available. Please type it in your message.'; } }},'Copy my request');
+    const enc=encodeURIComponent(summary);
+    const textBtn=C.tel?h('a',{class:'wb-btn blue',href:C.tel.replace(/^tel:/,'sms:')+'?&body='+enc},ico('chat',16,''),'Text Tyler'):null;
+    const mailBtn=C.email?h('a',{class:'wb-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request: '+prob.t)+'&body='+enc},'Email Tyler'):null;
+    const copy=h('button',{type:'button',class:'wb-fcopy',onclick:()=>{ const done=()=>{ copied.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(done,()=>{ copied.textContent='Copy not available. Please type it in your message.'; }); }catch(e){ copied.textContent='Copy not available. Please type it in your message.'; } }},'Copy my request to paste');
     result.hidden=false;
     result.replaceChildren(
-      h('div',{class:'wb-fres-l'},h('span',{class:'wb-tape light'},'Your match'),h('h3',null,svc),h('p',null,h('b',null,'You picked: '),prob.t+' in '+room.toLowerCase()+'.'),h('p',null,prob.why),(room==='Store or office')?h('p',null,'We also do commercial work, including storefronts and offices.'):null,h('p',{class:'wb-ftip'},'Tip: take a photo of the problem before you call. It helps.')),
-      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Next step'),h('div',{class:'wb-cta'},call('blue','Call Tyler'),copy,fbBtn('line','Message on Facebook')),copied,
-        h('button',{type:'button',class:'wb-freset',onclick:()=>{ prob=null; room=null; render(); }},'Start over'),
-        h('p',{class:'wb-fdemo'},'In the finished site, this sends your request and photos straight to Tyler.')));
+      h('div',{class:'wb-fres-l'},h('span',{class:'wb-tape light'},'Your match'),h('h3',null,svc),h('p',null,h('b',null,'You picked: '),prob.t+' in '+room.toLowerCase()+'.'),h('p',null,prob.why),(room==='Store or office')?h('p',null,'We also do commercial work, including storefronts and offices.'):null,h('p',{class:'wb-ftip'},'Tip: add a photo of the problem when you message. It helps.')),
+      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Send it to Tyler'),h('p',{class:'wb-fsub'},'Text is the fastest. Your picks are filled in for you.'),
+        h('div',{class:'wb-cta'},textBtn,fbBtn('line','Message on Facebook'),mailBtn),
+        h('div',{class:'wb-fmore'},copy,h('button',{type:'button',class:'wb-freset',onclick:()=>{ prob=null; room=null; render(); }},'Start over')),copied,
+        h('p',{class:'wb-fdemo'},'In the finished site, you can also attach photos here and send straight to Tyler.')));
     if(stage===2&&!matchMedia('(prefers-reduced-motion: reduce)').matches) result.scrollIntoView({block:'nearest',behavior:'smooth'});
   }
   const sec=h('section',{class:'wb-sec wb-mist wb-finder',id:'w-finder'},h('div',{class:'wb-wrap'},
