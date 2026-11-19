@@ -621,6 +621,10 @@ body.t-o2{background:#FBF5EC}
 .cl-carry-ico{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#F6E7E8;color:#B3121B;margin-bottom:16px}
 .cl-carry-ico svg{width:36px;height:36px}
 .cl-carry-c{text-align:left}
+.cl-carry-c.pic{padding:0}
+.cl-carry-pic{aspect-ratio:4/3;background-size:cover;background-position:center;transition:transform .4s ease}
+.cl-carry-c.pic:hover .cl-carry-pic{transform:scale(1.04)}
+.cl-carry-c.pic .cl-carry-t{padding:18px 20px 20px;position:relative;background:#fff}
 .cl-carry-n{display:block;font-family:'Montserrat',sans-serif;font-weight:800;color:#C9C9CF;font-size:.9rem;margin-bottom:10px}
 .cl-carry-c b{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.5rem;line-height:1.05;color:#111114}
 .cl-carry-c small{display:block;margin-top:8px;color:#5E6068;font-size:.84rem}
@@ -3525,7 +3529,7 @@ function cloudShop(C){
     shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Trending In Store'),row,
       h('p',{class:'cl-note'},'Stock changes often. Call ahead to check if your favorite is in.')));
   } else {
-    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>h('div',{class:'cl-carry-c rv'},clCatIco(k),h('b',null,k),h('small',null,'In store now'))))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
+    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>(()=>{ const cp=C.x.catPhotos&&typeof C.x.catPhotos==='object'?C.x.catPhotos[k]:''; const ok=typeof cp==='string'&&/^https:\/\//.test(cp); return h('div',{class:'cl-carry-c rv'+(ok?' pic':'')},ok?bg(h('div',{class:'cl-carry-pic'}),cp):clCatIco(k),h('div',{class:'cl-carry-t'},h('b',null,k),h('small',null,'In store now'))); })()))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
       h('p',null,'New products come in all the time. Stop in, or call and ask what is in stock today.'),C.tel?h('a',{class:'cl-btn red',href:C.tel},'Call '+C.phoneTxt):null));
   }
   const gal=pics.length>3?h('section',{class:'cl-sec cl-gal'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Inside the Shop'),

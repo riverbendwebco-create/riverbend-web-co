@@ -374,6 +374,10 @@ body.t-o2{background:#FBF5EC}
 .cl-carry-ico{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#F6E7E8;color:#B3121B;margin-bottom:16px}
 .cl-carry-ico svg{width:36px;height:36px}
 .cl-carry-c{text-align:left}
+.cl-carry-c.pic{padding:0}
+.cl-carry-pic{aspect-ratio:4/3;background-size:cover;background-position:center;transition:transform .4s ease}
+.cl-carry-c.pic:hover .cl-carry-pic{transform:scale(1.04)}
+.cl-carry-c.pic .cl-carry-t{padding:18px 20px 20px;position:relative;background:#fff}
 .cl-carry-n{display:block;font-family:'Montserrat',sans-serif;font-weight:800;color:#C9C9CF;font-size:.9rem;margin-bottom:10px}
 .cl-carry-c b{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.5rem;line-height:1.05;color:#111114}
 .cl-carry-c small{display:block;margin-top:8px;color:#5E6068;font-size:.84rem}
