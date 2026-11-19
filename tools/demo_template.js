@@ -1146,6 +1146,13 @@ function fade(C){
 }
 
 /* ===================== WELBORN (painting + drywall contractor) ===================== */
+const WB_ART={
+ drywall:'<svg viewBox="0 0 120 96" stroke="#fff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none"><g fill="rgba(255,255,255,.16)"><path d="M14 70l62-12 30 10-62 12z"/><path d="M14 70v8l30 10v-8M44 80l62-12v8L44 88"/></g><g fill="rgba(255,255,255,.3)"><path d="M14 52l62-12 30 10-62 12z"/><path d="M14 52v8l30 10v-8M44 62l62-12v8L44 70"/></g><g fill="#fff"><path d="M14 34l62-12 30 10-62 12z"/><path d="M14 34v8l30 10v-8M44 44l62-12v8L44 52"/></g></svg>',
+ repair:'<svg viewBox="0 0 120 96" stroke="#fff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none"><rect x="8" y="8" width="104" height="80" fill="rgba(255,255,255,.14)"/><path d="M30 8l10 18-12 14 14 16-8 16-6 16"/><rect x="62" y="28" width="38" height="36" fill="#fff" stroke="none"/><path d="M62 28h38v36H62z" stroke-dasharray="5 4"/><path d="M58 76h40l6-8H64z" fill="rgba(255,255,255,.3)"/><path d="M104 68l8-8"/></svg>',
+ paint:'<svg viewBox="0 0 120 96" stroke="#fff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none"><rect x="8" y="8" width="104" height="80" fill="rgba(255,255,255,.14)"/><rect x="8" y="44" width="62" height="44" fill="rgba(255,255,255,.4)" stroke="none"/><rect x="26" y="10" width="76" height="24" rx="5" fill="#fff" stroke="none"/><path d="M102 22h8v26H58v10"/><rect x="52" y="56" width="12" height="30" rx="3" fill="#fff" stroke="none"/></svg>',
+ shop:'<svg viewBox="0 0 120 96" stroke="#fff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none"><rect x="12" y="8" width="96" height="16" fill="rgba(255,255,255,.2)"/><path d="M8 26h104l-8 16H16z" fill="#fff" stroke="none"/><path d="M36 26l-4 16M60 26v16M84 26l4 16" stroke="rgba(0,0,0,.35)" stroke-width="3"/><rect x="14" y="46" width="92" height="42" fill="rgba(255,255,255,.12)"/><rect x="22" y="53" width="34" height="35" fill="rgba(255,255,255,.2)"/><rect x="68" y="53" width="28" height="35" fill="#fff" stroke="none"/><circle cx="73" cy="72" r="2" fill="#0B0F14" stroke="none"/></svg>'
+};
+const WB_ART_ORDER=['drywall','repair','paint','shop'];
 function wbLogo(C,cls){ const u=okUrl(C.x.logoUrl); return u?h('img',{class:'wb-logo '+(cls||''),src:u,alt:C.name||'Logo'}):h('b',{class:'wb-logo-t'},C.name||''); }
 function welborn(C){
   const name=C.name||'Welborn Painting & Drywall';
@@ -1195,7 +1202,7 @@ function welborn(C){
   const services=svc.length?h('section',{class:'wb-sec wb-mist',id:'w-services'},h('div',{class:'wb-wrap'},
     h('div',{class:'wb-sh'},h('span',{class:'wb-tape'},'What we do'),h('h2',null,C.x.svcTitle?String(C.x.svcTitle):'Pick your finish'),C.x.svcSub?h('p',null,String(C.x.svcSub)):null),
     h('div',{class:'wb-chips'},svc.map((s,i)=>h('article',{class:'wb-chip'},
-      h('div',{class:'wb-chip-top',style:'background:'+chipCols[i%chipCols.length]},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,s.g)),
+      h('div',{class:'wb-chip-top',style:'background:'+chipCols[i%chipCols.length]},(()=>{ const a=h('span',{class:'wb-art','aria-hidden':'true'}); a.innerHTML=WB_ART[WB_ART_ORDER[i%4]]; return a; })(),h('b',null,String(i+1).padStart(2,'0')),h('h3',null,s.g)),
       h('div',{class:'wb-chip-body'},s.d?h('p',null,s.d):null,h('ul',null,s.t.map(t=>h('li',null,t))),C.tel?h('a',{class:'wb-chip-call',href:C.tel},'Call for an estimate'):null)))))):null;
 
   /* work: gallery that slides on its own */

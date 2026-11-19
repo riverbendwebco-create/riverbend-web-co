@@ -2078,7 +2078,9 @@ body.t-mk{background:#fff;padding-bottom:0}
 .wb-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .wb-chip{background:#fff;border:1px solid var(--ln);border-radius:3px;overflow:hidden;box-shadow:0 10px 24px rgba(11,15,20,.08);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column}
 .wb-chip:hover{transform:translateY(-6px);box-shadow:0 18px 34px rgba(11,15,20,.14)}
-.wb-chip-top{padding:22px 22px 20px;min-height:158px;color:#fff;display:flex;flex-direction:column;justify-content:space-between}
+.wb-chip-top{position:relative;padding:22px 22px 20px;min-height:218px;color:#fff;display:flex;flex-direction:column;justify-content:space-between}
+.wb-art{position:absolute;right:16px;top:14px;width:150px;height:120px;transition:transform .3s}.wb-art svg{display:block;width:100%;height:100%}
+.wb-chip:hover .wb-art{transform:translateY(-4px) rotate(-2deg)}
 .wb-chip-top b{font:700 1.15rem var(--hf);letter-spacing:.14em}.wb-chip-top h3{font-size:2.1rem}
 .wb-chip-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column}
 .wb-chip-body p{color:#475569;font-size:.98rem}
@@ -2153,7 +2155,7 @@ body.t-mk{background:#fff;padding-bottom:0}
  .wb-hero-ph{height:400px}.wb-logo.sm{height:40px}.wb-work-h{align-items:flex-start}
  .wb-follow b{font-size:1.4rem}.wb-ct-card{padding:30px 22px}
 }
-@media (prefers-reduced-motion:reduce){.wb-stroke{animation:none;background-size:100% .36em}.wb-roll{display:none}.wb-chip{transition:none}}
+@media (prefers-reduced-motion:reduce){.wb-art{transition:none}.wb-stroke{animation:none;background-size:100% .36em}.wb-roll{display:none}.wb-chip{transition:none}}
 /* ---- Welborn marketing page ---- */
 .mk-welborn .mp-bar{border-bottom:4px solid #0B0F14}
 .mk-welborn .mp-brand{color:#0B0F14}
