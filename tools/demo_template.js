@@ -1312,7 +1312,8 @@ function cloudShop(C){
   const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
   const G=groups(C.items,'In Store');
   const pics=C.own.slice();
-  const cats=G.names.filter(k=>k!=='In Store'||G.names.length===1);
+  const xc=Array.isArray(C.x.cats)?C.x.cats.filter(v=>typeof v==='string'&&v.trim()).slice(0,8):[];
+  const cats=C.items.length?G.names:xc;
   const warn=h('div',{class:'cl-warn'},'WARNING: This product contains nicotine. Nicotine is an addictive chemical.');
   const head=h('header',{class:'cl-head'},h('div',{class:'cl-w cl-head-in'},
     C.logo?h('img',{src:C.logo,alt:C.name,class:'cl-logo'}):h('span',{class:'cl-name'},C.name),
@@ -1335,7 +1336,7 @@ function cloudShop(C){
     shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Trending In Store'),row,
       h('p',{class:'cl-note'},'Stock changes often. Call ahead to check if your favorite is in.')));
   } else {
-    shop=h('section',{class:'cl-sec',id:'cl-shop'},h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},'Shop In Store'),
+    shop=h('section',{class:'cl-sec',id:'cl-shop'},xc.length?h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'What We Carry'),h('div',{class:'cl-carry'},xc.map((k,i)=>h('div',{class:'cl-carry-c rv'},h('span',{class:'cl-carry-n'},String(i+1).padStart(2,'0')),h('b',null,k),h('small',null,'In store now'))))):null,h('div',{class:'cl-w cl-empty'},h('h2',{class:'cl-h'},xc.length?'Ask What\u2019s In Stock':'Shop In Store'),
       h('p',null,'New products come in all the time. Stop in, or call and ask what is in stock today.'),C.tel?h('a',{class:'cl-btn red',href:C.tel},'Call '+C.phoneTxt):null));
   }
   const gal=pics.length>3?h('section',{class:'cl-sec cl-gal'},h('div',{class:'cl-w'},h('h2',{class:'cl-h'},'Inside the Shop'),

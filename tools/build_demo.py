@@ -345,6 +345,13 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
+.cl-carry{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:60px}
+.cl-carry-c{position:relative;border:1px solid #E6E6EA;border-radius:6px;padding:26px 22px;background:#fff;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.cl-carry-c:hover{border-color:#B3121B;box-shadow:0 14px 34px rgba(17,17,20,.08)}
+.cl-carry-c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#B3121B}
+.cl-carry-n{display:block;font-family:'Montserrat',sans-serif;font-weight:800;color:#C9C9CF;font-size:.9rem;margin-bottom:10px}
+.cl-carry-c b{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:1.5rem;line-height:1.05;color:#111114}
+.cl-carry-c small{display:block;margin-top:8px;color:#5E6068;font-size:.84rem}
 body.t-cl{background:#fff}
 .cl{--red:#B3121B;--ink:#111114;--mut:#5E6068;--line:#E6E6EA;--soft:#F5F5F7;--m:'Montserrat',Inter,sans-serif;background:#fff;color:var(--ink);font-family:var(--font-b)}
 .cl-w{max-width:1240px;margin:0 auto;padding:0 24px}

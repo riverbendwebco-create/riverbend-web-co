@@ -2909,5 +2909,47 @@
     "data": {
       "variant": "cloud"
     }
+  },
+  {
+    "key": "drbobs-cloudlab-1",
+    "matchName": "drbobscloudlabs.com",
+    "patch": true,
+    "data": {
+      "variant": "cloud",
+      "name": "Dr. Bob's Cloud Lab",
+      "category": "Vape & Smoke Shop",
+      "tagline": "Your Favourite Stop for Shopping Clouds",
+      "address": "3350 Center Grove Dr, Suite 2",
+      "city": "Dubuque, IA",
+      "phone": "5632399089",
+      "email": "contact@drbobscloudlabs.com",
+      "website": "https://drbobscloudlabs.com",
+      "hours": [
+        "8am - 9pm",
+        "8am - 9pm",
+        "8am - 9pm",
+        "8am - 9pm",
+        "8am - 9pm",
+        "9am - 9pm",
+        "10am - 8pm"
+      ],
+      "heroUrl": "https://drbobscloudlabs.com/wp-content/uploads/2026/01/Enter-1024x1024.jpg",
+      "photos": [
+        "https://drbobscloudlabs.com/wp-content/uploads/2026/01/Enter-1024x1024.jpg",
+        "https://drbobscloudlabs.com/wp-content/uploads/2026/01/inside-1024x1024.jpg"
+      ],
+      "social": {
+        "facebook": "https://facebook.com/profile.php?id=857231284150865",
+        "instagram": "https://www.instagram.com/drbobscloudlab"
+      },
+      "x": {
+        "cats": [
+          "Vapes",
+          "Cigars",
+          "Cigarettes",
+          "Beverages"
+        ]
+      }
+    }
   }
 ]
