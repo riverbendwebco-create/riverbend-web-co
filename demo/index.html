@@ -3444,7 +3444,7 @@ function cloudShop(C){
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
     h('h1',null,C.tag||('Your local cloud shop in '+city)),
     h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
-    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
+    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),(typeof C.x.heroPhoto==='string'&&/^https:\/\//.test(C.x.heroPhoto))?C.x.heroPhoto:C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
   const perks=h('section',{class:'cl-w cl-perks'},[
     ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
   ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));
