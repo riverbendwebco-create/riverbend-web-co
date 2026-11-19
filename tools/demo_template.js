@@ -1114,8 +1114,15 @@ function fade(C){
 
   /* perks band */
   const pole=()=>h('div',{class:'fd-pole','aria-hidden':'true'});
+  const FD_PK={
+    coffee:'<path d="M8 22h26v14a10 10 0 0 1-10 10h-6A10 10 0 0 1 8 36z"/><path d="M34 26h4a6 6 0 0 1 0 12h-4"/><path d="M15 6c-3 4 3 5 0 10M22 6c-3 4 3 5 0 10M29 6c-3 4 3 5 0 10"/>',
+    beer:'<path d="M10 14h24v28a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z"/><path d="M34 20h5a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4h-5"/><path d="M10 14c0-5 5-7 8-5 3-4 10-3 11 2 3 0 5 1 5 3"/><path d="M18 22v18M26 22v18"/>',
+    tv:'<rect x="4" y="8" width="40" height="28" rx="3"/><path d="M16 44h16M24 36v8"/><path d="M10 14h12"/>',
+    star:'<path d="m24 6 5.4 11 12.1 1.7-8.8 8.5 2.1 12-10.8-5.7-10.8 5.7 2.1-12-8.8-8.5L18.6 17z"/>'};
+  const pkIco=t=>{ const k=/coffee|tea|cafe/i.test(t)?'coffee':/beer|drink|bar/i.test(t)?'beer':/tv|screen|game|sport/i.test(t)?'tv':'star'; const s=h('span',{class:'fd-pk-i','aria-hidden':'true'}); s.innerHTML='<svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">'+FD_PK[k]+'</svg>'; return s; };
   const band=perks.length?h('section',{class:'fd-band',id:'f-shop'},pole(),
-    h('div',{class:'fd-wrap fd-band-in'},perks.map((p,i)=>[i?h('i',{'aria-hidden':'true'}):null,h('span',null,String(p.t))])),pole()):null;
+    h('div',{class:'fd-wrap'},h('span',{class:'fd-band-k'},'While you wait'),
+      h('ul',{class:'fd-band-in'},perks.map(p=>h('li',null,pkIco(String(p.t)),h('span',null,String(p.t)))))),pole()):null;
 
   /* FAQ */
   const faqEl=faq.length?h('section',{class:'fd-sec fd-light fd-faq',id:'f-faq'},h('div',{class:'fd-wrap fd-faq-grid'},
