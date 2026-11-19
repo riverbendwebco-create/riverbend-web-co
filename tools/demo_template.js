@@ -2440,6 +2440,13 @@ function marketing(C){
   const hide=(Array.isArray(C.x.mkHide)?C.x.mkHide.filter(x=>typeof x==='string'):[]).concat(C.mkHide);
   const adds=MK.filter(m=>hide.indexOf(m.id)<0), plans=MK_SOCIAL.filter(m=>hide.indexOf(m.id)<0);
   const webs=MK_WEB.filter(m=>hide.indexOf(m.id)<0); let sn=0; const num=()=>String(++sn).padStart(2,'0');
+  /* optional recommended package, priced from the live plan list so totals stay right */
+  const pickBox=()=>{ const ids=Array.isArray(C.x.mkPick)?C.x.mkPick.filter(x=>typeof x==='string'):[]; const all=MK_WEB.concat(MK_SOCIAL,MK); const items=ids.map(id=>all.find(m=>m.id===id)).filter(Boolean); if(!items.length) return null;
+    const mo=items.filter(m=>m.per==='mo').reduce((a,m)=>a+m.price,0), once=items.filter(m=>m.per!=='mo').reduce((a,m)=>a+m.price,0);
+    return h('div',{class:'mp-pick'},h('div',{class:'mp-pick-h'},typeof C.x.mkPickTitle==='string'&&C.x.mkPickTitle?C.x.mkPickTitle:'Recommended starting plan'),
+      h('ul',null,items.map(m=>h('li',null,h('span',null,ovr('mkName',m.id)||m.name),h('b',null,money(m.price)+(m.per==='mo'?'/mo':' one-time'))))),
+      h('div',{class:'mp-pick-t'},h('span',null,'Total'),h('b',null,(mo?money(mo)+'/mo':'')+(mo&&once?' + ':'')+(once?money(once)+' one-time':''))),
+      typeof C.x.mkPickNote==='string'&&C.x.mkPickNote?h('p',{class:'mp-pick-n'},C.x.mkPickNote):null); };
   return h('div',{class:'mp'+(/^[a-z]{3,20}$/.test(C.variant||'')?' mk-'+C.variant:'')},
     h('header',{class:'mp-bar'},h('div',{class:'mp-in'},
       h('span',{class:'mp-brand'},'Riverbend Web Co.'),
@@ -2449,8 +2456,9 @@ function marketing(C){
         okUrl(C.x.mkLogo)?h('img',{class:'mp-wlogo',src:okUrl(C.x.mkLogo),alt:C.name}):null,
         typeof C.x.mkWord==='string'&&C.x.mkWord?h('div',{class:'mp-word'},C.x.mkWord):null,
         h('div',{class:'mp-eyebrow'},'Marketing proposal'),
-        h('h1',null,'Website and local marketing for '+(C.name||'your business')),
-        h('p',null,'Your own website first, then a simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Google, Facebook and Instagram.')),
+        h('h1',null,(typeof C.x.mkTitle==='string'&&C.x.mkTitle)||'Website and local marketing for '+(C.name||'your business')),
+        h('p',null,(typeof C.x.mkLead==='string'&&C.x.mkLead)||'Your own website first, then a simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Google, Facebook and Instagram.'),
+        pickBox()),
       h('dl',{class:'mp-meta'},
         h('div',null,h('dt',null,'Prepared for'),h('dd',null,C.name||'')),
         h('div',null,h('dt',null,'Prepared by'),h('dd',null,'Riverbend Web Co., Dubuque')),

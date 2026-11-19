@@ -1578,6 +1578,37 @@ body.t-mk{background:#fff;padding-bottom:0}
 .mp-btn{display:flex;align-items:center;justify-content:center;height:48px;border-radius:10px;background:#0052CC;color:#fff;font-weight:700;text-decoration:none;border:1px solid #0052CC;cursor:pointer;font-size:.95rem;width:100%;font-family:inherit}
 .mp-btn:hover{background:#0047B3}
 .mp-ghost{background:#fff;color:#0F172A;border-color:#CBD5E1;margin-top:10px}.mp-ghost:hover{background:#F8FAFC}
+.mp-pick{margin-top:24px;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:18px 20px;max-width:520px}
+.mp-pick-h{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;opacity:.8;margin-bottom:10px}
+.mp-pick ul{list-style:none;margin:0;padding:0}
+.mp-pick li{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:.95rem}
+.mp-pick-t{display:flex;justify-content:space-between;gap:16px;padding-top:12px;font-weight:700}
+.mp-pick-t b{font-size:1.15rem}
+.mp-pick-n{font-size:.85rem!important;margin-top:10px!important;opacity:.85}
+/* realty: black and white, matches the realtor site */
+.mk-realty .mp-bar{border-bottom:1px solid #E2E2E2}
+.mk-realty .mp-brand{color:#000}
+.mk-realty .mp-back{color:#000;text-decoration:underline;text-underline-offset:4px}
+.mk-realty .mp-cover{background:#000;padding:60px 0 56px}
+.mk-realty .mp-cover .mp-in{grid-template-columns:1.25fr .85fr;grid-template-rows:auto auto;gap:28px 56px;align-items:start}
+.mk-realty .mp-cover-l{grid-column:1;grid-row:1}
+.mk-realty .mp-meta{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 24px;margin:0;border-top-color:rgba(255,255,255,.2)}
+.mk-realty .mp-meta div{border-bottom-color:rgba(255,255,255,.2)}
+.mk-realty .mp-meta dt{color:#9A9A9A}
+.mk-realty .mp-eyebrow{color:#BDBDBD;font-family:inherit;text-transform:uppercase;letter-spacing:.24em;font-size:.72rem}
+.mk-realty .mp-cover h1{color:#fff;font-weight:800;font-size:clamp(2rem,4.2vw,3.2rem)}
+.mk-realty .mp-cover p{color:#CFCFCF}
+.mk-realty .mp-photo{grid-column:2;grid-row:1/span 2;background:#111;border:0;outline:1px solid rgba(255,255,255,.25);outline-offset:10px;border-radius:4px;box-shadow:none}
+.mk-realty .mp-photo .ph{height:auto;aspect-ratio:1;background-position:50% 20%;border-radius:4px}
+.mk-realty .mp-photo figcaption{color:#BDBDBD;padding:12px 2px 0}
+.mk-realty .mp-label{border-top:2px solid #000;color:#000}
+.mk-realty .mp-label span,.mk-realty .mo-num{color:#6B6B6B}
+.mk-realty .mo-body h3,.mk-realty .mo-price b{color:#000}
+.mk-realty .mo-ex{background:#F4F4F4;border-left-color:#000}
+.mk-realty .mo-ex span{color:#000}
+.mk-realty .mo-more li::before{background:#000}
+@media (max-width:860px){.mk-realty .mp-cover .mp-in{grid-template-columns:1fr}.mk-realty .mp-photo{grid-column:1;grid-row:auto;max-width:300px;order:-1;margin:10px}.mk-realty .mp-meta{grid-row:auto;grid-template-columns:1fr}}
+.mp-pick li b{white-space:nowrap}
 .mk-trail .mp-cover{background:#000;border-bottom:5px solid #9FD4D0;padding:40px 0 36px}
 .mk-trail .mp-cover .mp-in{grid-template-columns:1.25fr 1fr;grid-template-rows:auto auto;gap:22px 40px;align-items:center}
 .mk-trail .mp-cover-l{grid-column:1;grid-row:1}
