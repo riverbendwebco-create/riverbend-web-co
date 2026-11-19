@@ -2156,6 +2156,41 @@ body.t-mk{background:#fff;padding-bottom:0}
  .wb-follow b{font-size:1.4rem}.wb-ct-card{padding:30px 22px}
 }
 @media (prefers-reduced-motion:reduce){.wb-art{transition:none}.wb-stroke{animation:none;background-size:100% .36em}.wb-roll{display:none}.wb-chip{transition:none}}
+/* ---- Welborn fix-it finder ---- */
+.wb-finder{padding-top:72px}
+.wb-fsteps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0 0 12px;padding:0;counter-reset:none}
+.wb-fsteps li{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#fff;border:1px solid var(--ln);border-top:5px solid var(--ln);color:#64748B;font-weight:700}
+.wb-fsteps li b{display:grid;place-items:center;width:32px;height:32px;border-radius:3px;background:var(--ln);color:var(--ink);font:800 1.15rem var(--hf);flex:none}
+.wb-fsteps li.now{border-top-color:var(--bl);color:var(--ink)}.wb-fsteps li.now b{background:var(--bl)}
+.wb-fsteps li.done{border-top-color:var(--ink);color:var(--ink)}.wb-fsteps li.done b{background:var(--ink);color:#fff}
+.wb-fhint{margin:0 0 26px;font-weight:700;color:var(--bd);font-size:1.05rem;min-height:1.6em}
+.wb-fblock{margin-bottom:28px;transition:opacity .25s}.wb-fblock.dim{opacity:.45}
+.wb-fblock>h3{display:flex;align-items:center;gap:12px;font-size:1.7rem;margin-bottom:16px}
+.wb-fblock>h3 span{display:grid;place-items:center;width:34px;height:34px;background:var(--ink);color:#fff;border-radius:3px;font-size:1.2rem}
+.wb-fps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.wb-fp{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:2px solid var(--ln);border-radius:3px;padding:16px 18px;font:700 1.05rem var(--bf);color:var(--ink);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.wb-fp:hover{border-color:var(--bl);transform:translateY(-2px)}
+.wb-fp.on{border-color:var(--ink);box-shadow:6px 6px 0 var(--bl)}
+.wb-fic{flex:none;display:grid;place-items:center;width:52px;height:52px;background:var(--mist);color:var(--bd);border-radius:3px}.wb-fic svg{width:34px;height:34px}
+.wb-fp.on .wb-fic{background:var(--bl);color:var(--ink)}
+.wb-frs{display:flex;flex-wrap:wrap;gap:10px}
+.wb-fr{background:#fff;border:2px solid var(--ln);border-radius:3px;padding:12px 18px;min-height:48px;font:700 1rem var(--bf);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s}
+.wb-fr:hover{border-color:var(--bl)}.wb-fr.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.wb-fblock.dim .wb-fr{cursor:default}
+.wb-fres{display:grid;grid-template-columns:1.1fr 1fr;gap:0;margin-top:8px;background:var(--ink);color:#fff;border-radius:3px;box-shadow:12px 12px 0 var(--bl)}
+.wb-fres[hidden]{display:none}
+.wb-fres-l{padding:34px 34px 30px}.wb-fres-r{padding:34px;border-left:1px solid #1F2937}
+.wb-fres h3{font-size:clamp(2.2rem,4.4vw,3.2rem);color:#fff;margin-bottom:14px}
+.wb-fres p{color:#CBD5E1;max-width:52ch}.wb-fres p b{color:#fff}
+.wb-ftip{color:#94A3B8!important;font-size:.95rem}
+.wb-fnext{font:800 1.3rem var(--hf)!important;text-transform:uppercase;letter-spacing:.1em;color:#fff!important}
+.wb-fres .wb-cta{margin-top:12px}
+.wb-fres .wb-btn.line{border-color:#fff;color:#fff}.wb-fres .wb-btn.line:hover{background:#fff;color:var(--ink)}
+.wb-fcopied{display:block;margin-top:12px;font-size:.92rem;color:#7FB0FF;min-height:1.2em}
+.wb-freset{margin-top:6px;background:none;border:0;padding:8px 0;color:#CBD5E1;font:600 .95rem var(--bf);text-decoration:underline;cursor:pointer}
+.wb-fdemo{margin-top:18px!important;font-size:.85rem;color:#94A3B8!important;border-top:1px dashed #334155;padding-top:14px}
+@media (max-width:900px){.wb-fps{grid-template-columns:repeat(2,1fr)}.wb-fres{grid-template-columns:1fr}.wb-fres-r{border-left:0;border-top:1px solid #1F2937}.wb-fres{box-shadow:8px 8px 0 var(--bl)}}
+@media (max-width:560px){.wb-fsteps{grid-template-columns:1fr}.wb-fsteps li{padding:10px 14px}.wb-fps{grid-template-columns:1fr}.wb-fres-l,.wb-fres-r{padding:26px 22px}.wb-finder{padding-top:52px}}
 /* ---- Welborn marketing page ---- */
 .mk-welborn .mp-bar{border-bottom:4px solid #0B0F14}
 .mk-welborn .mp-brand{color:#0B0F14}
