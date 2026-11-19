@@ -1314,16 +1314,17 @@ function cloudShop(C){
   const pics=C.own.slice();
   const xc=Array.isArray(C.x.cats)?C.x.cats.filter(v=>typeof v==='string'&&v.trim()).slice(0,8):[];
   const cats=C.items.length?G.names:xc;
+  const logo=C.logo||(typeof C.x.logoUrl==='string'&&/^https:\/\//.test(C.x.logoUrl)?C.x.logoUrl:'');
   const warn=h('div',{class:'cl-warn'},'WARNING: This product contains nicotine. Nicotine is an addictive chemical.');
   const head=h('header',{class:'cl-head'},h('div',{class:'cl-w cl-head-in'},
-    C.logo?h('img',{src:C.logo,alt:C.name,class:'cl-logo'}):h('span',{class:'cl-name'},C.name),
-    h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null,jump('cl-shop',clIco('bag'),'cl-ic-btn'))),
+    h('div',{class:'cl-brand'},logo?h('img',{src:logo,alt:'',class:'cl-logo'}):null,h('span',{class:'cl-name'},C.name)),
+    h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null)),
     h('nav',{class:'cl-w cl-cats'},jump('cl-shop','New In','on'),cats.slice(0,8).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours'),jump('cl-visit','Location')));
   const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'},h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
     h('h1',null,C.tag||('Your local cloud shop in '+city)),
     h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
-    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null)),C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
+    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
   const perks=h('section',{class:'cl-w cl-perks'},[
     ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
   ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));

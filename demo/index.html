@@ -592,6 +592,10 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
+.cl-brand{display:flex;align-items:center;gap:12px}
+.cl-hero{justify-content:space-between;gap:30px}
+.cl-hero-logo{position:relative;z-index:1;height:min(400px,78%);max-height:400px;width:auto;max-width:38%;object-fit:contain;margin-right:56px;filter:drop-shadow(0 18px 40px rgba(0,0,0,.55))}
+@media (max-width:860px){.cl-hero{flex-direction:column-reverse;justify-content:center;align-items:flex-start}.cl-hero-logo{height:170px;max-width:60%;margin:36px 0 0 24px}.cl-hero-c{padding-top:16px}}
 .cl-carry{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:60px}
 .cl-carry-c{position:relative;border:1px solid #E6E6EA;border-radius:6px;padding:26px 22px;background:#fff;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .cl-carry-c:hover{border-color:#B3121B;box-shadow:0 14px 34px rgba(17,17,20,.08)}
@@ -607,7 +611,7 @@ body.t-cl{background:#fff}
 .cl-head-in{display:flex;align-items:center;justify-content:space-between;padding-top:16px;padding-bottom:14px}
 .cl-name{font-family:var(--m);font-weight:900;font-style:italic;font-size:1.7rem;letter-spacing:-.01em;text-transform:uppercase;color:var(--ink)}
 .cl-name.light{color:#fff}
-.cl-logo{height:48px;width:auto;max-width:220px;object-fit:contain}
+.cl-logo{height:52px;width:auto;max-width:120px;object-fit:contain}
 .cl-head-ic{display:flex;gap:18px;align-items:center}
 .cl-head-ic a,.cl-ic-btn{color:var(--ink);background:none;border:0;cursor:pointer;padding:0;display:inline-flex}
 .cl-ico{display:inline-grid;place-items:center}
@@ -3430,16 +3434,17 @@ function cloudShop(C){
   const pics=C.own.slice();
   const xc=Array.isArray(C.x.cats)?C.x.cats.filter(v=>typeof v==='string'&&v.trim()).slice(0,8):[];
   const cats=C.items.length?G.names:xc;
+  const logo=C.logo||(typeof C.x.logoUrl==='string'&&/^https:\/\//.test(C.x.logoUrl)?C.x.logoUrl:'');
   const warn=h('div',{class:'cl-warn'},'WARNING: This product contains nicotine. Nicotine is an addictive chemical.');
   const head=h('header',{class:'cl-head'},h('div',{class:'cl-w cl-head-in'},
-    C.logo?h('img',{src:C.logo,alt:C.name,class:'cl-logo'}):h('span',{class:'cl-name'},C.name),
-    h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null,jump('cl-shop',clIco('bag'),'cl-ic-btn'))),
+    h('div',{class:'cl-brand'},logo?h('img',{src:logo,alt:'',class:'cl-logo'}):null,h('span',{class:'cl-name'},C.name)),
+    h('div',{class:'cl-head-ic'},C.tel?h('a',{href:C.tel,'aria-label':'Call'},clIco('phone')):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener','aria-label':'Directions'},clIco('pin')):null)),
     h('nav',{class:'cl-w cl-cats'},jump('cl-shop','New In','on'),cats.slice(0,8).map(k=>jump('cl-shop',k)),jump('cl-visit','Hours'),jump('cl-visit','Location')));
   const hero=h('section',{class:'cl-w cl-hero-wrap'},bg(h('div',{class:'cl-hero'},h('div',{class:'cl-hero-c'},
     h('small',null,[C.cat||'Vape & Smoke Shop',city].filter(Boolean).join(' · ')),
     h('h1',null,C.tag||('Your local cloud shop in '+city)),
     h('div',{class:'cl-hero-btns'},C.maps?h('a',{class:'cl-btn white',href:C.maps,target:'_blank',rel:'noopener'},'Get Directions',clIco('arrow')):null,C.tel?h('a',{class:'cl-btn ghost',href:C.tel},'Call '+C.phoneTxt):null),
-    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null)),C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
+    C.today?h('p',{class:'cl-open'},clIco('clock'),'Open today '+C.today):null),logo?h('img',{src:logo,alt:C.name+' logo',class:'cl-hero-logo'}):null),C.hero,'linear-gradient(90deg,rgba(10,10,12,.88) 0%,rgba(10,10,12,.55) 50%,rgba(10,10,12,.15) 100%)'));
   const perks=h('section',{class:'cl-w cl-perks'},[
     ['id','21+ only','Bring a valid ID'],['pin','Walk right in',addrTxt||('In '+city)],['clock','Hours today',C.today||'Call for hours'],['phone','Questions?',C.phoneTxt||'Stop in and ask']
   ].map(([i,t,d])=>h('div',{class:'cl-perk'},clIco(i),h('div',null,h('b',null,t),h('span',null,d)))));

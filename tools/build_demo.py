@@ -345,6 +345,10 @@ body.t-o2{background:#FBF5EC}
 .o2-hero-c{padding:0 20px}
 
 /* ===== CLOUD: vape / smoke shop retail ===== */
+.cl-brand{display:flex;align-items:center;gap:12px}
+.cl-hero{justify-content:space-between;gap:30px}
+.cl-hero-logo{position:relative;z-index:1;height:min(400px,78%);max-height:400px;width:auto;max-width:38%;object-fit:contain;margin-right:56px;filter:drop-shadow(0 18px 40px rgba(0,0,0,.55))}
+@media (max-width:860px){.cl-hero{flex-direction:column-reverse;justify-content:center;align-items:flex-start}.cl-hero-logo{height:170px;max-width:60%;margin:36px 0 0 24px}.cl-hero-c{padding-top:16px}}
 .cl-carry{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:60px}
 .cl-carry-c{position:relative;border:1px solid #E6E6EA;border-radius:6px;padding:26px 22px;background:#fff;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .cl-carry-c:hover{border-color:#B3121B;box-shadow:0 14px 34px rgba(17,17,20,.08)}
@@ -360,7 +364,7 @@ body.t-cl{background:#fff}
 .cl-head-in{display:flex;align-items:center;justify-content:space-between;padding-top:16px;padding-bottom:14px}
 .cl-name{font-family:var(--m);font-weight:900;font-style:italic;font-size:1.7rem;letter-spacing:-.01em;text-transform:uppercase;color:var(--ink)}
 .cl-name.light{color:#fff}
-.cl-logo{height:48px;width:auto;max-width:220px;object-fit:contain}
+.cl-logo{height:52px;width:auto;max-width:120px;object-fit:contain}
 .cl-head-ic{display:flex;gap:18px;align-items:center}
 .cl-head-ic a,.cl-ic-btn{color:var(--ink);background:none;border:0;cursor:pointer;padding:0;display:inline-flex}
 .cl-ico{display:inline-grid;place-items:center}
