@@ -1385,7 +1385,6 @@ const CL_CAT={
 function clCatIco(k){ const t=String(k).toLowerCase(); const key=/vape|disposable|pod|device|e-?liquid|juice|mod/.test(t)?'vape':/cigar(?!ette)/.test(t)?'cigar':/cigarette|tobacco|smoke/.test(t)?'cigarette':/beverage|drink|soda|energy|water/.test(t)?'beverage':'other'; const d=h('span',{class:'cl-carry-ico','aria-hidden':'true'}); d.innerHTML=CL_CAT[key]; return d; }
 function clIco(k){ const d=h('span',{class:'cl-ico','aria-hidden':'true'}); d.innerHTML=CL_ICO[k]; return d; }
 function clAge(C){
-  try{ if(sessionStorage.getItem('clAge')) return; }catch(e){}
   const box=h('div',{class:'cl-age',role:'dialog','aria-modal':'true','aria-label':'Age verification'});
   const yes=h('button',{type:'button',class:'cl-btn red'},'Yes, I am 21 or older');
   const no=h('button',{type:'button',class:'cl-btn line'},'No');
@@ -1393,7 +1392,7 @@ function clAge(C){
   box.append(h('div',{class:'cl-age-card'},h('div',{class:'cl-age-top'},'Age Verification'),h('div',{class:'cl-age-b'},
     h('b',{class:'cl-age-name'},C.name),h('p',null,'Products sold at '+C.name+' are age-restricted and intended for adults of legal smoking age only.'),
     h('p',null,'By entering, you confirm you are 21 years of age or older.'),h('div',{class:'cl-age-btns'},yes,no),msg)));
-  yes.addEventListener('click',()=>{ box.remove(); document.documentElement.classList.remove('os-lock'); try{ sessionStorage.setItem('clAge','1'); }catch(e){} });
+  yes.addEventListener('click',()=>{ box.remove(); document.documentElement.classList.remove('os-lock'); });
   no.addEventListener('click',()=>{ msg.textContent='Sorry, you must be 21 or older to view this site.'; });
   document.documentElement.classList.add('os-lock');
   document.body.append(box);
