@@ -2181,6 +2181,12 @@ function cloudShop(C){
   return h('div',{class:'demo cl'},warn,head,hero,perks,tiles,shop,gal,revs,visit,foot);
 }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
+/* Website plans: keep in step with the Pricing section of index.html */
+const MK_WEB=[
+  {id:'web1',name:'Essentials',price:79,per:'mo',label:'per month + $499 one-time setup',what:'A great site, paid off up front, with low monthly upkeep. Month to month after launch; cancel anytime with 14 days notice.',more:["Custom 3-page mobile-ready website","Menu or services setup","Google Business Profile set up","Hosting, SSL and security","2 small updates a month, handled by us","You own the site files once setup is paid"],always:true,idea:()=>''},
+  {id:'web2',name:'Growth (most popular)',price:149,per:'mo',label:'per month, $0 down',what:'Zero upfront. First payment is due the day your site goes live. 6-month minimum, then month to month.',more:["Everything in Essentials, no setup fee","Unlimited updates within 24 hours","Google Business Profile optimized and kept current","Monthly event and specials promo banner","Monthly report: visits, calls and direction taps","Local SEO tune-ups and a yearly design refresh"],always:true,idea:()=>''},
+  {id:'web3',name:'Partner',price:299,per:'mo',label:'per month, $0 down',what:'For busy businesses that want Google handled too. First payment is due the day your site goes live. 6-month minimum, then month to month.',more:["Everything in Growth","Same-day updates","Weekly Google posts and photo updates","Weekly specials and events banners","Review requests: QR table cards and a text link","Quarterly design refresh"],always:true,idea:()=>''}
+];
 const MK_SOCIAL=[
   {id:'soc1',more:["3 posts a week, shared to both your Facebook and Instagram pages", "We write the captions and make the graphics for your specials, events and drawings", "We use photos you send us from your phone, cropped and touched up", "Posts go out on a set schedule, timed for when your customers are online", "You see and approve the month's plan before anything posts", "A short report each month: reach, new followers and your best posts"],name:'Social Starter',price:90,per:'mo',what:'We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your food, specials and events. Plus a short monthly report.',idea:C=>C.specials[0]?'Posts every week for '+C.specials[0].title+', with photos.':''},
   {id:'soc2',more:["Everything in Social Starter", "Weekly stories for the day's special, live music and last-minute news", "2 short Reels a month, edited from video clips you send us", "We answer comments and messages for you and flag anything that needs you", "Reminder posts before events like live music and your monthly drawing"],name:'Social Growth',price:199,per:'mo',what:'The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you.',idea:C=>{ const f=pickFavs(C)[0]; return f?'A short Reel of your '+f.name+' to show people what they are missing.':''; }}
@@ -2211,12 +2217,13 @@ function marketing(C){
       h('div',{class:'mo-body'},
         h('h3',null,ovr('mkName',m.id)||m.name),
         h('p',{class:'mo-what'},ovr('mkWhat',m.id)||m.what),
-        (()=>{ const om=C.x.mkMore&&typeof C.x.mkMore==='object'&&Array.isArray(C.x.mkMore[m.id])?C.x.mkMore[m.id].filter(t=>typeof t==='string'):null; const L=om||m.more; return C.mkMore&&L?h('ul',{class:'mo-more'},L.map(t=>h('li',null,t))):null; })(),
+        (()=>{ const om=C.x.mkMore&&typeof C.x.mkMore==='object'&&Array.isArray(C.x.mkMore[m.id])?C.x.mkMore[m.id].filter(t=>typeof t==='string'):null; const L=om||m.more; return (C.mkMore||m.always)&&L?h('ul',{class:'mo-more'},L.map(t=>h('li',null,t))):null; })(),
         idea?h('div',{class:'mo-ex'},h('span',null,'Example for '+C.name),h('p',null,idea)):null),
       h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
   const soc=[C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null].filter(Boolean);
   const hide=(Array.isArray(C.x.mkHide)?C.x.mkHide.filter(x=>typeof x==='string'):[]).concat(C.mkHide);
   const adds=MK.filter(m=>hide.indexOf(m.id)<0), plans=MK_SOCIAL.filter(m=>hide.indexOf(m.id)<0);
+  const webs=MK_WEB.filter(m=>hide.indexOf(m.id)<0); let sn=0; const num=()=>String(++sn).padStart(2,'0');
   return h('div',{class:'mp'+(/^[a-z]{3,20}$/.test(C.variant||'')?' mk-'+C.variant:'')},
     h('header',{class:'mp-bar'},h('div',{class:'mp-in'},
       h('span',{class:'mp-brand'},'Riverbend Web Co.'),
@@ -2226,8 +2233,8 @@ function marketing(C){
         okUrl(C.x.mkLogo)?h('img',{class:'mp-wlogo',src:okUrl(C.x.mkLogo),alt:C.name}):null,
         typeof C.x.mkWord==='string'&&C.x.mkWord?h('div',{class:'mp-word'},C.x.mkWord):null,
         h('div',{class:'mp-eyebrow'},'Marketing proposal'),
-        h('h1',null,'Social media and local marketing for '+(C.name||'your business')),
-        h('p',null,'A simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Facebook and Instagram.')),
+        h('h1',null,'Website and local marketing for '+(C.name||'your business')),
+        h('p',null,'Your own website first, then a simple monthly plan to keep '+(C.name||'your business')+' in front of local customers on Google, Facebook and Instagram.')),
       h('dl',{class:'mp-meta'},
         h('div',null,h('dt',null,'Prepared for'),h('dd',null,C.name||'')),
         h('div',null,h('dt',null,'Prepared by'),h('dd',null,'Riverbend Web Co., Dubuque')),
@@ -2237,15 +2244,19 @@ function marketing(C){
       C.variant==='bigbill'?bbMkArt():null,
       okUrl(C.x.mkPhoto)?h('figure',{class:'mp-photo'},bg(h('div',{class:'ph'}),okUrl(C.x.mkPhoto)),typeof C.x.mkCap==='string'&&C.x.mkCap?h('figcaption',null,C.x.mkCap):null):null)),
     h('main',{class:'mp-in mo'},
+      webs.length?h('section',null,
+        h('div',{class:'mp-label'},h('span',null,num()),'Website plans'),
+        h('p',{class:'mp-sub'},'Hosting, security and a real person handling updates come with every plan. Choose one.'),
+        h('div',{class:'mo-list'},webs.map((m,i)=>offer(m,i,'plan')))):null,
       h('section',null,
-        h('div',{class:'mp-label'},h('span',null,'01'),'Social media management'),
+        h('div',{class:'mp-label'},h('span',null,num()),'Social media management'),
         h('p',{class:'mp-sub'},'Monthly plans. Choose one.'),
         h('div',{class:'mo-list'},plans.map((m,i)=>offer(m,i,'plan')))),
       h('section',null,
-        h('div',{class:'mp-label'},h('span',null,'02'),'Add-ons'),
+        h('div',{class:'mp-label'},h('span',null,num()),'Add-ons'),
         h('p',{class:'mp-sub'},'Add any of these to a plan.'),
         h('div',{class:'mo-list'},adds.map((m,i)=>offer(m,i,'add')))),
-      h('p',{class:'mp-fine mo-fine'},'Prices are for Riverbend Web Co. services and can be added to any website plan. Ask us about terms.')));
+      h('p',{class:'mp-fine mo-fine'},'Prices are for Riverbend Web Co. services. Marketing plans and add-ons can be added to any website plan. Every term is in the service agreement.')));
 }
 function mapBox(label,href,fill){
   const NS='http://www.w3.org/2000/svg', s=document.createElementNS(NS,'svg'); s.setAttribute('viewBox','0 0 320 170'); s.setAttribute('aria-hidden','true'); if(fill) s.setAttribute('preserveAspectRatio','xMidYMid slice');
