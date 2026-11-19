@@ -92,7 +92,7 @@ function build(d){
   C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
-  if(C.variant==='osteria'){ document.body.className='t-os'; const pg=osteria(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); osIntro(C); return; }
+  if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
   if(style==='pub'&&p&&readableOnDark(p)) page.style.setProperty('--gold',p),page.style.setProperty('--gold-2',p);
   if(style==='lounge'&&p&&readableOnDark(p)) page.style.setProperty('--brass',p);
@@ -1210,6 +1210,74 @@ function osteria(C){
     socials(C)),
     h('div',{class:'os-wrap os-foot-b'},h('small',null,'\u00A9 '+new Date().getFullYear()+' '+C.name),C.phoneTxt?h('a',{href:C.tel||null},C.phoneTxt):null));
   return h('div',{class:'demo os'},nav,hero,story,menu,gal,revs,reserve,visit,foot);
+}
+
+/* ===================== OSTERIA v2 (fine dining: script wordmark, cream pages, serif type) ===================== */
+function o2Bar(pg){
+  const bar=pg.querySelector('.o2-bar'), hero=pg.querySelector('.o2-hero');
+  if(!bar||!hero||!('IntersectionObserver' in window)) return;
+  new IntersectionObserver(es=>es.forEach(e=>bar.classList.toggle('on',!e.isIntersecting)),{rootMargin:'-80px 0px 0px 0px'}).observe(hero);
+}
+function osteria2(C){
+  const city=C.city.split(',')[0];
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
+  const G=groups(C.items,'Menu');
+  const pics=C.own.slice();
+  const items=[C.items.length?['Food & Drink','Our Menu','o2-menu']:null,pics.length>1?['Take a Look','Gallery','o2-gal']:null,['Find a Table','Reservations','o2-res'],['Come Visit','Location','o2-visit']].filter(Boolean);
+  const heroNav=h('nav',{class:'o2-hnav'},items.map(([sc,sub,id])=>jump(id,[h('i',null,sc),h('small',null,sub)])));
+  const hero=h('section',{class:'o2-hero'},bg(h('div',{class:'o2-hero-bg'}),C.hero),h('div',{class:'o2-hero-shade'}),heroNav,
+    h('div',{class:'o2-hero-c'},h('h1',{class:'o2-mark'},C.name),h('p',{class:'o2-sub'},[C.cat||'Italian Restaurant',city].filter(Boolean).join(' · ')),
+      C.today?h('p',{class:'o2-open'},'Open today '+C.today):null));
+  const bar=h('header',{class:'o2-bar'},h('div',{class:'o2-bar-in'},jump('o2-top',C.name,'o2-bar-mark'),
+    h('nav',{class:'o2-bar-nav'},items.map(([,sub,id])=>jump(id,sub))),jump('o2-res','Reserve','o2-pill')));
+  const paras=String(C.about||'').split(/\n\s*\n/).map(t=>t.trim()).filter(Boolean);
+  const intro=h('section',{class:'o2-intro',id:'o2-top'},h('div',{class:'o2-w o2-narrow rv'},
+    h('h2',null,C.tag||('Welcome to '+C.name+'.')),paras[0]?h('p',{class:'o2-lead'},paras[0]):null,
+    C.items.length?jump('o2-menu','Explore the menu','o2-ul'):null));
+  const trio=pics.length>=3?h('div',{class:'o2-w o2-trio rv'},[pics[1]||pics[0],pics[0],pics[2]].map((u,i)=>{ const b=bg(h('button',{type:'button',class:'o2-ph t'+i,'aria-label':'Open photo'}),u); b.addEventListener('click',()=>gallery(pics,C.name,0)); return b; })):null;
+  const rule=()=>h('div',{class:'o2-w'},h('hr',{class:'o2-rule'}));
+  let menu=null;
+  if(C.items.length){
+    const leads=['Start with','Enjoy','Savor','Share','Save room for','Sip on','Try our'];
+    const list=h('div',{class:'o2-groups'},G.names.map((k,ix)=>{
+      const lead=/dessert|dolci|sweet/i.test(k)?'Save room for':/drink|wine|cocktail|bar|beer/i.test(k)?'Sip on':leads[ix%5];
+      const body=h('div',{class:'o2-items'},G.map[k].map(i=>h('div',{class:'o2-it'},h('div',{class:'o2-it-top'},h('b',null,i.name),i.price?h('span',null,i.price):null),i.desc?h('p',null,i.desc):null)));
+      const head=h('button',{type:'button',class:'o2-g-head','aria-expanded':ix?'false':'true'},h('i',null,lead),h('span',{class:'o2-g-t'},k,h('em',{'aria-hidden':'true'},'→')),h('small',null,G.map[k].length+(G.map[k].length===1?' dish':' dishes')));
+      const g=h('div',{class:'o2-g'+(ix?'':' open')},head,body);
+      head.addEventListener('click',()=>{ const o=!g.classList.contains('open'); g.classList.toggle('open',o); head.setAttribute('aria-expanded',o?'true':'false'); });
+      return g; }));
+    menu=h('section',{class:'o2-sec',id:'o2-menu'},
+      h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Our Menu'),h('p',{class:'o2-big'},paras[1]||('From handmade pasta to the last sweet bite, here is what '+C.name+' is serving.'))),
+      h('div',{class:'o2-w o2-menu-split'},pics.length?bg(h('div',{class:'o2-menu-pic rv'}),pics[3]||pics[1]||pics[0]):null,list));
+  }
+  const gal=pics.length>1?h('section',{class:'o2-sec o2-gal',id:'o2-gal'},
+    h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Gallery'),h('p',{class:'o2-big'},'A look inside '+C.name+'.')),
+    h('div',{class:'o2-w o2-grid'},pics.slice(0,6).map((u,i)=>{ const b=bg(h('button',{type:'button',class:'o2-ph g'+i,'aria-label':'Open photo '+(i+1)}),u); b.addEventListener('click',()=>gallery(pics,C.name,i)); return b; }))):null;
+  const revs=C.reviews.length?h('section',{class:'o2-sec'},h('div',{class:'o2-w o2-revs'},C.reviews.slice(0,3).map(r=>h('figure',{class:'rv'},h('blockquote',null,'“'+short(r.text,220)+'”'),h('figcaption',null,r.name)))),
+    C.reviewsSource?h('p',{class:'o2-src'},C.reviewsSource):null):null;
+  const ok=h('div',{class:'o2-ok'},h('h3',null,'Grazie, your request is in.'),h('p',null,'This is a preview. On your live site, reservation requests go straight to your inbox.'));
+  const form=bookingForm(C,'o2-form',ok,[['Your Name','text','Jane Smith'],['Phone or Email','text','(563) 555-0100'],['Date','date',''],['Guests','text','2']]);
+  const res=h('section',{class:'o2-res',id:'o2-res'},pics.length?bg(h('div',{class:'o2-res-bg'}),pics[2]||pics[0]):null,h('div',{class:'o2-w o2-res-in'},
+    h('div',{class:'rv'},h('i',{class:'o2-script'},'Find a Table'),h('h2',null,'Reserve your evening'),h('p',null,'Date night, family dinner or a celebration. Send a request and we will have your table ready.'),
+      C.phoneTxt?h('a',{class:'o2-ul light',href:C.tel||null},'Or call '+C.phoneTxt):null),
+    h('div',{class:'o2-card rv'},form,ok)));
+  const visit=h('section',{class:'o2-sec',id:'o2-visit'},
+    h('div',{class:'o2-w o2-two rv'},h('small',{class:'o2-label'},'Location'),h('p',{class:'o2-big'},addrTxt?('Find us at '+addrTxt+'.'):'Come see us.')),
+    h('div',{class:'o2-w o2-visit'},
+      h('div',{class:'o2-info rv'},
+        C.hasHours?h('div',null,h('small',{class:'o2-label'},'Hours'),h('div',{class:'o2-hrs'},osHours(C).map(r=>h('div',{class:r.today?'on':null},h('span',null,r.days),h('span',null,r.v))))):null,
+        C.phoneTxt?h('div',null,h('small',{class:'o2-label'},'Call'),h('a',{class:'o2-phone',href:C.tel||null},C.phoneTxt)):null,
+        C.maps?h('a',{class:'o2-ul',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),
+      addrTxt?h('div',{class:'o2-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+C.name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
+  const foot=h('footer',{class:'o2-foot'},h('div',{class:'o2-w o2-foot-in'},
+    h('span',{class:'o2-foot-mark'},C.name),
+    h('div',{class:'o2-foot-cols'},
+      addrTxt?h('div',null,h('small',null,'Visit'),h('p',null,addrTxt)):null,
+      C.phoneTxt?h('div',null,h('small',null,'Call'),h('p',null,h('a',{href:C.tel||null},C.phoneTxt))):null,
+      h('div',null,h('small',null,'Explore'),h('div',{class:'o2-foot-nav'},items.map(([,sub,id])=>jump(id,sub))))),
+    socials(C),h('small',{class:'o2-copy'},'© '+new Date().getFullYear()+' '+C.name)));
+  return h('div',{class:'demo o2'},hero,bar,intro,trio,rule(),menu,gal,revs,res,visit,foot);
 }
 /* ===================== MARKETING PLAN (Riverbend offer for a demo's business) ===================== */
 const MK_SOCIAL=[
