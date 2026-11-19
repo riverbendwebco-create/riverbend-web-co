@@ -3018,5 +3018,25 @@
         "heroPhoto": "https://images.unsplash.com/photo-1696255400336-05e8eb84f01a?auto=format&fit=crop&w=2000&q=75"
       }
     }
+  },
+  {
+    "key": "drbobs-cloudlab-6",
+    "matchName": "Dr. Bob's Cloud Lab",
+    "patch": true,
+    "data": {
+      "x": {
+        "cats": [
+          "Vapes",
+          "Cigars",
+          "Cigarettes",
+          "Beverages"
+        ],
+        "logoUrl": "https://drbobscloudlabs.com/wp-content/uploads/2026/01/DR.BOB-png-849x1024.png",
+        "heroPhoto": "https://images.unsplash.com/photo-1696255400336-05e8eb84f01a?auto=format&fit=crop&w=2000&q=75",
+        "extraPhotos": [
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLcuyrKwm-ohrrW-pIJrwkyIlA78qkUK39wsegeAF6cpIJh2ihuzZe-SzyAtyywsnfuohLLEda5hAn9k4MQKYuJYedoF3rlhgQIXgOgI2LAE49kircA-TuxcfQcyNGLW3ZAsxaJvWE6vdiMq=w1600-h1200-p-k-no"
+        ]
+      }
+    }
   }
 ]

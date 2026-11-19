@@ -3462,7 +3462,7 @@ function cloudShop(C){
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const mapQ=encodeURIComponent([C.name,C.addr,C.city].filter(Boolean).join(', '));
   const G=groups(C.items,'In Store');
-  const pics=C.own.slice();
+  const pics=C.own.concat((Array.isArray(C.x.extraPhotos)?C.x.extraPhotos:[]).filter(u=>typeof u==='string'&&/^https:\/\//.test(u)));
   const xc=Array.isArray(C.x.cats)?C.x.cats.filter(v=>typeof v==='string'&&v.trim()).slice(0,8):[];
   const cats=C.items.length?G.names:xc;
   const logo=C.logo||(typeof C.x.logoUrl==='string'&&/^https:\/\//.test(C.x.logoUrl)?C.x.logoUrl:'');
