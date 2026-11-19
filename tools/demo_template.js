@@ -1563,12 +1563,13 @@ function marketing(C){
   const money=n=>'$'+n.toLocaleString('en-US');
   const unit=m=>m.label||(m.per==='mo'?'per month':'one-time');
   const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const ovr=(k,id)=>{ const o=C.x[k]; return o&&typeof o==='object'&&typeof o[id]==='string'?o[id]:''; };
   const offer=(m,ix,kind)=>{ const ov=C.x.mkIdeas&&typeof C.x.mkIdeas==='object'?C.x.mkIdeas[m.id]:''; const idea=(typeof ov==='string'&&ov)||m.idea(C);
     return h('article',{class:'mo-item mo-'+kind},
       h('div',{class:'mo-num'},String(ix+1).padStart(2,'0')),
       h('div',{class:'mo-body'},
-        h('h3',null,m.name),
-        h('p',{class:'mo-what'},m.what),
+        h('h3',null,ovr('mkName',m.id)||m.name),
+        h('p',{class:'mo-what'},ovr('mkWhat',m.id)||m.what),
         (()=>{ const om=C.x.mkMore&&typeof C.x.mkMore==='object'&&Array.isArray(C.x.mkMore[m.id])?C.x.mkMore[m.id].filter(t=>typeof t==='string'):null; const L=om||m.more; return C.mkMore&&L?h('ul',{class:'mo-more'},L.map(t=>h('li',null,t))):null; })(),
         idea?h('div',{class:'mo-ex'},h('span',null,'Example for '+C.name),h('p',null,idea)):null),
       h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
