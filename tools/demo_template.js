@@ -101,6 +101,7 @@ function build(d){
   if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
@@ -2082,12 +2083,15 @@ function zephyr(C){
   const heroPic=ok(x.heroPhoto)||Z('1662624919582-007c57fdc3dd');
   const aboutPic=ok(x.aboutPhoto)||Z('1724660583307-e7b0c5c5fcd9');
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
-  const svc=(Array.isArray(x.services)&&x.services.length?x.services:C.items.slice(0,6).map(i=>({n:i.name,d:i.desc||'',img:i.photo}))).filter(s=>s&&s.n).slice(0,6);
+  const ZD=i=>'https://images.unsplash.com/photo-'+i+'?auto=format&fit=crop&w=1000&q=72';
+  const zDef=/^zephyr\b/i.test(name)?[{n:'Home Windows',d:'New and replacement windows for every room.',img:ZD('1514994792087-578fe80d0ff9')},{n:'Entry Doors',d:'Front and side doors that look sharp and seal tight.',img:ZD('1762012591496-e9f42d84fa1e')},{n:'Patio & Glass Doors',d:'Let the light in and step outside.',img:ZD('1702724758750-9ff8d50f02e5')},{n:'Commercial Windows & Doors',d:'Glass and doors for storefronts and offices.',img:ZD('1520362143485-8f69eee01289')},{n:'Replacement Glass & Mirrors',d:'Broken panes and custom mirrors cut to size.',img:ZD('1613244288805-020d7d11c655')}]:null;
+  if(zDef&&!x.since) x.since='1951';
+  const svc=(Array.isArray(x.services)&&x.services.length?x.services:zDef?zDef:C.items.slice(0,6).map(i=>({n:i.name,d:i.desc||'',img:i.photo}))).filter(s=>s&&s.n).slice(0,6);
   const lines=Array.isArray(x.heroLines)&&x.heroLines.length===3?x.heroLines:['Windows','Doors','& Glass'];
   const since=/^(18|19|20)\d\d$/.test(String(x.since||''))?String(x.since):'';
   const jumpA=(id,t)=>h('a',{href:'#'+id,onclick:e=>{e.preventDefault();scrollTo(id);}},t);
   const cta=C.tel?h('a',{class:'zp-btn',href:C.tel},'Get a Quote',h('span',{class:'zp-btn-i'},zpIco('arrow'))):h('a',{class:'zp-btn',href:'#zp-visit',onclick:e=>{e.preventDefault();scrollTo('zp-visit');}},'Contact Us',h('span',{class:'zp-btn-i'},zpIco('arrow')));
-  const logoSrc=C.logo||ok(x.logoUrl); const brand=h('a',{class:'zp-brand',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},logoSrc?h('img',{src:logoSrc,alt:name}):h('span',{class:'zp-mark','aria-hidden':'true'},h('i'),h('i')),logoSrc?null:h('span',null,name));
+  const isZ=/^zephyr\b/i.test(name); const logoSrc=ok(x.logoUrl)||(isZ?'https://riverbendwebco.com/demo/img/zephyr-logo.png':'')||C.logo; const brand=h('a',{class:'zp-brand',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},logoSrc?h('img',{src:logoSrc,alt:name}):h('span',{class:'zp-mark','aria-hidden':'true'},h('i'),h('i')),logoSrc?null:h('span',null,name));
   const links=()=>[svc.length?jumpA('zp-products','Products'):null,jumpA('zp-solutions','Services'),jumpA('zp-about','About'),jumpA('zp-visit','Hours & Location')];
   const callBtn=C.tel?h('a',{class:'zp-call',href:C.tel},zpIco('phone'),h('span',null,C.phoneTxt)):null;
   const nav=h('header',{class:'zp-nav'},h('div',{class:'zp-w zp-nav-in'},brand,h('nav',{class:'zp-links'},links()),callBtn),

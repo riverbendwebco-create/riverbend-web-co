@@ -6775,90 +6775,6 @@
     }
   },
   {
-    "key": "zephyr-1",
-    "matchName": "Zephyr Aluminum",
-    "patch": true,
-    "data": {
-      "variant": "zephyr",
-      "category": "Windows & Doors",
-      "address": "555 Huff St",
-      "city": "Dubuque, IA",
-      "phone": "5635882036",
-      "x": {
-        "since": "1951",
-        "services": [
-          {
-            "n": "Home Windows",
-            "d": "New and replacement windows for every room.",
-            "img": "https://images.unsplash.com/photo-1514994792087-578fe80d0ff9?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Entry Doors",
-            "d": "Front and side doors that look sharp and seal tight.",
-            "img": "https://images.unsplash.com/photo-1762012591496-e9f42d84fa1e?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Patio & Glass Doors",
-            "d": "Let the light in and step outside.",
-            "img": "https://images.unsplash.com/photo-1702724758750-9ff8d50f02e5?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Commercial Windows & Doors",
-            "d": "Glass and doors for storefronts and offices.",
-            "img": "https://images.unsplash.com/photo-1520362143485-8f69eee01289?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Replacement Glass & Mirrors",
-            "d": "Broken panes and custom mirrors cut to size.",
-            "img": "https://images.unsplash.com/photo-1613244288805-020d7d11c655?auto=format&fit=crop&w=1000&q=72"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "key": "zephyr-products-1",
-    "matchName": "Zephyr Aluminum Products",
-    "patch": true,
-    "data": {
-      "variant": "zephyr",
-      "category": "Windows & Doors",
-      "address": "555 Huff St",
-      "city": "Dubuque, IA",
-      "phone": "5635882036",
-      "x": {
-        "since": "1951",
-        "services": [
-          {
-            "n": "Home Windows",
-            "d": "New and replacement windows for every room.",
-            "img": "https://images.unsplash.com/photo-1514994792087-578fe80d0ff9?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Entry Doors",
-            "d": "Front and side doors that look sharp and seal tight.",
-            "img": "https://images.unsplash.com/photo-1762012591496-e9f42d84fa1e?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Patio & Glass Doors",
-            "d": "Let the light in and step outside.",
-            "img": "https://images.unsplash.com/photo-1702724758750-9ff8d50f02e5?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Commercial Windows & Doors",
-            "d": "Glass and doors for storefronts and offices.",
-            "img": "https://images.unsplash.com/photo-1520362143485-8f69eee01289?auto=format&fit=crop&w=1000&q=72"
-          },
-          {
-            "n": "Replacement Glass & Mirrors",
-            "d": "Broken panes and custom mirrors cut to size.",
-            "img": "https://images.unsplash.com/photo-1613244288805-020d7d11c655?auto=format&fit=crop&w=1000&q=72"
-          }
-        ]
-      }
-    }
-  },
-  {
     "key": "zephyr-2",
     "matchName": "Zephyr Aluminum",
     "patch": true,
@@ -6904,6 +6820,92 @@
   {
     "key": "zephyr-products-2",
     "matchName": "Zephyr Aluminum Products",
+    "patch": true,
+    "data": {
+      "variant": "zephyr",
+      "category": "Windows & Doors",
+      "address": "555 Huff St",
+      "city": "Dubuque, IA",
+      "phone": "5635882036",
+      "x": {
+        "since": "1951",
+        "services": [
+          {
+            "n": "Home Windows",
+            "d": "New and replacement windows for every room.",
+            "img": "https://images.unsplash.com/photo-1514994792087-578fe80d0ff9?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Entry Doors",
+            "d": "Front and side doors that look sharp and seal tight.",
+            "img": "https://images.unsplash.com/photo-1762012591496-e9f42d84fa1e?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Patio & Glass Doors",
+            "d": "Let the light in and step outside.",
+            "img": "https://images.unsplash.com/photo-1702724758750-9ff8d50f02e5?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Commercial Windows & Doors",
+            "d": "Glass and doors for storefronts and offices.",
+            "img": "https://images.unsplash.com/photo-1520362143485-8f69eee01289?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Replacement Glass & Mirrors",
+            "d": "Broken panes and custom mirrors cut to size.",
+            "img": "https://images.unsplash.com/photo-1613244288805-020d7d11c655?auto=format&fit=crop&w=1000&q=72"
+          }
+        ],
+        "logoUrl": "https://riverbendwebco.com/demo/img/zephyr-logo.png"
+      }
+    }
+  },
+  {
+    "key": "zephyr-inc-1",
+    "matchName": "Zephyr Aluminum Products Inc",
+    "patch": true,
+    "data": {
+      "variant": "zephyr",
+      "category": "Windows & Doors",
+      "address": "555 Huff St",
+      "city": "Dubuque, IA",
+      "phone": "5635882036",
+      "x": {
+        "since": "1951",
+        "services": [
+          {
+            "n": "Home Windows",
+            "d": "New and replacement windows for every room.",
+            "img": "https://images.unsplash.com/photo-1514994792087-578fe80d0ff9?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Entry Doors",
+            "d": "Front and side doors that look sharp and seal tight.",
+            "img": "https://images.unsplash.com/photo-1762012591496-e9f42d84fa1e?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Patio & Glass Doors",
+            "d": "Let the light in and step outside.",
+            "img": "https://images.unsplash.com/photo-1702724758750-9ff8d50f02e5?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Commercial Windows & Doors",
+            "d": "Glass and doors for storefronts and offices.",
+            "img": "https://images.unsplash.com/photo-1520362143485-8f69eee01289?auto=format&fit=crop&w=1000&q=72"
+          },
+          {
+            "n": "Replacement Glass & Mirrors",
+            "d": "Broken panes and custom mirrors cut to size.",
+            "img": "https://images.unsplash.com/photo-1613244288805-020d7d11c655?auto=format&fit=crop&w=1000&q=72"
+          }
+        ],
+        "logoUrl": "https://riverbendwebco.com/demo/img/zephyr-logo.png"
+      }
+    }
+  },
+  {
+    "key": "zephyr-short-1",
+    "matchName": "Zephyr",
     "patch": true,
     "data": {
       "variant": "zephyr",
