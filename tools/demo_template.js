@@ -2695,9 +2695,14 @@ function realty(C){
   const person=(typeof C.x.legalName==='string'&&C.x.legalName)||name.replace(/\s+Real Estate$/i,'');
   const office=(typeof C.x.officeCity==='string'&&C.x.officeCity)||'Asbury, IA';
   const licStates=(typeof C.x.licStates==='string'&&C.x.licStates)||'Iowa';
+  const licMore=typeof C.x.licensedStates==='string'?C.x.licensedStates:'';
+  const offAddr=typeof C.x.officeAddr==='string'?C.x.officeAddr:'', offPhone=typeof C.x.officePhone==='string'?C.x.officePhone:'';
+  const ehoLogo=okUrl(C.x.ehoLogo), realtorLogo=okUrl(C.x.realtorLogo), idxText=typeof C.x.idxDisclaimer==='string'?C.x.idxDisclaimer:'';
   const licNo=(String(C.x.license||'').match(/#\s*([A-Z0-9-]+)/)||[])[1]||'';
-  const kwLogo=okUrl(C.x.kwLogo)||(/keller williams/i.test(firm)?'https://riverbendwebco.com/demo/img/kw-logo.png':''), myLogo=okUrl(C.x.logoUrl);
-  const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):h('span',{class:'rt-kw-t'},firm||'Keller Williams'));
+  const kwLogo=okUrl(C.x.kwLogo);
+  /* official Market Center DBA logo goes in x.kwLogo (file from KW Connect, unmodified); until then a labeled placeholder */
+  const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),title:kwLogo?'':'Placeholder: official '+firm+' logo from KW Connect'},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):[h('b',null,firm||'Keller Williams'),h('small',null,'Official logo placeholder')]);
+  const pTitle=person+', REALTOR\u00ae';
   const photo=okUrl(C.x.photo);
   const site=okUrl(C.x.searchUrl)||'';
   const digits=C.phone.replace(/\D/g,'').slice(-10);
@@ -2745,8 +2750,7 @@ function realty(C){
   const NAVL=[['home','Home'],['search','Search'],['buyers','Buyers'],['sellers','Sellers'],['neighborhoods','Neighborhoods'],['about','About & Contact']];
   const navA=([k,l])=>h('a',{href:'#'+k,'data-nav':k},l);
   const nav=h('header',{class:'rt-nav solid'},h('div',{class:'rt-wrap rt-nav-in'},
-    h('a',{class:'rt-brand',href:'#home'},myLogo?h('img',{class:'rt-mylogo',src:myLogo,alt:person}):h('span',{class:'rt-mono','aria-hidden':'true'},person.split(/\s+/).map(w=>w[0]).slice(0,2).join('')),
-      h('span',{class:'rt-brand-t'},h('b',null,person),h('span',null,firm))),
+    h('a',{class:'rt-brand',href:'#home'},h('span',{class:'rt-brand-t'},h('b',null,pTitle),h('span',null,firm))),
     h('nav',{class:'rt-links'},NAVL.map(navA)),
     h('div',{class:'rt-nav-r'},kwMark('nav'),h('a',{class:'rt-btn gold rt-cta',href:'#about','data-go':'r-consult',onclick:e=>{e.preventDefault();routeTo('r-consult');}},h('span',{class:'rt-cta-l'},'Schedule a '),'Consultation'))),
     h('nav',{class:'rt-mlinks','aria-label':'Pages'},h('a',{class:'rt-mcta',href:'#about',onclick:e=>{e.preventDefault();routeTo('r-consult');}},'Schedule a Consultation'),NAVL.map(navA)));
@@ -2760,7 +2764,7 @@ function realty(C){
     h('div',{class:'rt-wrap rt-hero-in'},
       h('span',{class:'rt-hero-kick'},'Serving '+(S(C.x.areaName)?S(C.x.areaName).replace(/-area$/i,''):C.city||'the area')+' and surrounding communities'),
       h('h1',null,person),
-      h('div',{class:'rt-hero-firm'},firm),
+      h('div',{class:'rt-hero-firm'},'REALTOR\u00ae  \u00b7  '+firm),
       C.tag?h('p',{class:'rt-lead'},C.tag):null,
       h('form',{class:'rt-hsearch',onsubmit:e=>{ e.preventDefault(); sQ.value=hq.value; if(htype.value!=='Any type') sType.value=htype.value; location.hash='search'; }},hq,htype,h('button',{type:'submit',class:'rt-btn gold'},'Search Homes')),
       langs.length?h('div',{class:'rt-langs'},h('span',null,'Speaks'),langs.map(l=>h('b',{lang:S(l.code)||null},S(l.native)||S(l.n)))):null,
@@ -2951,7 +2955,7 @@ function realty(C){
   const today=new Date().getFullYear();
   const privacy=legalPage('Privacy Policy',['This website is operated by '+person+', '+firm+'. When you send a form on this site, your name, phone, email and the details you enter are used only to answer your request and to send you the information you asked for, such as listing alerts or a home value estimate.','We do not sell your personal information. You can ask to be removed from emails or texts at any time by replying STOP or asking '+first+' directly.','This site may use basic analytics and cookies to understand how visitors use it. Map and listing features may be provided by third parties with their own privacy policies.','Questions about this policy? Contact '+person+', '+firm+', '+office+'.']);
   const terms=legalPage('Terms of Use',['The information on this website is provided for general information only and is not legal, tax or financial advice. Home values, payment estimates and market information are estimates and are not guaranteed.','Listing information is deemed reliable but not guaranteed and should be independently verified. Prices, availability and details can change without notice.','Using this website does not create an agency relationship. An agency relationship with '+person+', '+firm+', begins only when agreed to in writing.','All content on this site belongs to '+person+' or is used with permission.']);
-  const idx=legalPage('MLS / IDX Disclaimer',['The listing data on this website comes in part from the Internet Data Exchange (IDX) program of the local Multiple Listing Service. Listings held by brokerage firms other than '+firm+' are marked with the listing broker’s name.','IDX information is provided exclusively for consumers’ personal, non-commercial use and may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing.','Information is deemed reliable but is not guaranteed accurate by the MLS or '+firm+'. Data last updated: '+today+'.']);
+  const idx=legalPage('MLS / IDX Disclaimer',['The listing data on this website will come in part from the Internet Data Exchange (IDX) program of the East Central Iowa Association of REALTORS\u00ae MLS once the feed is connected. Listings held by brokerage firms other than '+firm+' are marked with the listing broker’s name.','IDX information is provided exclusively for consumers’ personal, non-commercial use and may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing.','Information is deemed reliable but is not guaranteed accurate by the MLS or '+firm+'. Data last updated: '+today+'.']);
 
   /* ---------- footer on every page: brokerage, licensing and fair housing ---------- */
   const eho=()=>{ const d=h('span',{class:'rt-eho',role:'img','aria-label':'Equal Housing Opportunity'}); d.innerHTML='<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 22L24 8l18 14"/><path d="M11 19v21h26V19"/><path d="M17 26h14M17 32h14" stroke-width="3"/></svg><small>EQUAL HOUSING<br>OPPORTUNITY</small>'; return d; };
@@ -2959,23 +2963,26 @@ function realty(C){
   const li=(href,label)=>h('li',null,h('a',{href},label));
   const foot=h('footer',{class:'rt-foot'},h('div',{class:'rt-wrap'},
     h('div',{class:'rt-foot-g'},
-      h('div',{class:'rt-foot-b'},h('b',null,person),h('span',{class:'rt-foot-firm'},firm),kwMark('foot')),
+      h('div',{class:'rt-foot-b'},h('b',null,pTitle),h('span',{class:'rt-foot-firm'},firm),kwMark('foot')),
       col('Explore',[li('#search','Search homes'),li('#buyers','Buyer guide'),li('#sellers','Seller guide'),li('#neighborhoods','Neighborhoods'),li('#about','About & contact')]),
       col('Contact',[C.tel?h('li',null,h('a',{href:C.tel},C.phoneTxt)):null,C.email?h('li',null,h('a',{href:mail('')},C.email)):null,h('li',null,firm),h('li',null,'Office: '+office)]),
       col('Legal',[li('#privacy','Privacy Policy'),li('#terms','Terms of Use'),li('#idx','MLS / IDX Disclaimer')])),
     h('div',{class:'rt-comply'},
       h('div',{class:'rt-comply-t'},
-        h('p',null,h('b',null,person),', REALTOR®  |  ',h('b',null,firm),'  |  Supervising office: '+office),
-        h('p',null,'Licensed in '+licStates+(licNo?'. Iowa license #'+licNo:'')+'.'),
-        h('p',null,'Each Keller Williams Realty office is independently owned and operated.'),
-        h('p',null,'© '+today+' '+person+', '+firm+'. All rights reserved.  ',h('a',{href:'#privacy'},'Privacy Policy'),'  ·  ',h('a',{href:'#terms'},'Terms of Use'),'  ·  ',h('a',{href:'#idx'},'MLS / IDX Disclaimer'))),
-      h('div',{class:'rt-comply-l'},eho(),h('span',{class:'rt-realtor',role:'img','aria-label':'REALTOR'},h('b',null,'R'),h('small',null,'REALTOR®'))))));
+        h('p',{class:'rt-pair'},h('b',null,pTitle),h('span',null,' | '),h('b',null,firm)),
+        h('p',null,'Each Office Is Independently Owned and Operated.'),
+        h('p',null,'Licensed in the State of Iowa',licMore?h('span',{class:'rt-lic-more'},', '+licMore):h('span',{class:'rt-ph','data-edit':'licensedStates'},' [Add Illinois or Wisconsin here if licensed]'),licNo?'. Iowa license #'+licNo+'.':'.'),
+        h('p',null,'Main office: '+firm+', ',offAddr?h('span',null,offAddr+', '):h('span',{class:'rt-ph'},'[Office street address], '),office,'  \u00b7  Office: ',offPhone?h('a',{href:'tel:+1'+offPhone.replace(/\D/g,'').slice(-10)},offPhone):h('span',{class:'rt-ph'},'[Main office phone]'),'  \u00b7  '+first+' direct: ',C.tel?h('a',{href:C.tel},C.phoneTxt):h('span',{class:'rt-ph'},'[Direct phone]')),
+        h('p',null,'\u00a9 '+today+' '+person+', '+firm+'.  ',h('a',{href:'#privacy'},'Privacy Policy'),'  \u00b7  ',h('a',{href:'#terms'},'Terms of Use'),'  \u00b7  ',h('a',{href:'#idx'},'MLS / IDX Disclaimer'))),
+      h('div',{class:'rt-comply-l'},ehoLogo?h('img',{class:'rt-clogo',src:ehoLogo,alt:'Equal Housing Opportunity'}):eho(),realtorLogo?h('img',{class:'rt-clogo',src:realtorLogo,alt:'REALTOR\u00ae'}):h('span',{class:'rt-realtor',role:'img','aria-label':'REALTOR'},h('b',null,'R'),h('small',null,'REALTOR\u00ae')))),
+    h('div',{class:'rt-idxblock',id:'r-idx-note'},h('b',null,'MLS / IDX data disclaimer'),
+      idxText?h('p',null,idxText):h('p',null,h('span',{class:'rt-ph'},'Reserved for East Central Iowa Association of REALTORS\u00ae MLS/IDX attribution and data disclaimers. This text is added when the Search Homes bar is connected to an active IDX feed.')))));
 
   /* text button that stays on screen on phones */
   const fab=sms?h('a',{class:'rt-fab',href:sms+'?&body='+encodeURIComponent('Hi '+first+', I found you on your website. ')},ico('chat',18,''),'Text '+first):null;
 
   /* ---------- pages ---------- */
-  const pgHead=(kick,title,sub)=>h('header',{class:'rt-pghead'},h('div',{class:'rt-wrap'},h('span',{class:'rt-kick'},kick),h('h1',null,title),sub?h('p',null,sub):null,h('p',{class:'rt-firm-line'},person+'  |  '+firm)));
+  const pgHead=(kick,title,sub)=>h('header',{class:'rt-pghead'},h('div',{class:'rt-wrap'},h('span',{class:'rt-kick'},kick),h('h1',null,title),sub?h('p',null,sub):null,h('p',{class:'rt-firm-line'},pTitle+'  |  '+firm)));
   const PG=(id,...kids)=>h('div',{class:'rt-pg','data-pg':id,hidden:true},...kids);
   const homePg=h('div',{class:'rt-pg','data-pg':''},hero,intro,cards,featured,proof,homeValue,factsRow);
   const pages=[homePg,
