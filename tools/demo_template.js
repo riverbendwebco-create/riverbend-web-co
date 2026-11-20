@@ -2677,15 +2677,19 @@ function sunshine(C){
   const chk=()=>h('div',{class:'sn-chk','aria-hidden':'true'});
   const bigFoot=h('div',{class:'sn-bigfoot'},h('div',{class:'sn-wrap sn-bigfoot-in'},h('b',null,name.split(/\s+/)[0]+'!'),h('span',null,'See you at breakfast.')));
   const root0=h('div',{class:'sn fw'+(big?' big':'')},top,nav,hero,chk(),marquee,pickSec,menuSec,favSec,revSec,storySec,visit,chk(),bigFoot,foot);
-  /* phones: horizontal rows advance on their own; a touch pauses them for a while */
-  const autoRow=sel=>{ const el=root0.querySelector(sel); if(!el) return; let pause=0, timer=0;
-    const hold=()=>{ pause=Date.now()+8000; };
+  /* phones: horizontal rows roll continuously; a touch pauses them briefly */
+  const autoRow=sel=>{ const el=root0.querySelector(sel); if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let cloned=false, pause=0, pos=0, last=0;
+    const hold=()=>{ pause=performance.now()+4000; };
     ['touchstart','pointerdown','wheel'].forEach(ev=>el.addEventListener(ev,hold,{passive:true}));
-    const step=()=>{ if(!el.isConnected){ clearInterval(timer); return; } if(Date.now()<pause||el.scrollWidth<=el.clientWidth+4) return;
+    el.addEventListener('scroll',()=>{ if(performance.now()<pause) pos=el.scrollLeft; },{passive:true});
+    const tick=t=>{ if(!el.isConnected) return; requestAnimationFrame(tick); const dt=last?Math.min(t-last,50):16; last=t;
+      if(el.scrollWidth<=el.clientWidth+4) return;
+      if(!cloned){ [...el.children].forEach(k=>{ const c=k.cloneNode(true); c.setAttribute('aria-hidden','true'); c.classList.add('rv-on'); el.append(c); }); cloned=true; el.style.scrollSnapType='none'; }
+      if(t<pause) return;
       const r=el.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
-      const er=el.getBoundingClientRect(), pad=parseFloat(getComputedStyle(el).paddingLeft)||0, x=el.scrollLeft; const next=[...el.children].find(k=>k.getBoundingClientRect().left>er.left+pad+10);
-      if(!next||x+el.clientWidth>=el.scrollWidth-6) el.scrollTo({left:0,behavior:'smooth'}); else el.scrollTo({left:x+next.getBoundingClientRect().left-er.left-pad,behavior:'smooth'}); };
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(step,3500); };
+      pos+=dt*0.045; const half=el.scrollWidth/2; if(pos>=half) pos-=half; el.scrollLeft=pos; };
+    requestAnimationFrame(tick); };
   setTimeout(()=>['.sn-favs','.sn-mosaic','.sn-fam2'].forEach(autoRow),400);
   return root0;
 }
