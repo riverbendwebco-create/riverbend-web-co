@@ -2444,7 +2444,7 @@ function mountaintop2(C){
     h('a',{class:'m2-btn dark sm',href:tel},mtI('phone'),h('span',{class:'m2-hide-s'},phoneTxt),h('span',{class:'m2-show-s'},'Call'))),
     h('nav',{class:'m2-mlinks'},links()));
   /* hero */
-  const slides=[0,1,2].map(i=>h('div',{class:'m2-slide'+(i?'':' on'),style:'background-image:url("'+P(i)+'")'}));
+  const slides=[h('div',{class:'m2-slide on',style:'background-image:url("https://riverbendwebco.com/demo/img/mt-hero.jpg")'})];
   const hero=h('section',{class:'m2-hero'},h('div',{class:'m2-hero-media'},slides),
     h('div',{class:'m2-w m2-hero-in'},
       h('p',{class:'m2-eyebrow light'},'Countertops & stone surfaces · Dubuque, Iowa'),
@@ -2452,7 +2452,6 @@ function mountaintop2(C){
       h('div',{class:'m2-hero-row'},
         h('p',null,'Where beautiful surfaces are crafted from nature. Designed, fabricated and installed by our own local craftsmen.'),
         h('div',{class:'m2-cta'},h('a',{class:'m2-btn light',href:'#m2-surfaces',onclick:go('m2-surfaces')},'Explore surfaces',arrow()),h('a',{class:'m2-btn ghost',href:maps,target:'_blank',rel:'noopener'},'Visit the showroom')))));
-  let si=0; const st=setInterval(()=>{ if(!hero.isConnected){clearInterval(st);return;} slides[si].classList.remove('on'); si=(si+1)%slides.length; slides[si].classList.add('on'); },6000);
   const stats=h('section',{class:'m2-stats'},h('div',{class:'m2-w m2-stats-in'},[['10','Surface types'],['6','Craftsmen on our team'],['CNC','Precision fabrication'],['1','Local showroom to see it all']].map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b)))));
   /* intro statement */
   const intro=h('section',{class:'m2-sec'},h('div',{class:'m2-w m2-intro rv'},
@@ -2468,15 +2467,18 @@ function mountaintop2(C){
         h('p',{class:'m2-eyebrow'},t),h('h3',null,n),h('p',null,d),h('div',{class:'m2-tags'},tags.map(x=>h('span',null,x))),
         h('a',{class:'m2-btn dark',href:tel},mtI('phone'),'Ask about '+n)))); sheet.hidden=false; };
   sheet.addEventListener('click',e=>{ if(e.target===sheet) sheet.hidden=true; }); addEventListener('keydown',e=>{ if(e.key==='Escape') sheet.hidden=true; });
-  const rail=h('div',{class:'m2-rail'});
-  const drawS=f=>rail.replaceChildren(...MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
-    return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); }));
-  const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); rail.scrollTo({left:0,behavior:'smooth'}); }; return b; }));
+  const rail=h('div',{class:'m2-rail roll'}), track=h('div',{class:'m2-track'}); rail.append(track);
+  const mkTiles=f=>MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
+    return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); });
+  const drawS=f=>{ const a=mkTiles(f), b=mkTiles(f); b.forEach(t=>{ t.setAttribute('aria-hidden','true'); t.tabIndex=-1; }); track.replaceChildren(...a,...b); track.style.animationDuration=(a.length*6)+'s'; };
+  let rt0=0; const holdR=()=>{ track.classList.add('hold'); clearTimeout(rt0); rt0=setTimeout(()=>track.classList.remove('hold'),3500); };
+  rail.addEventListener('touchstart',holdR,{passive:true});
+  const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); }; return b; }));
   drawS('All');
   const railNav=d=>()=>rail.scrollBy({left:d*rail.clientWidth*.8,behavior:'smooth'});
   const surfaces=h('section',{class:'m2-sec m2-gray',id:'m2-surfaces'},h('div',{class:'m2-w'},
     h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow'},'Surface types'),h('h2',null,'Find your surface.')),
-      h('div',{class:'m2-head-r'},chips,h('div',{class:'m2-arrows'},h('button',{type:'button','aria-label':'Previous',onclick:railNav(-1)},mtI('arrow')),h('button',{type:'button','aria-label':'Next',onclick:railNav(1)},mtI('arrow')))))),
+      h('div',{class:'m2-head-r'},chips))),
     rail,h('div',{class:'m2-w'},h('p',{class:'m2-note'},'Quartz brands we carry: Technistone and Caesarstone. Tap any surface to learn more.')));
   /* why bento */
   const why=h('section',{class:'m2-sec',id:'m2-about'},h('div',{class:'m2-w'},

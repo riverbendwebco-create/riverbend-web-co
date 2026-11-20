@@ -1322,6 +1322,13 @@ body.t-mt{background:#fff}
 .m2-tile b{display:block;font-size:1.45rem;font-weight:500;letter-spacing:-.02em;margin-top:4px}
 .m2-tile em{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-size:.88rem;color:var(--mut);margin-top:6px}
 .m2-note{color:var(--mut);margin:30px 0 0}
+.m2-rail.roll{overflow:hidden;scroll-snap-type:none;padding:0 0 10px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.m2-track{display:flex;width:max-content;animation:m2Roll 60s linear infinite;padding-top:8px}
+.m2-track .m2-tile{margin-right:18px}
+.m2-rail.roll:hover .m2-track,.m2-track.hold{animation-play-state:paused}
+@keyframes m2Roll{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.m2-track{animation:none}.m2-rail.roll{overflow-x:auto}}
+.m2-slide{background-position:center 60%}
 .m2-sheet{position:fixed;inset:0;z-index:200;background:rgba(10,10,10,.55);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
 .m2-sheet[hidden],.m2-lb[hidden]{display:none}
 .m2-sheet-card{display:grid;grid-template-columns:1fr 1fr;width:min(940px,100%);background:#fff;border-radius:26px;overflow:hidden;max-height:90vh}
@@ -1381,7 +1388,7 @@ body.t-mt{background:#fff}
 .m2-hero{height:auto;min-height:0}.m2-hero-in{padding-top:180px;padding-bottom:30px}.m2-hero-row{flex-direction:column;align-items:flex-start;gap:22px}.m2-cta .m2-btn{flex:1 1 100%;justify-content:center}
 .m2-stats-in{grid-template-columns:1fr 1fr}.m2-stats-in>div{padding:22px 0 22px 16px}.m2-stats-in>div:nth-child(3){border-left:0;padding-left:0}.m2-stats-in>div:nth-child(n+3){border-top:1px solid var(--line)}.m2-stats b{font-size:2rem}
 .m2-sec{padding:80px 0}.m2-vals{grid-template-columns:1fr;gap:28px;margin-top:44px}
-.m2-arrows{display:none}.m2-rail{padding:0 20px 6px}.m2-tile{flex-basis:72vw}
+.m2-arrows{display:none}.m2-tile{flex-basis:62vw}.m2-track .m2-tile{margin-right:12px}
 .m2-sheet{padding:0;align-items:end}.m2-sheet-card{grid-template-columns:1fr;border-radius:24px 24px 0 0}.m2-sheet-ph{min-height:220px}.m2-sheet-b{padding:28px 22px 34px}.m2-sheet-b h3{font-size:2rem}
 .m2-bento{grid-template-columns:1fr 1fr;grid-auto-rows:150px;gap:10px}.m2-bento .m2-b:nth-last-child(-n+2){grid-column:auto}.m2-b{padding:18px;border-radius:18px}.m2-b b{font-size:1rem}
 .m2-work{grid-template-columns:1fr 1fr;grid-auto-rows:170px;gap:10px}.m2-wk,.m2-wk.w0,.m2-wk.w1,.m2-wk.w2,.m2-wk.w3,.m2-wk.w4,.m2-wk.w5{grid-column:span 1;grid-row:span 1}.m2-wk.w0{grid-column:span 2;grid-row:span 2}
@@ -6781,7 +6788,7 @@ function mountaintop2(C){
     h('a',{class:'m2-btn dark sm',href:tel},mtI('phone'),h('span',{class:'m2-hide-s'},phoneTxt),h('span',{class:'m2-show-s'},'Call'))),
     h('nav',{class:'m2-mlinks'},links()));
   /* hero */
-  const slides=[0,1,2].map(i=>h('div',{class:'m2-slide'+(i?'':' on'),style:'background-image:url("'+P(i)+'")'}));
+  const slides=[h('div',{class:'m2-slide on',style:'background-image:url("https://riverbendwebco.com/demo/img/mt-hero.jpg")'})];
   const hero=h('section',{class:'m2-hero'},h('div',{class:'m2-hero-media'},slides),
     h('div',{class:'m2-w m2-hero-in'},
       h('p',{class:'m2-eyebrow light'},'Countertops & stone surfaces · Dubuque, Iowa'),
@@ -6789,7 +6796,6 @@ function mountaintop2(C){
       h('div',{class:'m2-hero-row'},
         h('p',null,'Where beautiful surfaces are crafted from nature. Designed, fabricated and installed by our own local craftsmen.'),
         h('div',{class:'m2-cta'},h('a',{class:'m2-btn light',href:'#m2-surfaces',onclick:go('m2-surfaces')},'Explore surfaces',arrow()),h('a',{class:'m2-btn ghost',href:maps,target:'_blank',rel:'noopener'},'Visit the showroom')))));
-  let si=0; const st=setInterval(()=>{ if(!hero.isConnected){clearInterval(st);return;} slides[si].classList.remove('on'); si=(si+1)%slides.length; slides[si].classList.add('on'); },6000);
   const stats=h('section',{class:'m2-stats'},h('div',{class:'m2-w m2-stats-in'},[['10','Surface types'],['6','Craftsmen on our team'],['CNC','Precision fabrication'],['1','Local showroom to see it all']].map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b)))));
   /* intro statement */
   const intro=h('section',{class:'m2-sec'},h('div',{class:'m2-w m2-intro rv'},
@@ -6805,15 +6811,18 @@ function mountaintop2(C){
         h('p',{class:'m2-eyebrow'},t),h('h3',null,n),h('p',null,d),h('div',{class:'m2-tags'},tags.map(x=>h('span',null,x))),
         h('a',{class:'m2-btn dark',href:tel},mtI('phone'),'Ask about '+n)))); sheet.hidden=false; };
   sheet.addEventListener('click',e=>{ if(e.target===sheet) sheet.hidden=true; }); addEventListener('keydown',e=>{ if(e.key==='Escape') sheet.hidden=true; });
-  const rail=h('div',{class:'m2-rail'});
-  const drawS=f=>rail.replaceChildren(...MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
-    return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); }));
-  const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); rail.scrollTo({left:0,behavior:'smooth'}); }; return b; }));
+  const rail=h('div',{class:'m2-rail roll'}), track=h('div',{class:'m2-track'}); rail.append(track);
+  const mkTiles=f=>MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
+    return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); });
+  const drawS=f=>{ const a=mkTiles(f), b=mkTiles(f); b.forEach(t=>{ t.setAttribute('aria-hidden','true'); t.tabIndex=-1; }); track.replaceChildren(...a,...b); track.style.animationDuration=(a.length*6)+'s'; };
+  let rt0=0; const holdR=()=>{ track.classList.add('hold'); clearTimeout(rt0); rt0=setTimeout(()=>track.classList.remove('hold'),3500); };
+  rail.addEventListener('touchstart',holdR,{passive:true});
+  const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); }; return b; }));
   drawS('All');
   const railNav=d=>()=>rail.scrollBy({left:d*rail.clientWidth*.8,behavior:'smooth'});
   const surfaces=h('section',{class:'m2-sec m2-gray',id:'m2-surfaces'},h('div',{class:'m2-w'},
     h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow'},'Surface types'),h('h2',null,'Find your surface.')),
-      h('div',{class:'m2-head-r'},chips,h('div',{class:'m2-arrows'},h('button',{type:'button','aria-label':'Previous',onclick:railNav(-1)},mtI('arrow')),h('button',{type:'button','aria-label':'Next',onclick:railNav(1)},mtI('arrow')))))),
+      h('div',{class:'m2-head-r'},chips))),
     rail,h('div',{class:'m2-w'},h('p',{class:'m2-note'},'Quartz brands we carry: Technistone and Caesarstone. Tap any surface to learn more.')));
   /* why bento */
   const why=h('section',{class:'m2-sec',id:'m2-about'},h('div',{class:'m2-w'},
