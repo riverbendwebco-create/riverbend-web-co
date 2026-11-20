@@ -2783,9 +2783,9 @@ function realty(C){
       h('p',null,String(C.about||'').split('\n')[0]),
       h('div',{class:'rt-row'},h('a',{class:'rt-btn dark',href:'#about'},'More About '+first),btn('outline',null,'Schedule a Consultation',false,go('r-consult'))))));
   const cards=h('section',{class:'rt-cards-sec'},h('div',{class:'rt-wrap rt-cards'},
-    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Search Homes',null,false,()=>{location.hash='search';},'https://images.unsplash.com/photo-1787088988806-7ec503692b85?auto=format&fit=crop&w=1800&q=75'),
-    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell'),'https://images.unsplash.com/photo-1766603636700-e9d80473f40f?auto=format&fit=crop&w=1800&q=75'),
-    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'),'https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?auto=format&fit=crop&w=1800&q=75')));
+    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Search Homes',null,false,()=>{location.hash='search';},'https://riverbendwebco.com/demo/img/gill-buy.jpg'),
+    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell'),'https://riverbendwebco.com/demo/img/gill-sell.jpg'),
+    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'),'https://riverbendwebco.com/demo/img/gill-value.jpg')));
 
   const factsRow=facts.length?h('section',{class:'rt-facts-sec'},h('div',{class:'rt-wrap rt-facts-g'},
     h('h2',null,'Why ',h('br'),first),facts.map(f=>h('div',{class:'rt-fact rv'},h('b',null,String(f.v)),h('span',null,String(f.k)))))):null;

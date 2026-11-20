@@ -3575,6 +3575,15 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-hero-bg.lights .rt-lfit img{object-fit:cover;object-position:42% 40%}
 }
 }
+.rt.lux .rt-best .rt-card{min-height:0!important;height:auto;aspect-ratio:auto;display:block;align-self:stretch}
+.rt.lux .rt-best .rt-cards{align-items:stretch}.rt.lux .rt-best .rt-card{display:flex!important;flex-direction:column}.rt.lux .rt-best .rt-card-in{flex:1}
+.rt.lux .rt-best .rt-card-img{position:relative;inset:auto;display:block;width:100%;height:auto}
+.rt.lux .rt-best .rt-card-in{position:relative;padding:20px 22px 22px;background:var(--navy)}.rt.lux .rt-best .rt-card h3{font-size:1.5rem}
+.rt.lux .rt-best .rt-card:after{display:none}
+.rt.lux .rt-best .rt-card p{max-height:none;opacity:1;margin-top:8px}
+.rt.lux .rt-best .rt-card:hover .rt-card-img{transform:none}
+.rt.lux .rt-best .rt-card{min-height:0!important;background:var(--navy)}
+@media (max-width:860px){.rt.lux .rt-best .rt-card{min-height:0}}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}
