@@ -3574,7 +3574,6 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-hero-bg.lights .rt-lfit{animation:none;transform:none}
 .rt-hero-bg.lights .rt-lfit{top:50%;bottom:auto;height:auto;aspect-ratio:16/9;transform:translateY(-38%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 82%,transparent 100%)}
 .rt-hero-bg.lights .rt-lfit img{object-fit:cover}
-.rt.lux .rt-hero{padding-top:58px!important}
 }
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
