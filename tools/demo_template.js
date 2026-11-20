@@ -2674,7 +2674,9 @@ function sunshine(C){
     h('div',null,h('b',null,'Hours'),h('p',null,C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:DAYS.map((d,i)=>d.slice(0,3)+' '+(C.hours[i]||'Closed')).join(' · '))),
     h('div',null,h('b',null,'Find us'),h('p',null,[C.addr,C.city].filter(Boolean).join(', ')),C.tel?h('a',{href:C.tel},C.phoneTxt):null)));
 
-  const root0=h('div',{class:'sn'+(big?' big':'')},top,nav,hero,marquee,pickSec,menuSec,favSec,revSec,storySec,visit,foot);
+  const chk=()=>h('div',{class:'sn-chk','aria-hidden':'true'});
+  const bigFoot=h('div',{class:'sn-bigfoot'},h('div',{class:'sn-wrap sn-bigfoot-in'},h('b',null,name.split(/\s+/)[0]+'!'),h('span',null,'See you at breakfast.')));
+  const root0=h('div',{class:'sn fw'+(big?' big':'')},top,nav,hero,chk(),marquee,pickSec,menuSec,favSec,revSec,storySec,visit,chk(),bigFoot,foot);
   return root0;
 }
 /* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
