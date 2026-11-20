@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -2087,16 +2087,19 @@ function zephyr(C){
   const since=/^(18|19|20)\d\d$/.test(String(x.since||''))?String(x.since):'';
   const jumpA=(id,t)=>h('a',{href:'#'+id,onclick:e=>{e.preventDefault();scrollTo(id);}},t);
   const cta=C.tel?h('a',{class:'zp-btn',href:C.tel},'Get a Quote',h('span',{class:'zp-btn-i'},zpIco('arrow'))):h('a',{class:'zp-btn',href:'#zp-visit',onclick:e=>{e.preventDefault();scrollTo('zp-visit');}},'Contact Us',h('span',{class:'zp-btn-i'},zpIco('arrow')));
-  const brand=h('div',{class:'zp-brand'},C.logo?h('img',{src:C.logo,alt:name+' logo'}):h('span',{class:'zp-mark','aria-hidden':'true'},h('i'),h('i')),h('span',null,name));
-  const nav=h('header',{class:'zp-nav'},h('div',{class:'zp-w zp-nav-in'},brand,
-    h('nav',{class:'zp-links'},jumpA('zp-about','About'),svc.length?jumpA('zp-products','Products'):null,jumpA('zp-solutions','Services'),jumpA('zp-visit','Contact')),cta));
+  const logoSrc=C.logo||ok(x.logoUrl); const brand=h('a',{class:'zp-brand',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},logoSrc?h('img',{src:logoSrc,alt:name}):h('span',{class:'zp-mark','aria-hidden':'true'},h('i'),h('i')),logoSrc?null:h('span',null,name));
+  const links=()=>[svc.length?jumpA('zp-products','Products'):null,jumpA('zp-solutions','Services'),jumpA('zp-about','About'),jumpA('zp-visit','Hours & Location')];
+  const callBtn=C.tel?h('a',{class:'zp-call',href:C.tel},zpIco('phone'),h('span',null,C.phoneTxt)):null;
+  const nav=h('header',{class:'zp-nav'},h('div',{class:'zp-w zp-nav-in'},brand,h('nav',{class:'zp-links'},links()),callBtn),
+    h('nav',{class:'zp-mnav','aria-label':'Sections'},links()));
   const card=h('div',{class:'zp-card rv'},h('small',null,since?'Dubuque, since '+since:(C.city||'Local')),h('b',null,'Your local window & door shop'),
-    C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener'},'Get directions',zpIco('arrow')):null);
+    C.tel?h('a',{href:C.tel},'Call for a free quote',zpIco('arrow')):null);
   const hero=h('section',{class:'zp-hero'},
-    bg(h('div',{class:'zp-hero-bg'}),heroPic,'linear-gradient(180deg,rgba(14,12,11,.55) 0%,rgba(14,12,11,.25) 40%,rgba(14,12,11,.7) 100%)'),
+    bg(h('div',{class:'zp-hero-bg'}),heroPic,'linear-gradient(90deg,rgba(10,8,60,.78) 0%,rgba(10,8,60,.35) 55%,rgba(10,8,60,.55) 100%)'),
     h('div',{class:'zp-w zp-hero-in'},
       h('p',{class:'zp-hero-p'},C.tag||('Residential and commercial windows and doors for homes and businesses around '+(C.city?C.city.split(',')[0]:'town')+'.')),
       h('h1',{class:'zp-h1'},h('span',null,lines[0]),h('span',{class:'cu'},lines[1]),h('span',{class:'thin'},lines[2])),
+      h('div',{class:'zp-quick'},C.tel?h('a',{href:C.tel},zpIco('phone'),'Call us'):null,C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener'},zpIco('pin'),'Directions'):null,svc.length?h('a',{href:'#zp-products',onclick:e=>{e.preventDefault();scrollTo('zp-products');}},zpIco('win'),'Products'):null),
       card));
   const label=t=>h('div',{class:'zp-label'},h('span',{class:'zp-line','aria-hidden':'true'}),t);
   const about=h('section',{class:'zp-sec',id:'zp-about'},h('div',{class:'zp-w zp-about'},
@@ -2109,7 +2112,7 @@ function zephyr(C){
   const sol=h('section',{class:'zp-sec zp-soft',id:'zp-solutions'},h('div',{class:'zp-w'},
     h('div',{class:'zp-head rv'},label('What We Do'),h('h2',{class:'zp-h2'},'Window & door solutions for home and business')),
     h('div',{class:'zp-bento'},
-      bg(h('div',{class:'zp-b zp-b-pic rv'}),ok((svc[0]||{}).img)||heroPic,'linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(14,12,11,.8) 100%)'),
+      bg(h('div',{class:'zp-b zp-b-pic rv'}),ok((svc[0]||{}).img)||heroPic,'linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(10,8,60,.75) 100%)'),
       h('div',{class:'zp-b zp-b-txt rv'},zpIco('home'),h('b',null,'For your home'),h('p',null,'New and replacement windows and doors, sized for your house and installed by a local crew.')),
       h('div',{class:'zp-b zp-b-cu rv'},zpIco('shop'),h('b',null,'For your business'),h('p',null,'Commercial windows, doors and glass for storefronts and offices.')),
       h('div',{class:'zp-b zp-b-txt rv'},zpIco('glass'),h('b',null,'Glass & mirrors'),h('p',null,'Broken pane or a new bathroom mirror? Bring the size and we will cut it to fit.')),
@@ -2128,10 +2131,10 @@ function zephyr(C){
       C.tel?h('a',{class:'zp-li',href:C.tel},zpIco('phone'),h('span',null,C.phoneTxt)):null,
       C.hasHours?h('div',{class:'zp-hours'},hoursRows(C)):null),
     addrTxt?h('div',{class:'zp-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
-  const foot=h('footer',{class:'zp-foot'},h('div',{class:'zp-w zp-foot-in'},brand.cloneNode(true),h('p',null,'Residential & commercial windows and doors'+(C.city?' in '+C.city:'')+'.'),h('small',null,'© '+new Date().getFullYear()+' '+name)));
+  const foot=h('footer',{class:'zp-foot'},h('div',{class:'zp-w zp-foot-in'},h('div',{class:'zp-foot-logo'},logoSrc?h('img',{src:logoSrc,alt:name}):h('b',null,name)),h('p',null,'Residential & commercial windows and doors'+(C.city?' in '+C.city:'')+'.'),h('small',null,'© '+new Date().getFullYear()+' '+name)));
   return h('div',{class:'zp'},nav,hero,about,sol,prod,revs,visit,foot);
 }
-function zpNav(){ const n=document.querySelector('.zp-nav'); if(!n) return; const f=()=>n.classList.toggle('solid',scrollY>60); addEventListener('scroll',f,{passive:true}); f(); }
+function zpNav(){ const n=document.querySelector('.zp-nav'); if(!n) return; const f=()=>n.classList.toggle('solid',scrollY>10); addEventListener('scroll',f,{passive:true}); f(); }
 
 const CL_ICO={
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
