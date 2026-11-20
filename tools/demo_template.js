@@ -2696,7 +2696,7 @@ function realty(C){
   const office=(typeof C.x.officeCity==='string'&&C.x.officeCity)||'Asbury, IA';
   const licStates=(typeof C.x.licStates==='string'&&C.x.licStates)||'Iowa';
   const licNo=(String(C.x.license||'').match(/#\s*([A-Z0-9-]+)/)||[])[1]||'';
-  const kwLogo=okUrl(C.x.kwLogo), myLogo=okUrl(C.x.logoUrl);
+  const kwLogo=okUrl(C.x.kwLogo)||(/keller williams/i.test(firm)?'https://riverbendwebco.com/demo/img/kw-logo.png':''), myLogo=okUrl(C.x.logoUrl);
   const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):h('span',{class:'rt-kw-t'},firm||'Keller Williams'));
   const photo=okUrl(C.x.photo);
   const site=okUrl(C.x.searchUrl)||'';
@@ -2749,7 +2749,7 @@ function realty(C){
       h('span',{class:'rt-brand-t'},h('b',null,person),h('span',null,firm))),
     h('nav',{class:'rt-links'},NAVL.map(navA)),
     h('div',{class:'rt-nav-r'},kwMark('nav'),h('a',{class:'rt-btn gold rt-cta',href:'#about','data-go':'r-consult',onclick:e=>{e.preventDefault();routeTo('r-consult');}},h('span',{class:'rt-cta-l'},'Schedule a '),'Consultation'))),
-    h('nav',{class:'rt-mlinks','aria-label':'Pages'},NAVL.map(navA)));
+    h('nav',{class:'rt-mlinks','aria-label':'Pages'},h('a',{class:'rt-mcta',href:'#about',onclick:e=>{e.preventDefault();routeTo('r-consult');}},'Schedule a Consultation'),NAVL.map(navA)));
   const heroHome=okUrl(C.x.heroHome)||'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/20170506-OC-PJK-0182_%2834455904386%29.jpg/2400px-20170506-OC-PJK-0182_%2834455904386%29.jpg';
   const heroFallback='https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1600';
   const hImg=h('img',{src:heroHome,alt:''}); hImg.onerror=()=>{ if(hImg.src!==heroFallback) hImg.src=heroFallback; };
