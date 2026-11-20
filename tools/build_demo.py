@@ -3276,6 +3276,10 @@ body.t-sn{background:#FFFFFF}
 .sn.fw .sn-tl li.hi b{background:var(--y)}
 .sn.fw .sn-hours-card,.sn.fw .sn-map,.sn.fw .sn-grp2,.sn.fw .sn-gk{background:var(--cream);border:2px solid var(--b);border-radius:22px;box-shadow:none}
 .sn.fw .sn-gk{padding:22px 24px}
+.sn.fw .sn-chalk h3,.sn.fw .sn-chalk small,.sn.fw .sn-chalk li{color:#fff!important}
+.sn.fw .sn-sticker{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}
+.sn.fw .sn-sticker b{font-size:1.25rem;line-height:1}.sn.fw .sn-sticker small{font-size:.5rem;letter-spacing:.04em;line-height:1.1;margin-top:2px;max-width:72px}
+.sn.fw .sn-sticker .sn-sk-ic svg{width:22px;height:22px}
 .sn.fw .sn-pk:before,.sn.fw .sn-pk:after,.sn.fw .sn-pk-q:before,.sn.fw .sn-pk-q:after{display:none!important}
 .sn.fw .sn-pk-o button svg,.sn.fw .sn-pk-o button .sn-ic{color:currentColor}
 .sn.fw .sn-hero .sn-cta .sn-btn{width:auto!important;flex:0 0 auto}
@@ -3301,7 +3305,8 @@ body.t-sn{background:#FFFFFF}
 .sn.fw .sn-hero .sn-wrap.sn-hero-g{grid-template-columns:1fr;min-height:0}
 .sn.fw .sn-hero-t{padding:26px 20px 24px;border-right:0;border-bottom:2px solid var(--b)}
 .sn.fw .sn-hero-v{padding:18px 18px 22px}.sn.fw .sn-photo img{max-height:220px}.sn.fw .sn-hero .sn-cta{gap:10px}.sn.fw .sn-hero .sn-cta .sn-btn{padding:12px 16px}
-.sn.fw .sn-sticker{width:92px;height:92px;right:8px;top:8px}
+.sn.fw .sn-sticker{width:84px;height:84px;right:6px;top:6px}.sn.fw .sn-sticker b{font-size:1.05rem}.sn.fw .sn-sticker small{font-size:.44rem;max-width:62px}.sn.fw .sn-sticker .sn-sk-ic svg{width:18px;height:18px}
+.sn.fw .sn-mlinks{justify-content:space-between;gap:0;padding:0 8px 10px;overflow:visible}.sn.fw .sn-mlinks button{padding:8px 6px;font-size:.88rem}
 .sn.fw .sn-bigfoot span{padding-left:0;border-left:0}
 }
 /* ===== REALTY (real estate agent): modern black and white ===== */

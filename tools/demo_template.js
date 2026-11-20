@@ -2677,6 +2677,16 @@ function sunshine(C){
   const chk=()=>h('div',{class:'sn-chk','aria-hidden':'true'});
   const bigFoot=h('div',{class:'sn-bigfoot'},h('div',{class:'sn-wrap sn-bigfoot-in'},h('b',null,name.split(/\s+/)[0]+'!'),h('span',null,'See you at breakfast.')));
   const root0=h('div',{class:'sn fw'+(big?' big':'')},top,nav,hero,chk(),marquee,pickSec,menuSec,favSec,revSec,storySec,visit,chk(),bigFoot,foot);
+  /* phones: horizontal rows advance on their own; a touch pauses them for a while */
+  const autoRow=sel=>{ const el=root0.querySelector(sel); if(!el) return; let pause=0, timer=0;
+    const hold=()=>{ pause=Date.now()+8000; };
+    ['touchstart','pointerdown','wheel'].forEach(ev=>el.addEventListener(ev,hold,{passive:true}));
+    const step=()=>{ if(!el.isConnected){ clearInterval(timer); return; } if(Date.now()<pause||el.scrollWidth<=el.clientWidth+4) return;
+      const r=el.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
+      const er=el.getBoundingClientRect(), pad=parseFloat(getComputedStyle(el).paddingLeft)||0, x=el.scrollLeft; const next=[...el.children].find(k=>k.getBoundingClientRect().left>er.left+pad+10);
+      if(!next||x+el.clientWidth>=el.scrollWidth-6) el.scrollTo({left:0,behavior:'smooth'}); else el.scrollTo({left:x+next.getBoundingClientRect().left-er.left-pad,behavior:'smooth'}); };
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(step,3500); };
+  setTimeout(()=>['.sn-favs','.sn-mosaic','.sn-fam2'].forEach(autoRow),400);
   return root0;
 }
 /* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
