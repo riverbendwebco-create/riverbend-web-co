@@ -2757,7 +2757,9 @@ function realty(C){
     h('nav',{class:'rt-links'},NAVL.map(navA)),
     h('div',{class:'rt-nav-r'},kwMark('nav'),h('a',{class:'rt-btn gold rt-cta',href:'#about','data-go':'r-consult',onclick:e=>{e.preventDefault();routeTo('r-consult');}},h('span',{class:'rt-cta-l'},'Schedule a '),'Consultation'))),
     h('nav',{class:'rt-mlinks','aria-label':'Pages'},h('a',{class:'rt-mcta',href:'#about',onclick:e=>{e.preventDefault();routeTo('r-consult');}},'Schedule a Consultation'),NAVL.map(navA)));
-  const heroHome=okUrl(C.x.heroHome)||'https://images.unsplash.com/photo-1757362141189-8d2f7af341b0?auto=format&fit=crop&w=1800&q=75';
+  const AREA_IMG={dubuque:'https://riverbendwebco.com/demo/img/gill-dubuque.jpg',asbury:'https://riverbendwebco.com/demo/img/gill-asbury.jpg',peosta:'https://riverbendwebco.com/demo/img/gill-peosta.jpg',dyersville:'https://riverbendwebco.com/demo/img/gill-dyersville.jpg'};
+  const areaImg=(n,fb)=>AREA_IMG[String(n||'').toLowerCase().trim()]||fb;
+  const heroHome=okUrl(C.x.heroHome)||AREA_IMG.dubuque;
   const heroFallback='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=75';
   const hImg=h('img',{src:heroHome,alt:''}); hImg.onerror=()=>{ if(hImg.src!==heroFallback) hImg.src=heroFallback; };
   const hq=h('input',{type:'search',placeholder:'City, ZIP, address or MLS #','aria-label':'Search homes'});
@@ -2878,6 +2880,7 @@ function realty(C){
   const areasWrap=h('div',{class:'rt-areas'},areas.map((a,i)=>{ const g=guides[i]; const t=h(g?'button':(site?'a':'div'),Object.assign({class:'rt-area rv'},g?{type:'button','aria-expanded':'false'}:(site?{href:site,target:'_blank',rel:'noopener'}:{})),
       h('span',{class:'rt-area-n','aria-hidden':'true'},String(i+1).padStart(2,'0')),
       h('div',null,h('small',null,'Explore'),h('b',null,a),h('em',null,g?'Area guide ':'Search Listings ',ico('arrow',13,''))));
+    const ai=areaImg(a,''); if(ai){ t.style.backgroundImage='linear-gradient(180deg,rgba(19,39,68,.15) 20%,rgba(19,39,68,.88) 100%),url("'+ai+'")'; t.style.backgroundSize='cover'; t.style.backgroundPosition='center'; t.classList.add('has-img'); }
     if(g) t.onclick=()=>openGuide(g,t); return t; }));
   const areasSec=areas.length?h('section',{class:'rt-sec dark',id:'r-areas'},h('div',{class:'rt-wrap'},
     head('Neighborhoods','Search Listings By Area',guides.length?'Tap a town for a quick guide and homes for sale.':''),areasWrap,panel)):null;
@@ -3020,13 +3023,13 @@ function realty(C){
   /* ---------- home sections laid out like the reference site ---------- */
   const IMGS=['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1758448756207-54505680d130?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1706808849777-96e0d7be3bb7?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1761013320045-d29e4f10bcbc?auto=format&fit=crop&w=1800&q=75'];
   const G2=guides.length?guides:areas.map(n=>({n,t:''}));
-  const areaPanels=G2.length?h('section',{class:'rt-apanels'},G2.slice(0,2).map((g,i)=>{ const im=h('img',{src:IMGS[i],alt:'',loading:'lazy'}); im.onerror=()=>{ im.src=IMGS[2]; };
+  const areaPanels=G2.length?h('section',{class:'rt-apanels'},G2.slice(0,2).map((g,i)=>{ const im=h('img',{src:areaImg(g.n,IMGS[i]),alt:'',loading:'lazy'}); im.onerror=()=>{ im.src=IMGS[2]; };
     return h('div',{class:'rt-apanel'},im,h('div',{class:'rt-apanel-in rv'},h('h2',null,S(g.n)),S(g.t)?h('p',null,S(g.t)):null,h('a',{class:'rt-btn line',href:'#search',onclick:()=>{ sQ.value=S(g.n)+', IA'; }},'Search Homes in '+S(g.n)))); })):null;
   const whoBand=h('section',{class:'rt-who'},h('img',{class:'rt-who-bg',src:IMGS[3],alt:'',loading:'lazy'}),h('div',{class:'rt-wrap rt-who-in rv'},
     h('span',{class:'rt-kick'},'Who I am'),h('h2',null,'Local. Honest. On your side.'),h('p',null,String(C.about||'').split('\n').slice(-1)[0]),h('a',{class:'rt-btn solid',href:'#about'},'Meet '+first)));
   const bestHead=h('div',{class:'rt-wrap rt-best-h rv'},h('span',{class:'rt-kick'},'Simply the best'),h('h2',null,'The right home is closer than you think.'));
   const guidesHome=G2.length?h('section',{class:'rt-sec gray'},h('div',{class:'rt-wrap'},head('Neighborhoods','Our local market guides'),
-    h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:IMGS[(i+2)%6],alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
+    h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:areaImg(g.n,IMGS[(i+2)%6]),alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
   const trust=h('section',{class:'rt-sec'},h('div',{class:'rt-wrap rt-bio'},photo?h('img',{class:'rt-bio-ph rv',src:photo,alt:pTitle+', '+firm}):null,
     h('div',{class:'rv'},h('span',{class:'rt-kick'},'REALTOR\u00ae'),h('h2',null,pTitle),h('p',{class:'rt-firm-line'},firm),h('p',{class:'rt-bio-t'},String(C.about||'').split('\n')[0]),
       h('ul',{class:'rt-trust'},[['Trusted agent','Clear answers and honest advice at every step.'],['Local expert','Lives in the '+areaTxt+' area and knows the neighborhoods.'],['Prompt response','Calls, texts and emails answered fast.']].map(([t,d])=>h('li',null,h('b',null,t),h('span',null,d)))),
