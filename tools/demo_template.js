@@ -2295,7 +2295,8 @@ const SN_ART={
   two:snPlate+snEgg(88,94,.95)+snEgg(122,78,.95)+'<ellipse cx="170" cy="86" rx="28" ry="12" fill="#D98E3A" stroke="#1B2A41" stroke-width="3"/><ellipse cx="170" cy="83" rx="26" ry="10" fill="#F6C46A"/><ellipse cx="186" cy="104" rx="28" ry="12" fill="#D98E3A" stroke="#1B2A41" stroke-width="3"/><ellipse cx="186" cy="101" rx="26" ry="10" fill="#F6C46A"/><g fill="none" stroke-linecap="round"><path d="M80 120 q12 -8 24 0 t24 0 t20 0" stroke="#1B2A41" stroke-width="12"/><path d="M80 120 q12 -8 24 0 t24 0 t20 0" stroke="#C6452E" stroke-width="8"/><path d="M80 120 q12 -8 24 0 t24 0 t20 0" stroke="#F3A08C" stroke-width="2"/><path d="M86 132 q12 -8 24 0 t24 0 t20 0" stroke="#1B2A41" stroke-width="12"/><path d="M86 132 q12 -8 24 0 t24 0 t20 0" stroke="#C6452E" stroke-width="8"/><path d="M86 132 q12 -8 24 0 t24 0 t20 0" stroke="#F3A08C" stroke-width="2"/></g>',
   skillet:'<ellipse cx="124" cy="116" rx="104" ry="44" fill="#1B2A41" opacity=".12"/><rect x="206" y="94" width="50" height="14" rx="7" fill="#2B2F3A" stroke="#1B2A41" stroke-width="3" transform="rotate(-10 206 101)"/><ellipse cx="122" cy="106" rx="98" ry="44" fill="#2B2F3A" stroke="#1B2A41" stroke-width="3"/><ellipse cx="122" cy="102" rx="84" ry="35" fill="#40454F"/><g stroke="#1B2A41" stroke-width="2"><rect x="56" y="94" width="14" height="12" rx="3" fill="#F0B65A"/><rect x="74" y="80" width="14" height="12" rx="3" fill="#F0B65A"/><rect x="160" y="88" width="14" height="12" rx="3" fill="#F0B65A"/><rect x="176" y="104" width="13" height="11" rx="3" fill="#F0B65A"/><rect x="92" y="110" width="12" height="10" rx="3" fill="#F0B65A"/><rect x="66" y="108" width="10" height="9" rx="2" fill="#4CAF50"/><rect x="150" y="110" width="10" height="9" rx="2" fill="#E5533D"/><rect x="170" y="80" width="10" height="9" rx="2" fill="#4CAF50"/><rect x="84" y="98" width="9" height="8" rx="2" fill="#E5533D"/><circle cx="146" cy="78" r="6" fill="#A0522D"/><circle cx="188" cy="94" r="5" fill="#A0522D"/><circle cx="108" cy="80" r="5" fill="#A0522D"/></g><path d="M86 86 Q100 74 126 80 Q150 74 166 90 Q160 108 140 112 Q120 120 100 110 Q84 104 86 86Z" fill="#FFC93C" opacity=".9"/>'+snEgg(124,94,1)
 };
-function snArt(f){ const k=f.a||(/gyro|omelet/i.test(f.n)?'omelet':/2x2/i.test(f.n)?'two':/hash/i.test(f.n)?'hash':/gravy|biscuit/i.test(f.n)?'gravy':/pancake|cake/i.test(f.n)?'cakes':/skillet/i.test(f.n)?'skillet':'');
+function snArtKey(f){ const n=String(f.n||''); return f.a||(/gyro|omelet/i.test(n)?'omelet':/2x2/i.test(n)?'two':/hash/i.test(n)?'hash':/gravy|biscuit/i.test(n)?'gravy':/pancake|cake/i.test(n)?'cakes':/skillet/i.test(n)?'skillet':''); }
+function snArt(f){ const k=snArtKey(f)||(/gyro|omelet/i.test(f.n)?'omelet':/2x2/i.test(f.n)?'two':/hash/i.test(f.n)?'hash':/gravy|biscuit/i.test(f.n)?'gravy':/pancake|cake/i.test(f.n)?'cakes':/skillet/i.test(f.n)?'skillet':'');
   if(!SN_ART[k]) return null; const d=h('div',{class:'sn-art-svg','aria-hidden':'true'}); d.innerHTML='<svg viewBox="0 -24 260 184">'+snSteam+SN_ART[k]+'</svg>'; return d; }
 /* the curved corner building at 4th and Central, with the blue awning and a rising sun */
 function snBuilding(name){
@@ -2345,9 +2346,92 @@ function sunshine(C){
   const orderBtn=(cls,label)=>order?h('a',{class:'sn-btn '+cls,href:order,target:'_blank',rel:'noopener'},snIc('bag',18,'sn-bi'),label||'Order for delivery'):null;
   const links=[['s-menu','Menu'],favs.length?['s-favs','Favorites']:null,A('gallery').length?['s-photos','Photos']:null,story.length?['s-story','Our story']:null,revs.length?['s-reviews','Reviews']:null,['s-visit','Visit']].filter(Boolean);
 
+
+  /* --- big text toggle (remembered per browser) --- */
+  let big=false; try{ big=localStorage.getItem('sn-big')==='1'; }catch(e){}
+  const bigBtn=h('button',{type:'button',class:'sn-big',title:'Make the text bigger or smaller','aria-pressed':big?'true':'false',onclick:()=>{ big=!big; root0.classList.toggle('big',big); bigBtn.setAttribute('aria-pressed',big?'true':'false'); bigBtn.lastChild.textContent=big?'Normal text':'Larger text'; try{ localStorage.setItem('sn-big',big?'1':'0'); }catch(e){} }},h('b',null,'Aa'),h('span',null,big?'Normal text':'Larger text'));
+
+  /* --- what should I order? --- */
+  const byArt=k=>favs.find(f=>snArtKey(f)===k);
+  const PICKS={'sweet-light':['cakes'],'sweet-hungry':['cakes','two'],'sweet-starving':['two','cakes'],
+    'savory-light':['gravy','omelet'],'savory-hungry':['omelet','hash','gravy'],'savory-starving':['skillet','hash'],
+    'both-light':['deal0','cakes'],'both-hungry':['deal0','two'],'both-starving':['two','skillet']};
+  let pT='',pH='',pN=0;
+  const pRes=h('div',{class:'sn-pk-res','aria-live':'polite'});
+  const pickOpts=(arr,cur,set)=>h('div',{class:'sn-pk-o'},arr.map(([v,l,ic])=>{ const b=h('button',{type:'button','aria-pressed':'false',onclick:()=>{ b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); set(v); pN=0; showPick(); }},snIc(ic,26),h('span',null,l)); return b; }));
+  const showPick=()=>{ if(!pT||!pH){ pRes.replaceChildren(h('div',{class:'sn-pk-wait'},snIc('plate',40),h('p',null,'Pick both and we will find your plate.'))); return; }
+    const list=(PICKS[pT+'-'+pH]||[]).map(k=>{ if(k==='deal0'&&deals[0]) return {n:S(deals[0].t),d:S(deals[0].d),p:S(deals[0].p),a:'two'}; const f=byArt(k); return f?{n:S(f.n),d:S(f.d),a:k}:null; }).filter(Boolean);
+    if(!list.length){ pRes.replaceChildren(h('p',null,'Ask your server, they know the menu best.')); return; }
+    const it=list[pN%list.length]; const art=snArt({n:it.n,a:it.a});
+    pRes.replaceChildren(h('div',{class:'sn-pk-card'},art?h('div',{class:'sn-pk-art'},art):null,h('div',null,h('small',null,'You should try'),h('h3',null,it.n,it.p?h('span',{class:'sn-pk-p'},it.p):null),h('p',null,it.d),
+      h('div',{class:'sn-cta'},list.length>1?h('button',{type:'button',class:'sn-btn line sm',onclick:()=>{ pN++; showPick(); }},'Something else'):null,h('button',{type:'button',class:'sn-btn sun sm',onclick:()=>scrollTo('s-menu')},'See the menu'))))); };
+  showPick();
+  const pickSec=favs.length?h('section',{class:'sn-sec sky sn-pick',id:'s-pick'},h('div',{class:'sn-wrap sn-pk'},
+    h('div',{class:'sn-pk-q rv'},h('span',{class:'sn-kick'},'Can’t decide?'),h('h2',null,'What should I order?'),h('p',{class:'sn-pk-sub'},'Two quick taps and we will point you to a plate guests love.'),
+      h('b',{class:'sn-pk-l'},'1. What are you in the mood for?'),pickOpts([['sweet','Sweet','cakes'],['savory','Savory','egg'],['both','A bit of both','plate']],pT,v=>pT=v),
+      h('b',{class:'sn-pk-l'},'2. How hungry are you?'),pickOpts([['light','A little','cup'],['hungry','Pretty hungry','pan'],['starving','Starving','star']],pH,v=>pH=v)),
+    h('div',{class:'rv'},pRes))):null;
+
+  /* --- chalkboard --- */
+  const now=new Date(), dayName=DAYS[todayIx()];
+  const tPick=favs.length?favs[(now.getDate()+todayIx())%favs.length]:null;
+  const chalkLines=(S(C.x.today)?S(C.x.today).split('|'):[tPick?'Today’s pick: '+S(tPick.n):'',deals[0]?S(deals[0].t)+' '+S(deals[0].p):'','Hot coffee from 6am']).map(t=>t.trim()).filter(Boolean).slice(0,5);
+  const chalk=h('div',{class:'sn-chalk rv'},h('div',{class:'sn-chalk-in'},h('small',null,'Today at '+name.split(/\s+/)[0]),h('h3',null,dayName+', '+now.toLocaleDateString('en-US',{month:'long',day:'numeric'})),
+    h('ul',null,chalkLines.map(t=>h('li',null,t))),h('span',{class:'sn-chalk-sun'},snIc('sun',30))));
+
+  /* --- then and now --- */
+  const nowImg=okUrl(C.x.heroImg);
+  let tnSec=null;
+  if(nowImg&&S(C.x.thenName)){
+    const then=snBuilding(S(C.x.thenName)); then.classList.add('sn-tn-then'); then.innerHTML=then.innerHTML.replace('OPEN 6AM',S(C.x.thenSign)||'EST. 1942').replace('<svg viewBox="0 0 520 440">','<svg viewBox="0 30 520 390" preserveAspectRatio="xMidYMid slice">');
+    const wrap=h('div',{class:'sn-tn-box',style:'--p:62%'},h('img',{src:nowImg,alt:'Today',loading:'lazy'}),then,h('span',{class:'sn-tn-bar'},h('i',null,'‹ ›')),
+      h('span',{class:'sn-tn-tag l'},S(C.x.thenLabel)||'Then'),h('span',{class:'sn-tn-tag r'},'Today'));
+    const rng=h('input',{type:'range',min:'0',max:'100',value:'62','aria-label':'Slide between then and now',oninput:e=>wrap.style.setProperty('--p',e.target.value+'%')});
+    wrap.append(rng);
+    tnSec=h('section',{class:'sn-sec sn-tn'},h('div',{class:'sn-wrap sn-tn-g'},
+      h('div',{class:'rv'},h('span',{class:'sn-kick'},'Then and now'),h('h2',null,S(C.x.thenTitle)||'Same corner, same welcome'),h('p',{class:'sn-story-p'},S(C.x.thenText)),h('p',{class:'sn-note'},'Slide to compare. The “then” side is an illustration.')),
+      h('div',{class:'rv'},wrap)));
+  }
+
+  /* --- meet the family --- */
+  const fam=A('fam').filter(f=>f&&S(f.n)).slice(0,3);
+  const famSec=fam.length?h('section',{class:'sn-sec sun',id:'s-family'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Meet the family'),h('h2',null,S(C.x.famTitle)||'The faces behind the coffee pot'),S(C.x.famSub)?h('p',null,S(C.x.famSub)):null),
+    h('div',{class:'sn-fam'},fam.map((f,i)=>h('article',{class:'sn-fm rv'},h('div',{class:'sn-fm-av c'+i},okUrl(f.img)?h('img',{src:okUrl(f.img),alt:S(f.n)}):h('span',null,S(f.ini)||S(f.n).slice(0,1))),
+      h('small',null,S(f.r)),h('h3',null,S(f.n)),h('p',null,S(f.d))))))):null;
+
+  /* --- groups heads-up --- */
+  const gIn=(lab,el)=>h('label',{class:'sn-f'},h('span',null,lab),el);
+  const gName=h('input',{type:'text',autocomplete:'name',required:'required'}), gPhone=h('input',{type:'tel',autocomplete:'tel',required:'required'});
+  const gSize=h('select',{required:'required'},h('option',{value:''},'Choose'),['6 to 9','10 to 14','15 to 24','25 or more'].map(v=>h('option',{value:v},v)));
+  const gDay=h('input',{type:'date',required:'required'}), gTime=h('select',null,['6:00am','7:00am','8:00am','9:00am','10:00am','11:00am','12:00pm','1:00pm'].map(v=>h('option',{value:v},v)));
+  const gNote=h('textarea',{rows:'3',placeholder:'Birthday, team breakfast, after church, high chairs needed...'});
+  const gErr=h('p',{class:'sn-f-err','aria-live':'polite'}), gDone=h('div',{class:'sn-f-done',hidden:'hidden'});
+  const gForm=h('form',{class:'sn-form rv',novalidate:'novalidate',onsubmit:e=>{ e.preventDefault(); const bad=[gName,gPhone,gSize,gDay].find(x=>!String(x.value).trim()); if(bad){ gErr.textContent='Please fill in your name, phone, group size and day.'; bad.focus(); return; }
+      gErr.textContent=''; gDone.replaceChildren(snIc('heart',30),h('h3',null,'Thanks, '+gName.value.trim().split(/\s+/)[0]+'!'),h('p',null,'Your group of '+gSize.value+' on '+new Date(gDay.value+'T12:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+' around '+gTime.value+' is on its way to the kitchen.'),h('small',null,'Demo preview: on the live site this note goes straight to the restaurant.')); gForm.hidden=true; gDone.hidden=false; }},
+    h('div',{class:'sn-f-g'},gIn('Your name',gName),gIn('Phone',gPhone),gIn('Group size',gSize),gIn('Day',gDay),gIn('About what time?',gTime)),gIn('Anything we should know?',gNote),gErr,h('button',{type:'submit',class:'sn-btn sun'},'Send the heads-up'));
+  const grpSec=h('section',{class:'sn-sec',id:'s-groups'},h('div',{class:'sn-wrap sn-grp'},
+    h('div',{class:'rv'},h('span',{class:'sn-kick'},'Coming with a crowd?'),h('h2',null,S(C.x.grpTitle)||'Give us a heads-up'),h('p',{class:'sn-story-p'},S(C.x.grpText)||'Bringing the team, the family reunion or the whole Sunday school class? Let us know you are coming and we will do our best to have tables ready.'),
+      h('ul',{class:'sn-grp-l'},['Teams and clubs','Birthdays and reunions','Church and community groups'].map(t=>h('li',null,snIc('star',18),t))),
+      C.tel?h('p',{class:'sn-note'},'Coming today? Just call ',h('a',{href:C.tel},C.phoneTxt),'.'):null),
+    h('div',null,gForm,gDone)));
+
+  /* --- map with both locations --- */
+  const locs=[{n:S(C.x.mainLabel)||'Downtown',t:name,a:[C.addr,C.city].filter(Boolean).join(', '),h:C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:'',p:C.phoneTxt,tel:C.tel,extra:S(C.x.corner)}];
+  if(west) locs.push({n:'West',t:S(west.n),a:S(west.a),h:S(west.h),p:S(west.p),tel:S(west.p)?'tel:+1'+S(west.p).replace(/\D/g,'').slice(-10):'',extra:''});
+  const mapFrame=h('iframe',{title:'Map',loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'});
+  const mapInfo=h('div',{class:'sn-map-info'}), mapTabs=h('div',{class:'sn-map-tabs',role:'tablist'});
+  const showLoc=i=>{ const L=locs[i]; mapTabs.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-selected',j===i?'true':'false'));
+    mapFrame.src='https://www.google.com/maps?q='+encodeURIComponent(L.t+', '+L.a)+'&output=embed';
+    mapInfo.replaceChildren(h('h3',null,L.t),h('p',null,snIc('pin',18),L.a),L.extra?h('p',{class:'sn-note'},L.extra):null,L.h?h('p',null,snIc('clock',18),L.h):null,L.p?h('p',null,snIc('phone',18),h('a',{href:L.tel},L.p)):null,
+      h('a',{class:'sn-btn blue sm',href:'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(L.t+', '+L.a),target:'_blank',rel:'noopener'},snIc('pin',16,'sn-bi'),'Directions')); };
+  locs.forEach((L,i)=>mapTabs.append(h('button',{type:'button',role:'tab',onclick:()=>showLoc(i)},L.n)));
+  showLoc(0);
+  const mapBox=h('div',{class:'sn-map rv'},h('div',{class:'sn-map-side'},locs.length>1?h('small',{class:'sn-map-k'},'Two locations, one warm welcome'):null,locs.length>1?mapTabs:null,mapInfo),h('div',{class:'sn-map-f'},mapFrame));
+
   const top=h('div',{class:'sn-top'},h('div',{class:'sn-wrap sn-top-in'},
     st?h('span',{class:'sn-live '+(st.open?'on':'')},h('i'),st.t):h('span',null,''),
-    h('span',{class:'sn-top-r'},C.daysOpen===7?'Open 7 days a week':'',C.addr?h('span',null,C.addr+', '+C.city):null)));
+    h('span',{class:'sn-top-r'},C.daysOpen===7?'Open 7 days a week':'',C.addr?h('span',null,C.addr+', '+C.city):null),bigBtn));
   const nav=h('header',{class:'sn-nav'},h('div',{class:'sn-wrap sn-nav-in'},
     h('a',{class:'sn-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('s-top');}},snIc('sun',34,'sn-logo'),h('span',null,h('b',null,name.split(/\s+/)[0]),h('small',null,name.split(/\s+/).slice(1).join(' ')))),
     h('nav',{class:'sn-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
@@ -2372,7 +2456,7 @@ function sunshine(C){
         pic?h('div',{class:'sn-fav-art c'+(i%3)},h('span',{class:'sn-fav-no'},String(i+1).padStart(2,'0')),pic):h('div',{class:'sn-fav-ic c'+(i%3)},snIc(S(f.i)||'plate',34)),
         h('div',{class:'sn-fav-b'},h('h3',null,S(f.n)),h('p',null,S(f.d)),S(f.q)?h('blockquote',null,'“'+S(f.q)+'”'):null)); })))):null;
 
-  const dealSec=deals.length?h('section',{class:'sn-deals'},h('div',{class:'sn-wrap sn-deals-g'},deals.map(dl=>h('div',{class:'sn-deal rv'},h('div',null,h('small',null,S(dl.k)||'Special'),h('h3',null,S(dl.t)),h('p',null,S(dl.d))),S(dl.p)?h('b',{class:'sn-deal-p'},S(dl.p)):null)))):null;
+  const dealSec=h('section',{class:'sn-deals'},h('div',{class:'sn-wrap sn-deals-w'},chalk,h('div',{class:'sn-deals-g'},deals.map(dl=>h('div',{class:'sn-deal rv'},h('div',null,h('small',null,S(dl.k)||'Special'),h('h3',null,S(dl.t)),h('p',null,S(dl.d))),S(dl.p)?h('b',{class:'sn-deal-p'},S(dl.p)):null)))));
 
   /* menu with tabs */
   const G=groups(C.items,'Menu');
@@ -2416,14 +2500,15 @@ function sunshine(C){
         order?h('li',null,snIc('bag',22),h('div',null,h('small',null,'Delivery'),h('a',{href:order,target:'_blank',rel:'noopener'},S(C.x.orderLabel)||'Order online'))):null),
       h('div',{class:'sn-cta'},C.maps?h('a',{class:'sn-btn blue',href:C.maps,target:'_blank',rel:'noopener'},snIc('pin',18,'sn-bi'),'Get directions'):null,call('line'))),
     h('div',{class:'sn-hours-card rv'},h('h3',null,snIc('clock',22),'Hours'),hoursList,st?h('p',{class:'sn-live '+(st.open?'on':'')},h('i'),st.t):null),
-    west?h('div',{class:'sn-west rv'},h('small',null,'Our second location'),h('h3',null,S(west.n)),h('p',null,[S(west.a),S(west.h)].filter(Boolean).join(' · ')),S(west.p)?h('a',{href:'tel:+1'+S(west.p).replace(/\D/g,'').slice(-10)},S(west.p)):null):null));
+    mapBox));
 
   const foot=h('footer',{class:'sn-foot'},h('div',{class:'sn-wrap sn-foot-in'},
     h('div',null,h('div',{class:'sn-brand'},snIc('sun',30,'sn-logo'),h('span',null,h('b',null,name.split(/\s+/)[0]),h('small',null,name.split(/\s+/).slice(1).join(' ')))),h('p',null,S(C.x.footLine)||'')),
     h('div',null,h('b',null,'Hours'),h('p',null,C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:DAYS.map((d,i)=>d.slice(0,3)+' '+(C.hours[i]||'Closed')).join(' · '))),
     h('div',null,h('b',null,'Find us'),h('p',null,[C.addr,C.city].filter(Boolean).join(', ')),C.tel?h('a',{href:C.tel},C.phoneTxt):null)));
 
-  return h('div',{class:'sn'},top,nav,hero,marquee,favSec,dealSec,galSec,menuSec,storySec,revSec,noteSec,visit,foot);
+  const root0=h('div',{class:'sn'+(big?' big':'')},top,nav,hero,marquee,favSec,pickSec,dealSec,galSec,menuSec,storySec,tnSec,famSec,revSec,noteSec,grpSec,visit,foot);
+  return root0;
 }
 /* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
 const RT_SVG={
