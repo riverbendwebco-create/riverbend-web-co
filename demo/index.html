@@ -3683,7 +3683,7 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt.lux .rt-mlinks{display:none}
 .rt.lux .rt-hero{min-height:calc((100vh - 84px)*.7);padding:44px 0 44px;background:var(--navy2)}
 .rt.lux .rt-hero .rt-langs{display:none}.rt.lux .rt-hero .rt-lead{margin-top:14px}.rt.lux .rt-hsearch{margin-top:22px}.rt.lux .rt-hero-btns{margin-top:18px}.rt-hero-kick{margin-bottom:14px}
-.rt.lux .rt-hero-bg:after{background:linear-gradient(180deg,rgba(19,39,68,.72) 0%,rgba(19,39,68,.55) 50%,rgba(19,39,68,.82) 100%)}
+.rt.lux .rt-hero-bg:after{background:linear-gradient(180deg,rgba(19,39,68,.62) 0%,rgba(19,39,68,.38) 50%,rgba(19,39,68,.72) 100%)}
 .rt.lux .rt-hero h1{font-size:clamp(2.8rem,7vw,5.6rem)}
 .rt-hero-firm{font-family:'Montserrat',sans-serif;font-size:clamp(1rem,1.6vw,1.2rem);font-weight:600;letter-spacing:.08em;margin-top:14px;color:#fff}
 .rt.lux .rt-hero-kick{color:var(--gold)}
@@ -3808,6 +3808,19 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 @media (max-width:860px){.rt-work .rt-row{flex-direction:column;align-items:center}.rt-work .rt-row .rt-btn{width:100%;max-width:320px}.rt.lux footer.rt-foot .rt-foot-g{grid-template-columns:1fr;gap:28px}.rt.lux .rt-foot-b b{font-size:1.3rem}.rt.lux .rt-comply{padding-bottom:70px}}
 .rt.lux .rt-row{display:flex;flex-wrap:wrap;gap:12px}
 .rt-lempty .rt-row{gap:14px}
+.rt-hero-bg.lights{animation:rtZoom 18s ease-out forwards;transform:scale(1.04)}
+.rt-hero-bg.lights img{transform:none;animation:none}
+.rt-hero-bg.lights img+img{position:absolute;inset:0;opacity:0;animation:rtLights 3.2s ease-in .7s forwards}
+.rt-hero-bg img{object-position:50% 45%}
+@keyframes rtLights{0%{opacity:0}12%{opacity:.45}16%{opacity:.15}30%{opacity:.7}34%{opacity:.5}55%{opacity:.85}100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.rt-hero-bg.lights img+img{animation:none;opacity:1}.rt-hero-bg.lights{animation:none;transform:none}}
+@media (max-width:860px){
+.rt.lux .rt-hero{display:block;padding:0 0 32px;min-height:0;background:var(--navy)}
+.rt.lux .rt-hero .rt-hero-bg{position:relative;inset:auto;width:100%;aspect-ratio:16/9;overflow:hidden;transform:none;animation:none}
+.rt.lux .rt-hero .rt-hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:none}
+.rt.lux .rt-hero .rt-hero-bg:after{background:linear-gradient(180deg,rgba(19,39,68,0) 55%,rgba(27,54,93,1) 100%)}
+.rt.lux .rt-hero .rt-hero-in{padding-top:4px}
+}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}
@@ -6654,7 +6667,7 @@ function realty(C){
   const hq=h('input',{type:'search',placeholder:'City, ZIP, address or MLS #','aria-label':'Search homes'});
   const htype=h('select',{'aria-label':'Property type'},['Any type','House','Condo / Townhome','Multi-family','Land / Acreage','Farm'].map(o=>h('option',null,o)));
   const hero=h('section',{class:'rt-hero',id:'r-top'},
-    h('div',{class:'rt-hero-bg','aria-hidden':'true'},hImg),
+    h('div',{class:'rt-hero-bg'+(heroHome===AREA_IMG.dubuque?' lights':''),'aria-hidden':'true'},heroHome===AREA_IMG.dubuque?h('img',{class:'rt-off',src:AREA_IMG.dubuque.replace('.jpg','-off.jpg'),alt:''}):null,hImg),
     h('div',{class:'rt-wrap rt-hero-in'},
       h('span',{class:'rt-hero-kick'},'Serving '+(S(C.x.areaName)?S(C.x.areaName).replace(/-area$/i,''):C.city||'the area')+' and surrounding communities'),
       h('h1',null,person),
