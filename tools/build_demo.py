@@ -1103,6 +1103,25 @@ body.t-mt{background:#fff}
 .m2-bento .m2-b:nth-last-child(-n+2){grid-column:span 2}
 .m2-wk img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1s}.m2-wk:hover img{transform:scale(1.05)}
 .m2-wk span{position:absolute;left:18px;bottom:16px;background:rgba(255,255,255,.92);color:#0F1011;font:500 .86rem 'Outfit',sans-serif;padding:8px 14px;border-radius:999px}
+.m2-wctl{display:flex;gap:8px}
+.m2-wctl button{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.m2-wctl button:hover{background:#fff;color:#0F1011}.m2-wctl button:first-child .mt-i{transform:rotate(180deg)}
+.m2-wstage{position:relative;border-radius:28px;overflow:hidden;background:#1B1D1F}
+.m2-wmain{display:block;position:relative;width:100%;aspect-ratio:21/9;border:0;padding:0;background:none;cursor:zoom-in}
+.m2-ws{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.08);transition:opacity 1.1s ease,transform 6s ease-out}
+.m2-ws.on{opacity:1;transform:scale(1)}
+.m2-wcap{position:absolute;left:24px;bottom:24px;display:flex;align-items:center;gap:16px;padding:16px 22px 18px;border-radius:18px;background:rgba(15,16,17,.55);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);color:#fff;overflow:hidden;min-width:min(420px,calc(100% - 48px))}
+.m2-wnum{font-size:2.2rem;font-weight:500;letter-spacing:-.04em;line-height:1}
+.m2-wcap small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;opacity:.65}
+.m2-wcap b{display:block;font-size:1.15rem;font-weight:500;margin-top:3px}
+.m2-wtot{margin-left:auto;opacity:.6;font-size:.9rem}
+.m2-wbar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:#fff;transform-origin:left;transform:scaleX(0)}
+.m2-wbar.run{animation:m2Bar 5s linear forwards}
+@keyframes m2Bar{to{transform:scaleX(1)}}
+.m2-wthumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:14px}
+.m2-wt{padding:0;border:0;border-radius:14px;overflow:hidden;aspect-ratio:16/10;background:#1B1D1F;cursor:pointer;opacity:.45;transition:opacity .3s,transform .3s;outline:2px solid transparent;outline-offset:3px}
+.m2-wt img{width:100%;height:100%;object-fit:cover;display:block}
+.m2-wt:hover{opacity:.8}.m2-wt.on{opacity:1;outline-color:#fff}
 .m2-lb{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:grid;place-items:center;padding:20px}
 .m2-lb figure{margin:0}.m2-lb img{max-width:100%;max-height:82vh;border-radius:16px;display:block}.m2-lb figcaption{color:#fff;margin-top:12px;font-family:'Outfit',sans-serif}
 .m2-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink)}
@@ -1143,6 +1162,7 @@ body.t-mt{background:#fff}
 .m2-sheet{padding:0;align-items:end}.m2-sheet-card{grid-template-columns:1fr;border-radius:24px 24px 0 0}.m2-sheet-ph{min-height:220px}.m2-sheet-b{padding:28px 22px 34px}.m2-sheet-b h3{font-size:2rem}
 .m2-bento{grid-template-columns:1fr 1fr;grid-auto-rows:150px;gap:10px}.m2-bento .m2-b:nth-last-child(-n+2){grid-column:auto}.m2-b{padding:18px;border-radius:18px}.m2-b b{font-size:1rem}
 .m2-work{grid-template-columns:1fr 1fr;grid-auto-rows:170px;gap:10px}.m2-wk,.m2-wk.w0,.m2-wk.w1,.m2-wk.w2,.m2-wk.w3,.m2-wk.w4,.m2-wk.w5{grid-column:span 1;grid-row:span 1}.m2-wk.w0{grid-column:span 2;grid-row:span 2}
+.m2-wmain{aspect-ratio:4/3}.m2-wstage{border-radius:20px}.m2-wcap{left:12px;right:12px;bottom:12px;min-width:0;padding:12px 14px 14px;gap:12px}.m2-wnum{font-size:1.6rem}.m2-wcap b{font-size:1rem;margin:0}.m2-wcap small{display:none}.m2-wtot{white-space:nowrap}.m2-wthumbs{grid-template-columns:repeat(6,1fr);gap:6px}.m2-wt{border-radius:8px}.m2-wctl{display:none}
 .m2-steps{grid-template-columns:1fr;border-top:0;border-left:1px solid var(--ink);margin-left:22px}.m2-steps li{padding:0 0 34px 34px}.m2-steps span{margin:0 0 0 -57px;float:left}.m2-steps h3{margin-top:8px}
 .m2-team{grid-template-columns:1fr;gap:30px}.m2-team li{flex-direction:column;gap:2px}.m2-team li span{text-align:left}
 .m2-visit{grid-template-columns:1fr}.m2-visit-t{padding:70px 20px}.m2-map iframe{min-height:320px}

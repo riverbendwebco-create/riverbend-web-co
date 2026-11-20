@@ -2488,9 +2488,21 @@ function mountaintop2(C){
   const lb=h('div',{class:'m2-lb',hidden:true,role:'dialog','aria-modal':'true'});
   const openLb=i=>{ lb.replaceChildren(h('button',{type:'button',class:'m2-x',onclick:()=>{lb.hidden=true;},'aria-label':'Close'},mtI('x')),h('figure',null,h('img',{src:P(i),alt:MT.projects[i][1]}),h('figcaption',null,MT.projects[i][1]))); lb.hidden=false; };
   lb.addEventListener('click',e=>{ if(e.target===lb) lb.hidden=true; });
+  const N=MT.projects.length; let wi=0, wt=0;
+  const wSlides=MT.projects.map(([f,c],i)=>h('div',{class:'m2-ws'+(i?'':' on'),style:'background-image:url("'+MT_SITE+f+'")'}));
+  const wCap=h('b',null,MT.projects[0][1]), wNum=h('span',{class:'m2-wnum'},'01'), wBar=h('i',{class:'m2-wbar'});
+  const thumbs=MT.projects.map(([f,c],i)=>h('button',{type:'button',class:'m2-wt'+(i?'':' on'),'aria-label':'Show '+c,onclick:()=>showW(i,true)},h('img',{src:MT_SITE+f,alt:'',loading:'lazy'})));
+  const showW=(i,user)=>{ wSlides[wi].classList.remove('on'); thumbs[wi].classList.remove('on'); wi=(i+N)%N; wSlides[wi].classList.add('on'); thumbs[wi].classList.add('on');
+    wCap.textContent=MT.projects[wi][1]; wNum.textContent=String(wi+1).padStart(2,'0'); wBar.classList.remove('run'); void wBar.offsetWidth; wBar.classList.add('run');
+    if(user){ clearInterval(wt); wt=setInterval(tickW,5000); } };
+  const tickW=()=>{ if(!wCap.isConnected){ clearInterval(wt); return; } showW(wi+1); };
+  wt=setInterval(tickW,5000); requestAnimationFrame(()=>wBar.classList.add('run'));
   const work=h('section',{class:'m2-sec m2-dark',id:'m2-work'},h('div',{class:'m2-w'},
-    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow light'},'Our work'),h('h2',null,'Kitchens and baths across the Dubuque area.'))),
-    h('div',{class:'m2-work'},MT.projects.map(([f,c],i)=>h('button',{type:'button',class:'m2-wk w'+i,onclick:()=>openLb(i)},h('img',{src:MT_SITE+f,alt:c,loading:'lazy'}),h('span',null,c))))));
+    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow light'},'Our work'),h('h2',null,'Kitchens and baths across the Dubuque area.')),
+      h('div',{class:'m2-wctl'},h('button',{type:'button','aria-label':'Previous project',onclick:()=>showW(wi-1,true)},mtI('arrow')),h('button',{type:'button','aria-label':'Next project',onclick:()=>showW(wi+1,true)},mtI('arrow')))),
+    h('div',{class:'m2-wstage'},h('button',{type:'button',class:'m2-wmain','aria-label':'Open photo',onclick:()=>openLb(wi)},wSlides),
+      h('div',{class:'m2-wcap'},wNum,h('div',null,h('small',null,'Project '+'\u00b7 Mountaintop Stoneworks'),wCap),h('span',{class:'m2-wtot'},'/ '+String(N).padStart(2,'0')),wBar)),
+    h('div',{class:'m2-wthumbs'},thumbs)));
   /* process */
   const steps=[['Visit the showroom','See slabs and samples in person and choose the surface that fits your space and budget.'],['Measure & template','We measure your space precisely so every edge and seam fits.'],['Precision fabrication','Your stone is cut on our CNC equipment by experienced craftsmen.'],['Professional install','Our installers set your surfaces with care and clean up after.']];
   const process=h('section',{class:'m2-sec',id:'m2-process'},h('div',{class:'m2-w'},
