@@ -2702,6 +2702,16 @@ body.t-sn{background:#FFFFFF}
 .sn-story-img img{display:block;width:100%;max-width:400px;aspect-ratio:4/3;object-fit:cover;object-position:50% 30%;border-radius:20px;transform:rotate(-1.5deg);border:5px solid #fff;box-shadow:0 16px 36px rgba(31,95,175,.16)}
 @media (max-width:960px){.sn-gal{grid-template-columns:1fr 1fr;grid-auto-rows:190px}.sn-photo{max-width:600px}}
 @media (max-width:760px){.sn-gal{grid-auto-rows:160px;gap:10px}.sn-g.g0{grid-column:span 2;grid-row:span 1}.sn-g.g3{grid-column:span 2}.sn-g.g4,.sn-g.g5{grid-column:span 1}.sn-sticker{width:96px;height:96px;left:-6px;bottom:-16px}.sn-sticker b{font-size:1.2rem}.sn-photo img{transform:none}}
+.sn-favsec{position:relative;overflow:hidden;background:radial-gradient(circle at 92% 8%,rgba(255,201,60,.22),transparent 28%),radial-gradient(circle at 4% 92%,rgba(31,95,175,.08),transparent 30%)}
+.sn-fav.has-art{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.sn-fav-b{padding:22px 26px 26px}
+.sn-fav-art{position:relative;height:200px;display:flex;align-items:center;justify-content:center;background-image:radial-gradient(rgba(27,42,65,.08) 1.6px,transparent 1.8px);background-size:16px 16px;border-bottom:2px solid var(--ln)}
+.sn-fav-art.c0{background-color:#FFF2C4}.sn-fav-art.c1{background-color:#E2EFFF}.sn-fav-art.c2{background-color:#FFE6D8}
+.sn-fav-art:before{content:"";position:absolute;width:210px;height:210px;border-radius:50%;background:rgba(255,255,255,.55)}
+.sn-art-svg{position:relative;width:250px;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.sn-art-svg svg{display:block;width:100%;height:auto;overflow:visible}
+.sn-fav:hover .sn-art-svg{transform:scale(1.06) rotate(-3deg)}
+.sn-fav-no{position:absolute;top:14px;left:16px;font-weight:900;font-size:.85rem;letter-spacing:.08em;color:var(--b2);background:#fff;border:2px solid var(--ink);border-radius:10px;padding:3px 8px;z-index:1}
 @media (prefers-reduced-motion:reduce){.sn *{animation:none!important;transition:none!important}}
 @media (max-width:960px){.sn-hero-g,.sn-story,.sn-visit{grid-template-columns:1fr}.sn-favs,.sn-revs{grid-template-columns:1fr 1fr}.sn-menu{grid-template-columns:1fr}.sn-art{max-width:560px}}
 @media (max-width:760px){.sn-links,.sn-nav .sn-btn,.sn-top-r{display:none}.sn-mlinks{display:flex;overflow-x:auto;gap:2px;padding:0 14px 10px}.sn-mlinks button{white-space:nowrap}
