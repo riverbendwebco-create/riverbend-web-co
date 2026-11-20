@@ -4962,307 +4962,6 @@
     }
   },
   {
-    "key": "gill-future-1",
-    "matchName": "Francis Gill",
-    "patch": true,
-    "data": {
-      "x": {
-        "brokerage": "Keller Williams Legacy Group",
-        "photo": "https://riverbendwebco.com/demo/img/gill-headshot-hd.jpg",
-        "searchUrl": "https://gillfsm.kw.com",
-        "license": "Licensed in the State of Iowa",
-        "legal": "Each office is independently owned and operated. Equal Housing Opportunity.",
-        "follow": {},
-        "hideLogo": true,
-        "mkPhoto": "https://riverbendwebco.com/demo/img/gill-headshot-hd.jpg",
-        "mkCap": "Francis Gill, REALTOR®, Keller Williams Legacy Group",
-        "mkHide": [
-          "qr",
-          "order"
-        ],
-        "mkWhat": {
-          "soc1": "We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your listings, open houses and the local market. Plus a short monthly report.",
-          "soc2": "The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you so no lead waits.",
-          "club": "People sign up on your website, and we send them new listings, open house times and market updates for you."
-        },
-        "mkMore": {
-          "soc1": [
-            "3 posts a week, shared to both your Facebook and Instagram pages",
-            "New listing, open house, just sold and market update posts",
-            "We write the captions and make the graphics",
-            "We use listing photos and photos you send from your phone",
-            "You approve the month's plan before anything posts",
-            "A short report each month: reach, new followers and your best posts"
-          ],
-          "soc2": [
-            "Everything in Social Starter",
-            "Weekly stories for open houses and new listings",
-            "2 short Reels a month, like home tours edited from clips you send",
-            "We answer comments and messages and send leads straight to you",
-            "Posts work on TikTok too, from the same videos"
-          ],
-          "club": [
-            "A sign-up form on your website for buyers and sellers",
-            "We send new listings, open houses and market updates to your list",
-            "Text or email, whichever people prefer",
-            "Opt-in only, with an easy way to unsubscribe",
-            "A monthly count of how many people have joined"
-          ]
-        },
-        "mkIdeas": {
-          "soc1": "A just-listed post with the best photos, then an open house reminder the day before.",
-          "soc2": "A 30-second walkthrough Reel of a new listing, shared to Facebook and Instagram.",
-          "club": "An email to your list the day a new home hits the market in Asbury."
-        }
-      }
-    }
-  },
-  {
-    "key": "gill-bw-1",
-    "matchName": "Francis Gill",
-    "patch": true,
-    "data": {
-      "about": "Francis Gill is a REALTOR® with Keller Williams Legacy Group in Asbury, licensed in the State of Iowa, and he lives in the Dubuque area. Before real estate, his career ran from mechanical engineering to principal of an industrial training institute and the retail business.\nHe is fluent in English, Hindi and Punjabi, and he calls himself a people person who values hard work and great service.",
-      "tagline": "Buying or selling a home in the Dubuque area? Work with a REALTOR® who keeps it simple and gets it done.",
-      "x": {
-        "brokerage": "Keller Williams Legacy Group",
-        "photo": "https://riverbendwebco.com/demo/img/gill-headshot-bw.jpg",
-        "searchUrl": "https://gillfsm.kw.com",
-        "license": "Licensed in the State of Iowa",
-        "legal": "Each office is independently owned and operated. Equal Housing Opportunity.",
-        "follow": {},
-        "hideLogo": true,
-        "mkPhoto": "https://riverbendwebco.com/demo/img/gill-headshot-bw.jpg",
-        "mkCap": "Francis Gill, REALTOR®, Keller Williams Legacy Group",
-        "mkHide": [
-          "qr",
-          "order"
-        ],
-        "mkWhat": {
-          "soc1": "We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your listings, open houses and the local market. Plus a short monthly report.",
-          "soc2": "The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you so no lead waits.",
-          "club": "People sign up on your website, and we send them new listings, open house times and market updates for you."
-        },
-        "mkMore": {
-          "soc1": [
-            "3 posts a week, shared to both your Facebook and Instagram pages",
-            "New listing, open house, just sold and market update posts",
-            "We write the captions and make the graphics",
-            "We use listing photos and photos you send from your phone",
-            "You approve the month's plan before anything posts",
-            "A short report each month: reach, new followers and your best posts"
-          ],
-          "soc2": [
-            "Everything in Social Starter",
-            "Weekly stories for open houses and new listings",
-            "2 short Reels a month, like home tours edited from clips you send",
-            "We answer comments and messages and send leads straight to you",
-            "Posts work on TikTok too, from the same videos"
-          ],
-          "club": [
-            "A sign-up form on your website for buyers and sellers",
-            "We send new listings, open houses and market updates to your list",
-            "Text or email, whichever people prefer",
-            "Opt-in only, with an easy way to unsubscribe",
-            "A monthly count of how many people have joined"
-          ]
-        },
-        "mkIdeas": {
-          "soc1": "A just-listed post with the best photos, then an open house reminder the day before.",
-          "soc2": "A 30-second walkthrough Reel of a new listing, shared to Facebook and Instagram.",
-          "club": "An email to your list the day a new home hits the market in Asbury."
-        },
-        "facts": [
-          {
-            "v": "3",
-            "k": "Languages: English, Hindi and Punjabi"
-          },
-          {
-            "v": "Iowa",
-            "k": "Licensed REALTOR®"
-          },
-          {
-            "v": "KW",
-            "k": "Keller Williams Legacy Group"
-          },
-          {
-            "v": "Asbury",
-            "k": "Office on Saratoga Road"
-          }
-        ],
-        "areas": [
-          "Dubuque",
-          "Asbury",
-          "Peosta",
-          "Dyersville"
-        ],
-        "areaName": "Dubuque-area"
-      }
-    }
-  },
-  {
-    "key": "gill-photo-1",
-    "matchName": "Francis Gill",
-    "patch": true,
-    "data": {
-      "x": {
-        "brokerage": "Keller Williams Legacy Group",
-        "photo": "https://riverbendwebco.com/demo/img/gill-kw-bw.jpg",
-        "searchUrl": "https://gillfsm.kw.com",
-        "license": "Licensed in the State of Iowa, License #B70016000",
-        "legal": "Each office is independently owned and operated. Equal Housing Opportunity.",
-        "follow": {},
-        "hideLogo": true,
-        "mkPhoto": "https://riverbendwebco.com/demo/img/gill-kw-color.jpg",
-        "mkCap": "Francis Gill, REALTOR®, Keller Williams Legacy Group",
-        "mkHide": [
-          "qr",
-          "order"
-        ],
-        "mkWhat": {
-          "soc1": "We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your listings, open houses and the local market. Plus a short monthly report.",
-          "soc2": "The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you so no lead waits.",
-          "club": "People sign up on your website, and we send them new listings, open house times and market updates for you."
-        },
-        "mkMore": {
-          "soc1": [
-            "3 posts a week, shared to both your Facebook and Instagram pages",
-            "New listing, open house, just sold and market update posts",
-            "We write the captions and make the graphics",
-            "We use listing photos and photos you send from your phone",
-            "You approve the month's plan before anything posts",
-            "A short report each month: reach, new followers and your best posts"
-          ],
-          "soc2": [
-            "Everything in Social Starter",
-            "Weekly stories for open houses and new listings",
-            "2 short Reels a month, like home tours edited from clips you send",
-            "We answer comments and messages and send leads straight to you",
-            "Posts work on TikTok too, from the same videos"
-          ],
-          "club": [
-            "A sign-up form on your website for buyers and sellers",
-            "We send new listings, open houses and market updates to your list",
-            "Text or email, whichever people prefer",
-            "Opt-in only, with an easy way to unsubscribe",
-            "A monthly count of how many people have joined"
-          ]
-        },
-        "mkIdeas": {
-          "soc1": "A just-listed post with the best photos, then an open house reminder the day before.",
-          "soc2": "A 30-second walkthrough Reel of a new listing, shared to Facebook and Instagram.",
-          "club": "An email to your list the day a new home hits the market in Asbury."
-        },
-        "facts": [
-          {
-            "v": "3",
-            "k": "Languages: English, Hindi and Punjabi"
-          },
-          {
-            "v": "Iowa",
-            "k": "Licensed REALTOR®"
-          },
-          {
-            "v": "KW",
-            "k": "Keller Williams Legacy Group"
-          },
-          {
-            "v": "Asbury",
-            "k": "Office on Saratoga Road"
-          }
-        ],
-        "areas": [
-          "Dubuque",
-          "Asbury",
-          "Peosta",
-          "Dyersville"
-        ],
-        "areaName": "Dubuque-area"
-      }
-    }
-  },
-  {
-    "key": "gill-round-1",
-    "matchName": "Francis Gill",
-    "patch": true,
-    "data": {
-      "x": {
-        "brokerage": "Keller Williams Legacy Group",
-        "photo": "https://riverbendwebco.com/demo/img/gill-round-bw.jpg",
-        "searchUrl": "https://gillfsm.kw.com",
-        "license": "Licensed in the State of Iowa, License #B70016000",
-        "legal": "Each office is independently owned and operated. Equal Housing Opportunity.",
-        "follow": {},
-        "hideLogo": true,
-        "mkPhoto": "https://riverbendwebco.com/demo/img/gill-round-color.jpg",
-        "mkCap": "Francis Gill, REALTOR®, Keller Williams Legacy Group",
-        "mkHide": [
-          "qr",
-          "order"
-        ],
-        "mkWhat": {
-          "soc1": "We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your listings, open houses and the local market. Plus a short monthly report.",
-          "soc2": "The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you so no lead waits.",
-          "club": "People sign up on your website, and we send them new listings, open house times and market updates for you."
-        },
-        "mkMore": {
-          "soc1": [
-            "3 posts a week, shared to both your Facebook and Instagram pages",
-            "New listing, open house, just sold and market update posts",
-            "We write the captions and make the graphics",
-            "We use listing photos and photos you send from your phone",
-            "You approve the month's plan before anything posts",
-            "A short report each month: reach, new followers and your best posts"
-          ],
-          "soc2": [
-            "Everything in Social Starter",
-            "Weekly stories for open houses and new listings",
-            "2 short Reels a month, like home tours edited from clips you send",
-            "We answer comments and messages and send leads straight to you",
-            "Posts work on TikTok too, from the same videos"
-          ],
-          "club": [
-            "A sign-up form on your website for buyers and sellers",
-            "We send new listings, open houses and market updates to your list",
-            "Text or email, whichever people prefer",
-            "Opt-in only, with an easy way to unsubscribe",
-            "A monthly count of how many people have joined"
-          ]
-        },
-        "mkIdeas": {
-          "soc1": "A just-listed post with the best photos, then an open house reminder the day before.",
-          "soc2": "A 30-second walkthrough Reel of a new listing, shared to Facebook and Instagram.",
-          "club": "An email to your list the day a new home hits the market in Asbury."
-        },
-        "facts": [
-          {
-            "v": "3",
-            "k": "Languages: English, Hindi and Punjabi"
-          },
-          {
-            "v": "Iowa",
-            "k": "Licensed REALTOR®"
-          },
-          {
-            "v": "KW",
-            "k": "Keller Williams Legacy Group"
-          },
-          {
-            "v": "Asbury",
-            "k": "Office on Saratoga Road"
-          }
-        ],
-        "areas": [
-          "Dubuque",
-          "Asbury",
-          "Peosta",
-          "Dyersville"
-        ],
-        "areaName": "Dubuque-area"
-      }
-    }
-  },
-  {
     "key": "gill-4k-1",
     "matchName": "Francis Gill",
     "patch": true,
@@ -6597,4 +6296,989 @@
         "logoUrl": "https://riverbendwebco.com/demo/img/zephyr-logo.png"
       }
     }
-  },{"key":"sunshine-site-2","slug":"sunshine-family-restaurant-ea479","patch":true,"data":{"x":{"headline":"Good morning,|Dubuque.","kicker":"Family owned since 2004 · Downtown Dubuque","favs":[{"n":"Gyro Omelet","i":"wrap","d":"Gyro meat folded into a fluffy omelet with tzatziki on the side. You won't find it on many menus.","q":"We both had the gyro omelet because we'd never seen that on a menu before."},{"n":"Corned Beef Hash","i":"pan","d":"A hearty, crispy plate that regulars come back for again and again."},{"n":"Biscuits and Gravy","i":"gravy","d":"The most mentioned dish in Google reviews. Try a half order with hash browns."},{"n":"Pancakes","i":"cakes","d":"Big, fluffy and soft. Ask for the apple topping.","q":"I loved the pancakes, it melts in your mouth."},{"n":"2x2x2","i":"egg","d":"Two eggs, two pancakes and two meats. One guest was full halfway through."},{"n":"Skillet","i":"pan","d":"Sausage Supreme, Meat Lovers or Jalapeno, piled high and served hot."}],"deals":[{"k":"Early bird","t":"Early Bird Special","d":"Three strips of bacon, two pancakes and two eggs.","p":"$6.95"},{"k":"60 and over","t":"Senior Special","d":"A smaller plate at a smaller price for guests 60 and over.","p":"$4.95"}],"menuSub":"Home-style cooking, big portions and fair prices, from the first cup of coffee at 6am.","menuNote":"Ask your server about today's specials.","storyText":"Sunshine sits in the curved corner building with the blue awning at 4th and Central, where Dubuque has been sitting down to eat for more than 80 years. The names on the sign have changed, but the idea hasn't: good food, a hot cup of coffee and a friendly face.","family":"Owned by Zoro and Kandi Saliu since 2004. A family restaurant where the servers know many regulars by name.","story":[{"y":"1890","t":"Jungels and Bade opens at 4th and Central."},{"y":"1942","t":"The building becomes Karigan's Restaurant."},{"y":"1948","t":"Rebuilt after a fire."},{"y":"1972","t":"The Karigan family sells to Peter Sfikas, and it becomes Sfikas Restaurant."},{"y":"1987","t":"Lyle Ostenborg buys the business and keeps the Sfikas name."},{"y":"2004","t":"Zoro and Kandi Saliu buy it, and Sunshine Family Restaurant is born.","hi":"1"},{"y":"2010","t":"A fire damages the inside. The family rebuilds and reopens."},{"y":"Today","t":"Still serving breakfast and lunch every day from 6am.","hi":"1"}],"rev":[{"t":"Old-fashioned, nothing fancy, hearty breakfast. Outstanding service, inexpensive, delicious corned beef and Denver omelets.","n":"Howard S.","s":"Google"},{"t":"Great family restaurant in the area. Large portions and great food. I loved the pancakes, it melts in your mouth.","n":"Geraldine B.","s":"Google"},{"t":"One of best breakfast restaurants I've been to. Super delicious, with large portions and very reasonably priced.","n":"Google reviewer","s":"Google"},{"t":"Love this yummy, speed service and reasonably priced restaurant!","n":"Google reviewer","s":"Google"},{"t":"We both had the gyro omelet because we'd never seen that on a menu before.","n":"Val G.","s":"Tripadvisor"},{"t":"Portions very large (we recommend a plate for two).","n":"Naddel M.","s":"Tripadvisor"}],"notes":["Big portions. Some guests even share a plate","Family friendly, with high chairs for little ones","Busy on weekend mornings, but tables turn over quickly","Open every day of the week from 6am","Wheelchair accessible entrance","Friendly servers who keep your coffee filled","Downtown on the corner of 4th and Central, with street parking nearby","Senior Special for guests 60 and over"],"rating":{"v":"4.5","n":1680,"src":"Google reviews"},"orderUrl":"https://www.doordash.com/store/sunshine-family-restaurant-llc-dubuque-46576772/","orderLabel":"Order on DoorDash","corner":"On the corner of 4th and Central, downtown","west":{"n":"Sunshine Family Restaurant West","a":"1575 John F Kennedy Rd, Dubuque","h":"Daily 6am to 2pm","p":"(563) 557-3000"},"footLine":"Hearty breakfast and lunch at 4th and Central. Family owned since 2004.","heroImg":"https://riverbendwebco.com/demo/img/sun-front.jpg","since":"2004","storyImg":"https://riverbendwebco.com/demo/img/sun-window.jpg","galSub":"Big plates, hot coffee and a room full of neighbors.","gallery":["https://riverbendwebco.com/demo/img/sun-crowd.jpg|A full house for breakfast","https://riverbendwebco.com/demo/img/sun-pancakes.jpg|Pancakes and eggs Benedict","https://riverbendwebco.com/demo/img/sun-skillet.jpg|Skillet with sausage gravy","https://riverbendwebco.com/demo/img/sun-dining.jpg|Plenty of tables","https://riverbendwebco.com/demo/img/sun-hash.jpg|Two eggs over hash browns","https://riverbendwebco.com/demo/img/sun-dining2.jpg|Booths for the whole family"],"fam":[{"ini":"Z & K","r":"Owners since 2004","n":"Zoro and Kandi Saliu","d":"They bought the restaurant at 4th and Central in 2004, gave it the Sunshine name, and reopened after the 2010 fire."},{"ini":"S","r":"The crew","n":"Our servers","d":"Quick with the coffee pot, and many of them know the regulars by name."},{"ini":"You","r":"Pull up a chair","n":"Our regulars","d":"Neighbors, families and first-timers, and the 1,680 Google reviews they have left."}],"mkPhoto":"https://riverbendwebco.com/demo/img/sun-front.jpg","mkCap":"Sunshine Family Restaurant, 4th and Central, Dubuque","mkTitle":"A website and marketing plan for Sunshine Family Restaurant","mkLead":"1,680 Google reviews say Dubuque loves Sunshine, but there is no website to send people to. Here is how we put your menu, story and specials online and give more people a reason to stop in for breakfast.","mkPick":["web2","soc1","order"],"mkPickTitle":"Our recommendation for Sunshine","mkPickNote":"Start with the website, steady posts and pickup orders with no per-order fee from us. Add the text club or Reels any time.","mkName":{"order":"Call-ahead pickup ordering","qr":"QR table tents with a review link"},"mkWhat":{"soc1":"We run Sunshine's Facebook and Instagram: 3 posts a week in total, shared to both pages, about your plates, specials and the people behind them. Plus a short monthly report.","soc2":"The same 3 posts a week, plus weekly stories and 2 short Reels a month, so Dubuque sees the pancakes coming off the griddle, not just a photo.","club":"Guests sign up on your website or with a QR sign at the register, and we send your specials and news to them for you.","qr":"Table tents with a QR code that opens your menu and a link to leave a Google review.","order":"Guests pick their order on your website and send it straight to you for pickup. No per-order fee from us, unlike the delivery apps. One-time $150 setup."},"mkMore":{"soc1":["3 posts a week, shared to both your Facebook and Instagram pages","We set up your pages if you don't have them yet","Plate photos, Early Bird and Senior Special reminders, and holiday hours","We write the captions and make the graphics","We use photos you or your staff send from your phone","You approve the month's plan before anything posts","A short report each month: reach, new followers and your best posts"],"soc2":["Everything in Social Starter","Weekly stories for today's chalkboard special","2 short Reels a month, edited from clips you send","Reminder posts before holidays like Easter and Mother's Day","The same videos ready for TikTok too"],"club":["A sign-up form on your website, plus a QR sign for the register and tables","We write and send your specials, holiday hours and news","Text or email, whichever your guests prefer","Opt-in only, with an easy way to unsubscribe","A monthly count of how many people have joined"],"qr":["Table tents in Sunshine yellow and blue","The QR code opens your live website menu, so price changes never mean reprinting","A link to leave a Google review in the same scan","Print-ready files you can take to any printer"],"order":["Pickup orders right from the menu on your website","Orders sent to you by text or email","No per-order fee from us","Your DoorDash link stays on the site for delivery","We set it up, test it with you and walk your staff through it"],"web2":["Everything in Essentials, no setup fee","Unlimited updates within 24 hours, like menu prices and holiday hours","Chalkboard and specials updated when you send them","Google Business Profile optimized and kept current","Monthly report: visits, calls and direction taps","Local SEO tune-ups and a yearly design refresh"],"web3":["Everything in Growth","Same-day updates: text us the morning special and it is on the chalkboard that day","Weekly Google posts and photo updates","Weekly specials banners","Review requests: QR table cards and a text link","Quarterly design refresh"]},"mkIdeas":{"soc1":"Monday: an Early Bird plate photo. Wednesday: the gyro omelet you won't find on most menus. Friday: a 'Good morning, Dubuque' post with weekend hours.","soc2":"A 15-second Reel of the apple topping going on a stack of pancakes.","club":"A text the week before Mother's Day with your hours and a reminder to come early.","qr":"A guest scans while waiting for pancakes and leaves a Google review before the check comes.","order":"A family orders two skillets and pancakes from the website at 7:45 on Saturday and walks in to a ready order."},"mkPlayTitle":"Your first month with each service","mkPlay":[{"id":"web2","t":"Website: Growth","w":"$0 down.","m":"Week 1: Your site goes live|Week 2: Google profile tuned up|Week 3: Specials banner goes up|Week 4: Report: visits, calls, directions"},{"id":"soc1","t":"Social Starter","w":"3 posts a week.","m":"Week 1: Early Bird, gyro omelet, weekend hours|Week 2: Biscuits and gravy, Senior Special, hello Friday|Week 3: Meet a server, pancakes, weekend hours|Week 4: Skillet, a history throwback, your report"},{"id":"order","t":"Call-ahead pickup ordering","w":"One-time setup.","m":"Week 1: Ordering added to your menu|Week 2: Test orders with you|Week 3: Staff walkthrough, go live|Week 4: Pickup orders, no fee from us"},{"id":"web1","t":"Website: Essentials","w":"$499 setup, low monthly upkeep.","m":"Week 1: We build your site|Week 2: You check the menu and photos|Week 3: Site live, Google profile set up|Week 4: Your 2 small updates"},{"id":"web3","t":"Website: Partner","w":"We handle Google too.","m":"Week 1: Same-day updates start|Week 2: Specials banner, Google post|Week 3: Review cards on the tables|Week 4: New photos, Google post, report"},{"id":"soc2","t":"Social Growth","w":"Posts plus video.","m":"Week 1: Reel: pancakes off the griddle|Week 2: Stories: today's special|Week 3: Reel: a skillet hits the table|Week 4: Stories: weekend hours"},{"id":"club","t":"Text or email club","w":"Reach regulars any morning.","m":"Week 1: Sign-up sign at the register|Week 2: Text: Early Bird is $6.95|Week 3: Text: favorite of the week|Week 4: Text: holiday hours"},{"id":"qr","t":"QR table tents","w":"Menu and review link on every table.","m":"Week 1: Designed in Sunshine colors|Week 2: You approve it|Week 3: Print files delivered|Week 4: Guests scan for menu and reviews"}],"mkPlaySub":"One month, week by week.","then":{"n":"Karigan's","l":"1940s, Karigan's","t":"Karigan's Restaurant opened on this corner in 1942, and the building was rebuilt after a fire in 1948. More than 80 years later, the coffee is still on at 6am."}}}},{"key":"sunshine-site-3","slug":"sunshine-family-restaurant-ea479","patch":true,"data":{"x":{"headline":"Good morning,|Dubuque.","kicker":"Family owned since 2004 · Downtown Dubuque","favs":[{"n":"Gyro Omelet","i":"wrap","d":"Gyro meat folded into a fluffy omelet with tzatziki on the side. You won't find it on many menus.","q":"We both had the gyro omelet because we'd never seen that on a menu before."},{"n":"Corned Beef Hash","i":"pan","d":"A hearty, crispy plate that regulars come back for again and again."},{"n":"Biscuits and Gravy","i":"gravy","d":"The most mentioned dish in Google reviews. Try a half order with hash browns."},{"n":"Pancakes","i":"cakes","d":"Big, fluffy and soft. Ask for the apple topping.","q":"I loved the pancakes, it melts in your mouth."},{"n":"2x2x2","i":"egg","d":"Two eggs, two pancakes and two meats. One guest was full halfway through."},{"n":"Skillet","i":"pan","d":"Sausage Supreme, Meat Lovers or Jalapeno, piled high and served hot."}],"deals":[{"k":"Early bird","t":"Early Bird Special","d":"Three strips of bacon, two pancakes and two eggs.","p":"$6.95"},{"k":"60 and over","t":"Senior Special","d":"A smaller plate at a smaller price for guests 60 and over.","p":"$4.95"}],"menuSub":"Home-style cooking, big portions and fair prices, from the first cup of coffee at 6am.","menuNote":"Ask your server about today's specials.","storyText":"Sunshine sits in the curved corner building with the blue awning at 4th and Central, where Dubuque has been sitting down to eat for more than 80 years. The names on the sign have changed, but the idea hasn't: good food, a hot cup of coffee and a friendly face.","family":"Owned by Zoro and Kandi Saliu since 2004. A family restaurant where the servers know many regulars by name.","story":[{"y":"1890","t":"Jungels and Bade opens at 4th and Central."},{"y":"1942","t":"The building becomes Karigan's Restaurant."},{"y":"1948","t":"Rebuilt after a fire."},{"y":"1972","t":"The Karigan family sells to Peter Sfikas, and it becomes Sfikas Restaurant."},{"y":"1987","t":"Lyle Ostenborg buys the business and keeps the Sfikas name."},{"y":"2004","t":"Zoro and Kandi Saliu buy it, and Sunshine Family Restaurant is born.","hi":"1"},{"y":"2010","t":"A fire damages the inside. The family rebuilds and reopens."},{"y":"Today","t":"Still serving breakfast and lunch every day from 6am.","hi":"1"}],"rev":[{"t":"Old-fashioned, nothing fancy, hearty breakfast. Outstanding service, inexpensive, delicious corned beef and Denver omelets.","n":"Howard S.","s":"Google"},{"t":"Great family restaurant in the area. Large portions and great food. I loved the pancakes, it melts in your mouth.","n":"Geraldine B.","s":"Google"},{"t":"One of best breakfast restaurants I've been to. Super delicious, with large portions and very reasonably priced.","n":"Google reviewer","s":"Google"},{"t":"Love this yummy, speed service and reasonably priced restaurant!","n":"Google reviewer","s":"Google"},{"t":"We both had the gyro omelet because we'd never seen that on a menu before.","n":"Val G.","s":"Tripadvisor"},{"t":"Portions very large (we recommend a plate for two).","n":"Naddel M.","s":"Tripadvisor"}],"notes":["Big portions. Some guests even share a plate","Family friendly, with high chairs for little ones","Busy on weekend mornings, but tables turn over quickly","Open every day of the week from 6am","Wheelchair accessible entrance","Friendly servers who keep your coffee filled","Downtown on the corner of 4th and Central, with street parking nearby","Senior Special for guests 60 and over"],"rating":{"v":"4.5","n":1680,"src":"Google reviews"},"orderUrl":"https://www.doordash.com/store/sunshine-family-restaurant-llc-dubuque-46576772/","orderLabel":"Order on DoorDash","corner":"On the corner of 4th and Central, downtown","west":{"n":"Sunshine Family Restaurant West","a":"1575 John F Kennedy Rd, Dubuque","h":"Daily 6am to 2pm","p":"(563) 557-3000"},"footLine":"Hearty breakfast and lunch at 4th and Central. Family owned since 2004.","heroImg":"https://riverbendwebco.com/demo/img/sun-front.jpg","since":"2004","storyImg":"https://riverbendwebco.com/demo/img/sun-window.jpg","galSub":"Big plates, hot coffee and a room full of neighbors.","gallery":["https://riverbendwebco.com/demo/img/sun-crowd.jpg|A full house for breakfast","https://riverbendwebco.com/demo/img/sun-pancakes.jpg|Pancakes and eggs Benedict","https://riverbendwebco.com/demo/img/sun-skillet.jpg|Skillet with sausage gravy","https://riverbendwebco.com/demo/img/sun-dining.jpg|Plenty of tables","https://riverbendwebco.com/demo/img/sun-hash.jpg|Two eggs over hash browns","https://riverbendwebco.com/demo/img/sun-dining2.jpg|Booths for the whole family"],"fam":[{"ini":"Z & K","r":"Owners since 2004","n":"Zoro and Kandi Saliu","d":"They bought the restaurant at 4th and Central in 2004, gave it the Sunshine name, and reopened after the 2010 fire."},{"ini":"S","r":"The crew","n":"Our servers","d":"Quick with the coffee pot, and many of them know the regulars by name."},{"ini":"You","r":"Pull up a chair","n":"Our regulars","d":"Neighbors, families and first-timers, and the 1,680 Google reviews they have left."}],"mkPhoto":"https://riverbendwebco.com/demo/img/sun-front.jpg","mkCap":"Sunshine Family Restaurant, 4th and Central, Dubuque","mkTitle":"A website and marketing plan for Sunshine Family Restaurant","mkLead":"1,680 Google reviews say Dubuque loves Sunshine, but there is no website to send people to. Here is how we put your menu, story and specials online and give more people a reason to stop in for breakfast.","mkPick":["web2","soc1","order"],"mkPickTitle":"Our recommendation for Sunshine","mkPickNote":"Start with the website, steady posts and pickup orders with no per-order fee from us. Add the text club or Reels any time.","mkName":{"order":"Call-ahead pickup ordering","qr":"QR table tents with a review link"},"mkWhat":{"soc1":"We run Sunshine's Facebook and Instagram: 3 posts a week in total, shared to both pages, about your plates, specials and the people behind them. Plus a short monthly report.","soc2":"The same 3 posts a week, plus weekly stories and 2 short Reels a month, so Dubuque sees the pancakes coming off the griddle, not just a photo.","club":"Guests sign up on your website or with a QR sign at the register, and we send your specials and news to them for you.","qr":"Table tents with a QR code that opens your menu and a link to leave a Google review.","order":"Guests pick their order on your website and send it straight to you for pickup. No per-order fee from us, unlike the delivery apps. One-time $150 setup."},"mkMore":{"soc1":["3 posts a week, shared to both your Facebook and Instagram pages","We set up your pages if you don't have them yet","Plate photos, Early Bird and Senior Special reminders, and holiday hours","We write the captions and make the graphics","We use photos you or your staff send from your phone","You approve the month's plan before anything posts","A short report each month: reach, new followers and your best posts"],"soc2":["Everything in Social Starter","Weekly stories for today's chalkboard special","2 short Reels a month, edited from clips you send","Reminder posts before holidays like Easter and Mother's Day","The same videos ready for TikTok too"],"club":["A sign-up form on your website, plus a QR sign for the register and tables","We write and send your specials, holiday hours and news","Text or email, whichever your guests prefer","Opt-in only, with an easy way to unsubscribe","A monthly count of how many people have joined"],"qr":["Table tents in Sunshine yellow and blue","The QR code opens your live website menu, so price changes never mean reprinting","A link to leave a Google review in the same scan","Print-ready files you can take to any printer"],"order":["Pickup orders right from the menu on your website","Orders sent to you by text or email","No per-order fee from us","Your DoorDash link stays on the site for delivery","We set it up, test it with you and walk your staff through it"],"web2":["Everything in Essentials, no setup fee","Unlimited updates within 24 hours, like menu prices and holiday hours","Chalkboard and specials updated when you send them","Google Business Profile optimized and kept current","Monthly report: visits, calls and direction taps","Local SEO tune-ups and a yearly design refresh"],"web3":["Everything in Growth","Same-day updates: text us the morning special and it is on the chalkboard that day","Weekly Google posts and photo updates","Weekly specials banners","Review requests: QR table cards and a text link","Quarterly design refresh"]},"mkIdeas":{"soc1":"Monday: an Early Bird plate photo. Wednesday: the gyro omelet you won't find on most menus. Friday: a 'Good morning, Dubuque' post with weekend hours.","soc2":"A 15-second Reel of the apple topping going on a stack of pancakes.","club":"A text the week before Mother's Day with your hours and a reminder to come early.","qr":"A guest scans while waiting for pancakes and leaves a Google review before the check comes.","order":"A family orders two skillets and pancakes from the website at 7:45 on Saturday and walks in to a ready order."},"mkPlayTitle":"Your first month with each service","mkPlay":[{"id":"web2","t":"Website: Growth","m":"Week 1: Your site goes live|Week 2: Google profile tuned up|Week 3: Specials banner goes up|Week 4: Report: visits, calls, directions","d":"Your own website, $0 down|Unlimited updates within 24 hours|Google profile kept current"},{"id":"soc1","t":"Social Starter","m":"Week 1: Early Bird, gyro omelet, weekend hours|Week 2: Biscuits and gravy, Senior Special, hello Friday|Week 3: Meet a server, pancakes, weekend hours|Week 4: Skillet, a history throwback, your report","d":"3 posts a week on Facebook and Instagram|We write and design every post|You approve before anything posts"},{"id":"order","t":"Call-ahead pickup ordering","m":"Week 1: Ordering added to your menu|Week 2: Test orders with you|Week 3: Staff walkthrough, go live|Week 4: Pickup orders, no fee from us","d":"Pickup orders from your website|Orders sent to you by text or email|No per-order fee from us"},{"id":"web1","t":"Website: Essentials","m":"Week 1: We build your site|Week 2: You check the menu and photos|Week 3: Site live, Google profile set up|Week 4: Your 2 small updates","d":"Your own website, $499 setup|2 small updates a month|You own the site files"},{"id":"web3","t":"Website: Partner","m":"Week 1: Same-day updates start|Week 2: Specials banner, Google post|Week 3: Review cards on the tables|Week 4: New photos, Google post, report","d":"Everything in Growth|Same-day updates|Weekly Google posts and review cards"},{"id":"soc2","t":"Social Growth","m":"Week 1: Reel: pancakes off the griddle|Week 2: Stories: today's special|Week 3: Reel: a skillet hits the table|Week 4: Stories: weekend hours","d":"Everything in Social Starter|2 short Reels a month|Weekly stories"},{"id":"club","t":"Text or email club","m":"Week 1: Sign-up sign at the register|Week 2: Text: Early Bird is $6.95|Week 3: Text: favorite of the week|Week 4: Text: holiday hours","d":"Guests sign up for texts or emails|We write and send them|Opt-in, easy to unsubscribe"},{"id":"qr","t":"QR table tents","m":"Week 1: Designed in Sunshine colors|Week 2: You approve it|Week 3: Print files delivered|Week 4: Guests scan for menu and reviews","d":"Table tents with a QR menu|Google review link in the same scan|Print-ready files"}],"mkPlaySub":"One month, week by week.","then":{"n":"Karigan's","l":"1940s, Karigan's","t":"Karigan's Restaurant opened on this corner in 1942, and the building was rebuilt after a fire in 1948. More than 80 years later, the coffee is still on at 6am."}}}}]
+  },
+  {
+    "key": "sunshine-site-2",
+    "slug": "sunshine-family-restaurant-ea479",
+    "patch": true,
+    "data": {
+      "x": {
+        "headline": "Good morning,|Dubuque.",
+        "kicker": "Family owned since 2004 · Downtown Dubuque",
+        "favs": [
+          {
+            "n": "Gyro Omelet",
+            "i": "wrap",
+            "d": "Gyro meat folded into a fluffy omelet with tzatziki on the side. You won't find it on many menus.",
+            "q": "We both had the gyro omelet because we'd never seen that on a menu before."
+          },
+          {
+            "n": "Corned Beef Hash",
+            "i": "pan",
+            "d": "A hearty, crispy plate that regulars come back for again and again."
+          },
+          {
+            "n": "Biscuits and Gravy",
+            "i": "gravy",
+            "d": "The most mentioned dish in Google reviews. Try a half order with hash browns."
+          },
+          {
+            "n": "Pancakes",
+            "i": "cakes",
+            "d": "Big, fluffy and soft. Ask for the apple topping.",
+            "q": "I loved the pancakes, it melts in your mouth."
+          },
+          {
+            "n": "2x2x2",
+            "i": "egg",
+            "d": "Two eggs, two pancakes and two meats. One guest was full halfway through."
+          },
+          {
+            "n": "Skillet",
+            "i": "pan",
+            "d": "Sausage Supreme, Meat Lovers or Jalapeno, piled high and served hot."
+          }
+        ],
+        "deals": [
+          {
+            "k": "Early bird",
+            "t": "Early Bird Special",
+            "d": "Three strips of bacon, two pancakes and two eggs.",
+            "p": "$6.95"
+          },
+          {
+            "k": "60 and over",
+            "t": "Senior Special",
+            "d": "A smaller plate at a smaller price for guests 60 and over.",
+            "p": "$4.95"
+          }
+        ],
+        "menuSub": "Home-style cooking, big portions and fair prices, from the first cup of coffee at 6am.",
+        "menuNote": "Ask your server about today's specials.",
+        "storyText": "Sunshine sits in the curved corner building with the blue awning at 4th and Central, where Dubuque has been sitting down to eat for more than 80 years. The names on the sign have changed, but the idea hasn't: good food, a hot cup of coffee and a friendly face.",
+        "family": "Owned by Zoro and Kandi Saliu since 2004. A family restaurant where the servers know many regulars by name.",
+        "story": [
+          {
+            "y": "1890",
+            "t": "Jungels and Bade opens at 4th and Central."
+          },
+          {
+            "y": "1942",
+            "t": "The building becomes Karigan's Restaurant."
+          },
+          {
+            "y": "1948",
+            "t": "Rebuilt after a fire."
+          },
+          {
+            "y": "1972",
+            "t": "The Karigan family sells to Peter Sfikas, and it becomes Sfikas Restaurant."
+          },
+          {
+            "y": "1987",
+            "t": "Lyle Ostenborg buys the business and keeps the Sfikas name."
+          },
+          {
+            "y": "2004",
+            "t": "Zoro and Kandi Saliu buy it, and Sunshine Family Restaurant is born.",
+            "hi": "1"
+          },
+          {
+            "y": "2010",
+            "t": "A fire damages the inside. The family rebuilds and reopens."
+          },
+          {
+            "y": "Today",
+            "t": "Still serving breakfast and lunch every day from 6am.",
+            "hi": "1"
+          }
+        ],
+        "rev": [
+          {
+            "t": "Old-fashioned, nothing fancy, hearty breakfast. Outstanding service, inexpensive, delicious corned beef and Denver omelets.",
+            "n": "Howard S.",
+            "s": "Google"
+          },
+          {
+            "t": "Great family restaurant in the area. Large portions and great food. I loved the pancakes, it melts in your mouth.",
+            "n": "Geraldine B.",
+            "s": "Google"
+          },
+          {
+            "t": "One of best breakfast restaurants I've been to. Super delicious, with large portions and very reasonably priced.",
+            "n": "Google reviewer",
+            "s": "Google"
+          },
+          {
+            "t": "Love this yummy, speed service and reasonably priced restaurant!",
+            "n": "Google reviewer",
+            "s": "Google"
+          },
+          {
+            "t": "We both had the gyro omelet because we'd never seen that on a menu before.",
+            "n": "Val G.",
+            "s": "Tripadvisor"
+          },
+          {
+            "t": "Portions very large (we recommend a plate for two).",
+            "n": "Naddel M.",
+            "s": "Tripadvisor"
+          }
+        ],
+        "notes": [
+          "Big portions. Some guests even share a plate",
+          "Family friendly, with high chairs for little ones",
+          "Busy on weekend mornings, but tables turn over quickly",
+          "Open every day of the week from 6am",
+          "Wheelchair accessible entrance",
+          "Friendly servers who keep your coffee filled",
+          "Downtown on the corner of 4th and Central, with street parking nearby",
+          "Senior Special for guests 60 and over"
+        ],
+        "rating": {
+          "v": "4.5",
+          "n": 1680,
+          "src": "Google reviews"
+        },
+        "orderUrl": "https://www.doordash.com/store/sunshine-family-restaurant-llc-dubuque-46576772/",
+        "orderLabel": "Order on DoorDash",
+        "corner": "On the corner of 4th and Central, downtown",
+        "west": {
+          "n": "Sunshine Family Restaurant West",
+          "a": "1575 John F Kennedy Rd, Dubuque",
+          "h": "Daily 6am to 2pm",
+          "p": "(563) 557-3000"
+        },
+        "footLine": "Hearty breakfast and lunch at 4th and Central. Family owned since 2004.",
+        "heroImg": "https://riverbendwebco.com/demo/img/sun-front.jpg",
+        "since": "2004",
+        "storyImg": "https://riverbendwebco.com/demo/img/sun-window.jpg",
+        "galSub": "Big plates, hot coffee and a room full of neighbors.",
+        "gallery": [
+          "https://riverbendwebco.com/demo/img/sun-crowd.jpg|A full house for breakfast",
+          "https://riverbendwebco.com/demo/img/sun-pancakes.jpg|Pancakes and eggs Benedict",
+          "https://riverbendwebco.com/demo/img/sun-skillet.jpg|Skillet with sausage gravy",
+          "https://riverbendwebco.com/demo/img/sun-dining.jpg|Plenty of tables",
+          "https://riverbendwebco.com/demo/img/sun-hash.jpg|Two eggs over hash browns",
+          "https://riverbendwebco.com/demo/img/sun-dining2.jpg|Booths for the whole family"
+        ],
+        "fam": [
+          {
+            "ini": "Z & K",
+            "r": "Owners since 2004",
+            "n": "Zoro and Kandi Saliu",
+            "d": "They bought the restaurant at 4th and Central in 2004, gave it the Sunshine name, and reopened after the 2010 fire."
+          },
+          {
+            "ini": "S",
+            "r": "The crew",
+            "n": "Our servers",
+            "d": "Quick with the coffee pot, and many of them know the regulars by name."
+          },
+          {
+            "ini": "You",
+            "r": "Pull up a chair",
+            "n": "Our regulars",
+            "d": "Neighbors, families and first-timers, and the 1,680 Google reviews they have left."
+          }
+        ],
+        "mkPhoto": "https://riverbendwebco.com/demo/img/sun-front.jpg",
+        "mkCap": "Sunshine Family Restaurant, 4th and Central, Dubuque",
+        "mkTitle": "A website and marketing plan for Sunshine Family Restaurant",
+        "mkLead": "1,680 Google reviews say Dubuque loves Sunshine, but there is no website to send people to. Here is how we put your menu, story and specials online and give more people a reason to stop in for breakfast.",
+        "mkPick": [
+          "web2",
+          "soc1",
+          "order"
+        ],
+        "mkPickTitle": "Our recommendation for Sunshine",
+        "mkPickNote": "Start with the website, steady posts and pickup orders with no per-order fee from us. Add the text club or Reels any time.",
+        "mkName": {
+          "order": "Call-ahead pickup ordering",
+          "qr": "QR table tents with a review link"
+        },
+        "mkWhat": {
+          "soc1": "We run Sunshine's Facebook and Instagram: 3 posts a week in total, shared to both pages, about your plates, specials and the people behind them. Plus a short monthly report.",
+          "soc2": "The same 3 posts a week, plus weekly stories and 2 short Reels a month, so Dubuque sees the pancakes coming off the griddle, not just a photo.",
+          "club": "Guests sign up on your website or with a QR sign at the register, and we send your specials and news to them for you.",
+          "qr": "Table tents with a QR code that opens your menu and a link to leave a Google review.",
+          "order": "Guests pick their order on your website and send it straight to you for pickup. No per-order fee from us, unlike the delivery apps. One-time $150 setup."
+        },
+        "mkMore": {
+          "soc1": [
+            "3 posts a week, shared to both your Facebook and Instagram pages",
+            "We set up your pages if you don't have them yet",
+            "Plate photos, Early Bird and Senior Special reminders, and holiday hours",
+            "We write the captions and make the graphics",
+            "We use photos you or your staff send from your phone",
+            "You approve the month's plan before anything posts",
+            "A short report each month: reach, new followers and your best posts"
+          ],
+          "soc2": [
+            "Everything in Social Starter",
+            "Weekly stories for today's chalkboard special",
+            "2 short Reels a month, edited from clips you send",
+            "Reminder posts before holidays like Easter and Mother's Day",
+            "The same videos ready for TikTok too"
+          ],
+          "club": [
+            "A sign-up form on your website, plus a QR sign for the register and tables",
+            "We write and send your specials, holiday hours and news",
+            "Text or email, whichever your guests prefer",
+            "Opt-in only, with an easy way to unsubscribe",
+            "A monthly count of how many people have joined"
+          ],
+          "qr": [
+            "Table tents in Sunshine yellow and blue",
+            "The QR code opens your live website menu, so price changes never mean reprinting",
+            "A link to leave a Google review in the same scan",
+            "Print-ready files you can take to any printer"
+          ],
+          "order": [
+            "Pickup orders right from the menu on your website",
+            "Orders sent to you by text or email",
+            "No per-order fee from us",
+            "Your DoorDash link stays on the site for delivery",
+            "We set it up, test it with you and walk your staff through it"
+          ],
+          "web2": [
+            "Everything in Essentials, no setup fee",
+            "Unlimited updates within 24 hours, like menu prices and holiday hours",
+            "Chalkboard and specials updated when you send them",
+            "Google Business Profile optimized and kept current",
+            "Monthly report: visits, calls and direction taps",
+            "Local SEO tune-ups and a yearly design refresh"
+          ],
+          "web3": [
+            "Everything in Growth",
+            "Same-day updates: text us the morning special and it is on the chalkboard that day",
+            "Weekly Google posts and photo updates",
+            "Weekly specials banners",
+            "Review requests: QR table cards and a text link",
+            "Quarterly design refresh"
+          ]
+        },
+        "mkIdeas": {
+          "soc1": "Monday: an Early Bird plate photo. Wednesday: the gyro omelet you won't find on most menus. Friday: a 'Good morning, Dubuque' post with weekend hours.",
+          "soc2": "A 15-second Reel of the apple topping going on a stack of pancakes.",
+          "club": "A text the week before Mother's Day with your hours and a reminder to come early.",
+          "qr": "A guest scans while waiting for pancakes and leaves a Google review before the check comes.",
+          "order": "A family orders two skillets and pancakes from the website at 7:45 on Saturday and walks in to a ready order."
+        },
+        "mkPlayTitle": "Your first month with each service",
+        "mkPlay": [
+          {
+            "id": "web2",
+            "t": "Website: Growth",
+            "w": "$0 down.",
+            "m": "Week 1: Your site goes live|Week 2: Google profile tuned up|Week 3: Specials banner goes up|Week 4: Report: visits, calls, directions"
+          },
+          {
+            "id": "soc1",
+            "t": "Social Starter",
+            "w": "3 posts a week.",
+            "m": "Week 1: Early Bird, gyro omelet, weekend hours|Week 2: Biscuits and gravy, Senior Special, hello Friday|Week 3: Meet a server, pancakes, weekend hours|Week 4: Skillet, a history throwback, your report"
+          },
+          {
+            "id": "order",
+            "t": "Call-ahead pickup ordering",
+            "w": "One-time setup.",
+            "m": "Week 1: Ordering added to your menu|Week 2: Test orders with you|Week 3: Staff walkthrough, go live|Week 4: Pickup orders, no fee from us"
+          },
+          {
+            "id": "web1",
+            "t": "Website: Essentials",
+            "w": "$499 setup, low monthly upkeep.",
+            "m": "Week 1: We build your site|Week 2: You check the menu and photos|Week 3: Site live, Google profile set up|Week 4: Your 2 small updates"
+          },
+          {
+            "id": "web3",
+            "t": "Website: Partner",
+            "w": "We handle Google too.",
+            "m": "Week 1: Same-day updates start|Week 2: Specials banner, Google post|Week 3: Review cards on the tables|Week 4: New photos, Google post, report"
+          },
+          {
+            "id": "soc2",
+            "t": "Social Growth",
+            "w": "Posts plus video.",
+            "m": "Week 1: Reel: pancakes off the griddle|Week 2: Stories: today's special|Week 3: Reel: a skillet hits the table|Week 4: Stories: weekend hours"
+          },
+          {
+            "id": "club",
+            "t": "Text or email club",
+            "w": "Reach regulars any morning.",
+            "m": "Week 1: Sign-up sign at the register|Week 2: Text: Early Bird is $6.95|Week 3: Text: favorite of the week|Week 4: Text: holiday hours"
+          },
+          {
+            "id": "qr",
+            "t": "QR table tents",
+            "w": "Menu and review link on every table.",
+            "m": "Week 1: Designed in Sunshine colors|Week 2: You approve it|Week 3: Print files delivered|Week 4: Guests scan for menu and reviews"
+          }
+        ],
+        "mkPlaySub": "One month, week by week.",
+        "then": {
+          "n": "Karigan's",
+          "l": "1940s, Karigan's",
+          "t": "Karigan's Restaurant opened on this corner in 1942, and the building was rebuilt after a fire in 1948. More than 80 years later, the coffee is still on at 6am."
+        }
+      }
+    }
+  },
+  {
+    "key": "sunshine-site-3",
+    "slug": "sunshine-family-restaurant-ea479",
+    "patch": true,
+    "data": {
+      "x": {
+        "headline": "Good morning,|Dubuque.",
+        "kicker": "Family owned since 2004 · Downtown Dubuque",
+        "favs": [
+          {
+            "n": "Gyro Omelet",
+            "i": "wrap",
+            "d": "Gyro meat folded into a fluffy omelet with tzatziki on the side. You won't find it on many menus.",
+            "q": "We both had the gyro omelet because we'd never seen that on a menu before."
+          },
+          {
+            "n": "Corned Beef Hash",
+            "i": "pan",
+            "d": "A hearty, crispy plate that regulars come back for again and again."
+          },
+          {
+            "n": "Biscuits and Gravy",
+            "i": "gravy",
+            "d": "The most mentioned dish in Google reviews. Try a half order with hash browns."
+          },
+          {
+            "n": "Pancakes",
+            "i": "cakes",
+            "d": "Big, fluffy and soft. Ask for the apple topping.",
+            "q": "I loved the pancakes, it melts in your mouth."
+          },
+          {
+            "n": "2x2x2",
+            "i": "egg",
+            "d": "Two eggs, two pancakes and two meats. One guest was full halfway through."
+          },
+          {
+            "n": "Skillet",
+            "i": "pan",
+            "d": "Sausage Supreme, Meat Lovers or Jalapeno, piled high and served hot."
+          }
+        ],
+        "deals": [
+          {
+            "k": "Early bird",
+            "t": "Early Bird Special",
+            "d": "Three strips of bacon, two pancakes and two eggs.",
+            "p": "$6.95"
+          },
+          {
+            "k": "60 and over",
+            "t": "Senior Special",
+            "d": "A smaller plate at a smaller price for guests 60 and over.",
+            "p": "$4.95"
+          }
+        ],
+        "menuSub": "Home-style cooking, big portions and fair prices, from the first cup of coffee at 6am.",
+        "menuNote": "Ask your server about today's specials.",
+        "storyText": "Sunshine sits in the curved corner building with the blue awning at 4th and Central, where Dubuque has been sitting down to eat for more than 80 years. The names on the sign have changed, but the idea hasn't: good food, a hot cup of coffee and a friendly face.",
+        "family": "Owned by Zoro and Kandi Saliu since 2004. A family restaurant where the servers know many regulars by name.",
+        "story": [
+          {
+            "y": "1890",
+            "t": "Jungels and Bade opens at 4th and Central."
+          },
+          {
+            "y": "1942",
+            "t": "The building becomes Karigan's Restaurant."
+          },
+          {
+            "y": "1948",
+            "t": "Rebuilt after a fire."
+          },
+          {
+            "y": "1972",
+            "t": "The Karigan family sells to Peter Sfikas, and it becomes Sfikas Restaurant."
+          },
+          {
+            "y": "1987",
+            "t": "Lyle Ostenborg buys the business and keeps the Sfikas name."
+          },
+          {
+            "y": "2004",
+            "t": "Zoro and Kandi Saliu buy it, and Sunshine Family Restaurant is born.",
+            "hi": "1"
+          },
+          {
+            "y": "2010",
+            "t": "A fire damages the inside. The family rebuilds and reopens."
+          },
+          {
+            "y": "Today",
+            "t": "Still serving breakfast and lunch every day from 6am.",
+            "hi": "1"
+          }
+        ],
+        "rev": [
+          {
+            "t": "Old-fashioned, nothing fancy, hearty breakfast. Outstanding service, inexpensive, delicious corned beef and Denver omelets.",
+            "n": "Howard S.",
+            "s": "Google"
+          },
+          {
+            "t": "Great family restaurant in the area. Large portions and great food. I loved the pancakes, it melts in your mouth.",
+            "n": "Geraldine B.",
+            "s": "Google"
+          },
+          {
+            "t": "One of best breakfast restaurants I've been to. Super delicious, with large portions and very reasonably priced.",
+            "n": "Google reviewer",
+            "s": "Google"
+          },
+          {
+            "t": "Love this yummy, speed service and reasonably priced restaurant!",
+            "n": "Google reviewer",
+            "s": "Google"
+          },
+          {
+            "t": "We both had the gyro omelet because we'd never seen that on a menu before.",
+            "n": "Val G.",
+            "s": "Tripadvisor"
+          },
+          {
+            "t": "Portions very large (we recommend a plate for two).",
+            "n": "Naddel M.",
+            "s": "Tripadvisor"
+          }
+        ],
+        "notes": [
+          "Big portions. Some guests even share a plate",
+          "Family friendly, with high chairs for little ones",
+          "Busy on weekend mornings, but tables turn over quickly",
+          "Open every day of the week from 6am",
+          "Wheelchair accessible entrance",
+          "Friendly servers who keep your coffee filled",
+          "Downtown on the corner of 4th and Central, with street parking nearby",
+          "Senior Special for guests 60 and over"
+        ],
+        "rating": {
+          "v": "4.5",
+          "n": 1680,
+          "src": "Google reviews"
+        },
+        "orderUrl": "https://www.doordash.com/store/sunshine-family-restaurant-llc-dubuque-46576772/",
+        "orderLabel": "Order on DoorDash",
+        "corner": "On the corner of 4th and Central, downtown",
+        "west": {
+          "n": "Sunshine Family Restaurant West",
+          "a": "1575 John F Kennedy Rd, Dubuque",
+          "h": "Daily 6am to 2pm",
+          "p": "(563) 557-3000"
+        },
+        "footLine": "Hearty breakfast and lunch at 4th and Central. Family owned since 2004.",
+        "heroImg": "https://riverbendwebco.com/demo/img/sun-front.jpg",
+        "since": "2004",
+        "storyImg": "https://riverbendwebco.com/demo/img/sun-window.jpg",
+        "galSub": "Big plates, hot coffee and a room full of neighbors.",
+        "gallery": [
+          "https://riverbendwebco.com/demo/img/sun-crowd.jpg|A full house for breakfast",
+          "https://riverbendwebco.com/demo/img/sun-pancakes.jpg|Pancakes and eggs Benedict",
+          "https://riverbendwebco.com/demo/img/sun-skillet.jpg|Skillet with sausage gravy",
+          "https://riverbendwebco.com/demo/img/sun-dining.jpg|Plenty of tables",
+          "https://riverbendwebco.com/demo/img/sun-hash.jpg|Two eggs over hash browns",
+          "https://riverbendwebco.com/demo/img/sun-dining2.jpg|Booths for the whole family"
+        ],
+        "fam": [
+          {
+            "ini": "Z & K",
+            "r": "Owners since 2004",
+            "n": "Zoro and Kandi Saliu",
+            "d": "They bought the restaurant at 4th and Central in 2004, gave it the Sunshine name, and reopened after the 2010 fire."
+          },
+          {
+            "ini": "S",
+            "r": "The crew",
+            "n": "Our servers",
+            "d": "Quick with the coffee pot, and many of them know the regulars by name."
+          },
+          {
+            "ini": "You",
+            "r": "Pull up a chair",
+            "n": "Our regulars",
+            "d": "Neighbors, families and first-timers, and the 1,680 Google reviews they have left."
+          }
+        ],
+        "mkPhoto": "https://riverbendwebco.com/demo/img/sun-front.jpg",
+        "mkCap": "Sunshine Family Restaurant, 4th and Central, Dubuque",
+        "mkTitle": "A website and marketing plan for Sunshine Family Restaurant",
+        "mkLead": "1,680 Google reviews say Dubuque loves Sunshine, but there is no website to send people to. Here is how we put your menu, story and specials online and give more people a reason to stop in for breakfast.",
+        "mkPick": [
+          "web2",
+          "soc1",
+          "order"
+        ],
+        "mkPickTitle": "Our recommendation for Sunshine",
+        "mkPickNote": "Start with the website, steady posts and pickup orders with no per-order fee from us. Add the text club or Reels any time.",
+        "mkName": {
+          "order": "Call-ahead pickup ordering",
+          "qr": "QR table tents with a review link"
+        },
+        "mkWhat": {
+          "soc1": "We run Sunshine's Facebook and Instagram: 3 posts a week in total, shared to both pages, about your plates, specials and the people behind them. Plus a short monthly report.",
+          "soc2": "The same 3 posts a week, plus weekly stories and 2 short Reels a month, so Dubuque sees the pancakes coming off the griddle, not just a photo.",
+          "club": "Guests sign up on your website or with a QR sign at the register, and we send your specials and news to them for you.",
+          "qr": "Table tents with a QR code that opens your menu and a link to leave a Google review.",
+          "order": "Guests pick their order on your website and send it straight to you for pickup. No per-order fee from us, unlike the delivery apps. One-time $150 setup."
+        },
+        "mkMore": {
+          "soc1": [
+            "3 posts a week, shared to both your Facebook and Instagram pages",
+            "We set up your pages if you don't have them yet",
+            "Plate photos, Early Bird and Senior Special reminders, and holiday hours",
+            "We write the captions and make the graphics",
+            "We use photos you or your staff send from your phone",
+            "You approve the month's plan before anything posts",
+            "A short report each month: reach, new followers and your best posts"
+          ],
+          "soc2": [
+            "Everything in Social Starter",
+            "Weekly stories for today's chalkboard special",
+            "2 short Reels a month, edited from clips you send",
+            "Reminder posts before holidays like Easter and Mother's Day",
+            "The same videos ready for TikTok too"
+          ],
+          "club": [
+            "A sign-up form on your website, plus a QR sign for the register and tables",
+            "We write and send your specials, holiday hours and news",
+            "Text or email, whichever your guests prefer",
+            "Opt-in only, with an easy way to unsubscribe",
+            "A monthly count of how many people have joined"
+          ],
+          "qr": [
+            "Table tents in Sunshine yellow and blue",
+            "The QR code opens your live website menu, so price changes never mean reprinting",
+            "A link to leave a Google review in the same scan",
+            "Print-ready files you can take to any printer"
+          ],
+          "order": [
+            "Pickup orders right from the menu on your website",
+            "Orders sent to you by text or email",
+            "No per-order fee from us",
+            "Your DoorDash link stays on the site for delivery",
+            "We set it up, test it with you and walk your staff through it"
+          ],
+          "web2": [
+            "Everything in Essentials, no setup fee",
+            "Unlimited updates within 24 hours, like menu prices and holiday hours",
+            "Chalkboard and specials updated when you send them",
+            "Google Business Profile optimized and kept current",
+            "Monthly report: visits, calls and direction taps",
+            "Local SEO tune-ups and a yearly design refresh"
+          ],
+          "web3": [
+            "Everything in Growth",
+            "Same-day updates: text us the morning special and it is on the chalkboard that day",
+            "Weekly Google posts and photo updates",
+            "Weekly specials banners",
+            "Review requests: QR table cards and a text link",
+            "Quarterly design refresh"
+          ]
+        },
+        "mkIdeas": {
+          "soc1": "Monday: an Early Bird plate photo. Wednesday: the gyro omelet you won't find on most menus. Friday: a 'Good morning, Dubuque' post with weekend hours.",
+          "soc2": "A 15-second Reel of the apple topping going on a stack of pancakes.",
+          "club": "A text the week before Mother's Day with your hours and a reminder to come early.",
+          "qr": "A guest scans while waiting for pancakes and leaves a Google review before the check comes.",
+          "order": "A family orders two skillets and pancakes from the website at 7:45 on Saturday and walks in to a ready order."
+        },
+        "mkPlayTitle": "Your first month with each service",
+        "mkPlay": [
+          {
+            "id": "web2",
+            "t": "Website: Growth",
+            "m": "Week 1: Your site goes live|Week 2: Google profile tuned up|Week 3: Specials banner goes up|Week 4: Report: visits, calls, directions",
+            "d": "Your own website, $0 down|Unlimited updates within 24 hours|Google profile kept current"
+          },
+          {
+            "id": "soc1",
+            "t": "Social Starter",
+            "m": "Week 1: Early Bird, gyro omelet, weekend hours|Week 2: Biscuits and gravy, Senior Special, hello Friday|Week 3: Meet a server, pancakes, weekend hours|Week 4: Skillet, a history throwback, your report",
+            "d": "3 posts a week on Facebook and Instagram|We write and design every post|You approve before anything posts"
+          },
+          {
+            "id": "order",
+            "t": "Call-ahead pickup ordering",
+            "m": "Week 1: Ordering added to your menu|Week 2: Test orders with you|Week 3: Staff walkthrough, go live|Week 4: Pickup orders, no fee from us",
+            "d": "Pickup orders from your website|Orders sent to you by text or email|No per-order fee from us"
+          },
+          {
+            "id": "web1",
+            "t": "Website: Essentials",
+            "m": "Week 1: We build your site|Week 2: You check the menu and photos|Week 3: Site live, Google profile set up|Week 4: Your 2 small updates",
+            "d": "Your own website, $499 setup|2 small updates a month|You own the site files"
+          },
+          {
+            "id": "web3",
+            "t": "Website: Partner",
+            "m": "Week 1: Same-day updates start|Week 2: Specials banner, Google post|Week 3: Review cards on the tables|Week 4: New photos, Google post, report",
+            "d": "Everything in Growth|Same-day updates|Weekly Google posts and review cards"
+          },
+          {
+            "id": "soc2",
+            "t": "Social Growth",
+            "m": "Week 1: Reel: pancakes off the griddle|Week 2: Stories: today's special|Week 3: Reel: a skillet hits the table|Week 4: Stories: weekend hours",
+            "d": "Everything in Social Starter|2 short Reels a month|Weekly stories"
+          },
+          {
+            "id": "club",
+            "t": "Text or email club",
+            "m": "Week 1: Sign-up sign at the register|Week 2: Text: Early Bird is $6.95|Week 3: Text: favorite of the week|Week 4: Text: holiday hours",
+            "d": "Guests sign up for texts or emails|We write and send them|Opt-in, easy to unsubscribe"
+          },
+          {
+            "id": "qr",
+            "t": "QR table tents",
+            "m": "Week 1: Designed in Sunshine colors|Week 2: You approve it|Week 3: Print files delivered|Week 4: Guests scan for menu and reviews",
+            "d": "Table tents with a QR menu|Google review link in the same scan|Print-ready files"
+          }
+        ],
+        "mkPlaySub": "One month, week by week.",
+        "then": {
+          "n": "Karigan's",
+          "l": "1940s, Karigan's",
+          "t": "Karigan's Restaurant opened on this corner in 1942, and the building was rebuilt after a fire in 1948. More than 80 years later, the coffee is still on at 6am."
+        }
+      }
+    }
+  },
+  {
+    "key": "gill-color-1",
+    "matchName": "Francis Gill",
+    "patch": true,
+    "data": {
+      "phone": "5635643402",
+      "email": "gillfsm@kw.com",
+      "address": "5600 Saratoga Rd, Ste. 1",
+      "city": "Asbury, IA",
+      "x": {
+        "brokerage": "Keller Williams Legacy Group",
+        "photo": "https://riverbendwebco.com/demo/img/gill-4k-color.jpg",
+        "searchUrl": "https://gillfsm.kw.com",
+        "license": "Licensed in the State of Iowa, License #B70016000",
+        "legal": "Each office is independently owned and operated. Equal Housing Opportunity.",
+        "follow": {},
+        "hideLogo": true,
+        "mkPhoto": "https://riverbendwebco.com/demo/img/gill-4k-color.jpg",
+        "mkCap": "Francis Gill, REALTOR®, Keller Williams Legacy Group",
+        "mkHide": [
+          "qr",
+          "order"
+        ],
+        "mkWhat": {
+          "soc1": "We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your listings, open houses and the local market. Plus a short monthly report.",
+          "soc2": "The same 3 posts a week, plus weekly stories, 2 short Reels a month, and we answer comments and messages for you so no lead waits.",
+          "club": "People sign up on your website, and we send them new listings, open house times and market updates for you."
+        },
+        "mkMore": {
+          "soc1": [
+            "3 posts a week, shared to both your Facebook and Instagram pages",
+            "New listing, open house, just sold and market update posts",
+            "We write the captions and make the graphics",
+            "We use listing photos and photos you send from your phone",
+            "You approve the month's plan before anything posts",
+            "A short report each month: reach, new followers and your best posts"
+          ],
+          "soc2": [
+            "Everything in Social Starter",
+            "Weekly stories for open houses and new listings",
+            "2 short Reels a month, like home tours edited from clips you send",
+            "We answer comments and messages and send leads straight to you",
+            "Posts work on TikTok too, from the same videos"
+          ],
+          "club": [
+            "A sign-up form on your website for buyers and sellers",
+            "We send new listings, open houses and market updates to your list",
+            "Text or email, whichever people prefer",
+            "Opt-in only, with an easy way to unsubscribe",
+            "A monthly count of how many people have joined"
+          ]
+        },
+        "mkIdeas": {
+          "soc1": "A just-listed post with the best photos, then an open house reminder the day before.",
+          "soc2": "A 30-second walkthrough Reel of a new listing, shared to Facebook and Instagram.",
+          "club": "An email to your list the day a new home hits the market in Asbury."
+        },
+        "facts": [
+          {
+            "v": "3",
+            "k": "Languages: English, Hindi and Punjabi"
+          },
+          {
+            "v": "Iowa",
+            "k": "Licensed REALTOR®"
+          },
+          {
+            "v": "KW",
+            "k": "Keller Williams Legacy Group"
+          },
+          {
+            "v": "Asbury",
+            "k": "Office on Saratoga Road"
+          }
+        ],
+        "areas": [
+          "Dubuque",
+          "Asbury",
+          "Peosta",
+          "Dyersville"
+        ],
+        "areaName": "Dubuque-area",
+        "officeAddr": "5600 Saratoga Rd, Ste. 1",
+        "officeCity": "Asbury, IA 52002"
+      }
+    }
+  },
+  {
+    "key": "gill-color-2",
+    "matchName": "Francis Gill Real Estate",
+    "patch": true,
+    "data": {
+      "phone": "5635643402",
+      "email": "gillfsm@kw.com",
+      "address": "5600 Saratoga Rd, Ste. 1",
+      "city": "Asbury, IA",
+      "x": {
+        "brokerage": "Keller Williams Legacy Group",
+        "photo": "https://riverbendwebco.com/demo/img/gill-4k-color.jpg",
+        "searchUrl": "https://gillfsm.kw.com",
+        "license": "Licensed in the State of Iowa, License #B70016000",
+        "legal": "Each office is independently owned and operated. Equal Housing Opportunity.",
+        "follow": {},
+        "hideLogo": true,
+        "mkPhoto": "https://riverbendwebco.com/demo/img/gill-4k-color.jpg",
+        "mkCap": "Francis Gill, REALTOR®, Keller Williams Legacy Group",
+        "mkHide": [
+          "order"
+        ],
+        "mkWhat": {
+          "soc1": "We run your Facebook and Instagram: 3 posts a week in total, shared to both pages, about your listings, open houses and the local market. Plus a short monthly report.",
+          "soc2": "The same 3 posts a week, plus weekly stories and 2 short Reels a month, so more people in the area see Francis on video.",
+          "club": "People sign up on your website, and we send them new listings, open house times and market updates for you.",
+          "qr": "Signs for your yard signs and open houses with a QR code that opens the listing, your website and your contact info."
+        },
+        "mkMore": {
+          "soc1": [
+            "3 posts a week, shared to both your Facebook and Instagram pages",
+            "New listing, open house, just sold and market update posts",
+            "We write the captions and make the graphics",
+            "We use listing photos and photos you send from your phone",
+            "You approve the month's plan before anything posts",
+            "A short report each month: reach, new followers and your best posts"
+          ],
+          "soc2": [
+            "Everything in Social Starter",
+            "Weekly stories for open houses and new listings",
+            "2 short Reels a month, like home tours edited from clips you send",
+            "Posts work on TikTok too, from the same videos",
+            "Reminder posts before every open house"
+          ],
+          "club": [
+            "A sign-up form on your website for buyers and sellers",
+            "We send new listings, open houses and market updates to your list",
+            "Text or email, whichever people prefer",
+            "Opt-in only, with an easy way to unsubscribe",
+            "A monthly count of how many people have joined"
+          ],
+          "qr": [
+            "Rider signs for your yard signs and table signs for open houses",
+            "The QR code opens the listing on your website, so details are always current",
+            "Your photo, phone and website in the same scan",
+            "Print-ready files you can take to any printer"
+          ],
+          "web1": [
+            "Custom 3-page mobile-ready website",
+            "Showing and appointment request form included",
+            "Buying, selling and contact pages set up",
+            "Google Business Profile set up",
+            "Hosting, SSL and security",
+            "2 small updates a month, handled by us",
+            "You own the site files once setup is paid"
+          ],
+          "web2": [
+            "Everything in Essentials, no setup fee",
+            "Showing and appointment request form included",
+            "Unlimited updates within 24 hours",
+            "Google Business Profile optimized and kept current",
+            "Monthly banner for open houses and new listings",
+            "Monthly report: visits, calls and form requests",
+            "Local SEO tune-ups and a yearly design refresh"
+          ],
+          "web3": [
+            "Everything in Growth",
+            "Showing and appointment request form included",
+            "Same-day updates",
+            "Weekly Google posts and photo updates",
+            "Weekly banners for open houses and new listings",
+            "Review requests: QR cards and a text link",
+            "Quarterly design refresh"
+          ]
+        },
+        "mkIdeas": {
+          "soc1": "A just-listed post with the best photos, then an open house reminder the day before.",
+          "soc2": "A 30-second walkthrough Reel of a new listing, shared to Facebook and Instagram.",
+          "club": "An email to your list the day a new home hits the market in Asbury.",
+          "web2": "His new site already has a home value form, a home search questionnaire and a payment calculator, so every visit can turn into a lead.",
+          "qr": "A QR rider on every yard sign, so a neighbor driving by can see the listing and call Francis right away."
+        },
+        "facts": [
+          {
+            "v": "3",
+            "k": "Languages: English, Hindi and Punjabi"
+          },
+          {
+            "v": "Iowa",
+            "k": "Licensed REALTOR®"
+          },
+          {
+            "v": "KW",
+            "k": "Keller Williams Legacy Group"
+          },
+          {
+            "v": "Asbury",
+            "k": "Office on Saratoga Road"
+          }
+        ],
+        "areaName": "Dubuque-area",
+        "langs": [
+          {
+            "n": "English",
+            "native": "English",
+            "hello": "Hello",
+            "code": "en"
+          },
+          {
+            "n": "Hindi",
+            "native": "हिन्दी",
+            "hello": "नमस्ते",
+            "code": "hi"
+          },
+          {
+            "n": "Punjabi",
+            "native": "ਪੰਜਾਬੀ",
+            "hello": "ਸਤ ਸ੍ਰੀ ਅਕਾਲ",
+            "code": "pa"
+          }
+        ],
+        "beforeTitle": "Before real estate",
+        "before": [
+          {
+            "t": "Mechanical engineering",
+            "d": "A career that started with how things are built and how they work."
+          },
+          {
+            "t": "Principal of an industrial training institute",
+            "d": "Years spent teaching, explaining and leading a team."
+          },
+          {
+            "t": "The retail business",
+            "d": "Hands-on experience serving customers every day."
+          },
+          {
+            "t": "What it means for you",
+            "d": "Careful attention to the details of a home, and clear answers at every step."
+          }
+        ],
+        "guideTitle": "The First-Time Home Buyer Guide",
+        "guide": [
+          "How much home can you afford?",
+          "Getting pre-approved, step by step",
+          "What to look for at a showing",
+          "How offers, inspections and appraisals work",
+          "What happens on closing day"
+        ],
+        "areaGuide": [
+          {
+            "n": "Dubuque",
+            "t": "Iowa's oldest city, on the Mississippi River, with historic neighborhoods, river views and a busy downtown.",
+            "p": "National Mississippi River Museum and Aquarium|Fenelon Place Elevator, a short, steep cable railway|The Historic Millwork District downtown|Bluffs and riverfront views"
+          },
+          {
+            "n": "Asbury",
+            "t": "A growing city right next to Dubuque's west side. It is the second-largest city in Dubuque County, with many newer neighborhoods.",
+            "p": "Four city parks, including Asbury Park and the Althaus Wetland and Nature Preserve|Walking and mountain bike trails|Close to west-side Dubuque shopping and dining|City motto: You're Home"
+          },
+          {
+            "n": "Peosta",
+            "t": "A fast-growing city about 12 miles west of Dubuque on Highway 20, halfway between Dubuque and Dyersville.",
+            "p": "Home to the Peosta campus of Northeast Iowa Community College|Quick Highway 20 access to Dubuque|Community center and city parks|Local employers like Mi-T-M and Bodine Electric"
+          },
+          {
+            "n": "Dyersville",
+            "t": "A small city west of Dubuque, known around the world as home of the Field of Dreams movie site.",
+            "p": "The Field of Dreams movie site|The Basilica of St. Francis Xavier|The National Farm Toy Museum|Small-town living with Highway 20 access"
+          }
+        ],
+        "mkTitle": "A website and marketing plan to bring Francis Gill new clients",
+        "mkLead": "As Francis goes full time in real estate, here is a simple plan: a professional website that turns visitors into leads, then steady local marketing on Google, Facebook and Instagram so buyers and sellers around Dubuque know his name.",
+        "mkPick": [
+          "web2",
+          "soc1",
+          "qr"
+        ],
+        "mkPickNote": "Nothing down on the website. The first payment is due the day the site goes live.",
+        "mkName": {
+          "club": "Email and text list for buyers and sellers",
+          "qr": "QR yard signs and open house signs"
+        },
+        "mkPlayTitle": "What we will do for Francis",
+        "mkPlaySub": "Plan by plan: what comes with each package, what a month looks like and real estate examples we would actually post.",
+        "mkPlay": [
+          {
+            "id": "web2",
+            "t": "Growth website: a lead machine that works 24/7",
+            "w": "His site does the selling while he is showing homes. Every form goes straight to his phone.",
+            "d": "Launch his site in about 7 days with his real info and headshot|Set up and optimize his Google Business Profile so he shows up in realtor searches around Dubuque|Send every form (home value, home search, showings, buyer guide) to his phone and email|Make any change within 24 hours when he texts us|Add a banner each month for open houses or new listings|Send a monthly report: visits, calls and form requests",
+            "m": "Week 1: Build and launch the site, set up Google|Week 2: Add his first listings and an open house banner|Week 3: Local search tune-up for Dubuque, Asbury, Peosta and Dyersville|Week 4: Monthly report and ideas for next month",
+            "e": "A seller in Asbury fills out What is my home worth? at 10pm, and Francis has the address and phone number before breakfast|A buyer finds his Peosta area guide on Google and taps Text Francis|An open house banner across the top of the site the week before each open house"
+          },
+          {
+            "id": "soc1",
+            "t": "Social Starter: show up every week without lifting a finger",
+            "w": "The simple way to stay in front of people. Francis approves the plan once a month, and we handle the rest.",
+            "d": "Post 3 times a week, shared to his Facebook and Instagram|Write every caption and design every graphic in his black and white style|Use his listing photos and the photos he texts us|Send him the month's plan to approve before anything posts|Send a short monthly report: reach, new followers and best posts",
+            "m": "Week 1: Meet Francis intro post, a just listed post and a buyer tip|Week 2: Open house reminder, a Dubuque market update and a seller tip|Week 3: Area spotlight on Asbury parks or the Dubuque riverfront, plus a first-time buyer tip|Week 4: Just sold or under contract, a myth vs fact post and a home value invite",
+            "e": "Just listed in Asbury: 3 beds, 2 baths and a big backyard. Tap the link for photos and to book a showing|Buyer tip: get pre-approved before you start touring. Here is why it matters|Francis speaks English, Hindi and Punjabi. Buying a home is easier in your own language|Curious what your home is worth? Get a free estimate in about a minute"
+          },
+          {
+            "id": "soc2",
+            "t": "Social Growth: everything in Starter, plus video",
+            "w": "For when he wants to grow faster. Video reaches the most new people in the area.",
+            "d": "Everything in Social Starter|Weekly stories for open houses, new listings and quick tips|2 short Reels a month, edited from clips he films on his phone, also posted to TikTok|Reminder posts before every open house",
+            "m": "Week 1: Reel: a 30-second walkthrough of a new listing|Week 2: Stories: open house countdown and a behind-the-scenes look|Week 3: Reel: Francis answers a common question, like how much do I need for a down payment|Week 4: Stories: a market update and a just sold celebration",
+            "e": "A Reel of Francis walking through a kitchen, with captions so it works with the sound off|A short video greeting in Hindi and Punjabi, inviting families to reach out in their own language|A just sold Reel celebrating his clients on closing day"
+          },
+          {
+            "id": "club",
+            "t": "Email and text list: stay in touch with past and future clients",
+            "w": "Most people buy or sell again, or refer a friend. A list keeps his name in front of them.",
+            "d": "Add a sign-up box to his site and a QR code for open houses|Write and send new listings, open house times and a short monthly market update|Text or email, whichever people choose|Opt-in only, with an easy way to unsubscribe|A monthly count of how many people have joined",
+            "m": "Every month: a short market update email|Every new listing: a new listing alert|Every open house: a reminder text the day before",
+            "e": "New in Dubuque this week: 3 beds, 2 baths. Reply YES for a private showing|Open house tomorrow 1 to 3pm in Peosta. Hope to see you there"
+          },
+          {
+            "id": "qr",
+            "t": "QR yard signs and open house signs: turn drive-bys into leads",
+            "w": "One-time setup. Every sign becomes a way to reach Francis.",
+            "d": "Design rider signs for his yard signs and table signs for open houses|The QR code opens the listing on his website, with photos and a showing request|Print-ready files he can take to any printer",
+            "e": "A neighbor driving by scans the yard sign and requests a showing on the spot|At an open house, visitors scan the table sign to save the listing and his number"
+          }
+        ],
+        "mkPlayNote": "How we keep it compliant: posts describe the home and the area, never who should live there, and every post names Keller Williams Legacy Group.",
+        "officeAddr": "5600 Saratoga Rd, Ste. 1",
+        "officeCity": "Asbury, IA 52002"
+      }
+    }
+  }
+]

@@ -3786,6 +3786,7 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-alerts-in{grid-template-columns:1fr;gap:20px}.rt-mguide{min-height:260px}.rt-best{padding:70px 0 40px}.rt-work{padding:70px 0}
 .rt-ftabs{gap:18px}
 }
+.rt.lux .rt-about-ph,.rt.lux .rt-bio-ph,.rt.lux .rt-intro-ph,.rt.lux img{filter:none!important}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}
@@ -6570,7 +6571,7 @@ function realty(C){
   /* official Market Center DBA logo goes in x.kwLogo (file from KW Connect, unmodified); until then a labeled placeholder */
   const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),title:kwLogo?'':'Placeholder: official '+firm+' logo from KW Connect'},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):[h('b',null,firm||'Keller Williams'),h('small',null,'Official logo placeholder')]);
   const pTitle=person+', REALTOR\u00ae';
-  const photo=okUrl(C.x.photo);
+  const photo=(u=>/\/gill-[\w-]*-bw\.jpg$/.test(u)?'https://riverbendwebco.com/demo/img/gill-4k-color.jpg':u)(okUrl(C.x.photo));
   const site=okUrl(C.x.searchUrl)||'';
   const digits=C.phone.replace(/\D/g,'').slice(-10);
   const sms=digits.length===10?'sms:+1'+digits:'';

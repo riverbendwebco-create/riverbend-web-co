@@ -3539,6 +3539,7 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-alerts-in{grid-template-columns:1fr;gap:20px}.rt-mguide{min-height:260px}.rt-best{padding:70px 0 40px}.rt-work{padding:70px 0}
 .rt-ftabs{gap:18px}
 }
+.rt.lux .rt-about-ph,.rt.lux .rt-bio-ph,.rt.lux .rt-intro-ph,.rt.lux img{filter:none!important}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}

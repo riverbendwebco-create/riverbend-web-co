@@ -2703,7 +2703,7 @@ function realty(C){
   /* official Market Center DBA logo goes in x.kwLogo (file from KW Connect, unmodified); until then a labeled placeholder */
   const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),title:kwLogo?'':'Placeholder: official '+firm+' logo from KW Connect'},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):[h('b',null,firm||'Keller Williams'),h('small',null,'Official logo placeholder')]);
   const pTitle=person+', REALTOR\u00ae';
-  const photo=okUrl(C.x.photo);
+  const photo=(u=>/\/gill-[\w-]*-bw\.jpg$/.test(u)?'https://riverbendwebco.com/demo/img/gill-4k-color.jpg':u)(okUrl(C.x.photo));
   const site=okUrl(C.x.searchUrl)||'';
   const digits=C.phone.replace(/\D/g,'').slice(-10);
   const sms=digits.length===10?'sms:+1'+digits:'';
