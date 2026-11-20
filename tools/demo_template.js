@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.rt-nav,.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.mt-nav,.rt-nav,.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -102,6 +102,7 @@ function build(d){
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
+  if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
@@ -2308,6 +2309,118 @@ function mutual(C){
     h('div',null,h('b',null,'Dubuque Store'),h('span',null,addrTxt),h('a',{href:tel},phoneTxt),h('span',null,'Mon-Fri '+hours[0]),h('span',null,'Sat '+hours[5]))),
     h('div',{class:'mw-foot-bar'},h('div',{class:'mw-w'},'© '+new Date().getFullYear()+' '+name)));
   return h('div',{class:'mw'},nav,hero,services,whyS,req,hist,how,visit,foot,hpage);
+}
+
+/* ===================== MOUNTAINTOP (stone countertops: charcoal, stone and logo yellow) ===================== */
+const MT_SITE='https://mountaintopstone.com/wp-content/uploads/2019/03/';
+const MT={
+  phone:'5635849499', addr:'400 Harrison St', city:'Dubuque, IA 52003',
+  hours:['9am - 5pm','9am - 5pm','9am - 5pm','9am - 5pm','9am - 5pm','9am - 1pm','Closed'],
+  social:{facebook:'https://www.facebook.com/mountaintopstoneworks/',instagram:'https://www.instagram.com/mountaintopstone/',youtube:'https://www.youtube.com/channel/UC5WbFxtX9yYdlWPbmOvzBqg'},
+  projects:[['Saturnia-Kitchen-1.jpg','Beautiful Kitchen Counter'],['Kitchen1.jpg','Full Kitchen Project'],['Kitchen02.jpg','Multilevel Kitchen Counter'],['100_4264_14x11.jpg','Bathroom Sink, Marble Light'],['BathCopper.jpg','Bathroom Sink, Copper'],['Bath_02.jpg','Bathroom Unique Design']],
+  surfaces:[
+    ['Quartz','Engineered','Low maintenance and durable, with consistent color and texture. Can mimic softer stones or come in colors not found in nature.',['No sealing','Non-porous','Avoid high heat']],
+    ['Granite','Natural','Very hard and durable, in a huge range of colors and patterns. Great for kitchens, baths, hearths and outdoor use.',['Very durable','Some types need sealing']],
+    ['Marble','Natural','Prized for its veining. Softer than granite and stains more easily, so it needs a little more care. Beautiful anywhere in the home.',['Classic veining','Needs care']],
+    ['Quartzite','Natural','Formed from sandstone. The look of marble with the durability of granite.',['Marble look','Granite strength','Needs sealing']],
+    ['Sintered Stone','Fabricated','Made from natural minerals like clay and feldspar. Resists scratches, heat, UV and water, and is food safe.',['Heat & scratch resistant','50%+ recycled']],
+    ['Soapstone','Natural','Durable with low absorbency, so stains soak in slowly. Darkens with age and can be refinished.',['Seal or oil','Can be refinished']],
+    ['Travertine','Natural','Durable, with creamy beige and brown tones. Slabs and tiles for counters, floors and backsplashes.',['Slabs & tiles']],
+    ['Limestone','Natural','A soft stone in beige and tan tones. Best in low-traffic areas.',['Needs sealing','Low traffic']],
+    ['Onyx','Natural','Rare and translucent, with swirling pastel patterns. Stunning for accent walls and bars.',['Accent surface','Translucent']],
+    ['Venetian Marble','Engineered','Recycled natural stone pressed and heated. A marble look at a lower cost, tougher than cultured marble.',['Marble look','Budget friendly']]],
+  team:[['Eric Christensen','Owner / CEO'],['Robert Breitbach','Owner / CFO'],['Rick Carner II','Production Manager'],['Randy Barton','Project Manager'],['Andrew Kartman','CNC Programmer / Operator'],['Wally Dirks','Installer / Fabrication Specialist']],
+  reviews:[['Thank you all for providing such a wonderful experience from beginning to end!','Ginny and Guy'],['Everyone was timely, considerate, and knowledgeable.','Cal and Jennifer'],['The flushing of the granite with the sink was perfect!','Tony and Pat'],['Will definitely refer business your way.','Bill and Julie'],['Not one single problem at all.','Mountaintop customer'],['I have found them very easy to work with, they answer all my questions.','Mountaintop customer'],['Good representatives for your company.','Mountaintop customer'],['It is beautiful!!','Mountaintop customer']]
+};
+const MT_I={
+  phone:'<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
+  pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  gem:'<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3l3 18M15 3l-3 18"/>', hand:'<path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4.5a1.5 1.5 0 0 1 3 0V11M14 10.5V6a1.5 1.5 0 0 1 3 0v8a7 7 0 0 1-7 7h-.5A6.5 6.5 0 0 1 4 15.2V12a1.5 1.5 0 0 1 3 0v1"/>',
+  heart:'<path d="M12 20s-8-4.6-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6.4-8 11-8 11z"/>', pencil:'<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
+  cpu:'<rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>', users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 6M18 14c2 .7 3 2.8 3 6"/>',
+  boxes:'<path d="M3 10h8v10H3zM13 10h8v10h-8zM8 3h8v7H8z"/>', store:'<path d="M3 21h18M4 21V9h16v12M4 9l2-5h12l2 5"/><path d="M10 21v-6h4v6"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  ruler:'<path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>', star:'<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/>',
+  fb:'<path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z"/>', ig:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/>', yt:'<rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor"/>'
+};
+function mtI(k,cls){ const s=h('span',{class:'mt-i'+(cls?' '+cls:''),'aria-hidden':'true'}); s.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(MT_I[k]||'')+'</svg>'; return s; }
+function mountaintop(C){
+  const name=C.name||'Mountaintop Stoneworks', x=C.x||{};
+  const digits=(C.phone||MT.phone).replace(/\D/g,'').slice(-10), tel='tel:+1'+digits, phoneTxt=digits.slice(0,3)+'-'+digits.slice(3,6)+'-'+digits.slice(6);
+  const addr=C.addr||MT.addr, city=/52003/.test(C.city||'')?C.city:MT.city, full=addr+', '+city;
+  const hours=C.hasHours?C.hours:MT.hours, today=hours[todayIx()]||'Closed';
+  const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+full);
+  const logo='https://riverbendwebco.com/demo/img/mountaintop-logo.png';
+  const P=i=>MT_SITE+MT.projects[i][0];
+  const go=id=>e=>{ e.preventDefault(); scrollTo(id); };
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const links=()=>[A('mt-surfaces','Surfaces'),A('mt-projects','Projects'),A('mt-process','Process'),A('mt-reviews','Reviews'),A('mt-team','Team'),A('mt-visit','Visit')];
+  const nav=h('header',{class:'mt-nav'},h('div',{class:'mt-w mt-nav-in'},
+    h('a',{class:'mt-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
+    h('nav',{class:'mt-links'},links()),
+    h('a',{class:'mt-btn y sm',href:tel},mtI('phone'),h('span',{class:'mt-btn-t'},phoneTxt),h('span',{class:'mt-btn-m'},'Call'))),
+    h('nav',{class:'mt-mlinks'},links()));
+  /* hero */
+  const slides=[0,1,2].map(i=>h('div',{class:'mt-slide'+(i===0?' on':''),style:'background-image:url("'+P(i)+'")'}));
+  const hero=h('section',{class:'mt-hero'},h('div',{class:'mt-slides','aria-hidden':'true'},slides),
+    h('div',{class:'mt-w mt-hero-in'},
+      h('span',{class:'mt-kick'},'Countertops & stone surfaces · Dubuque, Iowa'),
+      h('h1',null,'Bring the outdoors ',h('em',null,'in.')),
+      h('p',{class:'mt-lead'},'Where beautiful surfaces are crafted from nature. Granite, quartz, marble and more, designed, fabricated and installed by our own local craftsmen.'),
+      h('div',{class:'mt-cta'},h('a',{class:'mt-btn y',href:maps,target:'_blank',rel:'noopener'},'Come in today',mtI('arrow')),h('a',{class:'mt-btn ghost',href:'#mt-process',onclick:go('mt-process')},'Get started'))),
+    h('div',{class:'mt-w mt-strip'},[['store','Local showroom',addr],['clock','Open today',today],['gem','10 surface types','Natural & engineered'],['boxes','Large local inventory','Slabs in stock']].map(([i,a,b])=>h('div',null,mtI(i),h('span',null,h('b',null,a),h('small',null,b))))));
+  let si=0; const st=setInterval(()=>{ if(!hero.isConnected){clearInterval(st);return;} slides[si].classList.remove('on'); si=(si+1)%slides.length; slides[si].classList.add('on'); },6000);
+  /* values */
+  const head=(k,t,p)=>h('div',{class:'mt-head rv'},h('span',{class:'mt-kick'},k),h('h2',null,t),p?h('p',null,p):null);
+  const values=h('section',{class:'mt-sec mt-values'},h('div',{class:'mt-w'},
+    head('The Mountaintop difference','Quality. Craftsmanship. Passion.','Three principles behind every project, carried out through a proven process that treats each one as your own unique vision.'),
+    h('div',{class:'mt-vgrid'},[
+      ['gem','Quality','Our reputation is built on doing it right, and it defines how we treat every customer project.','“Quality means doing it right when no one is looking.” — Henry Ford'],
+      ['hand','Craftsmanship','A craftsman loves detail, and detail is how a project’s success is measured. Our team of craftsmen creates your vision.',''],
+      ['heart','Passion','We want to make your dream a reality, and nothing beats seeing your joy when your vision comes to life.','']].map(([i,t,d,q])=>h('div',{class:'mt-v rv'},mtI(i,'big'),h('h3',null,t),h('p',null,d),q?h('blockquote',null,q):null)))));
+  /* surfaces with filter */
+  const sgrid=h('div',{class:'mt-sgrid'});
+  const drawS=f=>{ sgrid.replaceChildren(...MT.surfaces.filter(s=>f==='All'||s[1]===f).map(([n,t,d,tags],i)=>h('article',{class:'mt-s rv rv-on'},
+    h('div',{class:'mt-s-sw sw'+(MT.surfaces.findIndex(z=>z[0]===n)%10),'aria-hidden':'true'}),h('div',{class:'mt-s-b'},h('div',{class:'mt-s-top'},h('h3',null,n),h('span',{class:'mt-tag '+t.toLowerCase()},t)),h('p',null,d),h('div',{class:'mt-chips'},tags.map(c=>h('span',null,c))))))); };
+  const ftabs=h('div',{class:'mt-ftabs',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',role:'tab',class:i?'':'on','aria-selected':i?'false':'true'},f); b.onclick=()=>{ ftabs.querySelectorAll('button').forEach(z=>{z.classList.toggle('on',z===b);z.setAttribute('aria-selected',z===b?'true':'false');}); drawS(f); }; return b; }));
+  drawS('All');
+  const surfaces=h('section',{class:'mt-sec mt-dark',id:'mt-surfaces'},h('div',{class:'mt-w'},
+    head('Surface types','Find your perfect surface','From timeless granite to low-maintenance quartz, see and touch every option in our showroom.'),
+    ftabs,sgrid,h('p',{class:'mt-brands'},'Quartz brands we carry: ',h('b',null,'Technistone'),' and ',h('b',null,'Caesarstone'),'.')));
+  /* why */
+  const why=h('section',{class:'mt-sec'},h('div',{class:'mt-w mt-why'},
+    h('div',{class:'mt-why-ph rv',style:'background-image:url("'+P(1)+'")'}),
+    h('div',{class:'rv'},h('span',{class:'mt-kick'},'Why Mountaintop'),h('h2',null,'Our passion is bringing the beauty of natural surfaces into your space.'),
+      h('ul',{class:'mt-why-l'},[['pencil','Expert design'],['cpu','Advanced state-of-the-art technology'],['users','Experienced, highly trained staff'],['boxes','Large local inventory'],['store','Convenient local showroom'],['ruler','Professional project process']].map(([i,t])=>h('li',null,mtI(i),t))))));
+  /* projects + lightbox */
+  const lb=h('div',{class:'mt-lb',hidden:true,role:'dialog','aria-modal':'true','aria-label':'Project photo'});
+  const openLb=i=>{ const [f,c]=MT.projects[i]; lb.replaceChildren(h('button',{type:'button',class:'mt-lb-x','aria-label':'Close',onclick:()=>{lb.hidden=true;}},mtI('x')),h('figure',null,h('img',{src:MT_SITE+f,alt:c}),h('figcaption',null,c))); lb.hidden=false; };
+  lb.addEventListener('click',e=>{ if(e.target===lb) lb.hidden=true; }); addEventListener('keydown',e=>{ if(e.key==='Escape') lb.hidden=true; });
+  const projects=h('section',{class:'mt-sec mt-dark',id:'mt-projects'},h('div',{class:'mt-w'},head('Our projects','See our work','Kitchens, baths and one-of-a-kind designs from right here in the Dubuque area.'),
+    h('div',{class:'mt-pgrid'},MT.projects.map(([f,c],i)=>h('button',{type:'button',class:'mt-p rv p'+i,onclick:()=>openLb(i)},h('img',{src:MT_SITE+f,alt:c,loading:'lazy'}),h('span',null,c))))));
+  /* process */
+  const steps=[['store','Visit the showroom','See slabs and samples in person and pick the surface that fits your space and budget.'],['ruler','Measure & template','We measure your space precisely so every edge and seam fits just right.'],['cpu','Precision fabrication','Your stone is cut on our state-of-the-art CNC equipment by experienced craftsmen.'],['check','Professional install','Our installers set your surfaces with care and leave you a space you will love.']];
+  const process=h('section',{class:'mt-sec',id:'mt-process'},h('div',{class:'mt-w'},head('The Mountaintop process','Create your stunning space','A proven process that treats every project as your unique vision.'),
+    h('ol',{class:'mt-steps'},steps.map(([i,t,d],n)=>h('li',{class:'rv'},h('span',{class:'mt-step-n'},String(n+1).padStart(2,'0')),mtI(i,'big'),h('h3',null,t),h('p',null,d)))),
+    h('div',{class:'mt-center'},h('a',{class:'mt-btn y',href:tel},mtI('phone'),'Get started: '+phoneTxt))));
+  /* reviews marquee */
+  const rv=MT.reviews.map(([q,n])=>h('figure',{class:'mt-r'},h('div',{class:'mt-stars','aria-label':'5 stars'},[0,1,2,3,4].map(()=>mtI('star'))),h('blockquote',null,q),h('figcaption',null,n)));
+  const rtrack=h('div',{class:'mt-rtrack'},rv,rv.map(n=>{ const c=n.cloneNode(true); c.setAttribute('aria-hidden','true'); return c; }));
+  const reviews=h('section',{class:'mt-sec mt-dark mt-revs',id:'mt-reviews'},h('div',{class:'mt-w'},head('Testimonials','What our clients are saying')),h('div',{class:'mt-rrow'},rtrack));
+  /* team */
+  const team=h('section',{class:'mt-sec',id:'mt-team'},h('div',{class:'mt-w'},head('Our team','The craftsmen behind your counters'),
+    h('div',{class:'mt-team'},MT.team.map(([n,r])=>h('div',{class:'mt-tm rv'},h('span',{class:'mt-av'},n.split(' ').map(w=>w[0]).slice(0,2).join('')),h('b',null,n),h('small',null,r))))));
+  /* visit */
+  const D3=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const visit=h('section',{class:'mt-sec mt-dark',id:'mt-visit'},h('div',{class:'mt-w mt-visit'},
+    h('div',{class:'rv'},h('span',{class:'mt-kick'},'Ready to get started?'),h('h2',null,'Come see the stone in person.'),
+      h('a',{class:'mt-li',href:maps,target:'_blank',rel:'noopener'},mtI('pin'),full),h('a',{class:'mt-li',href:tel},mtI('phone'),phoneTxt),
+      h('div',{class:'mt-hrs'},D3.map((d,i)=>h('div',{class:i===todayIx()?'on':null},h('span',null,d),h('b',null,hours[i]||'Closed')))),
+      h('div',{class:'mt-cta'},h('a',{class:'mt-btn y',href:maps,target:'_blank',rel:'noopener'},mtI('pin'),'Get directions'),h('a',{class:'mt-btn ghost',href:tel},mtI('phone'),'Call us')),
+      h('div',{class:'mt-soc'},h('a',{href:MT.social.facebook,target:'_blank',rel:'noopener','aria-label':'Facebook'},mtI('fb')),h('a',{href:MT.social.instagram,target:'_blank',rel:'noopener','aria-label':'Instagram'},mtI('ig')),h('a',{href:MT.social.youtube,target:'_blank',rel:'noopener','aria-label':'YouTube'},mtI('yt')))),
+    h('div',{class:'mt-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))));
+  const foot=h('footer',{class:'mt-foot'},h('div',{class:'mt-w mt-foot-in'},h('img',{src:logo,alt:name}),h('p',null,'Bring the outdoors IN. Countertops and stone surfaces at '+full+'.'),h('small',null,'© '+new Date().getFullYear()+' Mountaintop Stoneworks, Inc.')));
+  return h('div',{class:'mt'},nav,hero,values,surfaces,why,projects,process,reviews,team,visit,foot,lb);
 }
 
 const CL_ICO={
