@@ -101,6 +101,7 @@ function build(d){
   if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
   if(style==='pub'&&p&&readableOnDark(p)) page.style.setProperty('--gold',p),page.style.setProperty('--gold-2',p);
@@ -2059,6 +2060,79 @@ function osteria2(C){
 }
 
 /* ===================== CLOUD (vape / smoke shop retail, clean e-commerce look) ===================== */
+/* ===================== ZEPHYR (windows & doors, copper on charcoal) ===================== */
+const ZP_ICO={
+  win:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><circle cx="14.5" cy="12" r=".9" fill="currentColor"/></svg>',
+  glass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M8 14l6-6M10 17l7-7"/></svg>',
+  mirror:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="10" rx="6" ry="7.5"/><path d="M12 17.5V21M8.5 21h7M9.5 7.5l2-2"/></svg>',
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V9h16v12M4 9l2-5h12l2 5"/><path d="M10 21v-6h4v6"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v11h14V10"/><rect x="10" y="13" width="4" height="4"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
+};
+function zpIco(k){ const d=h('span',{class:'zp-ico','aria-hidden':'true'}); d.innerHTML=ZP_ICO[k]||ZP_ICO.win; return d; }
+function zpIcoFor(n){ n=String(n||'').toLowerCase(); return /mirror/.test(n)?'mirror':/glass/.test(n)?'glass':/commercial|store|business/.test(n)?'shop':/door/.test(n)?'door':/home|residential/.test(n)?'home':'win'; }
+function zephyr(C){
+  const x=C.x, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const Z=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1600&q=72';
+  const heroPic=ok(x.heroPhoto)||Z('1662624919582-007c57fdc3dd');
+  const aboutPic=ok(x.aboutPhoto)||Z('1724660583307-e7b0c5c5fcd9');
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const svc=(Array.isArray(x.services)&&x.services.length?x.services:C.items.slice(0,6).map(i=>({n:i.name,d:i.desc||'',img:i.photo}))).filter(s=>s&&s.n).slice(0,6);
+  const lines=Array.isArray(x.heroLines)&&x.heroLines.length===3?x.heroLines:['Windows','Doors','& Glass'];
+  const since=/^(18|19|20)\d\d$/.test(String(x.since||''))?String(x.since):'';
+  const jumpA=(id,t)=>h('a',{href:'#'+id,onclick:e=>{e.preventDefault();scrollTo(id);}},t);
+  const cta=C.tel?h('a',{class:'zp-btn',href:C.tel},'Get a Quote',h('span',{class:'zp-btn-i'},zpIco('arrow'))):h('a',{class:'zp-btn',href:'#zp-visit',onclick:e=>{e.preventDefault();scrollTo('zp-visit');}},'Contact Us',h('span',{class:'zp-btn-i'},zpIco('arrow')));
+  const brand=h('div',{class:'zp-brand'},C.logo?h('img',{src:C.logo,alt:name+' logo'}):h('span',{class:'zp-mark','aria-hidden':'true'},h('i'),h('i')),h('span',null,name));
+  const nav=h('header',{class:'zp-nav'},h('div',{class:'zp-w zp-nav-in'},brand,
+    h('nav',{class:'zp-links'},jumpA('zp-about','About'),svc.length?jumpA('zp-products','Products'):null,jumpA('zp-solutions','Services'),jumpA('zp-visit','Contact')),cta));
+  const card=h('div',{class:'zp-card rv'},h('small',null,since?'Dubuque, since '+since:(C.city||'Local')),h('b',null,'Your local window & door shop'),
+    C.maps?h('a',{href:C.maps,target:'_blank',rel:'noopener'},'Get directions',zpIco('arrow')):null);
+  const hero=h('section',{class:'zp-hero'},
+    bg(h('div',{class:'zp-hero-bg'}),heroPic,'linear-gradient(180deg,rgba(14,12,11,.55) 0%,rgba(14,12,11,.25) 40%,rgba(14,12,11,.7) 100%)'),
+    h('div',{class:'zp-w zp-hero-in'},
+      h('p',{class:'zp-hero-p'},C.tag||('Residential and commercial windows and doors for homes and businesses around '+(C.city?C.city.split(',')[0]:'town')+'.')),
+      h('h1',{class:'zp-h1'},h('span',null,lines[0]),h('span',{class:'cu'},lines[1]),h('span',{class:'thin'},lines[2])),
+      card));
+  const label=t=>h('div',{class:'zp-label'},h('span',{class:'zp-line','aria-hidden':'true'}),t);
+  const about=h('section',{class:'zp-sec',id:'zp-about'},h('div',{class:'zp-w zp-about'},
+    h('div',{class:'zp-about-pic rv'},bg(h('div',{class:'zp-about-img'}),aboutPic),since?h('div',{class:'zp-badge'},h('span',null,'Serving '+(C.city?C.city.split(',')[0]:'our town')+' since'),h('b',null,since)):null),
+    h('div',{class:'zp-about-t rv'},label('About Us'),h('h2',{class:'zp-h2'},x.aboutTitle||'Windows and doors, built and installed right.'),
+      h('p',null,C.about||(name+' helps homeowners and businesses choose, order and install the right windows and doors, with replacement glass and mirrors cut to fit.')),
+      svc.length?h('ul',{class:'zp-ticks'},svc.slice(0,4).map(s=>h('li',null,zpIco(zpIcoFor(s.n)),s.n))):null,
+      h('div',{class:'zp-row'},cta.cloneNode(true),C.tel?h('a',{class:'zp-tel',href:C.tel},zpIco('phone'),C.phoneTxt):null))));
+  const today=C.today;
+  const sol=h('section',{class:'zp-sec zp-soft',id:'zp-solutions'},h('div',{class:'zp-w'},
+    h('div',{class:'zp-head rv'},label('What We Do'),h('h2',{class:'zp-h2'},'Window & door solutions for home and business')),
+    h('div',{class:'zp-bento'},
+      bg(h('div',{class:'zp-b zp-b-pic rv'}),ok((svc[0]||{}).img)||heroPic,'linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(14,12,11,.8) 100%)'),
+      h('div',{class:'zp-b zp-b-txt rv'},zpIco('home'),h('b',null,'For your home'),h('p',null,'New and replacement windows and doors, sized for your house and installed by a local crew.')),
+      h('div',{class:'zp-b zp-b-cu rv'},zpIco('shop'),h('b',null,'For your business'),h('p',null,'Commercial windows, doors and glass for storefronts and offices.')),
+      h('div',{class:'zp-b zp-b-txt rv'},zpIco('glass'),h('b',null,'Glass & mirrors'),h('p',null,'Broken pane or a new bathroom mirror? Bring the size and we will cut it to fit.')),
+      h('div',{class:'zp-b zp-b-dark rv'},h('small',null,'Visit the showroom'),h('b',null,addrTxt||C.city||name),today?h('p',null,zpIco('clock'),'Open today '+today):null,
+        C.maps?h('a',{class:'zp-btn sm',href:C.maps,target:'_blank',rel:'noopener'},'Directions',h('span',{class:'zp-btn-i'},zpIco('arrow'))):null))));
+  const prod=svc.length?h('section',{class:'zp-sec',id:'zp-products'},h('div',{class:'zp-w zp-prod'},
+    h('div',{class:'zp-prod-l rv'},label('Products'),h('h2',{class:'zp-h2'},'What we install'),h('p',null,'Stop in to see samples, or call and tell us what you need. We will help you pick the right fit.'),cta.cloneNode(true)),
+    h('div',{class:'zp-prod-g'},svc.map((s,i)=>h('div',{class:'zp-p rv'},bg(h('div',{class:'zp-p-img'}),ok(s.img)||aboutPic),
+      h('div',{class:'zp-p-bar'},h('div',null,h('small',null,String(i+1).padStart(2,'0')),h('b',null,s.n),s.d?h('p',null,s.d):null),h('span',{class:'zp-p-go'},zpIco('arrow')))))))):null;
+  const revs=C.reviews.length?h('section',{class:'zp-sec zp-soft'},h('div',{class:'zp-w'},h('div',{class:'zp-head rv'},label('Reviews'),h('h2',{class:'zp-h2'},'What customers say')),
+    h('div',{class:'zp-revs'},C.reviews.slice(0,3).map(r=>h('figure',{class:'zp-rev rv'},h('div',{class:'zp-stars','aria-label':'5 stars'},'★★★★★'),h('blockquote',null,short(r.text,240)),h('figcaption',null,r.name)))))):null;
+  const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
+  const visit=h('section',{class:'zp-visit',id:'zp-visit'},h('div',{class:'zp-w zp-visit-in'},
+    h('div',{class:'zp-visit-t rv'},label('Contact'),h('h2',{class:'zp-h2'},'Come see us'),
+      addrTxt?h('a',{class:'zp-li',href:C.maps||'#',target:'_blank',rel:'noopener'},zpIco('pin'),h('span',null,addrTxt)):null,
+      C.tel?h('a',{class:'zp-li',href:C.tel},zpIco('phone'),h('span',null,C.phoneTxt)):null,
+      C.hasHours?h('div',{class:'zp-hours'},hoursRows(C)):null),
+    addrTxt?h('div',{class:'zp-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
+  const foot=h('footer',{class:'zp-foot'},h('div',{class:'zp-w zp-foot-in'},brand.cloneNode(true),h('p',null,'Residential & commercial windows and doors'+(C.city?' in '+C.city:'')+'.'),h('small',null,'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'zp'},nav,hero,about,sol,prod,revs,visit,foot);
+}
+function zpNav(){ const n=document.querySelector('.zp-nav'); if(!n) return; const f=()=>n.classList.toggle('solid',scrollY>60); addEventListener('scroll',f,{passive:true}); f(); }
+
 const CL_ICO={
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
   phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 4.5-2 1.2a11 11 0 0 0 6.8 6.8l1.2-2L20 16v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
