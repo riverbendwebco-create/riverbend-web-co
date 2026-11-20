@@ -2247,7 +2247,7 @@ function sunshine(C){
   const st=snStatus(C);
   const call=(cls,label)=>C.tel?h('a',{class:'sn-btn '+cls,href:C.tel},snIc('phone',18,'sn-bi'),label||'Call '+C.phoneTxt):null;
   const orderBtn=(cls,label)=>order?h('a',{class:'sn-btn '+cls,href:order,target:'_blank',rel:'noopener'},snIc('bag',18,'sn-bi'),label||'Order for delivery'):null;
-  const links=[['s-menu','Menu'],favs.length?['s-favs','Favorites']:null,story.length?['s-story','Our story']:null,revs.length?['s-reviews','Reviews']:null,['s-visit','Visit']].filter(Boolean);
+  const links=[['s-menu','Menu'],favs.length?['s-favs','Favorites']:null,A('gallery').length?['s-photos','Photos']:null,story.length?['s-story','Our story']:null,revs.length?['s-reviews','Reviews']:null,['s-visit','Visit']].filter(Boolean);
 
   const top=h('div',{class:'sn-top'},h('div',{class:'sn-wrap sn-top-in'},
     st?h('span',{class:'sn-live '+(st.open?'on':'')},h('i'),st.t):h('span',null,''),
@@ -2265,7 +2265,7 @@ function sunshine(C){
       h('p',{class:'sn-lead'},C.tag||''),
       h('div',{class:'sn-cta'},h('button',{type:'button',class:'sn-btn sun',onclick:()=>scrollTo('s-menu')},'See the menu'),call('blue'),orderBtn('line')),
       rating?h('div',{class:'sn-rate'},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',16,'sn-st'))),h('b',null,String(rating.v||'')),h('span',null,(rating.n?Number(rating.n).toLocaleString('en-US')+' ':'')+(S(rating.src)||'reviews'))):null),
-    snBuilding(name)));
+    okUrl(C.x.heroImg)?h('figure',{class:'sn-photo'},h('img',{src:okUrl(C.x.heroImg),alt:S(C.x.heroAlt)||name,loading:'eager'}),S(C.x.since)?h('span',{class:'sn-sticker'},snIc('sun',30,'sn-sk-ic'),h('b',null,S(C.x.since)),h('small',null,'Family owned')):null):snBuilding(name)));
 
   const marquee=favs.length?h('div',{class:'sn-marq','aria-hidden':'true'},h('div',{class:'sn-marq-in'},[0,1].map(()=>favs.map(f=>h('span',null,snIc('sun',16,'sn-mi'),S(f.n)))))):null;
 
@@ -2289,9 +2289,15 @@ function sunshine(C){
     h('div',{class:'sn-menu-box rv'},tabs,panes),
     h('div',{class:'sn-menu-foot'},S(C.x.menuNote)?h('p',{class:'sn-note'},S(C.x.menuNote)):null,h('div',{class:'sn-cta'},call('blue','Call ahead for takeout'),orderBtn('line')))));
 
+  const gal=A('gallery').filter(g=>typeof g==='string').map(g=>{const [u,c]=g.split('|');return {u:okUrl((u||'').trim()),c:(c||'').trim()};}).filter(g=>g.u).slice(0,8);
+  const galSec=gal.length?h('section',{class:'sn-sec',id:'s-photos'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},S(C.x.galKick)||'Pull up a chair'),h('h2',null,S(C.x.galTitle)||'Come hungry, leave happy'),S(C.x.galSub)?h('p',null,S(C.x.galSub)):null),
+    h('div',{class:'sn-gal'},gal.map((g,i)=>h('figure',{class:'sn-g rv g'+i},h('img',{src:g.u,alt:g.c||name,loading:'lazy'}),g.c?h('figcaption',null,g.c):null))))):null;
+
   const storySec=story.length?h('section',{class:'sn-sec',id:'s-story'},h('div',{class:'sn-wrap sn-story'},
     h('div',{class:'sn-story-t rv'},h('span',{class:'sn-kick'},'Our story'),h('h2',null,S(C.x.storyTitle)||'A corner with a story'),h('p',{class:'sn-story-p'},S(C.x.storyText)||C.about),
-      S(C.x.family)?h('div',{class:'sn-family'},snIc('heart',26,'sn-fh'),h('p',null,S(C.x.family))):null),
+      S(C.x.family)?h('div',{class:'sn-family'},snIc('heart',26,'sn-fh'),h('p',null,S(C.x.family))):null,
+      okUrl(C.x.storyImg)?h('figure',{class:'sn-story-img'},h('img',{src:okUrl(C.x.storyImg),alt:name,loading:'lazy'})):null),
     h('ol',{class:'sn-time rv'},story.map(e=>h('li',{class:S(e.hi)?'hi':null},h('b',null,S(e.y)),h('span',null,S(e.t))))))):null;
 
   const revSec=revs.length?h('section',{class:'sn-sec sun',id:'s-reviews'},h('div',{class:'sn-wrap'},
@@ -2318,7 +2324,7 @@ function sunshine(C){
     h('div',null,h('b',null,'Hours'),h('p',null,C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:DAYS.map((d,i)=>d.slice(0,3)+' '+(C.hours[i]||'Closed')).join(' · '))),
     h('div',null,h('b',null,'Find us'),h('p',null,[C.addr,C.city].filter(Boolean).join(', ')),C.tel?h('a',{href:C.tel},C.phoneTxt):null)));
 
-  return h('div',{class:'sn'},top,nav,hero,marquee,favSec,dealSec,menuSec,storySec,revSec,noteSec,visit,foot);
+  return h('div',{class:'sn'},top,nav,hero,marquee,favSec,dealSec,galSec,menuSec,storySec,revSec,noteSec,visit,foot);
 }
 /* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
 const RT_SVG={
