@@ -2212,7 +2212,7 @@ function mutual(C){
   const logo=ok(x.logoUrl)||C.logo;
   const brand=h('a',{class:'mw-brand',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},
     logo?h('img',{src:logo,alt:name}):[mwIco('wheel'),h('span',{class:'mw-wm'},h('b',null,'Mutual Wheel'),h('small',null,'The Truck Experts'))]);
-  const links=()=>[A('mw-services','Services'),A('mw-why','Why Us'),A('mw-request','Request a Part'),A('mw-history','History'),A('mw-visit','Locations')];
+  const links=()=>[A('mw-services','Services'),A('mw-why','Why Us'),A('mw-request','Request a Part'),h('a',{href:'#history',onclick:e=>openHist(e)},'History'),A('mw-visit','Locations')];
   const nav=h('header',{class:'mw-nav'},h('div',{class:'mw-w mw-nav-in'},brand,h('nav',{class:'mw-links'},links()),
     h('div',{class:'mw-nav-r'},h('a',{class:'mw-tel',href:tel},mwIco('phone'),phoneTxt),h('a',{class:'mw-btn red sm mw-dk',href:'#mw-request',onclick:go('mw-request')},'Request a Part'),h('a',{class:'mw-btn red sm mw-mb',href:tel},mwIco('phone'),'Call'))),
     h('nav',{class:'mw-mnav'},links()));
@@ -2261,12 +2261,33 @@ function mutual(C){
     h('div',{class:'mw-req-t'},h('h2',null,'Need a Part ',h('span',null,'Today?')),h('p',null,'Tell us what you need and we will check stock and call you back.'),
       h('ul',null,['Retail and wholesale pricing','Parts for light, medium and heavy-duty trucks','Knowledgeable counter staff','Chassis repair shop on site'].map(t=>h('li',null,mwIco('check'),t)))),
     form)));
+  const openHist=e=>{ if(e) e.preventDefault(); if(location.hash!=='#history') location.hash='history'; else showHist(); };
   const hist=h('section',{class:'mw-sec mw-soft',id:'mw-history'},h('div',{class:'mw-w mw-hist'},
     h('div',{class:'mw-hist-big rv'},h('b',null,'1893'),h('span',null,'Serving the transportation industry for over 130 years')),
     h('div',{class:'mw-hist-t rv'},h('h2',null,'Built on ',h('span',null,'130+ Years')),
-      h('p',null,'Mutual Wheel started in 1893, when 11 carriage wheel makers in the Quad Cities joined forces. The Engstrom family has owned the company since 1940, and it has grown with the trucking industry ever since.'),
-      h('p',null,'Today we run 11 locations in Iowa and Illinois, with our main warehouse and corporate offices in Moline. Our Moline brake shop produces Top Performance lined brake shoes for tractor-trailer applications.'),
-      h('div',{class:'mw-badges'},h('div',null,mwIco('shield'),h('span',null,h('b',null,'ASE Certified'),'Service technicians')),h('div',null,mwIco('brake'),h('span',null,h('b',null,'Top Performance'),'Brake shoes made in Moline'))))));
+      h('p',null,'In 1893, eleven Quad City carriage makers joined forces to build their own wooden wheels and take on the big wheel trust. By 1900 Mutual Wheel was one of the largest wheel makers in the world. When steel wheels and the Depression arrived, the company changed with the times and became a truck parts and service business. The Engstrom family has owned it since 1940, and it has served Dubuque since 1966.'),
+      h('div',{class:'mw-mini'},[['1893','Founded in Moline'],['1932','Parts & drive-in service'],['1940','Engstrom family'],['1966','Dubuque opens']].map(([y,t])=>h('div',null,h('b',null,y),h('span',null,t)))),
+      h('a',{class:'mw-btn red',href:'#history',onclick:openHist},'Read Our Full History',mwIco('arrow')))));
+  const HIST=[
+    ['1893','Eleven Carriage Makers Join Forces','Eleven Quad City carriage manufacturers formed the Mutual Wheel Company in Moline so they could build their own wooden-spoked wheels and stand up to the American Wheel Trust. The Trust even sent a spy to the founding meeting, but he did not get in. The company opened at 729 Third Avenue with a $40,000 investment and a goal of 30,000 sets of wheels a year, with George McMaster as its first general manager.'],
+    ['1900','The World\u2019s Largest Wheel Maker','The Quad Cities became known as \u201cLittle Detroit,\u201d and Mutual Wheel built the wooden wheels for many of the area\u2019s early motor vehicles. By 1900 the company had 500 to 600 employees, produced 100,000 sets of wheels a year, ran branch stock plants in the southern timber districts and claimed the title of largest vehicle wheel maker in the world.'],
+    ['1932','A New Direction','Steel automobile wheels arrived in 1927, and the Great Depression followed. In 1932 the company stopped making wooden wheels and moved into distributing auto and truck parts with drive-in service. The change was led by Elmer Engstrom, who had joined the company in 1917 as a timekeeper.'],
+    ['1940','The Engstrom Family Takes the Wheel','Elmer Engstrom bought the company in 1940 with George Wood. During World War II the Rock Island Arsenal was a key customer. In 1948 Elmer bought out Wood\u2019s shares, and he and his wife Helen became sole owners, making Mutual Wheel a family business.'],
+    ['1950s','Growing with the Trucking Industry','A new Moline facility opened at 2345 4th Avenue in 1950 and was expanded in 1955, 1960, 1967 and 1970. After Elmer passed away in 1951, Helen, their son Donald and his wife June ran the company. Mutual Wheel became a major wholesale distributor of wheels, truck equipment and power brakes and added a full brake service garage.'],
+    ['1966','New Branches, Including Dubuque','Branches opened in Monmouth (1954), Dubuque (1966), East Peoria (1973) and Milan (1977). In 1968 the company became a family corporation.'],
+    ['1980','One Central Warehouse','Mutual Wheel moved to a central warehouse in Moline, expanded to 50,000 square feet, with trucks delivering to every branch twice a week. Moline is also home to the remanufacturing and machine shop operations.'],
+    ['1989','The Next Generation','Donald retired, and his sons Dave, Rich and Bob took over together as the \u201cOffice of the President,\u201d with Dave leading sales, Rich purchasing and Bob administration. New branches followed in Bloomington, Rockford, Cedar Rapids and Waterloo.'],
+    ['Today','11 Locations, Still Family Owned','Mutual Wheel now runs 11 locations in Iowa and Illinois, carrying parts from a wide range of truck and trailer manufacturers and serving customers for more than 130 years.']];
+  const hpics=Array.isArray(x.historyPics)?x.historyPics.filter(p=>p&&ok(p.src)):[];
+  const hpage=h('div',{class:'mw-hpage',role:'dialog','aria-modal':'true','aria-label':'Our History',hidden:true},
+    h('div',{class:'mw-hp-bar'},h('div',{class:'mw-w mw-hp-bar-in'},h('button',{type:'button',class:'mw-hp-back',onclick:()=>history.back()},mwIco('arrow'),'Back to home'),h('span',null,name))),
+    h('header',{class:'mw-hp-hero'},h('div',{class:'mw-w'},h('small',{class:'mw-kick'},'Our History'),h('h1',null,'Over 130 Years ',h('span',null,'on the Road')),
+      h('p',null,'From wooden carriage wheels in 1893 to truck parts and service today, here is how Mutual Wheel got here.'))),
+    h('div',{class:'mw-w mw-tl'},HIST.map(([y,t,d],i)=>h('article',{class:'mw-tl-i'},h('div',{class:'mw-tl-y'},y),h('div',{class:'mw-tl-c'},h('h3',null,t),h('p',null,d),
+      hpics[i]?h('figure',null,h('img',{src:hpics[i].src,alt:hpics[i].cap||t,loading:'lazy'}),hpics[i].cap?h('figcaption',null,hpics[i].cap):null):null)))),
+    h('div',{class:'mw-w mw-hp-end'},h('a',{class:'mw-btn red',href:tel},mwIco('phone'),'Call '+phoneTxt),h('button',{type:'button',class:'mw-btn blue',onclick:()=>history.back()},'Back to home')));
+  const showHist=()=>{ const on=location.hash==='#history'; hpage.hidden=!on; document.documentElement.classList.toggle('os-lock',on); if(on){ hpage.scrollTop=0; hpage.querySelector('.mw-hp-back').focus({preventScroll:true}); } };
+  addEventListener('hashchange',showHist); setTimeout(showHist,0);
   const steps=[['phone','Call or Send a Request','Tell us the part or the problem.'],['search','We Check Stock','Our counter finds the right part.'],['truck','Pick Up or Drop Off','Grab your part or bring the truck in.'],['check','Back on the Road','Get rolling again fast.']];
   const how=h('section',{class:'mw-sec'},h('div',{class:'mw-w'},head('How It','Works'),h('div',{class:'mw-steps'},steps.map(([i,t,d],n)=>h('div',{class:'mw-step rv'},h('span',{class:'mw-step-i'},mwIco(i),h('em',null,String(n+1))),h('b',null,t),h('p',null,d))))));
   const DAYS3=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -2285,7 +2306,7 @@ function mutual(C){
     h('div',null,h('b',null,'Services'),svc.slice(0,6).map(s=>h('span',null,s.n))),
     h('div',null,h('b',null,'Dubuque Store'),h('span',null,addrTxt),h('a',{href:tel},phoneTxt),h('span',null,'Mon-Fri '+hours[0]),h('span',null,'Sat '+hours[5]))),
     h('div',{class:'mw-foot-bar'},h('div',{class:'mw-w'},'© '+new Date().getFullYear()+' '+name)));
-  return h('div',{class:'mw'},nav,hero,services,whyS,req,hist,how,visit,foot);
+  return h('div',{class:'mw'},nav,hero,services,whyS,req,hist,how,visit,foot,hpage);
 }
 
 const CL_ICO={
