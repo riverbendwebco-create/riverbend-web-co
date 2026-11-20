@@ -965,6 +965,52 @@ body.t-mt{background:#111}
 .mt-why-l{grid-template-columns:1fr}.mt-pgrid{grid-template-columns:1fr 1fr;grid-auto-rows:160px}.mt-p.p0{grid-column:span 2}.mt-p.p3{grid-row:auto}
 .mt-r{flex-basis:290px}.mt-hrs{grid-template-columns:repeat(4,1fr)}
 }
+/* ===== Mountaintop: warm, welcoming light theme ===== */
+.mt{--y:#F2D513;--gold:#9A7B00;--cream:#F8F4EC;--sand:#EFE8DB;--wink:#2A231C;background:var(--cream)}
+.mt h2 em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:500;color:var(--gold)}
+.mt-nav{background:rgba(38,31,24,.94)}
+.mt-btn{border-radius:12px}
+.mt-hero{background:#2A231C}
+.mt-slides:after{background:linear-gradient(90deg,rgba(38,30,22,.88) 0%,rgba(38,30,22,.6) 48%,rgba(38,30,22,.15) 100%),linear-gradient(0deg,rgba(38,30,22,.85) 0%,transparent 40%)}
+.mt-hero h1 em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:500}
+.mt-strip{border-top:0;gap:12px;grid-template-columns:repeat(4,1fr)}
+.mt-strip>div{background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:16px 18px}
+.mt-strip .mt-i{border-radius:12px;background:var(--y);color:#2A231C;border:0}
+.mt-sec{background:var(--cream);color:var(--wink)}
+.mt-sec.mt-dark{background:var(--sand);color:var(--wink)}
+.mt .mt-kick{color:var(--gold)}.mt .mt-kick:before{background:var(--y);height:3px;border-radius:2px}
+.mt-dark .mt-head p,.mt-head p{color:#6E655A}
+.mt-v,.mt-why-l li,.mt-steps li,.mt-tm{border-radius:20px;box-shadow:0 14px 34px rgba(60,45,20,.08);border:0}
+.mt-v{border-top:0;position:relative;overflow:hidden}.mt-v:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--y)}
+.mt-v .mt-i,.mt-why-l .mt-i,.mt-steps .mt-i{border-radius:14px}
+.mt-v blockquote{border-radius:12px;background:var(--cream)}
+.mt-ftabs button{border-radius:12px;background:#fff;border:1px solid #E4DCCB;color:var(--wink)}
+.mt-ftabs button.on{background:var(--wink);border-color:var(--wink);color:#fff}
+.mt-s{background:#fff;border:0;border-radius:20px;box-shadow:0 14px 34px rgba(60,45,20,.08)}
+.mt-s:hover{border-color:transparent;box-shadow:0 22px 44px rgba(60,45,20,.14)}
+.mt-s h3{color:var(--wink)}.mt-s p{color:#6E655A}
+.mt-chips span{color:#5A5248;border-color:#E9E1D2;background:var(--cream);border-radius:8px}
+.mt-tag{border-radius:8px}.mt-tag.natural{background:#FFF6C2;color:#7A6200}.mt-tag.engineered{background:#E4ECFF;color:#2E4CA0}.mt-tag.fabricated{background:#DFF5E8;color:#1E6B42}
+.mt-brands{color:#6E655A}.mt-brands b{color:var(--wink)}
+.mt-why-ph{border-radius:24px;box-shadow:18px 18px 0 var(--y)}
+.mt-p{border-radius:18px}
+.mt-r{background:#fff;border:0;border-radius:20px;box-shadow:0 14px 30px rgba(60,45,20,.08)}
+.mt-r blockquote{color:var(--wink)}.mt-r figcaption{color:#7A7064}
+.mt-stars{color:#E0B800}
+.mt-rrow{-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);padding:10px 0 24px}
+.mt-av{background:var(--y);color:var(--wink)}
+.mt-visit{background:#fff;border-radius:28px;padding:44px;box-shadow:0 20px 50px rgba(60,45,20,.1)}
+.mt-li{color:var(--wink)}.mt-li .mt-i{color:var(--gold)}
+.mt-hrs div{background:var(--cream);border:0;border-radius:12px}.mt-hrs span{color:#7A7064}.mt-hrs b{color:var(--wink)}
+.mt-hrs .on{background:var(--y)}
+.mt-visit .mt-btn.ghost{border-color:#D9CFBC;color:var(--wink)}.mt-visit .mt-btn.ghost:hover{background:var(--wink);color:#fff}
+.mt-soc a{border-color:#E4DCCB;color:var(--wink);border-radius:12px}
+.mt-map{border:0;border-radius:20px}.mt-map iframe{filter:none}
+.mt-foot{background:#2A231C;border-top:4px solid var(--y)}
+.mt-hero .mt-kick{color:var(--y)}
+.mt-welcome{background:var(--y);color:#2A231C;text-align:center;padding:14px 20px;font-weight:600}
+.mt-welcome a{color:#2A231C;font-weight:700}
+@media (max-width:980px){.mt-strip{grid-template-columns:1fr 1fr;gap:10px}.mt-strip>div{padding:12px;gap:10px}.mt-strip .mt-i{width:36px;height:36px}.mt-strip b{font-size:.9rem;line-height:1.25}.mt-strip small{font-size:.76rem}.mt-visit{padding:24px 18px;border-radius:20px}}
 .rv-in{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 .rv-in.rv-on{opacity:1;transform:none}
 @media (max-width:860px){.favs{grid-template-columns:1fr}.story{grid-template-columns:1fr}.story-ph{min-height:220px}.story-b{padding:26px 22px}.pub-strip{grid-template-columns:1fr 1fr;height:auto}.pub-strip .ph{height:130px}.pub-links{display:none}.fav-ph{height:160px}}
@@ -3868,7 +3914,7 @@ html = f'''<!DOCTYPE html>
 <title>Website Preview | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alfa+Slab+One&family=Pacifico&family=Work+Sans:wght@400;600;700;800&family=Archivo:wght@400;600;800&family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&family=Bebas+Neue&family=Bitter:wght@500;700;800&family=Rye&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Allura&family=Rubik:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Outfit:wght@200;300;400;500;600&family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,800;1,900&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Barlow:wght@500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alfa+Slab+One&family=Pacifico&family=Work+Sans:wght@400;600;700;800&family=Archivo:wght@400;600;800&family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&family=Bebas+Neue&family=Bitter:wght@500;700;800&family=Rye&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Allura&family=Fraunces:ital,wght@1,400;1,500&family=Rubik:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Outfit:wght@200;300;400;500;600&family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,800;1,900&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Barlow:wght@500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <!-- Generated by tools/build_demo.py from the demo designs in index.html. Do not edit by hand. -->
 <style>
 {demo_css}
