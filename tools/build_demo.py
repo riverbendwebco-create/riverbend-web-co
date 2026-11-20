@@ -3276,6 +3276,11 @@ body.t-sn{background:#FFFFFF}
 .sn.fw .sn-tl li.hi b{background:var(--y)}
 .sn.fw .sn-hours-card,.sn.fw .sn-map,.sn.fw .sn-grp2,.sn.fw .sn-gk{background:var(--cream);border:2px solid var(--b);border-radius:22px;box-shadow:none}
 .sn.fw .sn-gk{padding:22px 24px}
+.sn-roll{overflow:hidden!important;scroll-snap-type:none!important;display:block!important;padding-left:0!important;padding-right:0!important}
+.sn-roll-t{display:flex;gap:0;width:max-content;animation:snRoll 40s linear infinite}
+.sn-roll-t>*{flex:0 0 min(82vw,330px)!important;margin:0 14px 0 0!important}
+.sn-fam2.sn-roll .sn-roll-t>*{flex-basis:min(84vw,330px)!important}
+@keyframes snRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .sn.fw .sn-chalk h3,.sn.fw .sn-chalk small,.sn.fw .sn-chalk li{color:#fff!important}
 .sn.fw .sn-sticker{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}
 .sn.fw .sn-sticker b{font-size:1.25rem;line-height:1}.sn.fw .sn-sticker small{font-size:.5rem;letter-spacing:.04em;line-height:1.1;margin-top:2px;max-width:72px}

@@ -2677,19 +2677,14 @@ function sunshine(C){
   const chk=()=>h('div',{class:'sn-chk','aria-hidden':'true'});
   const bigFoot=h('div',{class:'sn-bigfoot'},h('div',{class:'sn-wrap sn-bigfoot-in'},h('b',null,name.split(/\s+/)[0]+'!'),h('span',null,'See you at breakfast.')));
   const root0=h('div',{class:'sn fw'+(big?' big':'')},top,nav,hero,chk(),marquee,pickSec,menuSec,favSec,revSec,storySec,visit,chk(),bigFoot,foot);
-  /* phones: horizontal rows roll continuously; a touch pauses them briefly */
-  const autoRow=sel=>{ const el=root0.querySelector(sel); if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let cloned=false, pause=0, pos=0, last=0;
-    const hold=()=>{ pause=performance.now()+4000; };
-    ['touchstart','pointerdown','wheel'].forEach(ev=>el.addEventListener(ev,hold,{passive:true}));
-    el.addEventListener('scroll',()=>{ if(performance.now()<pause) pos=el.scrollLeft; },{passive:true});
-    const tick=t=>{ if(!el.isConnected) return; requestAnimationFrame(tick); const dt=last?Math.min(t-last,50):16; last=t;
-      if(el.scrollWidth<=el.clientWidth+4) return;
-      if(!cloned){ [...el.children].forEach(k=>{ const c=k.cloneNode(true); c.setAttribute('aria-hidden','true'); c.classList.add('rv-on'); el.append(c); }); cloned=true; el.style.scrollSnapType='none'; }
-      if(t<pause) return;
-      const r=el.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
-      pos+=dt*0.045; const half=el.scrollWidth/2; if(pos>=half) pos-=half; el.scrollLeft=pos; };
-    requestAnimationFrame(tick); };
+  /* phones: horizontal rows roll like the dish ticker (CSS transform, same speed); a touch pauses them */
+  const autoRow=sel=>{ const el=root0.querySelector(sel); if(!el||!matchMedia('(max-width: 860px)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const kids=[...el.children]; if(kids.length<2) return;
+    const track=h('div',{class:'sn-roll-t'}); kids.forEach(k=>track.append(k)); kids.forEach(k=>{ const c=k.cloneNode(true); c.setAttribute('aria-hidden','true'); c.classList.add('rv-on'); track.append(c); });
+    el.classList.add('sn-roll'); el.append(track);
+    requestAnimationFrame(()=>{ const half=track.scrollWidth/2; track.style.animationDuration=Math.max(12,half/48)+'s'; });
+    let t=0; const hold=()=>{ track.style.animationPlayState='paused'; clearTimeout(t); t=setTimeout(()=>{ track.style.animationPlayState='running'; },3000); };
+    ['touchstart','pointerdown'].forEach(ev=>el.addEventListener(ev,hold,{passive:true})); };
   setTimeout(()=>['.sn-favs','.sn-mosaic','.sn-fam2'].forEach(autoRow),400);
   return root0;
 }
