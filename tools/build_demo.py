@@ -703,7 +703,7 @@ body.t-mw{background:#fff}
 .mw-hrs .on{background:var(--red);color:#fff}
 .mw-mgr{color:rgba(255,255,255,.6);font-size:.92rem;margin-top:16px}
 .mw-map{min-height:360px;border-radius:3px;overflow:hidden}.mw-map iframe{width:100%;height:100%;min-height:360px;border:0}
-.mw-locs-h{font-size:1.6rem;margin:56px 0 18px}
+.mw-locs-h{font-size:clamp(1.8rem,3.2vw,2.4rem);margin:0 0 20px}.mw-locs{margin-bottom:56px}
 .mw-locs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .mw-loc{background:#1E2128;padding:16px;border-radius:3px;border-top:3px solid #2C3038}.mw-loc.on{border-top-color:var(--red)}
 .mw-loc b{display:block;font-family:var(--hd);text-transform:uppercase;letter-spacing:.04em;font-weight:500;font-size:1.05rem}.mw-loc span,.mw-loc a{display:block;color:rgba(255,255,255,.65);font-size:.88rem;margin-top:3px;text-decoration:none}.mw-loc a:hover{color:#fff}

@@ -2232,15 +2232,15 @@ function mutual(C){
   const how=h('section',{class:'mw-sec'},h('div',{class:'mw-w'},head('How It','Works'),h('div',{class:'mw-steps'},steps.map(([i,t,d],n)=>h('div',{class:'mw-step rv'},h('span',{class:'mw-step-i'},mwIco(i),h('em',null,String(n+1))),h('b',null,t),h('p',null,d))))));
   const DAYS3=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const visit=h('section',{class:'mw-visit',id:'mw-visit'},h('div',{class:'mw-w'},
+    h('h3',{class:'mw-locs-h'},'All 11 Locations'),
+    h('div',{class:'mw-locs'},D.locs.map(([c,a,p])=>h('div',{class:'mw-loc'+(c.startsWith('Dubuque')?' on':'')},h('b',null,c),a?h('span',null,a):null,p?h('a',{href:'tel:+1'+p.replace(/\D/g,'')},p):null))),
     h('div',{class:'mw-visit-in'},
       h('div',{class:'mw-store rv'},h('small',{class:'mw-kick'},'Your local store'),h('h2',null,'Mutual Wheel ',h('span',null,'Dubuque')),
         h('a',{class:'mw-li',href:maps,target:'_blank',rel:'noopener'},mwIco('pin'),addrTxt),h('a',{class:'mw-li',href:tel},mwIco('phone'),phoneTxt),
         h('div',{class:'mw-li'},mwIco('phone'),'Toll free '+D.tollfree),today?h('div',{class:'mw-li'},mwIco('clock'),'Open today '+today):null,
         h('div',{class:'mw-hrs'},DAYS3.map((d,i)=>h('div',{class:i===todayIx()?'on':null},h('span',null,d),h('span',null,hours[i]||'Closed')))),
         h('p',{class:'mw-mgr'},'Store Manager: '+D.manager)),
-      h('div',{class:'mw-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+addrTxt)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))),
-    h('h3',{class:'mw-locs-h'},'All 11 Locations'),
-    h('div',{class:'mw-locs'},D.locs.map(([c,a,p])=>h('div',{class:'mw-loc'+(c.startsWith('Dubuque')?' on':'')},h('b',null,c),a?h('span',null,a):null,p?h('a',{href:'tel:+1'+p.replace(/\D/g,'')},p):null)))));
+      h('div',{class:'mw-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+addrTxt)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})))));
   const foot=h('footer',{class:'mw-foot'},h('div',{class:'mw-w mw-foot-in'},
     h('div',null,h('div',{class:'mw-brand on-dark'},logo?h('img',{src:logo,alt:name}):[mwIco('wheel'),h('span',{class:'mw-wm'},h('b',null,'Mutual Wheel'),h('small',null,'The Truck Experts'))]),h('p',null,'Truck parts, accessories and service since 1893.')),
     h('div',null,h('b',null,'Services'),svc.slice(0,6).map(s=>h('span',null,s.n))),
