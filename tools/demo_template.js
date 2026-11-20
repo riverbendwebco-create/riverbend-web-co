@@ -98,6 +98,7 @@ function build(d){
   C.venue=i=>{ const v=C.own.concat(STOCK.western.pool.map(U)); return v[i%v.length]; };
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
+  if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
@@ -2181,6 +2182,143 @@ function cloudShop(C){
     h('div',{class:'cl-legal'},h('b',null,'21+ Only'),h('p',null,'You must be 21 or older to purchase. Valid ID required. Products may contain nicotine, an addictive chemical.'))),
     h('div',{class:'cl-w cl-copy'},'© '+new Date().getFullYear()+' '+C.name));
   return h('div',{class:'demo cl'},warn,head,hero,perks,tiles,shop,gal,revs,visit,foot);
+}
+/* ===================== SUNSHINE (family diner: rising sun, blue awning, big plates) ===================== */
+const SN_IC={
+  sun:'<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
+  egg:'<path d="M5 13c0-4 3-6 6-6 4 0 8 2 8 6s-3 6-7 6-7-2-7-6z"/><circle cx="12" cy="12.5" r="2.6" fill="currentColor" stroke="none"/>',
+  cakes:'<ellipse cx="12" cy="8" rx="8" ry="2.6"/><path d="M4 8v2.6c0 1.4 3.6 2.6 8 2.6s8-1.2 8-2.6V8M4 11v2.6c0 1.4 3.6 2.6 8 2.6s8-1.2 8-2.6V11M4 14v2.6c0 1.4 3.6 2.6 8 2.6s8-1.2 8-2.6V14"/><path d="M11 6.6h2.4v1.4H11z" fill="currentColor"/>',
+  cup:'<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c-.8 1 .8 2-.1 3M12 3.5c-.8 1 .8 2-.1 3"/>',
+  pan:'<circle cx="10" cy="13" r="6.5"/><path d="M16 10.5l6-3"/><circle cx="9" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="15" r="1.2" fill="currentColor" stroke="none"/>',
+  wrap:'<path d="M6 20l3-15c2-2 6-2 8 0l-3 15"/><path d="M8 13c2 1 5 1 7 0M9 9c1.6.8 4 .8 5.6 0"/>',
+  gravy:'<path d="M3 13h18a9 6 0 0 1-18 0z"/><path d="M7 10c1-2 3-2 4 0M13 9c1-2 3-2 4 0"/>',
+  plate:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z" fill="currentColor"/>',
+  heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  pin:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+  phone:'<path d="M5 4h3.5l1.5 4-2 1.3a10 10 0 0 0 4.7 4.7L14 12l4 1.5V17a2 2 0 0 1-2 2A13 13 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+  bag:'<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'
+};
+function snIc(k,n,cls){ const s=h('span',{class:cls||'sn-ic','aria-hidden':'true'}); s.innerHTML='<svg viewBox="0 0 24 24" width="'+(n||22)+'" height="'+(n||22)+'" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(SN_IC[k]||SN_IC.plate)+'</svg>'; return s; }
+/* the curved corner building at 4th and Central, with the blue awning and a rising sun */
+function snBuilding(name){
+  const d=h('div',{class:'sn-art','aria-hidden':'true'});
+  const word=String(name||'Sunshine').split(/\s+/)[0].toUpperCase().slice(0,10).replace(/[^A-Z]/g,'');
+  let rays=''; for(let i=0;i<16;i++){ rays+='<rect x="417" y="-12" width="6" height="30" rx="3" transform="rotate('+(i*22.5)+' 420 74)"/>'; }
+  let scal=''; for(let i=0;i<14;i++){ const x=60+i*30; scal+='<path d="M'+x+' 262 q15 16 30 0" fill="'+(i%2?'#1F5FAF':'#FFFFFF')+'" stroke="#174A8A" stroke-width="2"/>'; }
+  let win=''; [[92,120],[162,120],[300,120],[370,120]].forEach(([x,y])=>{ win+='<rect x="'+x+'" y="'+y+'" width="52" height="64" rx="4" fill="#BFE0FF" stroke="#174A8A" stroke-width="3"/><path d="M'+(x+26)+' '+y+'v64M'+x+' '+(y+32)+'h52" stroke="#174A8A" stroke-width="2"/>'; });
+  d.innerHTML='<svg viewBox="0 0 520 440"><defs><radialGradient id="snSky" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".55" stop-color="#FFE08A"/><stop offset="1" stop-color="#FFC24A"/></radialGradient></defs>'+
+   '<rect x="0" y="0" width="520" height="440" rx="18" fill="url(#snSky)"/>'+
+   '<g class="sn-rays" fill="#FFB020" opacity=".55">'+rays+'</g>'+
+   '<circle class="sn-sun" cx="420" cy="74" r="52" fill="#FFB020"/><circle class="sn-sun" cx="420" cy="74" r="40" fill="#FFD45C"/><g fill="#FFFFFF" opacity=".9"><ellipse cx="110" cy="52" rx="38" ry="14"/><ellipse cx="138" cy="44" rx="24" ry="14"/><ellipse cx="230" cy="34" rx="28" ry="10"/></g>'+
+   '<path d="M40 330 L40 96 Q260 52 480 96 L480 330 Z" fill="#F7F9FC" stroke="#174A8A" stroke-width="4"/>'+
+   '<path d="M40 210 Q260 172 480 210" fill="none" stroke="#D8E3F2" stroke-width="3"/>'+win+
+   '<rect x="122" y="70" width="276" height="44" rx="8" fill="#1F5FAF"/><text x="260" y="101" text-anchor="middle" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="26" letter-spacing="5" fill="#FFFFFF">'+word+'</text>'+
+   '<path d="M50 238 Q260 200 470 238 L486 262 Q260 222 34 262 Z" fill="#1F5FAF" stroke="#174A8A" stroke-width="2"/>'+scal+
+   '<rect x="226" y="276" width="70" height="54" rx="4" fill="#174A8A"/><rect x="236" y="284" width="22" height="40" rx="2" fill="#BFE0FF"/><rect x="264" y="284" width="22" height="40" rx="2" fill="#BFE0FF"/>'+
+   '<rect x="78" y="284" width="110" height="40" rx="4" fill="#BFE0FF" stroke="#174A8A" stroke-width="3"/><rect x="334" y="284" width="110" height="40" rx="4" fill="#BFE0FF" stroke="#174A8A" stroke-width="3"/>'+
+   '<text x="133" y="310" text-anchor="middle" font-family="ui-rounded,system-ui,sans-serif" font-weight="700" font-size="13" fill="#174A8A">OPEN 6AM</text>'+
+   '<rect x="0" y="330" width="520" height="110" fill="#9DB4CF"/><rect x="0" y="330" width="520" height="14" fill="#C8D6E6"/>'+
+   '<path d="M0 392h520" stroke="#FFFFFF" stroke-width="5" stroke-dasharray="26 22"/>'+
+   '<g class="sn-steam" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round"><path d="M455 300c-6-8 6-12 0-20"/><path d="M468 302c-6-8 6-12 0-20"/></g>'+
+   '<rect x="440" y="306" width="40" height="30" rx="6" fill="#FFFFFF" stroke="#174A8A" stroke-width="3"/><path d="M480 314h6a6 6 0 0 1 0 12h-6" fill="none" stroke="#174A8A" stroke-width="3"/>'+
+   '</svg>';
+  return d;
+}
+function snParse(t){ const m=String(t||'').toLowerCase().match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*[-to]+\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)/); if(!m) return null; const f=(H,M,ap)=>((+H%12)+(ap==='pm'?12:0))*60+(+M||0); return [f(m[1],m[2],m[3]),f(m[4],m[5],m[6])]; }
+function snStatus(C){ const now=new Date(), d=todayIx(), mins=now.getHours()*60+now.getMinutes(); const r=snParse(C.hours[d]); const nice=t=>String(t||'').replace(/:00/g,'');
+  if(r&&mins>=r[0]&&mins<r[1]) return {open:true,t:'Open now until '+nice(String(C.hours[d]).split(/-|to/)[1]||'').trim()};
+  if(r&&mins<r[0]) return {open:false,t:'Opens today at '+nice(String(C.hours[d]).split(/-|to/)[0]).trim()};
+  for(let i=1;i<=7;i++){ const k=(d+i)%7, q=snParse(C.hours[k]); if(q) return {open:false,t:'Opens '+(i===1?'tomorrow':DAYS[k])+' at '+nice(String(C.hours[k]).split(/-|to/)[0]).trim()}; }
+  return null; }
+function sunshine(C){
+  const name=C.name||'Sunshine Family Restaurant';
+  const A=k=>Array.isArray(C.x[k])?C.x[k]:[], S=v=>typeof v==='string'?v:'';
+  const favs=A('favs').filter(f=>f&&S(f.n)).slice(0,6);
+  const favNames=favs.map(f=>S(f.n).toLowerCase());
+  const deals=A('deals').filter(f=>f&&S(f.t)).slice(0,3);
+  const story=A('story').filter(f=>f&&S(f.y)&&S(f.t)).slice(0,10);
+  const revs=A('rev').filter(r=>r&&S(r.t)&&S(r.n)).slice(0,6);
+  const notes=A('notes').filter(n=>typeof n==='string').slice(0,8);
+  const rating=C.x.rating&&typeof C.x.rating==='object'?C.x.rating:null;
+  const order=okUrl(C.x.orderUrl);
+  const west=C.x.west&&typeof C.x.west==='object'&&S(C.x.west.n)?C.x.west:null;
+  const st=snStatus(C);
+  const call=(cls,label)=>C.tel?h('a',{class:'sn-btn '+cls,href:C.tel},snIc('phone',18,'sn-bi'),label||'Call '+C.phoneTxt):null;
+  const orderBtn=(cls,label)=>order?h('a',{class:'sn-btn '+cls,href:order,target:'_blank',rel:'noopener'},snIc('bag',18,'sn-bi'),label||'Order for delivery'):null;
+  const links=[['s-menu','Menu'],favs.length?['s-favs','Favorites']:null,story.length?['s-story','Our story']:null,revs.length?['s-reviews','Reviews']:null,['s-visit','Visit']].filter(Boolean);
+
+  const top=h('div',{class:'sn-top'},h('div',{class:'sn-wrap sn-top-in'},
+    st?h('span',{class:'sn-live '+(st.open?'on':'')},h('i'),st.t):h('span',null,''),
+    h('span',{class:'sn-top-r'},C.daysOpen===7?'Open 7 days a week':'',C.addr?h('span',null,C.addr+', '+C.city):null)));
+  const nav=h('header',{class:'sn-nav'},h('div',{class:'sn-wrap sn-nav-in'},
+    h('a',{class:'sn-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('s-top');}},snIc('sun',34,'sn-logo'),h('span',null,h('b',null,name.split(/\s+/)[0]),h('small',null,name.split(/\s+/).slice(1).join(' ')))),
+    h('nav',{class:'sn-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),
+    call('sun sm','Call us')),
+    h('nav',{class:'sn-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
+
+  const hero=h('section',{class:'sn-hero',id:'s-top'},h('div',{class:'sn-wrap sn-hero-g'},
+    h('div',{class:'sn-hero-t'},
+      h('span',{class:'sn-kick'},S(C.x.kicker)||(C.cat||'Family restaurant')+' · '+(C.city||'')),
+      h('h1',null,...String(S(C.x.headline)||'Good morning, '+(String(C.city).split(',')[0]||'neighbor')+'.').split('|').map((t,i)=>i?[h('br'),h('em',null,t)]:t)),
+      h('p',{class:'sn-lead'},C.tag||''),
+      h('div',{class:'sn-cta'},h('button',{type:'button',class:'sn-btn sun',onclick:()=>scrollTo('s-menu')},'See the menu'),call('blue'),orderBtn('line')),
+      rating?h('div',{class:'sn-rate'},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',16,'sn-st'))),h('b',null,String(rating.v||'')),h('span',null,(rating.n?Number(rating.n).toLocaleString('en-US')+' ':'')+(S(rating.src)||'reviews'))):null),
+    snBuilding(name)));
+
+  const marquee=favs.length?h('div',{class:'sn-marq','aria-hidden':'true'},h('div',{class:'sn-marq-in'},[0,1].map(()=>favs.map(f=>h('span',null,snIc('sun',16,'sn-mi'),S(f.n)))))):null;
+
+  const favSec=favs.length?h('section',{class:'sn-sec',id:'s-favs'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Guest favorites'),h('h2',null,S(C.x.favTitle)||'What everybody orders'),h('p',null,S(C.x.favSub)||'The plates guests talk about most in their reviews.')),
+    h('div',{class:'sn-favs'},favs.map((f,i)=>h('article',{class:'sn-fav rv'},h('div',{class:'sn-fav-ic c'+(i%3)},snIc(S(f.i)||'plate',34)),h('h3',null,S(f.n)),h('p',null,S(f.d)),S(f.q)?h('blockquote',null,'“'+S(f.q)+'”'):null))))):null;
+
+  const dealSec=deals.length?h('section',{class:'sn-deals'},h('div',{class:'sn-wrap sn-deals-g'},deals.map(dl=>h('div',{class:'sn-deal rv'},h('div',null,h('small',null,S(dl.k)||'Special'),h('h3',null,S(dl.t)),h('p',null,S(dl.d))),S(dl.p)?h('b',{class:'sn-deal-p'},S(dl.p)):null)))):null;
+
+  /* menu with tabs */
+  const G=groups(C.items,'Menu');
+  const panes=h('div',{class:'sn-panes'});
+  const tabs=h('div',{class:'sn-tabs',role:'tablist'});
+  const showTab=k=>{ tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.k===k?'true':'false'));
+    panes.replaceChildren(h('ul',{class:'sn-menu'},G.map[k].map(it=>{ const fav=favNames.some(n=>n&&it.name.toLowerCase().indexOf(n)>=0);
+      return h('li',{class:fav?'sn-fv':null},h('div',{class:'sn-mi-t'},h('b',null,it.name),fav?h('span',{class:'sn-badge'},snIc('heart',12,'sn-bh'),'Guest favorite'):null,h('i',{class:'sn-dots'}),it.price?h('span',{class:'sn-price'},it.price):null),it.desc?h('p',null,it.desc):null); }))); };
+  G.names.forEach(k=>tabs.append(h('button',{type:'button',role:'tab','data-k':k,onclick:()=>showTab(k)},k)));
+  if(G.names.length) showTab(G.names[0]);
+  const menuSec=h('section',{class:'sn-sec sky',id:'s-menu'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'The menu'),h('h2',null,S(C.x.menuTitle)||'Breakfast and lunch, all day'),h('p',null,S(C.x.menuSub)||'Home-style cooking and big portions.')),
+    h('div',{class:'sn-menu-box rv'},tabs,panes),
+    h('div',{class:'sn-menu-foot'},S(C.x.menuNote)?h('p',{class:'sn-note'},S(C.x.menuNote)):null,h('div',{class:'sn-cta'},call('blue','Call ahead for takeout'),orderBtn('line')))));
+
+  const storySec=story.length?h('section',{class:'sn-sec',id:'s-story'},h('div',{class:'sn-wrap sn-story'},
+    h('div',{class:'sn-story-t rv'},h('span',{class:'sn-kick'},'Our story'),h('h2',null,S(C.x.storyTitle)||'A corner with a story'),h('p',{class:'sn-story-p'},S(C.x.storyText)||C.about),
+      S(C.x.family)?h('div',{class:'sn-family'},snIc('heart',26,'sn-fh'),h('p',null,S(C.x.family))):null),
+    h('ol',{class:'sn-time rv'},story.map(e=>h('li',{class:S(e.hi)?'hi':null},h('b',null,S(e.y)),h('span',null,S(e.t))))))):null;
+
+  const revSec=revs.length?h('section',{class:'sn-sec sun',id:'s-reviews'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Reviews'),h('h2',null,S(C.x.revTitle)||'Neighbors love it here'),rating?h('p',null,String(rating.v)+' stars from '+Number(rating.n).toLocaleString('en-US')+' '+(S(rating.src)||'reviews')+'.'):null),
+    h('div',{class:'sn-revs'},revs.map(r=>h('figure',{class:'sn-rev rv'},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',15,'sn-st'))),h('blockquote',null,S(r.t)),h('figcaption',null,S(r.n),S(r.s)?h('small',null,' on '+S(r.s)):null)))))):null;
+
+  const noteSec=notes.length?h('section',{class:'sn-sec'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Good to know'),h('h2',null,S(C.x.notesTitle)||'Bring your appetite')),
+    h('ul',{class:'sn-notes'},notes.map((n,i)=>h('li',{class:'rv'},snIc(['plate','heart','clock','sun','egg','cup','pin','star'][i%8],22),n))))):null;
+
+  const hoursList=h('ul',{class:'sn-hours'},DAYS.map((d,i)=>h('li',{class:i===todayIx()?'today':null},h('span',null,d),h('b',null,C.hours[i]||'Closed'))));
+  const visit=h('section',{class:'sn-sec sky',id:'s-visit'},h('div',{class:'sn-wrap sn-visit'},
+    h('div',{class:'rv'},h('span',{class:'sn-kick'},'Come on in'),h('h2',null,'Visit us'),
+      h('ul',{class:'sn-contact'},
+        C.addr?h('li',null,snIc('pin',22),h('div',null,h('small',null,'Address'),h('a',{href:C.maps,target:'_blank',rel:'noopener'},C.addr+', '+C.city),S(C.x.corner)?h('span',null,S(C.x.corner)):null)):null,
+        C.tel?h('li',null,snIc('phone',22),h('div',null,h('small',null,'Phone'),h('a',{href:C.tel},C.phoneTxt))):null,
+        order?h('li',null,snIc('bag',22),h('div',null,h('small',null,'Delivery'),h('a',{href:order,target:'_blank',rel:'noopener'},S(C.x.orderLabel)||'Order online'))):null),
+      h('div',{class:'sn-cta'},C.maps?h('a',{class:'sn-btn blue',href:C.maps,target:'_blank',rel:'noopener'},snIc('pin',18,'sn-bi'),'Get directions'):null,call('line'))),
+    h('div',{class:'sn-hours-card rv'},h('h3',null,snIc('clock',22),'Hours'),hoursList,st?h('p',{class:'sn-live '+(st.open?'on':'')},h('i'),st.t):null),
+    west?h('div',{class:'sn-west rv'},h('small',null,'Our second location'),h('h3',null,S(west.n)),h('p',null,[S(west.a),S(west.h)].filter(Boolean).join(' · ')),S(west.p)?h('a',{href:'tel:+1'+S(west.p).replace(/\D/g,'').slice(-10)},S(west.p)):null):null));
+
+  const foot=h('footer',{class:'sn-foot'},h('div',{class:'sn-wrap sn-foot-in'},
+    h('div',null,h('div',{class:'sn-brand'},snIc('sun',30,'sn-logo'),h('span',null,h('b',null,name.split(/\s+/)[0]),h('small',null,name.split(/\s+/).slice(1).join(' ')))),h('p',null,S(C.x.footLine)||'')),
+    h('div',null,h('b',null,'Hours'),h('p',null,C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:DAYS.map((d,i)=>d.slice(0,3)+' '+(C.hours[i]||'Closed')).join(' · '))),
+    h('div',null,h('b',null,'Find us'),h('p',null,[C.addr,C.city].filter(Boolean).join(', ')),C.tel?h('a',{href:C.tel},C.phoneTxt):null)));
+
+  return h('div',{class:'sn'},top,nav,hero,marquee,favSec,dealSec,menuSec,storySec,revSec,noteSec,visit,foot);
 }
 /* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
 const RT_SVG={
