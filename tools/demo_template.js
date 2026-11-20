@@ -2765,7 +2765,9 @@ function realty(C){
   const hq=h('input',{type:'search',placeholder:'City, ZIP, address or MLS #','aria-label':'Search homes'});
   const htype=h('select',{'aria-label':'Property type'},['Any type','House','Condo / Townhome','Multi-family','Land / Acreage','Farm'].map(o=>h('option',null,o)));
   const hero=h('section',{class:'rt-hero',id:'r-top'},
-    h('div',{class:'rt-hero-bg'+(heroHome===AREA_IMG.dubuque?' lights':''),'aria-hidden':'true'},heroHome===AREA_IMG.dubuque?h('img',{class:'rt-off',src:AREA_IMG.dubuque.replace('.jpg','-off.jpg'),alt:''}):null,hImg),
+    heroHome===AREA_IMG.dubuque?h('div',{class:'rt-hero-bg lights','aria-hidden':'true'},
+      h('div',{class:'rt-lfill'},h('img',{src:AREA_IMG.dubuque.replace('.jpg','-off.jpg'),alt:''}),h('img',{class:'on',src:AREA_IMG.dubuque,alt:''})),
+      h('div',{class:'rt-lfit'},h('img',{src:AREA_IMG.dubuque.replace('.jpg','-off.jpg'),alt:''}),h('img',{class:'on',src:AREA_IMG.dubuque,alt:''}))):h('div',{class:'rt-hero-bg','aria-hidden':'true'},hImg),
     h('div',{class:'rt-wrap rt-hero-in'},
       h('span',{class:'rt-hero-kick'},'Serving '+(S(C.x.areaName)?S(C.x.areaName).replace(/-area$/i,''):C.city||'the area')+' and surrounding communities'),
       h('h1',null,person),
