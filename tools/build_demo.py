@@ -2274,7 +2274,7 @@ body.t-mk{background:#fff;padding-bottom:0}
  .fd-hero-in{min-height:0;padding-top:64px;padding-bottom:44px}
  .fd-split,.fd-split[data-open="a"],.fd-split[data-open="b"]{grid-template-columns:1fr;min-height:0}
  .fd-pn{min-height:340px}.fd-pn+.fd-pn{border-left:0;border-top:6px solid #0a0a0a}.fd-pn-in{padding:28px 22px 30px}.fd-pn-ul{columns:1}
- .fd-map{height:420px}.fd-vwrap{margin-top:-170px}
+ .fd-map{height:340px}.fd-vwrap{margin-top:0;padding-top:20px}
 }
 @media (max-width:620px){
  .fd-sec{padding:58px 0}.fd-services{padding-top:58px}.fd-wrap{padding:0 20px}
