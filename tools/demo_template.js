@@ -2514,7 +2514,7 @@ function sunshine(C){
   const st=snStatus(C);
   const call=(cls,label)=>C.tel?h('a',{class:'sn-btn '+cls,href:C.tel},snIc('phone',18,'sn-bi'),label||'Call '+C.phoneTxt):null;
   const orderBtn=(cls,label)=>order?h('a',{class:'sn-btn '+cls,href:order,target:'_blank',rel:'noopener'},snIc('bag',18,'sn-bi'),label||'Order for delivery'):null;
-  const links=[['s-menu','Menu'],favs.length?['s-favs','Favorites']:null,A('gallery').length?['s-photos','Photos']:null,story.length?['s-story','Our story']:null,revs.length?['s-reviews','Reviews']:null,['s-visit','Visit']].filter(Boolean);
+  const links=[['s-menu','Menu'],favs.length?['s-favs','Favorites']:null,A('rev').length?['s-reviews','Reviews']:null,A('story').length?['s-story','Our story']:null,['s-visit','Visit']].filter(Boolean);
 
 
   /* --- big text toggle (remembered per browser) --- */
@@ -2536,11 +2536,11 @@ function sunshine(C){
     pRes.replaceChildren(h('div',{class:'sn-pk-card'},art?h('div',{class:'sn-pk-art'},art):null,h('div',null,h('small',null,'You should try'),h('h3',null,it.n,it.p?h('span',{class:'sn-pk-p'},it.p):null),h('p',null,it.d),
       h('div',{class:'sn-cta'},list.length>1?h('button',{type:'button',class:'sn-btn line sm',onclick:()=>{ pN++; showPick(); }},'Something else'):null,h('button',{type:'button',class:'sn-btn sun sm',onclick:()=>scrollTo('s-menu')},'See the menu'))))); };
   showPick();
-  const pickSec=favs.length?h('section',{class:'sn-sec sky sn-pick',id:'s-pick'},h('div',{class:'sn-wrap sn-pk'},
-    h('div',{class:'sn-pk-q rv'},h('span',{class:'sn-kick'},'Can’t decide?'),h('h2',null,'What should I order?'),h('p',{class:'sn-pk-sub'},'Two quick taps and we will point you to a plate guests love.'),
+  const pickSec=favs.length?h('section',{class:'sn-sec sn-pick',id:'s-pick'},h('div',{class:'sn-wrap'},h('div',{class:'sn-pk rv'},
+    h('div',{class:'sn-pk-q'},h('span',{class:'sn-kick'},'Can\u2019t decide?'),h('h2',null,'What should I order?'),h('p',{class:'sn-pk-sub'},'Two quick taps and we will point you to a plate guests love.'),
       h('b',{class:'sn-pk-l'},'1. What are you in the mood for?'),pickOpts([['sweet','Sweet','cakes'],['savory','Savory','egg'],['both','A bit of both','plate']],pT,v=>pT=v),
       h('b',{class:'sn-pk-l'},'2. How hungry are you?'),pickOpts([['light','A little','cup'],['hungry','Pretty hungry','pan'],['starving','Starving','star']],pH,v=>pH=v)),
-    h('div',{class:'rv'},pRes))):null;
+    h('div',null,pRes)))):null;
 
   /* --- chalkboard --- */
   const now=new Date(), dayName=DAYS[todayIx()];
@@ -2551,7 +2551,7 @@ function sunshine(C){
 
   /* --- then and now --- */
   const nowImg=okUrl(C.x.heroImg);
-  let tnSec=null;
+  let tnBox=null;
   const TH=C.x.then&&typeof C.x.then==='object'?C.x.then:{}; const thN=S(TH.n)||S(C.x.thenName), thL=S(TH.l)||S(C.x.thenLabel), thT=S(TH.t)||S(C.x.thenText);
   if(nowImg&&thN){
     const then=snBuilding(thN); then.classList.add('sn-tn-then'); then.innerHTML=then.innerHTML.replace('OPEN 6AM',S(C.x.thenSign)||'EST. 1942').replace('<svg viewBox="0 0 520 440">','<svg viewBox="0 30 520 390" preserveAspectRatio="xMidYMid slice">');
@@ -2559,17 +2559,13 @@ function sunshine(C){
       h('span',{class:'sn-tn-tag l'},thL||'Then'),h('span',{class:'sn-tn-tag r'},'Today'));
     const rng=h('input',{type:'range',min:'0',max:'100',value:'62','aria-label':'Slide between then and now',oninput:e=>wrap.style.setProperty('--p',e.target.value+'%')});
     wrap.append(rng);
-    tnSec=h('section',{class:'sn-sec sn-tn'},h('div',{class:'sn-wrap sn-tn-g'},
-      h('div',{class:'rv'},h('span',{class:'sn-kick'},'Then and now'),h('h2',null,S(C.x.thenTitle)||'Same corner, same welcome'),h('p',{class:'sn-story-p'},thT),h('p',{class:'sn-note'},'Slide to compare. The “then” side is an illustration.')),
-      h('div',{class:'rv'},wrap)));
+    tnBox=wrap;
   }
 
   /* --- meet the family --- */
   const fam=A('fam').filter(f=>f&&S(f.n)).slice(0,3);
-  const famSec=fam.length?h('section',{class:'sn-sec sun',id:'s-family'},h('div',{class:'sn-wrap'},
-    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Meet the family'),h('h2',null,S(C.x.famTitle)||'The faces behind the coffee pot'),S(C.x.famSub)?h('p',null,S(C.x.famSub)):null),
-    h('div',{class:'sn-fam'},fam.map((f,i)=>h('article',{class:'sn-fm rv'},h('div',{class:'sn-fm-av c'+i},okUrl(f.img)?h('img',{src:okUrl(f.img),alt:S(f.n)}):h('span',null,S(f.ini)||S(f.n).slice(0,1))),
-      h('small',null,S(f.r)),h('h3',null,S(f.n)),h('p',null,S(f.d))))))):null;
+  const famRow=fam.length?h('div',{class:'sn-fam2'},fam.map((f,i)=>h('div',{class:'sn-fm2'},h('div',{class:'sn-fm-av c'+i},okUrl(f.img)?h('img',{src:okUrl(f.img),alt:S(f.n)}):h('span',null,S(f.ini)||S(f.n).slice(0,1))),
+    h('div',null,h('small',null,S(f.r)),h('b',null,S(f.n)),h('p',null,S(f.d)))))):null;
 
   /* --- groups heads-up --- */
   const gIn=(lab,el)=>h('label',{class:'sn-f'},h('span',null,lab),el);
@@ -2578,14 +2574,11 @@ function sunshine(C){
   const gDay=h('input',{type:'date',required:'required'}), gTime=h('select',null,['6:00am','7:00am','8:00am','9:00am','10:00am','11:00am','12:00pm','1:00pm'].map(v=>h('option',{value:v},v)));
   const gNote=h('textarea',{rows:'3',placeholder:'Birthday, team breakfast, after church, high chairs needed...'});
   const gErr=h('p',{class:'sn-f-err','aria-live':'polite'}), gDone=h('div',{class:'sn-f-done',hidden:'hidden'});
-  const gForm=h('form',{class:'sn-form rv',novalidate:'novalidate',onsubmit:e=>{ e.preventDefault(); const bad=[gName,gPhone,gSize,gDay].find(x=>!String(x.value).trim()); if(bad){ gErr.textContent='Please fill in your name, phone, group size and day.'; bad.focus(); return; }
+  const gForm=h('form',{class:'sn-form',novalidate:'novalidate',onsubmit:e=>{ e.preventDefault(); const bad=[gName,gPhone,gSize,gDay].find(x=>!String(x.value).trim()); if(bad){ gErr.textContent='Please fill in your name, phone, group size and day.'; bad.focus(); return; }
       gErr.textContent=''; gDone.replaceChildren(snIc('heart',30),h('h3',null,'Thanks, '+gName.value.trim().split(/\s+/)[0]+'!'),h('p',null,'Your group of '+gSize.value+' on '+new Date(gDay.value+'T12:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+' around '+gTime.value+' is on its way to the kitchen.'),h('small',null,'Demo preview: on the live site this note goes straight to the restaurant.')); gForm.hidden=true; gDone.hidden=false; }},
     h('div',{class:'sn-f-g'},gIn('Your name',gName),gIn('Phone',gPhone),gIn('Group size',gSize),gIn('Day',gDay),gIn('About what time?',gTime)),gIn('Anything we should know?',gNote),gErr,h('button',{type:'submit',class:'sn-btn sun'},'Send the heads-up'));
-  const grpSec=h('section',{class:'sn-sec',id:'s-groups'},h('div',{class:'sn-wrap sn-grp'},
-    h('div',{class:'rv'},h('span',{class:'sn-kick'},'Coming with a crowd?'),h('h2',null,S(C.x.grpTitle)||'Give us a heads-up'),h('p',{class:'sn-story-p'},S(C.x.grpText)||'Bringing the team, the family reunion or the whole Sunday school class? Let us know you are coming and we will do our best to have tables ready.'),
-      h('ul',{class:'sn-grp-l'},['Teams and clubs','Birthdays and reunions','Church and community groups'].map(t=>h('li',null,snIc('star',18),t))),
-      C.tel?h('p',{class:'sn-note'},'Coming today? Just call ',h('a',{href:C.tel},C.phoneTxt),'.'):null),
-    h('div',null,gForm,gDone)));
+  const grpBox=h('details',{class:'sn-grp2'},h('summary',null,snIc('star',20),h('span',null,h('b',null,'Coming with a group of 6 or more?'),h('small',null,'Teams, birthdays, reunions and church groups. Give us a heads-up.')),h('i',{class:'sn-grp-plus','aria-hidden':'true'},'+')),
+    h('div',{class:'sn-grp-in'},gForm,gDone));
 
   /* --- map with both locations --- */
   const locs=[{n:S(C.x.mainLabel)||'Downtown',t:name,a:[C.addr,C.city].filter(Boolean).join(', '),h:C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:'',p:C.phoneTxt,tel:C.tel,extra:S(C.x.corner)}];
@@ -2609,14 +2602,17 @@ function sunshine(C){
     call('sun sm','Call us')),
     h('nav',{class:'sn-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
 
-  const hero=h('section',{class:'sn-hero',id:'s-top'},h('div',{class:'sn-wrap sn-hero-g'},
+  const hero=h('section',{class:'sn-hero',id:'s-top'},h('div',{class:'sn-burst','aria-hidden':'true'}),h('div',{class:'sn-wrap sn-hero-g'},
     h('div',{class:'sn-hero-t'},
       h('span',{class:'sn-kick'},S(C.x.kicker)||(C.cat||'Family restaurant')+' · '+(C.city||'')),
       h('h1',null,...String(S(C.x.headline)||'Good morning, '+(String(C.city).split(',')[0]||'neighbor')+'.').split('|').map((t,i)=>i?[h('br'),h('em',null,t)]:t)),
       h('p',{class:'sn-lead'},C.tag||''),
-      h('div',{class:'sn-cta'},h('button',{type:'button',class:'sn-btn sun',onclick:()=>scrollTo('s-menu')},'See the menu'),call('blue'),orderBtn('line')),
-      rating?h('div',{class:'sn-rate'},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',16,'sn-st'))),h('b',null,String(rating.v||'')),h('span',null,(rating.n?Number(rating.n).toLocaleString('en-US')+' ':'')+(S(rating.src)||'reviews'))):null),
-    okUrl(C.x.heroImg)?h('figure',{class:'sn-photo'},h('img',{src:okUrl(C.x.heroImg),alt:S(C.x.heroAlt)||name,loading:'eager'}),S(C.x.since)?h('span',{class:'sn-sticker'},snIc('sun',30,'sn-sk-ic'),h('b',null,S(C.x.since)),h('small',null,'Family owned')):null):snBuilding(name)));
+      h('div',{class:'sn-cta'},h('button',{type:'button',class:'sn-btn ink',onclick:()=>scrollTo('s-pick')},snIc('plate',18,'sn-bi'),'See the menu'),call('blue'),orderBtn('white'))),
+    h('div',{class:'sn-hero-v'},
+      okUrl(C.x.heroImg)?h('figure',{class:'sn-photo'},h('img',{src:okUrl(C.x.heroImg),alt:name,loading:'eager'})):snBuilding(name),
+      S(C.x.since)?h('span',{class:'sn-sticker'},snIc('sun',30,'sn-sk-ic'),h('b',null,S(C.x.since)),h('small',null,'Family owned')):null,
+      rating?h('span',{class:'sn-rbadge'},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',14,'sn-st'))),h('b',null,String(rating.v||'')+' on Google'),h('small',null,Number(rating.n||0).toLocaleString('en-US')+' reviews')):null,
+      h('span',{class:'sn-hbadge'},snIc('cup',20),h('b',null,'Coffee on at 6am'),h('small',null,C.daysOpen===7?'Every day of the week':'')))));
 
   const marquee=favs.length?h('div',{class:'sn-marq','aria-hidden':'true'},h('div',{class:'sn-marq-in'},[0,1].map(()=>favs.map(f=>h('span',null,snIc('sun',16,'sn-mi'),S(f.n)))))):null;
 
@@ -2627,7 +2623,7 @@ function sunshine(C){
         pic?h('div',{class:'sn-fav-art c'+(i%3)},h('span',{class:'sn-fav-no'},String(i+1).padStart(2,'0')),pic):h('div',{class:'sn-fav-ic c'+(i%3)},snIc(S(f.i)||'plate',34)),
         h('div',{class:'sn-fav-b'},h('h3',null,S(f.n)),h('p',null,S(f.d)),S(f.q)?h('blockquote',null,'“'+S(f.q)+'”'):null)); })))):null;
 
-  const dealSec=h('section',{class:'sn-deals'},h('div',{class:'sn-wrap sn-deals-w'},chalk,h('div',{class:'sn-deals-g'},deals.map(dl=>h('div',{class:'sn-deal rv'},h('div',null,h('small',null,S(dl.k)||'Special'),h('h3',null,S(dl.t)),h('p',null,S(dl.d))),S(dl.p)?h('b',{class:'sn-deal-p'},S(dl.p)):null)))));
+  const specials=h('div',{class:'sn-spec'},chalk,deals.map((dl,i)=>h('div',{class:'sn-deal rv d'+i},h('small',null,S(dl.k)||'Special'),h('h3',null,S(dl.t)),h('p',null,S(dl.d)),S(dl.p)?h('b',{class:'sn-deal-p'},S(dl.p)):null)));
 
   /* menu with tabs */
   const G=groups(C.items,'Menu');
@@ -2638,39 +2634,39 @@ function sunshine(C){
       return h('li',{class:fav?'sn-fv':null},h('div',{class:'sn-mi-t'},h('b',null,it.name),fav?h('span',{class:'sn-badge'},snIc('heart',12,'sn-bh'),'Guest favorite'):null,h('i',{class:'sn-dots'}),it.price?h('span',{class:'sn-price'},it.price):null),it.desc?h('p',null,it.desc):null); }))); };
   G.names.forEach(k=>tabs.append(h('button',{type:'button',role:'tab','data-k':k,onclick:()=>showTab(k)},k)));
   if(G.names.length) showTab(G.names[0]);
-  const menuSec=h('section',{class:'sn-sec sky',id:'s-menu'},h('div',{class:'sn-wrap'},
+  const menuSec=h('section',{class:'sn-sec sky sn-wv',id:'s-menu'},h('div',{class:'sn-wrap'},
     h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'The menu'),h('h2',null,S(C.x.menuTitle)||'Breakfast and lunch, every day'),h('p',null,S(C.x.menuSub)||'Home-style cooking and big portions.')),
+    specials,
     h('div',{class:'sn-menu-box rv'},tabs,panes),
     h('div',{class:'sn-menu-foot'},S(C.x.menuNote)?h('p',{class:'sn-note'},S(C.x.menuNote)):null,h('div',{class:'sn-cta'},call('blue','Call ahead for takeout'),orderBtn('line')))));
 
   const gal=A('gallery').filter(g=>typeof g==='string').map(g=>{const [u,c]=g.split('|');return {u:okUrl((u||'').trim()),c:(c||'').trim()};}).filter(g=>g.u).slice(0,8);
-  const galSec=gal.length?h('section',{class:'sn-sec',id:'s-photos'},h('div',{class:'sn-wrap'},
-    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},S(C.x.galKick)||'Pull up a chair'),h('h2',null,S(C.x.galTitle)||'Come hungry, leave happy'),S(C.x.galSub)?h('p',null,S(C.x.galSub)):null),
-    h('div',{class:'sn-gal'},gal.map((g,i)=>h('figure',{class:'sn-g rv g'+i},h('img',{src:g.u,alt:g.c||name,loading:'lazy'}),g.c?h('figcaption',null,g.c):null))))):null;
 
-  const storySec=story.length?h('section',{class:'sn-sec',id:'s-story'},h('div',{class:'sn-wrap sn-story'},
-    h('div',{class:'sn-story-t rv'},h('span',{class:'sn-kick'},'Our story'),h('h2',null,S(C.x.storyTitle)||'A corner with a story'),h('p',{class:'sn-story-p'},S(C.x.storyText)||C.about),
-      S(C.x.family)?h('div',{class:'sn-family'},snIc('heart',26,'sn-fh'),h('p',null,S(C.x.family))):null,
-      okUrl(C.x.storyImg)?h('figure',{class:'sn-story-img'},h('img',{src:okUrl(C.x.storyImg),alt:name,loading:'lazy'})):null),
-    h('ol',{class:'sn-time rv'},story.map(e=>h('li',{class:S(e.hi)?'hi':null},h('b',null,S(e.y)),h('span',null,S(e.t))))))):null;
+  const storySec=story.length?h('section',{class:'sn-sec',id:'s-story'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-story'},
+      h('div',{class:'sn-story-t rv'},h('span',{class:'sn-kick'},'Our story'),h('h2',null,S(C.x.storyTitle)||'A corner with a story'),h('p',{class:'sn-story-p'},S(C.x.storyText)||C.about),thT?h('p',{class:'sn-story-p'},thT):null,famRow),
+      tnBox?h('div',{class:'sn-story-v rv'},tnBox,h('p',{class:'sn-note'},'Slide to compare. The \u201cthen\u201d side is an illustration.')):null),
+    h('ol',{class:'sn-tl rv'},story.map(e=>h('li',{class:S(e.hi)?'hi':null},h('b',null,S(e.y)),h('span',null,S(e.t))))))):null;
 
-  const revSec=revs.length?h('section',{class:'sn-sec sun',id:'s-reviews'},h('div',{class:'sn-wrap'},
-    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Reviews'),h('h2',null,S(C.x.revTitle)||'Neighbors love it here'),rating?h('p',null,String(rating.v)+' stars from '+Number(rating.n).toLocaleString('en-US')+' '+(S(rating.src)||'reviews')+'.'):null),
-    h('div',{class:'sn-revs'},revs.map(r=>h('figure',{class:'sn-rev rv'},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',15,'sn-st'))),h('blockquote',null,S(r.t)),h('figcaption',null,S(r.n),S(r.s)?h('small',null,' on '+S(r.s)):null)))))):null;
+  const mos=[]; const nI=Math.max(gal.length,revs.length);
+  for(let i=0;i<nI;i++){ if(gal[i]) mos.push(h('figure',{class:'sn-mo-ph rv'},h('img',{src:gal[i].u,alt:gal[i].c||name,loading:'lazy'}),gal[i].c?h('figcaption',null,gal[i].c):null));
+    const r=revs[i]; if(r) mos.push(h('figure',{class:'sn-mo-rv rv c'+(i%3)},h('span',{class:'sn-stars'},[0,1,2,3,4].map(()=>snIc('star',15,'sn-st'))),h('blockquote',null,'\u201c'+S(r.t)+'\u201d'),h('figcaption',null,S(r.n),S(r.s)?h('small',null,' on '+S(r.s)):null))); }
+  const revSec=mos.length?h('section',{class:'sn-sec sun sn-wv',id:'s-reviews'},h('div',{class:'sn-wrap'},
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Photos and reviews'),h('h2',null,S(C.x.revTitle)||'Neighbors love it here'),rating?h('p',null,String(rating.v)+' stars from '+Number(rating.n).toLocaleString('en-US')+' '+(S(rating.src)||'reviews')+'. Big plates, hot coffee and a room full of neighbors.'):null),
+    h('div',{class:'sn-mosaic'},mos))):null;
 
-  const noteSec=notes.length?h('section',{class:'sn-sec'},h('div',{class:'sn-wrap'},
-    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'Good to know'),h('h2',null,S(C.x.notesTitle)||'Bring your appetite')),
-    h('ul',{class:'sn-notes'},notes.map((n,i)=>h('li',{class:'rv'},snIc(['plate','heart','clock','sun','egg','cup','pin','star'][i%8],22),n))))):null;
 
   const hoursList=h('ul',{class:'sn-hours'},DAYS.map((d,i)=>h('li',{class:i===todayIx()?'today':null},h('span',null,d),h('b',null,C.hours[i]||'Closed'))));
-  const visit=h('section',{class:'sn-sec sky',id:'s-visit'},h('div',{class:'sn-wrap sn-visit'},
+  const visit=h('section',{class:'sn-sec sky sn-wv',id:'s-visit'},h('div',{class:'sn-wrap sn-visit'},
     h('div',{class:'rv'},h('span',{class:'sn-kick'},'Come on in'),h('h2',null,'Visit us'),
       h('ul',{class:'sn-contact'},
         C.addr?h('li',null,snIc('pin',22),h('div',null,h('small',null,'Address'),h('a',{href:C.maps,target:'_blank',rel:'noopener'},C.addr+', '+C.city),S(C.x.corner)?h('span',null,S(C.x.corner)):null)):null,
         C.tel?h('li',null,snIc('phone',22),h('div',null,h('small',null,'Phone'),h('a',{href:C.tel},C.phoneTxt))):null,
         order?h('li',null,snIc('bag',22),h('div',null,h('small',null,'Delivery'),h('a',{href:order,target:'_blank',rel:'noopener'},S(C.x.orderLabel)||'Order online'))):null),
-      h('div',{class:'sn-cta'},C.maps?h('a',{class:'sn-btn blue',href:C.maps,target:'_blank',rel:'noopener'},snIc('pin',18,'sn-bi'),'Get directions'):null,call('line'))),
+      h('div',{class:'sn-cta'},C.maps?h('a',{class:'sn-btn blue',href:C.maps,target:'_blank',rel:'noopener'},snIc('pin',18,'sn-bi'),'Get directions'):null,call('line')),
+      notes.length?h('div',{class:'sn-gk'},h('b',null,S(C.x.notesTitle)||'Good to know'),h('ul',{class:'sn-notes2'},notes.map((n,i)=>h('li',null,snIc(['plate','heart','clock','sun','egg','cup','pin','star'][i%8],18),n)))):null),
     h('div',{class:'sn-hours-card rv'},h('h3',null,snIc('clock',22),'Hours'),hoursList,st?h('p',{class:'sn-live '+(st.open?'on':'')},h('i'),st.t):null),
+    grpBox,
     mapBox));
 
   const foot=h('footer',{class:'sn-foot'},h('div',{class:'sn-wrap sn-foot-in'},
@@ -2678,7 +2674,7 @@ function sunshine(C){
     h('div',null,h('b',null,'Hours'),h('p',null,C.daysOpen===7&&C.hours.every(x=>x===C.hours[0])?'Every day, '+C.hours[0]:DAYS.map((d,i)=>d.slice(0,3)+' '+(C.hours[i]||'Closed')).join(' · '))),
     h('div',null,h('b',null,'Find us'),h('p',null,[C.addr,C.city].filter(Boolean).join(', ')),C.tel?h('a',{href:C.tel},C.phoneTxt):null)));
 
-  const root0=h('div',{class:'sn'+(big?' big':'')},top,nav,hero,marquee,favSec,pickSec,dealSec,galSec,menuSec,storySec,tnSec,famSec,revSec,noteSec,grpSec,visit,foot);
+  const root0=h('div',{class:'sn'+(big?' big':'')},top,nav,hero,marquee,pickSec,menuSec,favSec,revSec,storySec,visit,foot);
   return root0;
 }
 /* ===================== REALTY (real estate agent: buy, sell, home value, follow) ===================== */
