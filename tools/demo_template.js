@@ -2743,20 +2743,25 @@ function realty(C){
     C.tel?h('a',{class:'rt-navcall',href:C.tel},C.phoneTxt):null),
     h('nav',{class:'rt-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))));
 
+  const heroHome=okUrl(C.x.heroHome)||'https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1600';
   const hero=h('section',{class:'rt-hero',id:'r-top'},
-    photo?h('div',{class:'rt-hero-ph','aria-hidden':'true'},h('img',{src:photo,alt:''})):null,
+    h('div',{class:'rt-hero-bg','aria-hidden':'true'},h('img',{src:heroHome,alt:''})),
     h('div',{class:'rt-wrap rt-hero-in'},
+      h('span',{class:'rt-hero-kick'},[firm,S(C.x.areaName)||C.city].filter(Boolean).join('  ·  ')),
       h('h1',null,name),
       h('div',{class:'rt-sub'},[C.cat,firm].filter(Boolean).join('  |  ')),
       C.tag?h('p',{class:'rt-lead'},C.tag):null,
       langs.length?h('div',{class:'rt-langs'},h('span',null,'Speaks'),langs.map(l=>h('b',{lang:S(l.code)||null},S(l.native)||S(l.n)))):null,
-      h('div',{class:'rt-hero-btns'},btn('solid',null,'Buy',false,go('r-buy')),btn('solid',null,'Sell',false,go('r-sell')),btn('solid',null,'Home Value',false,go('r-value')))));
+      h('div',{class:'rt-hero-btns'},btn('solid',null,'Search Homes',false,go('r-search')),btn('line',null,'What Is My Home Worth?',false,go('r-value')))),
+    h('button',{type:'button',class:'rt-scroll','aria-label':'Scroll down',onclick:go('r-intro')},ico('arrow',16,'')));
 
-  const card=(k,t,p,label,href,ext,onclick)=>h('div',{class:'rt-card'},h('div',{class:'rt-card-top'},svg(k),h('div',null,h('h3',null,t),h('p',null,p))),btn('outline',href,label,ext,onclick));
+  const card=(k,t,p,label,href,ext,onclick,img)=>{ const c=h('button',{type:'button',class:'rt-card',onclick},h('img',{class:'rt-card-img',src:img,alt:'',loading:'lazy'}),h('div',{class:'rt-card-in'},h('h3',null,t),h('p',null,p),h('span',{class:'rt-card-go'},label,ico('arrow',14,'')))); return c; };
+  const intro=h('section',{class:'rt-intro',id:'r-intro'},h('div',{class:'rt-wrap rt-intro-in rv'},h('span',{class:'rt-kick'},'Welcome'),h('h2',null,S(C.x.introTitle)||'Your home journey starts here'),
+    h('p',null,C.tag||''),h('i',{class:'rt-orn','aria-hidden':'true'})));
   const cards=h('section',{class:'rt-cards-sec'},h('div',{class:'rt-wrap rt-cards'},
-    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Start My Search',null,false,go('r-search')),
-    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell')),
-    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'))));
+    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Start My Search',null,false,go('r-search'),'https://images.pexels.com/photos/3935333/pexels-photo-3935333.jpeg?auto=compress&cs=tinysrgb&w=1600'),
+    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell'),'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600'),
+    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'),'https://images.pexels.com/photos/209315/pexels-photo-209315.jpeg?auto=compress&cs=tinysrgb&w=1600')));
 
   const factsRow=facts.length?h('section',{class:'rt-facts-sec'},h('div',{class:'rt-wrap rt-facts-g'},
     h('h2',null,'Why ',h('br'),first),facts.map(f=>h('div',{class:'rt-fact rv'},h('b',null,String(f.v)),h('span',null,String(f.k)))))):null;
@@ -2890,7 +2895,7 @@ function realty(C){
   /* text button that stays on screen on phones */
   const fab=sms?h('a',{class:'rt-fab',href:sms+'?&body='+encodeURIComponent('Hi '+first+', I found you on your website. ')},ico('chat',18,''),'Text '+first):null;
 
-  const page=h('div',{class:'rt'},nav,hero,cards,factsRow,about,buy,sell,proof,areasSec,follow,contact,foot,fab);
+  const page=h('div',{class:'rt lux'},nav,hero,intro,cards,factsRow,about,buy,sell,proof,areasSec,follow,contact,foot,fab);
   const onScroll=()=>{ if(!nav.isConnected){ removeEventListener('scroll',onScroll); return; } nav.classList.toggle('solid',scrollY>60); if(fab) fab.classList.toggle('on',scrollY>400); };
   addEventListener('scroll',onScroll,{passive:true});
   return page;
