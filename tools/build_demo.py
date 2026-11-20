@@ -890,7 +890,7 @@ body.t-mt{background:#111}
 .mt-sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
 .mt-s{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden;transition:transform .25s,border-color .25s}
 .mt-s:hover{transform:translateY(-4px);border-color:rgba(242,213,19,.5)}
-.mt-s-sw{height:120px}
+.mt-s-sw{height:150px}
 .sw0{background:linear-gradient(135deg,#f4f2ee 0%,#e7e3dc 40%,#f7f6f3 60%,#dcd7ce 100%)}
 .sw1{background:radial-gradient(circle at 20% 30%,#5a5550 2px,transparent 3px) 0 0/14px 14px,radial-gradient(circle at 70% 60%,#9b948a 2px,transparent 3px) 0 0/18px 18px,linear-gradient(135deg,#2c2a28,#4a4642)}
 .sw2{background:linear-gradient(115deg,transparent 40%,rgba(120,120,128,.55) 42%,transparent 45%),linear-gradient(160deg,transparent 60%,rgba(150,150,158,.45) 62%,transparent 64%),#f5f4f1}

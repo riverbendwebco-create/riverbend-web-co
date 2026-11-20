@@ -2332,6 +2332,7 @@ const MT={
   team:[['Eric Christensen','Owner / CEO'],['Robert Breitbach','Owner / CFO'],['Rick Carner II','Production Manager'],['Randy Barton','Project Manager'],['Andrew Kartman','CNC Programmer / Operator'],['Wally Dirks','Installer / Fabrication Specialist']],
   reviews:[['Thank you all for providing such a wonderful experience from beginning to end!','Ginny and Guy'],['Everyone was timely, considerate, and knowledgeable.','Cal and Jennifer'],['The flushing of the granite with the sink was perfect!','Tony and Pat'],['Will definitely refer business your way.','Bill and Julie'],['Not one single problem at all.','Mountaintop customer'],['I have found them very easy to work with, they answer all my questions.','Mountaintop customer'],['Good representatives for your company.','Mountaintop customer'],['It is beautiful!!','Mountaintop customer']]
 };
+const MT_PH={Granite:'granite',Marble:'marble',Quartzite:'quartzite',Soapstone:'soapstone',Travertine:'travertine',Limestone:'limestone',Onyx:'onyx'};
 const MT_I={
   phone:'<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
   pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
@@ -2381,7 +2382,7 @@ function mountaintop(C){
   /* surfaces with filter */
   const sgrid=h('div',{class:'mt-sgrid'});
   const drawS=f=>{ sgrid.replaceChildren(...MT.surfaces.filter(s=>f==='All'||s[1]===f).map(([n,t,d,tags],i)=>h('article',{class:'mt-s rv rv-on'},
-    h('div',{class:'mt-s-sw sw'+(MT.surfaces.findIndex(z=>z[0]===n)%10),'aria-hidden':'true'}),h('div',{class:'mt-s-b'},h('div',{class:'mt-s-top'},h('h3',null,n),h('span',{class:'mt-tag '+t.toLowerCase()},t)),h('p',null,d),h('div',{class:'mt-chips'},tags.map(c=>h('span',null,c))))))); };
+    h('div',{class:'mt-s-sw sw'+(MT.surfaces.findIndex(z=>z[0]===n)%10),'aria-hidden':'true',style:MT_PH[n]?'background:url("https://riverbendwebco.com/demo/img/mt-'+MT_PH[n]+'.jpg") '+(n==='Granite'?'center 18%':'center')+'/cover':null}),h('div',{class:'mt-s-b'},h('div',{class:'mt-s-top'},h('h3',null,n),h('span',{class:'mt-tag '+t.toLowerCase()},t)),h('p',null,d),h('div',{class:'mt-chips'},tags.map(c=>h('span',null,c))))))); };
   const ftabs=h('div',{class:'mt-ftabs',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',role:'tab',class:i?'':'on','aria-selected':i?'false':'true'},f); b.onclick=()=>{ ftabs.querySelectorAll('button').forEach(z=>{z.classList.toggle('on',z===b);z.setAttribute('aria-selected',z===b?'true':'false');}); drawS(f); }; return b; }));
   drawS('All');
   const surfaces=h('section',{class:'mt-sec mt-dark',id:'mt-surfaces'},h('div',{class:'mt-w'},

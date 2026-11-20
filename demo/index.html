@@ -1137,7 +1137,7 @@ body.t-mt{background:#111}
 .mt-sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
 .mt-s{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden;transition:transform .25s,border-color .25s}
 .mt-s:hover{transform:translateY(-4px);border-color:rgba(242,213,19,.5)}
-.mt-s-sw{height:120px}
+.mt-s-sw{height:150px}
 .sw0{background:linear-gradient(135deg,#f4f2ee 0%,#e7e3dc 40%,#f7f6f3 60%,#dcd7ce 100%)}
 .sw1{background:radial-gradient(circle at 20% 30%,#5a5550 2px,transparent 3px) 0 0/14px 14px,radial-gradient(circle at 70% 60%,#9b948a 2px,transparent 3px) 0 0/18px 18px,linear-gradient(135deg,#2c2a28,#4a4642)}
 .sw2{background:linear-gradient(115deg,transparent 40%,rgba(120,120,128,.55) 42%,transparent 45%),linear-gradient(160deg,transparent 60%,rgba(150,150,158,.45) 62%,transparent 64%),#f5f4f1}
@@ -6491,6 +6491,7 @@ const MT={
   team:[['Eric Christensen','Owner / CEO'],['Robert Breitbach','Owner / CFO'],['Rick Carner II','Production Manager'],['Randy Barton','Project Manager'],['Andrew Kartman','CNC Programmer / Operator'],['Wally Dirks','Installer / Fabrication Specialist']],
   reviews:[['Thank you all for providing such a wonderful experience from beginning to end!','Ginny and Guy'],['Everyone was timely, considerate, and knowledgeable.','Cal and Jennifer'],['The flushing of the granite with the sink was perfect!','Tony and Pat'],['Will definitely refer business your way.','Bill and Julie'],['Not one single problem at all.','Mountaintop customer'],['I have found them very easy to work with, they answer all my questions.','Mountaintop customer'],['Good representatives for your company.','Mountaintop customer'],['It is beautiful!!','Mountaintop customer']]
 };
+const MT_PH={Granite:'granite',Marble:'marble',Quartzite:'quartzite',Soapstone:'soapstone',Travertine:'travertine',Limestone:'limestone',Onyx:'onyx'};
 const MT_I={
   phone:'<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
   pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
@@ -6540,7 +6541,7 @@ function mountaintop(C){
   /* surfaces with filter */
   const sgrid=h('div',{class:'mt-sgrid'});
   const drawS=f=>{ sgrid.replaceChildren(...MT.surfaces.filter(s=>f==='All'||s[1]===f).map(([n,t,d,tags],i)=>h('article',{class:'mt-s rv rv-on'},
-    h('div',{class:'mt-s-sw sw'+(MT.surfaces.findIndex(z=>z[0]===n)%10),'aria-hidden':'true'}),h('div',{class:'mt-s-b'},h('div',{class:'mt-s-top'},h('h3',null,n),h('span',{class:'mt-tag '+t.toLowerCase()},t)),h('p',null,d),h('div',{class:'mt-chips'},tags.map(c=>h('span',null,c))))))); };
+    h('div',{class:'mt-s-sw sw'+(MT.surfaces.findIndex(z=>z[0]===n)%10),'aria-hidden':'true',style:MT_PH[n]?'background:url("https://riverbendwebco.com/demo/img/mt-'+MT_PH[n]+'.jpg") '+(n==='Granite'?'center 18%':'center')+'/cover':null}),h('div',{class:'mt-s-b'},h('div',{class:'mt-s-top'},h('h3',null,n),h('span',{class:'mt-tag '+t.toLowerCase()},t)),h('p',null,d),h('div',{class:'mt-chips'},tags.map(c=>h('span',null,c))))))); };
   const ftabs=h('div',{class:'mt-ftabs',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',role:'tab',class:i?'':'on','aria-selected':i?'false':'true'},f); b.onclick=()=>{ ftabs.querySelectorAll('button').forEach(z=>{z.classList.toggle('on',z===b);z.setAttribute('aria-selected',z===b?'true':'false');}); drawS(f); }; return b; }));
   drawS('All');
   const surfaces=h('section',{class:'mt-sec mt-dark',id:'mt-surfaces'},h('div',{class:'mt-w'},
