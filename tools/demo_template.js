@@ -2912,7 +2912,7 @@ function realty(C){
       h('div',{class:'rt-fg'},field('Name',n),field('Phone',ph),field('Email',em,true),field('What can '+first+' help with?',tp,true),field('Preferred day',dt),field('Time of day',tm),field('Meet by',how,true),field('Notes',msg,true)),
       consent(),h('button',{type:'submit',class:'rt-btn gold'},'Request My Consultation'),ok);
     return h('section',{class:'rt-sec navy',id},h('div',{class:'rt-wrap rt-consult'},
-      h('div',{class:'rv'},h('span',{class:'rt-kick'},'Free consultation'),h('h2',null,'Schedule a consultation with '+person),h('p',{class:'rt-firm-line'},firm),
+      h('div',{class:'rv'},h('span',{class:'rt-kick'},'Free consultation'),h('h2',null,'Schedule a consultation with '+first),
         h('p',{class:'rt-cp'},'Pick a day and time that works for you. No pressure, just clear answers about your next move.'),
         h('ul',{class:'rt-checks'},['30 minutes, in person or by phone','A plan for your timeline and budget','Free, with no obligation'].map(t=>h('li',null,t)))),
       h('div',{class:'rt-tool rv'},f))); };
@@ -2934,7 +2934,7 @@ function realty(C){
     h('div',{class:'rt-ftabs',role:'tablist'},['For Sale','Sold'].map((t,i)=>{ const b=h('button',{type:'button',role:'tab',class:i?'':'on','aria-selected':i?'false':'true'},t); b.onclick=()=>{ b.parentNode.querySelectorAll('button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-selected',x===b?'true':'false');}); }; return b; }),h('a',{class:'rt-viewall',href:'#search'},'View All')),
     LST.length?h('div',{class:'rt-lgrid'},LST.map(l=>h('a',{class:'rt-lcard rv',href:okUrl(l.u)||site||'#search',target:okUrl(l.u)||site?'_blank':null,rel:'noopener'},h('div',{class:'rt-lph'},h('img',{src:okUrl(l.p),alt:S(l.a),loading:'lazy'}),h('span',null,S(l.s)||'For Sale')),h('div',{class:'rt-lb'},h('b',null,S(l.price)),h('span',null,S(l.a)),S(l.d)?h('small',null,S(l.d)):null))))
       :h('div',{class:'rt-lempty rv'},h('div',null,h('b',null,'Live MLS listings'),h('p',null,'New listings, price changes and open houses from the MLS show here automatically once the IDX feed is connected.')),
-        h('div',{class:'rt-row'},h('a',{class:'rt-btn dark',href:'#search'},'Search All Homes'),site?btn('outline',site,'Browse '+firm+' listings',true):null))));
+        h('div',{class:'rt-row'},h('a',{class:'rt-btn dark',href:'#search'},'Search All Homes'),site?btn('outline',site,'Browse All Listings',true):null))));
 
   /* ---------- search page: filters, map, saved search alerts ---------- */
   const sQ=inp('search','City, ZIP, address or MLS #',false), sMin=sel(['No min','$100,000','$150,000','$200,000','$250,000','$300,000','$400,000','$500,000','$750,000']), sMax=sel(['No max','$150,000','$200,000','$250,000','$300,000','$400,000','$500,000','$750,000','$1,000,000+']);
@@ -2948,7 +2948,7 @@ function realty(C){
         h('div',{class:'rt-sp-top'},h('b',null,'Filter homes')),field('Location',sQ,true),
         h('div',{class:'rt-fg'},field('Min price',sMin),field('Max price',sMax),field('Beds',sBeds),field('Baths',sBaths),field('Property type',sType,true),field('Acreage / land',sAcre,true)),
         h('button',{type:'submit',class:'rt-btn gold'},'Show Matching Homes'),
-        h('p',{class:'rt-fine'},'Listings come from the MLS through '+firm+'.')),
+),
       h('div',{class:'rt-smap'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&z=11&output=embed',title:'Map of the search area',loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))),
     h('div',{class:'rt-alert rv'},h('div',null,h('span',{class:'rt-kick'},'Saved search'),h('h3',null,'Get new listings before anyone else'),h('p',null,'Save this search and '+first+' will send you new homes that match, price drops and open houses.')),
       h('form',{class:'rt-alert-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!aN.value.trim()||!aE.value.trim()){ aOk.hidden=false; aOk.textContent='Please add your name and email.'; return; } send('Saved search and listing alerts for '+aN.value,['Please send me listing alerts ('+aF.value.toLowerCase()+') for this search:'].concat(filters(),['',aN.value,aE.value])); aOk.hidden=false; aOk.textContent='Saved! You will start getting matching homes by email.'; }},
@@ -3002,24 +3002,20 @@ function realty(C){
     h('div',{class:'rt-foot-g'},
       h('div',{class:'rt-foot-b'},h('b',null,pTitle),h('span',{class:'rt-foot-firm'},firm),kwMark('foot')),
       col('Explore',[li('#search','Search homes'),li('#buyers','Buyer guide'),li('#sellers','Seller guide'),li('#neighborhoods','Neighborhoods'),li('#about','About & contact')]),
-      col('Contact',[C.tel?h('li',null,h('a',{href:C.tel},C.phoneTxt)):null,C.email?h('li',null,h('a',{href:mail('')},C.email)):null,h('li',null,firm),h('li',null,'Office: '+office)]),
-      col('Legal',[li('#privacy','Privacy Policy'),li('#terms','Terms of Use'),li('#idx','MLS / IDX Disclaimer')])),
+      col('Contact',[C.tel?h('li',null,'Direct: ',h('a',{href:C.tel},C.phoneTxt)):null,offPhone?h('li',null,'Office: ',h('a',{href:'tel:+1'+offPhone.replace(/\D/g,'').slice(-10)},offPhone)):h('li',{class:'rt-offphone','data-slot':'officePhone',hidden:true}),C.email?h('li',null,h('a',{href:mail('')},C.email)):null,h('li',null,[offAddr,office].filter(Boolean).join(', '))])),
     h('div',{class:'rt-comply'},
       h('div',{class:'rt-comply-t'},
-        h('p',{class:'rt-pair'},h('b',null,pTitle),h('span',null,' | '),h('b',null,firm)),
-        h('p',null,'Each Office Is Independently Owned and Operated.'),
         /* Licensing line. To add Illinois or Wisconsin later, set x.licensedStates (for example "Illinois and Wisconsin") and it appends here. */
-        h('p',null,'Licensed to practice real estate in the State of Iowa'+(licMore?' and the State of '+licMore:'')+'.'+(licNo?' Iowa license #'+licNo+'.':'')),
-        h('p',null,'Main office: '+firm+', ',offAddr?h('span',null,offAddr+', '):null,office,offPhone?h('span',{class:'rt-offphone'},'  \u00b7  Office: ',h('a',{href:'tel:+1'+offPhone.replace(/\D/g,'').slice(-10)},offPhone)):h('span',{class:'rt-offphone','data-slot':'officePhone'}),'  \u00b7  '+first+' direct: ',C.tel?h('a',{href:C.tel},C.phoneTxt):null),
-        h('p',null,'\u00a9 '+today+' '+person+', '+firm+'.  ',h('a',{href:'#privacy'},'Privacy Policy'),'  \u00b7  ',h('a',{href:'#terms'},'Terms of Use'),'  \u00b7  ',h('a',{href:'#idx'},'MLS / IDX Disclaimer'))),
-      h('div',{class:'rt-comply-l'},ehoLogo?h('img',{class:'rt-clogo',src:ehoLogo,alt:'Equal Housing Opportunity'}):eho(),realtorLogo?h('img',{class:'rt-clogo',src:realtorLogo,alt:'REALTOR\u00ae'}):h('span',{class:'rt-realtor',role:'img','aria-label':'REALTOR'},h('b',null,'R'),h('small',null,'REALTOR\u00ae')))),
-    h('p',{class:'rt-idxblock',id:'r-idx-note'},idxText||'IDX/MLS listing data and attribution provided by the East Central Iowa Association of REALTORS\u00ae (ECIAAR). Information deemed reliable but not guaranteed.')));
+        h('p',null,'Each Office Is Independently Owned and Operated. Licensed to practice real estate in the State of Iowa'+(licMore?' and the State of '+licMore:'')+'.'+(licNo?' Iowa license #'+licNo+'.':'')),
+        h('p',{class:'rt-idxblock',id:'r-idx-note'},idxText||'IDX/MLS listing data and attribution provided by the East Central Iowa Association of REALTORS\u00ae (ECIAAR). Information deemed reliable but not guaranteed.'),
+        h('p',{class:'rt-legal-links'},'\u00a9 '+today+' All rights reserved.  ',h('a',{href:'#privacy'},'Privacy Policy'),'  \u00b7  ',h('a',{href:'#terms'},'Terms of Use'),'  \u00b7  ',h('a',{href:'#idx'},'MLS / IDX Disclaimer'))),
+      h('div',{class:'rt-comply-l'},ehoLogo?h('img',{class:'rt-clogo',src:ehoLogo,alt:'Equal Housing Opportunity'}):eho(),realtorLogo?h('img',{class:'rt-clogo',src:realtorLogo,alt:'REALTOR\u00ae'}):h('span',{class:'rt-realtor',role:'img','aria-label':'REALTOR'},h('b',null,'R'),h('small',null,'REALTOR\u00ae'))))));
 
   /* text button that stays on screen on phones */
   const fab=sms?h('a',{class:'rt-fab',href:sms+'?&body='+encodeURIComponent('Hi '+first+', I found you on your website. ')},ico('chat',18,''),'Text '+first):null;
 
   /* ---------- pages ---------- */
-  const pgHead=(kick,title,sub)=>h('header',{class:'rt-pghead'},h('div',{class:'rt-wrap'},h('span',{class:'rt-kick'},kick),h('h1',null,title),sub?h('p',null,sub):null,h('p',{class:'rt-firm-line'},pTitle+'  |  '+firm)));
+  const pgHead=(kick,title,sub)=>h('header',{class:'rt-pghead'},h('div',{class:'rt-wrap'},h('span',{class:'rt-kick'},kick),h('h1',null,title),sub?h('p',null,sub):null,title.indexOf(person)>=0?h('p',{class:'rt-firm-line'},firm):null));
   const PG=(id,...kids)=>h('div',{class:'rt-pg','data-pg':id,hidden:true},...kids);
   /* ---------- home sections laid out like the reference site ---------- */
   const IMGS=['https://images.pexels.com/photos/3935333/pexels-photo-3935333.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/209315/pexels-photo-209315.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1600'];
@@ -3027,7 +3023,7 @@ function realty(C){
   const areaPanels=G2.length?h('section',{class:'rt-apanels'},G2.slice(0,2).map((g,i)=>{ const im=h('img',{src:i===0?heroHome:IMGS[0],alt:'',loading:'lazy'}); im.onerror=()=>{ im.src=IMGS[3]; };
     return h('div',{class:'rt-apanel'},im,h('div',{class:'rt-apanel-in rv'},h('h2',null,S(g.n)),S(g.t)?h('p',null,S(g.t)):null,h('a',{class:'rt-btn line',href:'#search',onclick:()=>{ sQ.value=S(g.n)+', IA'; }},'Search Homes in '+S(g.n)))); })):null;
   const whoBand=h('section',{class:'rt-who'},h('img',{class:'rt-who-bg',src:IMGS[3],alt:'',loading:'lazy'}),h('div',{class:'rt-wrap rt-who-in rv'},
-    h('span',{class:'rt-kick'},'Who I am'),h('h2',null,'Local. Honest. On your side.'),h('p',null,String(C.about||'').split('\n').slice(-1)[0]),h('p',{class:'rt-firm-line'},pTitle+'  |  '+firm),h('a',{class:'rt-btn solid',href:'#about'},'Meet '+first)));
+    h('span',{class:'rt-kick'},'Who I am'),h('h2',null,'Local. Honest. On your side.'),h('p',null,String(C.about||'').split('\n').slice(-1)[0]),h('a',{class:'rt-btn solid',href:'#about'},'Meet '+first)));
   const bestHead=h('div',{class:'rt-wrap rt-best-h rv'},h('span',{class:'rt-kick'},'Simply the best'),h('h2',null,'The right home is closer than you think.'));
   const guidesHome=G2.length?h('section',{class:'rt-sec gray'},h('div',{class:'rt-wrap'},head('Neighborhoods','Our local market guides'),
     h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:IMGS[i%4],alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
@@ -3046,7 +3042,7 @@ function realty(C){
     PG('buyers',pgHead('Buyer guide','Buying a home in the '+areaTxt+' area','Step by step, from pre-approval to closing day.'),buy,consult('r-consult-b','Buying a home')),
     PG('sellers',pgHead('Seller guide','Selling your home in the '+areaTxt+' area','How we price, prepare and market your home, start to finish.'),sell,consult('r-consult-s','Selling a home')),
     PG('neighborhoods',pgHead('Neighborhood guides','Find your community','Lifestyle highlights for the towns '+first+' knows best. Ask for the latest market report for any area.'),areasSec,h('section',{class:'rt-sec gray'},h('div',{class:'rt-wrap rt-stats'},h('div',null,h('span',{class:'rt-kick'},'Market stats'),h('h2',null,'Want the numbers for your neighborhood?'),h('p',{class:'rt-cp'},'Median sale price, days on market and homes for sale change every month. '+first+' will send you a free, up-to-date market report for any area.')),btn('gold',null,'Request a Market Report',false,()=>send('Market report request',['Hi '+first+', please send me the latest market report for my area.','Area: ','']))))),
-    PG('about',pgHead('About & contact','Meet '+person,firm),about,factsRow?factsRow.cloneNode(true):null,follow,contact,consult('r-consult','')),
+    PG('about',pgHead('About & contact','Meet '+person),about,factsRow?factsRow.cloneNode(true):null,follow,contact,consult('r-consult','')),
     PG('privacy',pgHead('Legal','Privacy Policy'),privacy),PG('terms',pgHead('Legal','Terms of Use'),terms),PG('idx',pgHead('Legal','MLS / IDX Disclaimer'),idx)];
   const page=h('div',{class:'rt lux'},nav,h('main',{class:'rt-main'},pages),foot,fab);
   const route=()=>{ const cur=curPage(); pages.forEach(p=>p.hidden=p.dataset.pg!==cur); nav.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',(a.dataset.nav==='home'?'':a.dataset.nav)===cur));
