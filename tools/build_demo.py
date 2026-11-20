@@ -3485,6 +3485,60 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-comply-l{display:flex;align-items:center;gap:18px}
 .rt-eho{display:flex;align-items:center;gap:8px;color:#fff}.rt-eho small{font-size:.58rem;font-weight:700;letter-spacing:.06em;line-height:1.2}
 .rt-realtor{display:flex;flex-direction:column;align-items:center;color:#fff}.rt-realtor b{width:38px;height:38px;display:grid;place-items:center;border:2px solid #fff;font-family:Georgia,serif;font-size:1.4rem}.rt-realtor small{font-size:.58rem;font-weight:700;margin-top:3px}
+/* ===== Realty home layout (reference: Luxury Presence style) ===== */
+.rt-apanels{display:grid;grid-template-columns:1fr 1fr}
+.rt-apanel{position:relative;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;color:#fff}
+.rt-apanel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease}
+.rt-apanel:hover img{transform:scale(1.05)}
+.rt-apanel:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,39,68,.1) 20%,rgba(19,39,68,.85) 100%)}
+.rt-apanel-in{position:relative;z-index:1;padding:50px 48px;max-width:560px}
+.rt-apanel h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.4rem,4vw,3.6rem);text-transform:uppercase;letter-spacing:.08em;line-height:1}
+.rt-apanel p{margin:14px 0 22px;line-height:1.7;color:rgba(255,255,255,.88)}
+.rt-who{position:relative;padding:150px 0;color:#fff;text-align:center;overflow:hidden}
+.rt-who-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rt-who:after{content:"";position:absolute;inset:0;background:rgba(19,39,68,.72)}
+.rt-who-in{position:relative;z-index:1;max-width:780px}
+.rt.lux .rt-who .rt-kick{justify-content:center;color:var(--gold)}.rt.lux .rt-who .rt-kick:after{content:"";width:36px;height:1px;background:currentColor}
+.rt-who h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.4rem,4.6vw,3.8rem);line-height:1.08;margin:6px 0 18px}
+.rt-who p{color:rgba(255,255,255,.88);line-height:1.8;font-size:1.05rem}
+.rt.lux .rt-who .rt-firm-line{color:var(--gold)!important;margin:16px 0 26px!important}
+.rt-ftabs{display:flex;align-items:center;gap:28px;border-bottom:1px solid #DDE2E9;margin:-20px 0 30px}
+.rt-ftabs button{background:none;border:0;padding:12px 0;font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B7684;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.rt-ftabs button.on{color:var(--navy);border-bottom-color:var(--gold)}
+.rt-viewall{margin-left:auto;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:4px}
+.rt-best{padding:100px 0 60px}
+.rt-best-h{text-align:center;margin-bottom:44px}.rt.lux .rt-best-h .rt-kick{justify-content:center}.rt.lux .rt-best-h .rt-kick:after{content:"";width:36px;height:1px;background:currentColor}
+.rt-best-h h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4.4vw,3.4rem);line-height:1.1}
+.rt-mguides{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.rt-mguide{position:relative;min-height:360px;display:flex;align-items:flex-end;color:#fff;text-decoration:none;overflow:hidden}
+.rt-mguide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s}
+.rt-mguide:hover img{transform:scale(1.06)}
+.rt-mguide:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,39,68,0) 35%,rgba(19,39,68,.85) 100%)}
+.rt-mguide>div{position:relative;z-index:1;padding:28px}
+.rt-mguide h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:2rem;text-transform:uppercase;letter-spacing:.06em}
+.rt-mguide span{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--gold);padding-bottom:4px}
+.rt-bio{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px;align-items:center}
+.rt-bio-ph{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:58% 20%;box-shadow:-22px 22px 0 var(--off)}
+.rt.lux .rt-bio h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
+.rt-bio-t{margin:18px 0 6px;color:#4A5563;line-height:1.8}
+.rt-trust{list-style:none;padding:0;margin:20px 0 30px;display:grid;gap:14px}
+.rt-trust li{border-left:2px solid var(--gold);padding-left:16px}.rt-trust b{display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:600;color:var(--navy)}.rt-trust span{color:#5A6472;font-size:.95rem}
+.rt-alerts{background:var(--navy);color:#fff;padding:60px 0}
+.rt-alerts-in{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.rt-alerts h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(1.9rem,3.4vw,2.6rem)}.rt-alerts p{color:rgba(255,255,255,.78);margin-top:8px}
+.rt-alerts-f{display:flex;flex-wrap:wrap;gap:0}.rt-alerts-f input{flex:1;min-width:200px;border:0;padding:17px 18px;font:inherit}.rt-alerts-f .rt-done-line{flex-basis:100%;color:var(--gold)}
+.rt-work{background:var(--off);padding:110px 0;text-align:center}
+.rt-work-in{max-width:760px}.rt.lux .rt-work .rt-kick{justify-content:center}.rt.lux .rt-work .rt-kick:after{content:"";width:36px;height:1px;background:currentColor}
+.rt-work h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.4rem,4.6vw,3.6rem);color:var(--navy)}
+.rt-work p{color:#5A6472;margin:14px 0 30px;line-height:1.7}.rt-work .rt-row{justify-content:center}
+.rt-work .rt-btn.line{border-color:var(--navy);color:var(--navy)}.rt-work .rt-btn.line:hover{background:var(--navy);color:#fff}
+.rt.lux .rt-best .rt-cards-sec{padding-bottom:0}
+@media (max-width:860px){
+.rt-apanels{grid-template-columns:1fr}.rt-apanel{min-height:420px}.rt-apanel-in{padding:30px 22px}
+.rt-who{padding:90px 0}.rt-bio{grid-template-columns:1fr;gap:34px}.rt-bio-ph{max-width:320px}
+.rt-alerts-in{grid-template-columns:1fr;gap:20px}.rt-mguide{min-height:260px}.rt-best{padding:70px 0 40px}.rt-work{padding:70px 0}
+.rt-ftabs{gap:18px}
+}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}

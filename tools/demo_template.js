@@ -2928,6 +2928,7 @@ function realty(C){
   const LST=A('listings').filter(l=>l&&S(l.a)&&okUrl(l.p)).slice(0,6);
   const featured=h('section',{class:'rt-sec gray',id:'r-featured'},h('div',{class:'rt-wrap'},
     head('Featured listings','Homes for sale in the '+areaTxt+' area'),
+    h('div',{class:'rt-ftabs',role:'tablist'},['For Sale','Sold'].map((t,i)=>{ const b=h('button',{type:'button',role:'tab',class:i?'':'on','aria-selected':i?'false':'true'},t); b.onclick=()=>{ b.parentNode.querySelectorAll('button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-selected',x===b?'true':'false');}); }; return b; }),h('a',{class:'rt-viewall',href:'#search'},'View All')),
     LST.length?h('div',{class:'rt-lgrid'},LST.map(l=>h('a',{class:'rt-lcard rv',href:okUrl(l.u)||site||'#search',target:okUrl(l.u)||site?'_blank':null,rel:'noopener'},h('div',{class:'rt-lph'},h('img',{src:okUrl(l.p),alt:S(l.a),loading:'lazy'}),h('span',null,S(l.s)||'For Sale')),h('div',{class:'rt-lb'},h('b',null,S(l.price)),h('span',null,S(l.a)),S(l.d)?h('small',null,S(l.d)):null))))
       :h('div',{class:'rt-lempty rv'},h('div',null,h('b',null,'Live MLS listings'),h('p',null,'New listings, price changes and open houses from the MLS show here automatically once the IDX feed is connected.')),
         h('div',{class:'rt-row'},h('a',{class:'rt-btn dark',href:'#search'},'Search All Homes'),site?btn('outline',site,'Browse '+firm+' listings',true):null))));
@@ -2984,7 +2985,26 @@ function realty(C){
   /* ---------- pages ---------- */
   const pgHead=(kick,title,sub)=>h('header',{class:'rt-pghead'},h('div',{class:'rt-wrap'},h('span',{class:'rt-kick'},kick),h('h1',null,title),sub?h('p',null,sub):null,h('p',{class:'rt-firm-line'},pTitle+'  |  '+firm)));
   const PG=(id,...kids)=>h('div',{class:'rt-pg','data-pg':id,hidden:true},...kids);
-  const homePg=h('div',{class:'rt-pg','data-pg':''},hero,intro,cards,featured,proof,homeValue,factsRow);
+  /* ---------- home sections laid out like the reference site ---------- */
+  const IMGS=['https://images.pexels.com/photos/3935333/pexels-photo-3935333.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/209315/pexels-photo-209315.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1600'];
+  const G2=guides.length?guides:areas.map(n=>({n,t:''}));
+  const areaPanels=G2.length?h('section',{class:'rt-apanels'},G2.slice(0,2).map((g,i)=>{ const im=h('img',{src:i===0?heroHome:IMGS[0],alt:'',loading:'lazy'}); im.onerror=()=>{ im.src=IMGS[3]; };
+    return h('div',{class:'rt-apanel'},im,h('div',{class:'rt-apanel-in rv'},h('h2',null,S(g.n)),S(g.t)?h('p',null,S(g.t)):null,h('a',{class:'rt-btn line',href:'#search',onclick:()=>{ sQ.value=S(g.n)+', IA'; }},'Search Homes in '+S(g.n)))); })):null;
+  const whoBand=h('section',{class:'rt-who'},h('img',{class:'rt-who-bg',src:IMGS[3],alt:'',loading:'lazy'}),h('div',{class:'rt-wrap rt-who-in rv'},
+    h('span',{class:'rt-kick'},'Who I am'),h('h2',null,'Local. Honest. On your side.'),h('p',null,String(C.about||'').split('\n').slice(-1)[0]),h('p',{class:'rt-firm-line'},pTitle+'  |  '+firm),h('a',{class:'rt-btn solid',href:'#about'},'Meet '+first)));
+  const bestHead=h('div',{class:'rt-wrap rt-best-h rv'},h('span',{class:'rt-kick'},'Simply the best'),h('h2',null,'The right home is closer than you think.'));
+  const guidesHome=G2.length?h('section',{class:'rt-sec gray'},h('div',{class:'rt-wrap'},head('Neighborhoods','Our local market guides'),
+    h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:IMGS[i%4],alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
+  const trust=h('section',{class:'rt-sec'},h('div',{class:'rt-wrap rt-bio'},photo?h('img',{class:'rt-bio-ph rv',src:photo,alt:pTitle+', '+firm}):null,
+    h('div',{class:'rv'},h('span',{class:'rt-kick'},'Team lead'),h('h2',null,pTitle),h('p',{class:'rt-firm-line'},firm),h('p',{class:'rt-bio-t'},String(C.about||'').split('\n')[0]),
+      h('ul',{class:'rt-trust'},[['Trusted agent','Clear answers and honest advice at every step.'],['Local expert','Lives in the '+areaTxt+' area and knows the neighborhoods.'],['Prompt response','Calls, texts and emails answered fast.']].map(([t,d])=>h('li',null,h('b',null,t),h('span',null,d)))),
+      btn('dark',null,'Schedule a Consultation',false,go('r-consult')))));
+  const alN=inp('email','Email address *',true), alOk=h('p',{class:'rt-done-line',hidden:true});
+  const alerts=h('section',{class:'rt-alerts'},h('div',{class:'rt-wrap rt-alerts-in rv'},h('div',null,h('h2',null,'Sign up for property alerts & more'),h('p',null,'Get new listings, open houses and market updates from '+first+'.')),
+    h('form',{class:'rt-alerts-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!alN.value.trim()){ alOk.hidden=false; alOk.textContent='Please add your email.'; return; } send('Property alerts sign-up',['Please send me property alerts and market updates.','',alN.value]); alOk.hidden=false; alOk.textContent='Thank you! You are on the list.'; }},alN,h('button',{type:'submit',class:'rt-btn gold'},'Submit'),alOk)));
+  const workWith=h('section',{class:'rt-work'},h('div',{class:'rt-wrap rt-work-in rv'},h('span',{class:'rt-kick'},'Work with us'),h('h2',null,'Ready to make your move?'),h('p',null,'Whether you are buying, selling or just curious about the market, '+first+' is here to help.'),
+    h('div',{class:'rt-row'},h('a',{class:'rt-btn gold',href:'#about'},'Contact Us'),btn('line',null,'Schedule a Consultation',false,go('r-consult')))));
+  const homePg=h('div',{class:'rt-pg','data-pg':''},hero,areaPanels,whoBand,featured,h('section',{class:'rt-best'},bestHead,cards),guidesHome,proof,homeValue,trust,alerts,workWith);
   const pages=[homePg,
     PG('search',pgHead('Property search','Search homes for sale','Filter by price, beds, baths, property type and acreage, then save your search to get new listings first.'),searchPage),
     PG('buyers',pgHead('Buyer guide','Buying a home in the '+areaTxt+' area','Step by step, from pre-approval to closing day.'),buy,consult('r-consult-b','Buying a home')),
