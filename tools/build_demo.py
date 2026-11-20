@@ -3558,6 +3558,7 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt.lux .rt-foot-b b{font-size:1.5rem;line-height:1.15}
 .rt.lux p.rt-idxblock{border:0;padding:0;margin:6px 0 0}
 .rt-legal-links{margin-top:10px!important}
+@media (max-width:860px){.rt-work .rt-row{flex-direction:column;align-items:center}.rt-work .rt-row .rt-btn{width:100%;max-width:320px}.rt.lux footer.rt-foot .rt-foot-g{grid-template-columns:1fr;gap:28px}.rt.lux .rt-foot-b b{font-size:1.3rem}.rt.lux .rt-comply{padding-bottom:70px}}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}

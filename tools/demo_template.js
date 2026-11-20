@@ -2757,8 +2757,8 @@ function realty(C){
     h('nav',{class:'rt-links'},NAVL.map(navA)),
     h('div',{class:'rt-nav-r'},kwMark('nav'),h('a',{class:'rt-btn gold rt-cta',href:'#about','data-go':'r-consult',onclick:e=>{e.preventDefault();routeTo('r-consult');}},h('span',{class:'rt-cta-l'},'Schedule a '),'Consultation'))),
     h('nav',{class:'rt-mlinks','aria-label':'Pages'},h('a',{class:'rt-mcta',href:'#about',onclick:e=>{e.preventDefault();routeTo('r-consult');}},'Schedule a Consultation'),NAVL.map(navA)));
-  const heroHome=okUrl(C.x.heroHome)||'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/20170506-OC-PJK-0182_%2834455904386%29.jpg/2400px-20170506-OC-PJK-0182_%2834455904386%29.jpg';
-  const heroFallback='https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1600';
+  const heroHome=okUrl(C.x.heroHome)||'https://images.unsplash.com/photo-1757362141189-8d2f7af341b0?auto=format&fit=crop&w=1800&q=75';
+  const heroFallback='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=75';
   const hImg=h('img',{src:heroHome,alt:''}); hImg.onerror=()=>{ if(hImg.src!==heroFallback) hImg.src=heroFallback; };
   const hq=h('input',{type:'search',placeholder:'City, ZIP, address or MLS #','aria-label':'Search homes'});
   const htype=h('select',{'aria-label':'Property type'},['Any type','House','Condo / Townhome','Multi-family','Land / Acreage','Farm'].map(o=>h('option',null,o)));
@@ -2779,9 +2779,9 @@ function realty(C){
       h('p',null,String(C.about||'').split('\n')[0]),
       h('div',{class:'rt-row'},h('a',{class:'rt-btn dark',href:'#about'},'More About '+first),btn('outline',null,'Schedule a Consultation',false,go('r-consult'))))));
   const cards=h('section',{class:'rt-cards-sec'},h('div',{class:'rt-wrap rt-cards'},
-    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Search Homes',null,false,()=>{location.hash='search';},'https://images.pexels.com/photos/3935333/pexels-photo-3935333.jpeg?auto=compress&cs=tinysrgb&w=1600'),
-    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell'),'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600'),
-    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'),'https://images.pexels.com/photos/209315/pexels-photo-209315.jpeg?auto=compress&cs=tinysrgb&w=1600')));
+    card('home','Buy with '+first,'From first-time buyers to move-up buyers and downsizers, '+first+' guides you through every step.','Search Homes',null,false,()=>{location.hash='search';},'https://images.unsplash.com/photo-1787088988806-7ec503692b85?auto=format&fit=crop&w=1800&q=75'),
+    card('sign','Sell with '+first,'A clear plan to price, prepare and market your home, so it sells with less stress.','Sell My Home',null,false,go('r-sell'),'https://images.unsplash.com/photo-1766603636700-e9d80473f40f?auto=format&fit=crop&w=1800&q=75'),
+    card('value','What is my home worth?','Get a free, no-pressure estimate of what your home could sell for in today’s market.','Get My Estimate',null,false,go('r-value'),'https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?auto=format&fit=crop&w=1800&q=75')));
 
   const factsRow=facts.length?h('section',{class:'rt-facts-sec'},h('div',{class:'rt-wrap rt-facts-g'},
     h('h2',null,'Why ',h('br'),first),facts.map(f=>h('div',{class:'rt-fact rv'},h('b',null,String(f.v)),h('span',null,String(f.k)))))):null;
@@ -3018,15 +3018,15 @@ function realty(C){
   const pgHead=(kick,title,sub)=>h('header',{class:'rt-pghead'},h('div',{class:'rt-wrap'},h('span',{class:'rt-kick'},kick),h('h1',null,title),sub?h('p',null,sub):null,title.indexOf(person)>=0?h('p',{class:'rt-firm-line'},firm):null));
   const PG=(id,...kids)=>h('div',{class:'rt-pg','data-pg':id,hidden:true},...kids);
   /* ---------- home sections laid out like the reference site ---------- */
-  const IMGS=['https://images.pexels.com/photos/3935333/pexels-photo-3935333.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/209315/pexels-photo-209315.jpeg?auto=compress&cs=tinysrgb&w=1600','https://images.pexels.com/photos/1396132/pexels-photo-1396132.jpeg?auto=compress&cs=tinysrgb&w=1600'];
+  const IMGS=['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1758448756207-54505680d130?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1706808849777-96e0d7be3bb7?auto=format&fit=crop&w=1800&q=75','https://images.unsplash.com/photo-1761013320045-d29e4f10bcbc?auto=format&fit=crop&w=1800&q=75'];
   const G2=guides.length?guides:areas.map(n=>({n,t:''}));
-  const areaPanels=G2.length?h('section',{class:'rt-apanels'},G2.slice(0,2).map((g,i)=>{ const im=h('img',{src:i===0?heroHome:IMGS[0],alt:'',loading:'lazy'}); im.onerror=()=>{ im.src=IMGS[3]; };
+  const areaPanels=G2.length?h('section',{class:'rt-apanels'},G2.slice(0,2).map((g,i)=>{ const im=h('img',{src:IMGS[i],alt:'',loading:'lazy'}); im.onerror=()=>{ im.src=IMGS[2]; };
     return h('div',{class:'rt-apanel'},im,h('div',{class:'rt-apanel-in rv'},h('h2',null,S(g.n)),S(g.t)?h('p',null,S(g.t)):null,h('a',{class:'rt-btn line',href:'#search',onclick:()=>{ sQ.value=S(g.n)+', IA'; }},'Search Homes in '+S(g.n)))); })):null;
   const whoBand=h('section',{class:'rt-who'},h('img',{class:'rt-who-bg',src:IMGS[3],alt:'',loading:'lazy'}),h('div',{class:'rt-wrap rt-who-in rv'},
     h('span',{class:'rt-kick'},'Who I am'),h('h2',null,'Local. Honest. On your side.'),h('p',null,String(C.about||'').split('\n').slice(-1)[0]),h('a',{class:'rt-btn solid',href:'#about'},'Meet '+first)));
   const bestHead=h('div',{class:'rt-wrap rt-best-h rv'},h('span',{class:'rt-kick'},'Simply the best'),h('h2',null,'The right home is closer than you think.'));
   const guidesHome=G2.length?h('section',{class:'rt-sec gray'},h('div',{class:'rt-wrap'},head('Neighborhoods','Our local market guides'),
-    h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:IMGS[i%4],alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
+    h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:IMGS[(i+2)%6],alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
   const trust=h('section',{class:'rt-sec'},h('div',{class:'rt-wrap rt-bio'},photo?h('img',{class:'rt-bio-ph rv',src:photo,alt:pTitle+', '+firm}):null,
     h('div',{class:'rv'},h('span',{class:'rt-kick'},'REALTOR\u00ae'),h('h2',null,pTitle),h('p',{class:'rt-firm-line'},firm),h('p',{class:'rt-bio-t'},String(C.about||'').split('\n')[0]),
       h('ul',{class:'rt-trust'},[['Trusted agent','Clear answers and honest advice at every step.'],['Local expert','Lives in the '+areaTxt+' area and knows the neighborhoods.'],['Prompt response','Calls, texts and emails answered fast.']].map(([t,d])=>h('li',null,h('b',null,t),h('span',null,d)))),
@@ -3036,7 +3036,7 @@ function realty(C){
     h('form',{class:'rt-alerts-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!alN.value.trim()){ alOk.hidden=false; alOk.textContent='Please add your email.'; return; } send('Property alerts sign-up',['Please send me property alerts and market updates.','',alN.value]); alOk.hidden=false; alOk.textContent='Thank you! You are on the list.'; }},alN,h('button',{type:'submit',class:'rt-btn gold'},'Submit'),h('p',{class:'rt-unsub'},'Unsubscribe at any time. ',h('a',{href:'#privacy'},'View our Privacy Policy'),'.'),alOk)));
   const workWith=h('section',{class:'rt-work'},h('div',{class:'rt-wrap rt-work-in rv'},h('span',{class:'rt-kick'},'Work with us'),h('h2',null,'Ready to make your move?'),h('p',null,'Whether you are buying, selling or just curious about the market, '+first+' is here to help.'),
     h('div',{class:'rt-row'},h('a',{class:'rt-btn gold',href:'#about'},'Contact Us'),btn('line',null,'Schedule a Consultation',false,go('r-consult')))));
-  const homePg=h('div',{class:'rt-pg','data-pg':''},hero,areaPanels,whoBand,featured,h('section',{class:'rt-best'},bestHead,cards),guidesHome,proof,homeValue,trust,alerts,workWith);
+  const homePg=h('div',{class:'rt-pg','data-pg':''},hero,trust,areaPanels,featured,h('section',{class:'rt-best'},bestHead,cards),guidesHome,proof,homeValue,alerts,workWith);
   const pages=[homePg,
     PG('search',pgHead('Property search','Search homes for sale','Filter by price, beds, baths, property type and acreage, then save your search to get new listings first.'),searchPage),
     PG('buyers',pgHead('Buyer guide','Buying a home in the '+areaTxt+' area','Step by step, from pre-approval to closing day.'),buy,consult('r-consult-b','Buying a home')),
