@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.mt-nav,.rt-nav,.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -102,7 +102,7 @@ function build(d){
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
-  if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
@@ -2422,6 +2422,103 @@ function mountaintop(C){
     h('div',{class:'mt-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))));
   const foot=h('footer',{class:'mt-foot'},h('div',{class:'mt-w mt-foot-in'},h('img',{src:logo,alt:name}),h('p',null,'Bring the outdoors IN. Countertops and stone surfaces at '+full+'.'),h('small',null,'© '+new Date().getFullYear()+' Mountaintop Stoneworks, Inc.')));
   return h('div',{class:'mt'},nav,h('div',{class:'mt-welcome'},'Stop by our Dubuque showroom and see every slab in person. ',h('a',{href:tel},'Call '+phoneTxt)),hero,values,surfaces,why,projects,process,reviews,team,visit,foot,lb);
+}
+
+function mountaintop2(C){
+  const name=C.name||'Mountaintop Stoneworks';
+  const digits=(C.phone||MT.phone).replace(/\D/g,'').slice(-10), tel='tel:+1'+digits, phoneTxt=digits.slice(0,3)+'-'+digits.slice(3,6)+'-'+digits.slice(6);
+  const addr=C.addr||MT.addr, city=/52003/.test(C.city||'')?C.city:MT.city, full=addr+', '+city;
+  const hours=C.hasHours?C.hours:MT.hours, today=hours[todayIx()]||'Closed';
+  const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+full);
+  const logo='https://riverbendwebco.com/demo/img/mountaintop-logo.png';
+  const P=i=>MT_SITE+MT.projects[i][0];
+  const SP=n=>MT_PH[n]?'https://riverbendwebco.com/demo/img/mt-'+MT_PH[n]+'.jpg':'';
+  const go=id=>e=>{ e.preventDefault(); scrollTo(id); };
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const links=()=>[A('m2-surfaces','Surfaces'),A('m2-work','Our Work'),A('m2-process','Process'),A('m2-about','About'),A('m2-visit','Contact')];
+  const arrow=()=>mtI('arrow');
+  /* nav */
+  const nav=h('header',{class:'m2-nav'},h('div',{class:'m2-w m2-nav-in'},
+    h('a',{class:'m2-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
+    h('nav',{class:'m2-links'},links()),
+    h('a',{class:'m2-btn dark sm',href:tel},mtI('phone'),h('span',{class:'m2-hide-s'},phoneTxt),h('span',{class:'m2-show-s'},'Call'))),
+    h('nav',{class:'m2-mlinks'},links()));
+  /* hero */
+  const slides=[0,1,2].map(i=>h('div',{class:'m2-slide'+(i?'':' on'),style:'background-image:url("'+P(i)+'")'}));
+  const hero=h('section',{class:'m2-hero'},h('div',{class:'m2-hero-media'},slides),
+    h('div',{class:'m2-w m2-hero-in'},
+      h('p',{class:'m2-eyebrow light'},'Countertops & stone surfaces · Dubuque, Iowa'),
+      h('h1',null,'Bring the',h('br'),'outdoors in.'),
+      h('div',{class:'m2-hero-row'},
+        h('p',null,'Where beautiful surfaces are crafted from nature. Designed, fabricated and installed by our own local craftsmen.'),
+        h('div',{class:'m2-cta'},h('a',{class:'m2-btn light',href:'#m2-surfaces',onclick:go('m2-surfaces')},'Explore surfaces',arrow()),h('a',{class:'m2-btn ghost',href:maps,target:'_blank',rel:'noopener'},'Visit the showroom')))));
+  let si=0; const st=setInterval(()=>{ if(!hero.isConnected){clearInterval(st);return;} slides[si].classList.remove('on'); si=(si+1)%slides.length; slides[si].classList.add('on'); },6000);
+  const stats=h('section',{class:'m2-stats'},h('div',{class:'m2-w m2-stats-in'},[['10','Surface types'],['6','Craftsmen on our team'],['CNC','Precision fabrication'],['1','Local showroom to see it all']].map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b)))));
+  /* intro statement */
+  const intro=h('section',{class:'m2-sec'},h('div',{class:'m2-w m2-intro rv'},
+    h('p',{class:'m2-eyebrow'},'The Mountaintop difference'),
+    h('h2',{class:'m2-statement'},'Quality, craftsmanship and passion, carried out through a proven process that treats every project as ',h('span',null,'your unique vision.')),
+    h('div',{class:'m2-vals'},[['Quality','“Quality means doing it right when no one is looking.” Henry Ford'],['Craftsmanship','A craftsman loves detail, and detail is how a project’s success is measured.'],['Passion','We want to make your dream a reality, and love seeing your joy when it comes to life.']].map(([t,d],i)=>h('div',{class:'m2-val'},h('small',null,'0'+(i+1)),h('h3',null,t),h('p',null,d))))));
+  /* surfaces: big photo tiles + detail sheet */
+  const sheet=h('div',{class:'m2-sheet',hidden:true,role:'dialog','aria-modal':'true'});
+  const openS=sv=>{ const [n,t,d,tags]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
+    sheet.replaceChildren(h('div',{class:'m2-sheet-card'},
+      h('div',{class:'m2-sheet-ph sw'+i,style:ph?'background:url("'+ph+'") center/cover':null}),
+      h('div',{class:'m2-sheet-b'},h('button',{type:'button',class:'m2-x','aria-label':'Close',onclick:()=>{sheet.hidden=true;}},mtI('x')),
+        h('p',{class:'m2-eyebrow'},t),h('h3',null,n),h('p',null,d),h('div',{class:'m2-tags'},tags.map(x=>h('span',null,x))),
+        h('a',{class:'m2-btn dark',href:tel},mtI('phone'),'Ask about '+n)))); sheet.hidden=false; };
+  sheet.addEventListener('click',e=>{ if(e.target===sheet) sheet.hidden=true; }); addEventListener('keydown',e=>{ if(e.key==='Escape') sheet.hidden=true; });
+  const rail=h('div',{class:'m2-rail'});
+  const drawS=f=>rail.replaceChildren(...MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
+    return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); }));
+  const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); rail.scrollTo({left:0,behavior:'smooth'}); }; return b; }));
+  drawS('All');
+  const railNav=d=>()=>rail.scrollBy({left:d*rail.clientWidth*.8,behavior:'smooth'});
+  const surfaces=h('section',{class:'m2-sec m2-gray',id:'m2-surfaces'},h('div',{class:'m2-w'},
+    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow'},'Surface types'),h('h2',null,'Find your surface.')),
+      h('div',{class:'m2-head-r'},chips,h('div',{class:'m2-arrows'},h('button',{type:'button','aria-label':'Previous',onclick:railNav(-1)},mtI('arrow')),h('button',{type:'button','aria-label':'Next',onclick:railNav(1)},mtI('arrow')))))),
+    rail,h('div',{class:'m2-w'},h('p',{class:'m2-note'},'Quartz brands we carry: Technistone and Caesarstone. Tap any surface to learn more.')));
+  /* why bento */
+  const why=h('section',{class:'m2-sec',id:'m2-about'},h('div',{class:'m2-w'},
+    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow'},'Why Mountaintop'),h('h2',null,'Our passion is bringing natural surfaces into your space.'))),
+    h('div',{class:'m2-bento'},
+      h('div',{class:'m2-b big',style:'background-image:url("'+P(1)+'")'},h('span',null,'Full kitchen project')),
+      [['pencil','Expert design'],['cpu','Advanced state-of-the-art technology'],['users','Experienced, highly trained staff'],['boxes','Large local inventory'],['store','Convenient local showroom'],['ruler','Professional project process']].map(([i,t])=>h('div',{class:'m2-b rv'},mtI(i),h('b',null,t))))));
+  /* work */
+  const lb=h('div',{class:'m2-lb',hidden:true,role:'dialog','aria-modal':'true'});
+  const openLb=i=>{ lb.replaceChildren(h('button',{type:'button',class:'m2-x',onclick:()=>{lb.hidden=true;},'aria-label':'Close'},mtI('x')),h('figure',null,h('img',{src:P(i),alt:MT.projects[i][1]}),h('figcaption',null,MT.projects[i][1]))); lb.hidden=false; };
+  lb.addEventListener('click',e=>{ if(e.target===lb) lb.hidden=true; });
+  const work=h('section',{class:'m2-sec m2-dark',id:'m2-work'},h('div',{class:'m2-w'},
+    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow light'},'Our work'),h('h2',null,'Kitchens and baths across the Dubuque area.'))),
+    h('div',{class:'m2-work'},MT.projects.map(([f,c],i)=>h('button',{type:'button',class:'m2-wk w'+i,onclick:()=>openLb(i)},h('img',{src:MT_SITE+f,alt:c,loading:'lazy'}),h('span',null,c))))));
+  /* process */
+  const steps=[['Visit the showroom','See slabs and samples in person and choose the surface that fits your space and budget.'],['Measure & template','We measure your space precisely so every edge and seam fits.'],['Precision fabrication','Your stone is cut on our CNC equipment by experienced craftsmen.'],['Professional install','Our installers set your surfaces with care and clean up after.']];
+  const process=h('section',{class:'m2-sec',id:'m2-process'},h('div',{class:'m2-w'},
+    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow'},'The Mountaintop process'),h('h2',null,'From slab to stunning in four steps.'))),
+    h('ol',{class:'m2-steps'},steps.map(([t,d],i)=>h('li',{class:'rv'},h('span',null,'0'+(i+1)),h('h3',null,t),h('p',null,d))))));
+  /* reviews slider */
+  const R=MT.reviews; let ri=0;
+  const rq=h('blockquote',null,R[0][0]), rn=h('cite',null,R[0][1]), rc=h('span',{class:'m2-rc'},'01 / '+String(R.length).padStart(2,'0'));
+  const showR=d=>{ ri=(ri+d+R.length)%R.length; rq.classList.remove('in'); void rq.offsetWidth; rq.textContent=R[ri][0]; rn.textContent=R[ri][1]; rc.textContent=String(ri+1).padStart(2,'0')+' / '+String(R.length).padStart(2,'0'); rq.classList.add('in'); };
+  const rt=setInterval(()=>{ if(!rq.isConnected){clearInterval(rt);return;} showR(1); },6000);
+  const reviews=h('section',{class:'m2-sec m2-gray'},h('div',{class:'m2-w m2-rev'},
+    h('p',{class:'m2-eyebrow'},'What our clients say'),h('div',{class:'m2-stars'},[0,1,2,3,4].map(()=>mtI('star'))),rq,rn,
+    h('div',{class:'m2-rnav'},h('button',{type:'button','aria-label':'Previous review',onclick:()=>showR(-1)},mtI('arrow')),rc,h('button',{type:'button','aria-label':'Next review',onclick:()=>showR(1)},mtI('arrow')))));
+  /* team */
+  const team=h('section',{class:'m2-sec'},h('div',{class:'m2-w m2-team'},
+    h('div',null,h('p',{class:'m2-eyebrow'},'Our team'),h('h2',null,'The craftsmen behind your counters.')),
+    h('ul',null,MT.team.map(([n,r])=>h('li',null,h('b',null,n),h('span',null,r))))));
+  /* visit */
+  const D3=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const visit=h('section',{class:'m2-visit',id:'m2-visit'},
+    h('div',{class:'m2-visit-t'},h('p',{class:'m2-eyebrow light'},'Ready to get started?'),h('h2',null,'Come see the stone in person.'),
+      h('a',{class:'m2-li',href:maps,target:'_blank',rel:'noopener'},mtI('pin'),full),h('a',{class:'m2-li',href:tel},mtI('phone'),phoneTxt),
+      h('ul',{class:'m2-hrs'},D3.map((d,i)=>h('li',{class:i===todayIx()?'on':null},h('span',null,d),h('span',null,hours[i]||'Closed')))),
+      h('div',{class:'m2-cta'},h('a',{class:'m2-btn light',href:maps,target:'_blank',rel:'noopener'},'Get directions',arrow()),h('a',{class:'m2-btn ghost',href:tel},'Call us')),
+      h('div',{class:'m2-soc'},h('a',{href:MT.social.facebook,target:'_blank',rel:'noopener','aria-label':'Facebook'},mtI('fb')),h('a',{href:MT.social.instagram,target:'_blank',rel:'noopener','aria-label':'Instagram'},mtI('ig')),h('a',{href:MT.social.youtube,target:'_blank',rel:'noopener','aria-label':'YouTube'},mtI('yt')))),
+    h('div',{class:'m2-map'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})));
+  const foot=h('footer',{class:'m2-foot'},h('div',{class:'m2-w m2-foot-in'},h('img',{src:logo,alt:name}),h('nav',null,links()),h('small',null,'© '+new Date().getFullYear()+' Mountaintop Stoneworks, Inc. · '+full)));
+  return h('div',{class:'m2'},nav,hero,stats,intro,surfaces,why,work,process,reviews,team,visit,foot,sheet,lb);
 }
 
 const CL_ICO={
