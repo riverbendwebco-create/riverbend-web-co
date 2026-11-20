@@ -2263,7 +2263,7 @@ function mutual(C){
     form)));
   const openHist=e=>{ if(e) e.preventDefault(); if(location.hash!=='#history') location.hash='history'; else showHist(); };
   const hist=h('section',{class:'mw-sec mw-soft',id:'mw-history'},h('div',{class:'mw-w mw-hist'},
-    h('div',{class:'mw-hist-big rv'},h('b',null,'1893'),h('span',null,'Serving the transportation industry for over 130 years')),
+    h('figure',{class:'mw-hist-photo rv'},h('img',{src:'https://riverbendwebco.com/demo/img/mw-1893-building.jpg',alt:'The Mutual Wheel Company building in 1893',loading:'lazy'}),h('figcaption',null,h('span',null,'Serving the transportation industry for over 130 years'))),
     h('div',{class:'mw-hist-t rv'},h('h2',null,'Built on ',h('span',null,'130+ Years')),
       h('p',null,'In 1893, eleven Quad City carriage makers joined forces to build their own wooden wheels and take on the big wheel trust. By 1900 Mutual Wheel was one of the largest wheel makers in the world. When steel wheels and the Depression arrived, the company changed with the times and became a truck parts and service business. The Engstrom family has owned it since 1940, and it has served Dubuque since 1966.'),
       h('div',{class:'mw-mini'},[['1893','Founded in Moline'],['1932','Parts & drive-in service'],['1940','Engstrom family'],['1966','Dubuque opens']].map(([y,t])=>h('div',null,h('b',null,y),h('span',null,t)))),
@@ -2278,13 +2278,14 @@ function mutual(C){
     ['1980','One Central Warehouse','Mutual Wheel moved to a central warehouse in Moline, expanded to 50,000 square feet, with trucks delivering to every branch twice a week. Moline is also home to the remanufacturing and machine shop operations.'],
     ['1989','The Next Generation','Donald retired, and his sons Dave, Rich and Bob took over together as the \u201cOffice of the President,\u201d with Dave leading sales, Rich purchasing and Bob administration. New branches followed in Bloomington, Rockford, Cedar Rapids and Waterloo.'],
     ['Today','11 Locations, Still Family Owned','Mutual Wheel now runs 11 locations in Iowa and Illinois, carrying parts from a wide range of truck and trailer manufacturers and serving customers for more than 130 years.']];
-  const hpics=Array.isArray(x.historyPics)?x.historyPics.filter(p=>p&&ok(p.src)):[];
+  const HI='https://riverbendwebco.com/demo/img/';
+  const hpics={'1893':{src:HI+'mw-1893-building.jpg',cap:'The Mutual Wheel Company building, 1893'},'1932':{src:HI+'mw-eh-engstrom.jpg',cap:'E.H. (Elmer) Engstrom'},'1950s':{src:HI+'mw-don-june.jpg',cap:'Don and June Engstrom'},'1989':{src:HI+'mw-engstrom-brothers.jpg',cap:'Bob, Dave and Rich Engstrom'}};
   const hpage=h('div',{class:'mw-hpage',role:'dialog','aria-modal':'true','aria-label':'Our History',hidden:true},
     h('div',{class:'mw-hp-bar'},h('div',{class:'mw-w mw-hp-bar-in'},h('button',{type:'button',class:'mw-hp-back',onclick:()=>history.back()},mwIco('arrow'),'Back to home'),h('span',null,name))),
     h('header',{class:'mw-hp-hero'},h('div',{class:'mw-w'},h('small',{class:'mw-kick'},'Our History'),h('h1',null,'Over 130 Years ',h('span',null,'on the Road')),
       h('p',null,'From wooden carriage wheels in 1893 to truck parts and service today, here is how Mutual Wheel got here.'))),
     h('div',{class:'mw-w mw-tl'},HIST.map(([y,t,d],i)=>h('article',{class:'mw-tl-i'},h('div',{class:'mw-tl-y'},y),h('div',{class:'mw-tl-c'},h('h3',null,t),h('p',null,d),
-      hpics[i]?h('figure',null,h('img',{src:hpics[i].src,alt:hpics[i].cap||t,loading:'lazy'}),hpics[i].cap?h('figcaption',null,hpics[i].cap):null):null)))),
+      hpics[y]?h('figure',null,h('img',{src:hpics[y].src,alt:hpics[y].cap,loading:'lazy'})):null)))),
     h('div',{class:'mw-w mw-hp-end'},h('a',{class:'mw-btn red',href:tel},mwIco('phone'),'Call '+phoneTxt),h('button',{type:'button',class:'mw-btn blue',onclick:()=>history.back()},'Back to home')));
   const showHist=()=>{ const on=location.hash==='#history'; hpage.hidden=!on; document.documentElement.classList.toggle('os-lock',on); if(on){ hpage.scrollTop=0; hpage.querySelector('.mw-hp-back').focus({preventScroll:true}); } };
   addEventListener('hashchange',showHist); setTimeout(showHist,0);

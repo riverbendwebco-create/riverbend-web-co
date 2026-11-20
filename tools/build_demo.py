@@ -708,6 +708,11 @@ body.t-mw{background:#fff}
 .mw-badges{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
 .mw-badges>div{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);padding:16px;border-radius:3px}.mw-badges .mw-ico{color:var(--blue)}.mw-badges .mw-ico svg{width:34px;height:34px}
 .mw-badges b{display:block;font-family:var(--hd);text-transform:uppercase;font-weight:500;letter-spacing:.04em}.mw-badges span{font-size:.88rem;color:var(--mut)}
+.mw-hist-photo{margin:0;position:relative;border-radius:3px;overflow:hidden;border-left:6px solid var(--red);background:var(--dark2)}
+.mw-hist-photo img{display:block;width:100%;height:auto;filter:contrast(1.05)}
+.mw-hist-photo figcaption{background:var(--dark2);color:#fff;padding:20px 24px;display:flex;align-items:center;gap:18px}
+.mw-hist-photo b{font-family:var(--hd);font-size:3.2rem;line-height:1;color:var(--red);font-weight:600}.mw-hist-photo span{font-family:var(--hd);text-transform:uppercase;letter-spacing:.05em;font-size:1rem;line-height:1.3}
+.mw-tl-c figure{max-width:none}.mw-tl-c img{width:auto!important;max-width:100%!important;max-height:280px;filter:contrast(1.05);box-shadow:0 10px 30px rgba(0,0,0,.15)}
 .mw-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 26px}
 .mw-mini>div{background:#fff;border:1px solid var(--line);border-top:3px solid var(--red);padding:12px 14px;border-radius:3px}
 .mw-mini b{display:block;font-family:var(--hd);font-size:1.5rem;font-weight:600;color:var(--ink);line-height:1}.mw-mini span{display:block;font-size:.82rem;color:var(--mut);margin-top:4px}
