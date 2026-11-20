@@ -3735,7 +3735,7 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-realtor{display:flex;flex-direction:column;align-items:center;color:#fff}.rt-realtor b{width:38px;height:38px;display:grid;place-items:center;border:2px solid #fff;font-family:Georgia,serif;font-size:1.4rem}.rt-realtor small{font-size:.58rem;font-weight:700;margin-top:3px}
 /* ===== Realty home layout (reference: Luxury Presence style) ===== */
 .rt-apanels{display:grid;grid-template-columns:1fr 1fr}
-.rt-apanel{position:relative;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;color:#fff}
+.rt-apanel{position:relative;min-height:0;aspect-ratio:16/9;display:flex;align-items:flex-end;overflow:hidden;color:#fff}
 .rt-apanel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease}
 .rt-apanel:hover img{transform:scale(1.05)}
 .rt-apanel:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,39,68,.1) 20%,rgba(19,39,68,.85) 100%)}
@@ -3782,7 +3782,7 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-work .rt-btn.line{border-color:var(--navy);color:var(--navy)}.rt-work .rt-btn.line:hover{background:var(--navy);color:#fff}
 .rt.lux .rt-best .rt-cards-sec{padding-bottom:0}
 @media (max-width:860px){
-.rt-apanels{grid-template-columns:1fr}.rt-apanel{min-height:420px}.rt-apanel-in{padding:30px 22px}
+.rt-apanels{grid-template-columns:1fr}.rt-apanel{aspect-ratio:auto;display:block;background:var(--navy)}.rt-apanel img{position:relative;display:block;height:auto;aspect-ratio:16/9}.rt-apanel:after{display:none}.rt-apanel-in{padding:24px 20px 34px}.rt-apanel:hover img{transform:none}
 .rt-who{padding:90px 0}.rt-bio{grid-template-columns:1fr;gap:34px}.rt-bio-ph{max-width:320px}
 .rt-alerts-in{grid-template-columns:1fr;gap:20px}.rt-mguide{min-height:260px}.rt-best{padding:70px 0 40px}.rt-work{padding:70px 0}
 .rt-ftabs{gap:18px}
@@ -3806,6 +3806,8 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt.lux p.rt-idxblock{border:0;padding:0;margin:6px 0 0}
 .rt-legal-links{margin-top:10px!important}
 @media (max-width:860px){.rt-work .rt-row{flex-direction:column;align-items:center}.rt-work .rt-row .rt-btn{width:100%;max-width:320px}.rt.lux footer.rt-foot .rt-foot-g{grid-template-columns:1fr;gap:28px}.rt.lux .rt-foot-b b{font-size:1.3rem}.rt.lux .rt-comply{padding-bottom:70px}}
+.rt.lux .rt-row{display:flex;flex-wrap:wrap;gap:12px}
+.rt-lempty .rt-row{gap:14px}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}
