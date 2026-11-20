@@ -368,6 +368,7 @@ function studio_(d) {
     case 'get': return getDemo_(String(d.slug || ''), true);
     case 'save': return saveDemo_(d);
     case 'delete': return deleteDemo_(String(d.slug || ''));
+    case 'status': return setDemoStatus_(String(d.slug || ''), String(d.status || ''));
     case 'scan': return scanSite_(String(d.url || ''));
     case 'image': return grabImage_(String(d.url || ''));
     case 'logout': CacheService.getScriptCache().remove('tok_' + d.token); return { ok: true };
@@ -585,6 +586,26 @@ function saveDemo_(d) {
     var safe = function (s) { s = String(s || ''); return /^[=+\-@]/.test(s) ? "'" + s : s; };
     sh.getRange(row, 1, 1, 7).setValues([[slug, safe(demo.name), demo.style, safe(demo.city), demo.private.status, new Date(), JSON.stringify(demo)]]);
     return { ok: true, slug: slug };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/* Quick status change from the Studio card buttons (Ready, Pitched, Won, Lost). Only the status changes. */
+function setDemoStatus_(slug, status) {
+  if (DEMO_STATUS.indexOf(status) < 0) return { ok: false, error: 'status' };
+  var lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    var sh = demoSheet_();
+    var row = findRow_(sh, slug);
+    if (!row) return { ok: false, error: 'notfound' };
+    var demo = JSON.parse(sh.getRange(row, 7).getValue() || '{}');
+    demo.private = demo.private || {};
+    demo.private.status = status;
+    demo.updated = new Date().toISOString();
+    sh.getRange(row, 5, 1, 3).setValues([[status, new Date(), JSON.stringify(demo)]]);
+    return { ok: true, slug: slug, status: status };
   } finally {
     lock.releaseLock();
   }

@@ -96,6 +96,13 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 80px}
 .tag.Won{background:#DCFCE7;color:#166534}
 .tag.Lost{background:#FEE2E2;color:#991B1B}
 .dc-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.dc-status{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid #E2E8F0}
+.st-btn{font:inherit;font-size:.74rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:7px 4px;border-radius:6px;border:1.5px solid #E2E8F0;background:#fff;color:#475569;cursor:pointer}
+.st-btn:hover{border-color:#94A3B8}
+.st-btn.Ready.on{background:#EFF6FF;border-color:#93C5FD;color:var(--blue)}
+.st-btn.Pitched.on{background:#FEF3C7;border-color:#FCD34D;color:#92400E}
+.st-btn.Won.on{background:#DCFCE7;border-color:#86EFAC;color:#166534}
+.st-btn.Lost.on{background:#FEE2E2;border-color:#FCA5A5;color:#991B1B}
 .empty{background:#fff;border:1.5px dashed #CBD5E1;border-radius:12px;padding:48px 24px;text-align:center;color:var(--mut)}
 .empty h3{color:var(--ink);margin:0 0 6px}
 
@@ -504,8 +511,16 @@ function renderCards(){
         el('button',{class:'btn btn-primary btn-sm',type:'button',onclick:()=>openDemo(d.slug)},svgUse('i-ext'),document.createTextNode('Open demo')),
         el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>edit(d.slug)},document.createTextNode('Edit')),
         el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>copyLink(d.slug)},svgUse('i-link'),document.createTextNode('Copy link')),
-        el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>window.open(demoUrl(d.slug)+'&view=marketing','_blank','noopener')},svgUse('i-ext'),document.createTextNode('Marketing'))));
+        el('button',{class:'btn btn-ghost btn-sm',type:'button',onclick:()=>window.open(demoUrl(d.slug)+'&view=marketing','_blank','noopener')},svgUse('i-ext'),document.createTextNode('Marketing'))),
+      el('div',{class:'dc-status',role:'group','aria-label':'Set status for '+(d.name||'this demo')},
+        ['Ready','Pitched','Won','Lost'].map(st=>el('button',{class:'st-btn '+st+(d.status===st?' on':''),type:'button','aria-pressed':d.status===st?'true':'false',onclick:()=>setStatus(d,st)},document.createTextNode(st)))));
   }));
+}
+async function setStatus(d,st){
+  const prev=d.status; d.status=st; renderCards();
+  const r=await api({action:'status',slug:d.slug,status:st}).catch(()=>null);
+  if(!r||!r.ok){ d.status=prev; renderCards(); toast('Could not update the status. Try again.',true); return; }
+  toast((d.name||'Demo')+' marked '+st+'.');
 }
 $('#q').addEventListener('input',renderCards); $('#fStatus').addEventListener('change',renderCards);
 $('#homeLink').addEventListener('click',e=>{e.preventDefault(); if(dirty&&!confirm('You have unsaved changes. Leave anyway?'))return; showList();});
