@@ -3566,13 +3566,15 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt-hero-bg.lights img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%;transform:none;animation:none}
 .rt-hero-bg.lights .rt-lfill{display:none}
 .rt-hero-bg.lights .rt-lfit{animation:rtZoom 18s ease-out forwards;transform:scale(1.04)}
-.rt-hero-bg.lights img.on{opacity:0;animation:rtLights 4.5s ease-in-out .8s forwards}
+.rt-hero-bg.lights img.on{opacity:0;animation:rtLights 2.6s ease-in-out .5s forwards}
 @keyframes rtLights{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.rt-hero-bg.lights img.on{animation:none;opacity:1}.rt-hero-bg.lights .rt-lfit{animation:none;transform:none}}
 @media (max-width:860px){
 .rt-hero-bg.lights .rt-lfill{display:block;filter:blur(14px) brightness(.8);transform:scale(1.15)}
 .rt-hero-bg.lights .rt-lfit{animation:none;transform:none}
-.rt-hero-bg.lights .rt-lfit img{object-fit:contain;object-position:50% 50%}
+.rt-hero-bg.lights .rt-lfit{top:50%;bottom:auto;height:auto;aspect-ratio:16/9;transform:translateY(-38%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 82%,transparent 100%)}
+.rt-hero-bg.lights .rt-lfit img{object-fit:cover}
+.rt.lux .rt-hero{padding-top:58px!important}
 }
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
