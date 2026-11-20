@@ -6014,14 +6014,15 @@ function sunshine(C){
   /* --- then and now --- */
   const nowImg=okUrl(C.x.heroImg);
   let tnSec=null;
-  if(nowImg&&S(C.x.thenName)){
-    const then=snBuilding(S(C.x.thenName)); then.classList.add('sn-tn-then'); then.innerHTML=then.innerHTML.replace('OPEN 6AM',S(C.x.thenSign)||'EST. 1942').replace('<svg viewBox="0 0 520 440">','<svg viewBox="0 30 520 390" preserveAspectRatio="xMidYMid slice">');
+  const TH=C.x.then&&typeof C.x.then==='object'?C.x.then:{}; const thN=S(TH.n)||S(C.x.thenName), thL=S(TH.l)||S(C.x.thenLabel), thT=S(TH.t)||S(C.x.thenText);
+  if(nowImg&&thN){
+    const then=snBuilding(thN); then.classList.add('sn-tn-then'); then.innerHTML=then.innerHTML.replace('OPEN 6AM',S(C.x.thenSign)||'EST. 1942').replace('<svg viewBox="0 0 520 440">','<svg viewBox="0 30 520 390" preserveAspectRatio="xMidYMid slice">');
     const wrap=h('div',{class:'sn-tn-box',style:'--p:62%'},h('img',{src:nowImg,alt:'Today',loading:'lazy'}),then,h('span',{class:'sn-tn-bar'},h('i',null,'‹ ›')),
-      h('span',{class:'sn-tn-tag l'},S(C.x.thenLabel)||'Then'),h('span',{class:'sn-tn-tag r'},'Today'));
+      h('span',{class:'sn-tn-tag l'},thL||'Then'),h('span',{class:'sn-tn-tag r'},'Today'));
     const rng=h('input',{type:'range',min:'0',max:'100',value:'62','aria-label':'Slide between then and now',oninput:e=>wrap.style.setProperty('--p',e.target.value+'%')});
     wrap.append(rng);
     tnSec=h('section',{class:'sn-sec sn-tn'},h('div',{class:'sn-wrap sn-tn-g'},
-      h('div',{class:'rv'},h('span',{class:'sn-kick'},'Then and now'),h('h2',null,S(C.x.thenTitle)||'Same corner, same welcome'),h('p',{class:'sn-story-p'},S(C.x.thenText)),h('p',{class:'sn-note'},'Slide to compare. The “then” side is an illustration.')),
+      h('div',{class:'rv'},h('span',{class:'sn-kick'},'Then and now'),h('h2',null,S(C.x.thenTitle)||'Same corner, same welcome'),h('p',{class:'sn-story-p'},thT),h('p',{class:'sn-note'},'Slide to compare. The “then” side is an illustration.')),
       h('div',{class:'rv'},wrap)));
   }
 
@@ -6100,7 +6101,7 @@ function sunshine(C){
   G.names.forEach(k=>tabs.append(h('button',{type:'button',role:'tab','data-k':k,onclick:()=>showTab(k)},k)));
   if(G.names.length) showTab(G.names[0]);
   const menuSec=h('section',{class:'sn-sec sky',id:'s-menu'},h('div',{class:'sn-wrap'},
-    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'The menu'),h('h2',null,S(C.x.menuTitle)||'Breakfast and lunch, all day'),h('p',null,S(C.x.menuSub)||'Home-style cooking and big portions.')),
+    h('div',{class:'sn-head rv'},h('span',{class:'sn-kick'},'The menu'),h('h2',null,S(C.x.menuTitle)||'Breakfast and lunch, every day'),h('p',null,S(C.x.menuSub)||'Home-style cooking and big portions.')),
     h('div',{class:'sn-menu-box rv'},tabs,panes),
     h('div',{class:'sn-menu-foot'},S(C.x.menuNote)?h('p',{class:'sn-note'},S(C.x.menuNote)):null,h('div',{class:'sn-cta'},call('blue','Call ahead for takeout'),orderBtn('line')))));
 
