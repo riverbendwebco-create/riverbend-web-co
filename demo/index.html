@@ -1382,6 +1382,23 @@ body.t-mt{background:#fff}
 @keyframes m2In{from{opacity:0;transform:translateY(12px)}}
 .m2-rev cite{display:block;font-style:normal;color:var(--mut);margin-top:22px}
 .m2-rnav{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:34px}.m2-rc{font-size:.9rem;color:var(--mut);min-width:64px}
+.m2-crew{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.m2-mem{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;background:var(--gray);border-radius:22px;overflow:hidden;transition:transform .35s,box-shadow .35s}
+.m2-mem:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08)}
+.m2-mem:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.m2-mem-ph{position:relative;aspect-ratio:4/4.4;background:linear-gradient(160deg,#E9E9E6,#D7D8D4);display:grid;place-items:center;overflow:hidden}
+.m2-mem-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:grayscale(1);transition:filter .5s,transform .6s}
+.m2-mem:hover .m2-mem-ph img{filter:none;transform:scale(1.03)}
+.m2-ini{font-size:3.4rem;font-weight:500;letter-spacing:-.04em;color:#9A9C9F}
+.m2-mem-t{padding:20px 22px 6px;display:flex;flex-direction:column;gap:4px}.m2-mem-t b{font-size:1.3rem;font-weight:500;letter-spacing:-.02em}.m2-mem-t span{color:var(--mut);font-size:.95rem}
+.m2-mem-more{display:flex;align-items:center;gap:8px;padding:10px 22px 22px;font-weight:500;font-size:.92rem}.m2-mem-more svg{width:16px;height:16px;transition:transform .3s}.m2-mem:hover .m2-mem-more svg{transform:translateX(4px)}
+.m2-bio{position:fixed;inset:0;z-index:210;background:rgba(10,10,10,.55);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}.m2-bio[hidden]{display:none}
+.m2-bio-card{position:relative;display:grid;grid-template-columns:.9fr 1.1fr;width:min(920px,100%);background:#fff;border-radius:26px;overflow:hidden;max-height:90vh}
+.m2-bio-ph{position:relative;overflow:hidden;background:linear-gradient(160deg,#E9E9E6,#D7D8D4);display:grid;place-items:center;min-height:420px}.m2-bio-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%}
+.m2-bio-b{padding:48px 40px;overflow:auto;display:flex;flex-direction:column}.m2-bio-b h3{font-size:2.4rem;font-weight:500;letter-spacing:-.04em;margin:0 0 16px}.m2-bio-b p{color:#4A4D52;line-height:1.75;margin:0 0 16px}.m2-bio-b .m2-eyebrow{margin-bottom:8px;color:var(--mut)}.m2-bio-b .m2-btn{align-self:flex-start;margin-top:8px}
+.m2-bio-card .m2-x{position:absolute;top:14px;right:14px;z-index:2}
+@media(max-width:900px){.m2-crew{grid-template-columns:repeat(2,1fr);gap:14px}.m2-mem-t{padding:14px 14px 4px}.m2-mem-t b{font-size:1.05rem}.m2-mem-t span{font-size:.82rem}.m2-mem-more{padding:8px 14px 16px;font-size:.82rem}.m2-mem-ph img{filter:none}
+.m2-bio{padding:0;align-items:end}.m2-bio-card{grid-template-columns:1fr;border-radius:24px 24px 0 0;max-height:92vh;overflow:auto}.m2-bio-ph{min-height:0;height:min(48vh,340px)}.m2-bio-b{padding:26px 22px 34px;overflow:visible}.m2-bio-b h3{font-size:1.9rem}}
 .m2-team{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start}
 .m2-team ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .m2-team li{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:22px 0;border-bottom:1px solid var(--line)}
@@ -6691,7 +6708,13 @@ const MT={
     ['Limestone','Natural','A soft stone in beige and tan tones. Best in low-traffic areas.',['Needs sealing','Low traffic']],
     ['Onyx','Natural','Rare and translucent, with swirling pastel patterns. Stunning for accent walls and bars.',['Accent surface','Translucent']],
     ['Venetian Marble','Engineered','Recycled natural stone pressed and heated. A marble look at a lower cost, tougher than cultured marble.',['Marble look','Budget friendly']]],
-  team:[['Eric Christensen','Owner / CEO'],['Robert Breitbach','Owner / CFO'],['Rick Carner II','Production Manager'],['Randy Barton','Project Manager'],['Andrew Kartman','CNC Programmer / Operator'],['Wally Dirks','Installer / Fabrication Specialist']],
+  team:[
+    ['Eric Christensen','Owner / CEO','https://mountaintopstone.com/wp-content/uploads/2019/04/ChristensenEric.png',['Eric has multiple roles. His knowledge of stone fabrication, stone equipment and installation techniques keeps him on the mechanical side of the business more often. But his knowledge of geology and stone applications allows him to help as an adviser in sales and design as well. Along with his business partner Bob, he helps run the day to day of Mountaintop Stoneworks, Inc.','Eric moved to Dubuque, Iowa from California in 1994, working in the tile and masonry industry. He started Mountaintop Stoneworks Inc. with Bob in 1998. He is the father of three daughters, and enjoys the outdoors and playing music with his band.']],
+    ['Robert Breitbach','Owner / CFO','',['Bob says his role is "all of the above," but he mainly handles the administration side: payroll, accounts payable and receivable, vendors, insurance and everything else it takes to keep the business running.','Bob and his wife Cathy have been self-employed for more than forty years, starting in flooring, then adding decorating and later stone fabrication. They have six children and twelve grandchildren.']],
+    ['Rick Carner II','Production Manager','https://mountaintopstone.com/wp-content/uploads/2019/04/CarnerRick.png',['Rick brings art to the saw. He is amazing at the layout process and will be happy to get you involved in choosing the best sections of the material you choose. Rick has a good eye for grain and flow in stone and makes sure each piece runs together smoothly. When seams are involved, he is a good person to have on your team.','Rick grew up locally. He enjoys working on his home and spending time with his girlfriend Jessica.']],
+    ['Randy Barton','Project Manager','',[]],
+    ['Andrew Kartman','CNC Programmer / Operator','https://mountaintopstone.com/wp-content/uploads/2019/04/KartmanAndrew.png',['Andrew programs and runs the CNC equipment that cuts your stone with precision. He first joined Mountaintop through a college internship and is continuing his studies in manufacturing process management.','Andrew grew up in Dubuque, Iowa. Outside of work he enjoys working on cars and spending time with his family and his girlfriend Skyler.']],
+    ['Wally Dirks','Installer / Fabrication Specialist','',['Wally has been installing for some time now and is familiar with most situations that can come up. He is also very proficient in the shop as a fabricator, which makes him well rounded.','Wally grew up locally. He has three children and two grandchildren. When he isn\'t fabricating and installing, he enjoys precious time with his family.']]],
   reviews:[['Thank you all for providing such a wonderful experience from beginning to end!','Ginny and Guy'],['Everyone was timely, considerate, and knowledgeable.','Cal and Jennifer'],['The flushing of the granite with the sink was perfect!','Tony and Pat'],['Will definitely refer business your way.','Bill and Julie'],['Not one single problem at all.','Mountaintop customer'],['I have found them very easy to work with, they answer all my questions.','Mountaintop customer'],['Good representatives for your company.','Mountaintop customer'],['It is beautiful!!','Mountaintop customer']]
 };
 const MT_PH={Granite:'granite',Marble:'marble',Quartzite:'quartzite',Soapstone:'soapstone',Travertine:'travertine',Limestone:'limestone',Onyx:'onyx'};
@@ -6879,9 +6902,22 @@ function mountaintop2(C){
     h('p',{class:'m2-eyebrow'},'What our clients say'),h('div',{class:'m2-stars'},[0,1,2,3,4].map(()=>mtI('star'))),rq,rn,
     h('div',{class:'m2-rnav'},h('button',{type:'button','aria-label':'Previous review',onclick:()=>showR(-1)},mtI('arrow')),rc,h('button',{type:'button','aria-label':'Next review',onclick:()=>showR(1)},mtI('arrow')))));
   /* team */
-  const team=h('section',{class:'m2-sec'},h('div',{class:'m2-w m2-team'},
-    h('div',null,h('p',{class:'m2-eyebrow'},'Our team'),h('h2',null,'The craftsmen behind your counters.')),
-    h('ul',null,MT.team.map(([n,r])=>h('li',null,h('b',null,n),h('span',null,r))))));
+  const bio=h('div',{class:'m2-bio',hidden:true,role:'dialog','aria-modal':'true'});
+  const ini=n=>n.split(' ').map(w=>w[0]).slice(0,2).join('');
+  const face=(m,cls)=>m[2]?h('div',{class:cls},h('img',{src:m[2],alt:m[0],loading:'lazy',onerror:function(){this.replaceWith(h('span',{class:'m2-ini'},ini(m[0])));}})):h('div',{class:cls},h('span',{class:'m2-ini'},ini(m[0])));
+  const openBio=m=>{ bio.replaceChildren(h('div',{class:'m2-bio-card'},
+      h('button',{type:'button',class:'m2-x',onclick:()=>{bio.hidden=true;},'aria-label':'Close'},mtI('x')),
+      face(m,'m2-bio-ph'),
+      h('div',{class:'m2-bio-b'},h('p',{class:'m2-eyebrow'},m[1]),h('h3',null,m[0]),
+        ...(m[3].length?m[3].map(t=>h('p',null,t)):[h('p',null,'Full bio coming soon.')]),
+        h('a',{class:'m2-btn dark',href:tel},'Call the shop',arrow())))); bio.hidden=false; };
+  bio.addEventListener('click',e=>{ if(e.target===bio) bio.hidden=true; });
+  const team=h('section',{class:'m2-sec',id:'m2-team'},h('div',{class:'m2-w'},
+    h('div',{class:'m2-head'},h('div',null,h('p',{class:'m2-eyebrow'},'Our team'),h('h2',null,'The craftsmen behind your counters.'))),
+    h('div',{class:'m2-crew'},MT.team.map(m=>h('button',{type:'button',class:'m2-mem rv',onclick:()=>openBio(m)},
+      face(m,'m2-mem-ph'),
+      h('div',{class:'m2-mem-t'},h('b',null,m[0]),h('span',null,m[1])),
+      h('span',{class:'m2-mem-more'},m[3].length?'Read full bio':'View profile',arrow()))))));
   /* visit */
   const D3=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const visit=h('section',{class:'m2-visit',id:'m2-visit'},
@@ -6892,7 +6928,7 @@ function mountaintop2(C){
       h('div',{class:'m2-soc'},h('a',{href:MT.social.facebook,target:'_blank',rel:'noopener','aria-label':'Facebook'},mtI('fb')),h('a',{href:MT.social.instagram,target:'_blank',rel:'noopener','aria-label':'Instagram'},mtI('ig')),h('a',{href:MT.social.youtube,target:'_blank',rel:'noopener','aria-label':'YouTube'},mtI('yt')))),
     h('div',{class:'m2-map'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})));
   const foot=h('footer',{class:'m2-foot'},h('div',{class:'m2-w m2-foot-in'},h('img',{src:logo,alt:name}),h('nav',null,links()),h('small',null,'© '+new Date().getFullYear()+' Mountaintop Stoneworks, Inc. · '+full)));
-  return h('div',{class:'m2'},nav,hero,stats,intro,surfaces,why,work,process,reviews,team,visit,foot,sheet,lb);
+  return h('div',{class:'m2'},nav,hero,stats,intro,surfaces,why,work,process,reviews,team,visit,foot,sheet,lb,bio);
 }
 
 const CL_ICO={
