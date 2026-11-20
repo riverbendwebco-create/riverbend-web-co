@@ -2149,17 +2149,34 @@ const MW_DATA={
   hours:['8am - 5pm','8am - 5pm','8am - 5pm','8am - 5pm','8am - 5pm','8am - 12pm','Closed'],
   hero:MW_U('1592805144716-feeccccef5ac'),
   services:[
-    {i:'parts',n:'Truck Parts & Accessories',d:'Retail and wholesale parts for light, medium and heavy-duty trucks.',img:MW_U('1767341372150-b9521fec39a3')},
-    {i:'wrench',n:'Chassis Repair Shop',d:'A fully equipped shop for trucks large and small.',img:MW_U('1727893304219-063d142ce6f3')},
-    {i:'brake',n:'Brakes & Brake Shoes',d:'Top Performance lined brake shoes, made in our own Moline brake shop.',img:MW_U('1619642751034-765dfdf7c58e')},
-    {i:'air',n:'Air Brake Valves',d:'Air brake valve replacement and repair.',img:MW_U('1615906655593-ad0386982a0f')},
-    {i:'frame',n:'Frame Straightening',d:'Heavy repairs, from frames to suspension.',img:MW_U('1727893119356-1702fe921cf9')},
-    {i:'tools',n:'Tools & Shop Supplies',d:'Tools and supplies for your shop and your fleet.',img:MW_U('1760310936486-4dd450aab2a8')}],
+    {i:'pickup',n:'Light Truck Accessories',d:'Hood shields, running boards, tonneau covers, light bars, hitches and much more for your pickup.',img:MW_U('1772817337500-e6fca46864a8'),
+      intro:'See Mutual Wheel Co. for all your light truck accessories!',
+      list:['Hood shields','Running boards','Spoilers','Tonneau covers','Light bars','Bed rails','Lens covers','Custom floor covers','Tool boxes','Truck racks','Visors','Mud flaps','Tailgate protectors','Grill guards','Polyurethane suspension bushings','Grill covers','Hitches','And much, much more']},
+    {i:'parts',n:'Truck Parts & Accessories',d:'Retail and wholesale parts for light, medium and heavy-duty trucks.',img:MW_U('1767341372150-b9521fec39a3'),
+      intro:'A full-service parts department for all of your truck parts, accessories and tool needs.',
+      list:['Retail and wholesale parts sales','Light, medium and heavy-duty trucks','Large inventory on hand','Knowledgeable counter staff','Parts for tractor-trailers','Call ahead and we will check stock']},
+    {i:'wrench',n:'Chassis Repair Shop',d:'A fully equipped shop for trucks large and small.',img:MW_U('1727893304219-063d142ce6f3'),
+      intro:'Our Dubuque location has a fully equipped chassis repair shop for trucks large and small.',
+      list:['Fully equipped chassis repair shop','Trucks large and small','ASE certified service technicians','Air brake valve replacement','Frame straightening','Parts counter on site']},
+    {i:'brake',n:'Brakes & Brake Shoes',d:'Top Performance lined brake shoes, made in our own Moline brake shop.',img:MW_U('1619642751034-765dfdf7c58e'),
+      intro:'Our Moline brake shop produces many thousands of Top Performance lined brake shoes every year.',
+      list:['Top Performance lined brake shoes','Made in our own Moline brake shop','Built for tractor-trailer applications','Strict quality controls','Brake re-line shop in Moline','Brake repairs in our service bays']},
+    {i:'air',n:'Air Brake Valves',d:'Air brake valve replacement and repair.',img:MW_U('1615906655593-ad0386982a0f'),
+      intro:'Air brake work done by ASE certified technicians.',
+      list:['Air brake valve replacement','Air brake parts in stock','ASE certified service technicians','Light, medium and heavy-duty trucks']},
+    {i:'frame',n:'Frame Straightening',d:'Heavy repairs, from frames to suspension.',img:MW_U('1727893119356-1702fe921cf9'),
+      intro:'Repairs range from air brake valve replacement all the way to frame straightening.',
+      list:['Frame straightening','Chassis repair','Suspension bushings and parts','Trucks large and small']},
+    {i:'tools',n:'Tools & Shop Supplies',d:'Tools and supplies for your shop and your fleet.',img:MW_U('1760310936486-4dd450aab2a8'),
+      intro:'Every location has a full-service parts department for your truck tool needs.',
+      list:['Truck tools','Shop supplies','Fleet supplies','Ask the counter for anything you need']}],
   locs:[['Dubuque, IA','30 Jones St','(563) 556-0800'],['Cedar Rapids, IA','340 Waconia Ct SW','(319) 366-1081'],['Waterloo, IA','2277 Laporte Rd','(319) 234-1231'],['Davenport, IA','',''],
     ['Moline, IL','2345 4th Ave',''],['Milan, IL','3215 1st Ave E','(309) 757-1234'],['East Peoria, IL','606 N Main St','(309) 694-6211'],['Monmouth, IL','1350 S Main St','(309) 734-8581'],
     ['Bloomington, IL','15 Quest Dr','(309) 827-3080'],['Quincy, IL','1910 N 43rd St','(217) 228-3360'],['Rockford, IL','','']]
 };
 const MW_ICO={
+  pickup:'<path d="M2 15V11l2-4h7v4h9l2 2v2z"/><path d="M6 7v4"/><circle cx="6.5" cy="16.5" r="1.8"/><circle cx="17.5" cy="16.5" r="1.8"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
   parts:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
   wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/>',
   brake:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5a8.5 8.5 0 0 1 8 5.5"/><path d="M5.2 17.4l2.3-1.6M16.5 16l2.3 1.6"/>',
@@ -2201,15 +2218,29 @@ function mutual(C){
     h('div',{class:'mw-w'},h('div',{class:'mw-strip'},strip.map(([i,a,b])=>h('div',null,mwIco(i),h('span',null,h('b',null,a),h('small',null,b)))))));
   const head=(a,b,id)=>h('div',{class:'mw-head rv'},h('h2',null,a+' ',h('span',null,b)));
   const services=h('section',{class:'mw-sec',id:'mw-services'},h('div',{class:'mw-w'},head('Our Truck','Services'),
-    h('div',{class:'mw-grid'},svc.map(s=>bg(h('div',{class:'mw-card rv'},mwIco(s.i||'wrench'),h('b',null,s.n),h('p',null,s.d)),ok(s.img),'linear-gradient(180deg,rgba(12,13,16,.35) 0%,rgba(12,13,16,.92) 100%)'))),
+    h('div',{class:'mw-grid'},svc.map(s=>{ const c=bg(h('button',{type:'button',class:'mw-card rv','aria-haspopup':'dialog'},mwIco(s.i||'wrench'),h('b',null,s.n),h('p',null,s.d),h('span',{class:'mw-more'},'See what we offer',mwIco('arrow'))),ok(s.img),'linear-gradient(180deg,rgba(12,13,16,.35) 0%,rgba(12,13,16,.92) 100%)'); c.addEventListener('click',()=>openSvc(s)); return c; })),
     h('div',{class:'mw-center'},h('a',{class:'mw-btn line',href:tel},'Call about any part'))));
   const why=[['boxes','Large Inventory'],['users','Knowledgeable Staff'],['shield','ASE Certified Techs'],['parts','Retail & Wholesale'],['brake','Brake Shoes Made In-House'],['home','Family Owned Since 1940']];
   const whyS=h('section',{class:'mw-sec mw-soft',id:'mw-why'},h('div',{class:'mw-w'},head('Why Truckers','Choose Us'),
     h('div',{class:'mw-why'},why.map(([i,t])=>h('div',{class:'rv'},mwIco(i),h('b',null,t))))));
+  const openSvc=s=>{
+    const close=()=>{ m.remove(); document.documentElement.classList.remove('os-lock'); removeEventListener('keydown',esc); };
+    const esc=e=>{ if(e.key==='Escape') close(); };
+    const m=h('div',{class:'mw-modal',role:'dialog','aria-modal':'true','aria-label':s.n},
+      h('div',{class:'mw-modal-card'},
+        bg(h('div',{class:'mw-modal-top'},mwIco(s.i||'wrench'),h('h3',null,s.n)),ok(s.img),'linear-gradient(180deg,rgba(12,13,16,.25) 0%,rgba(12,13,16,.9) 100%)'),
+        h('button',{type:'button',class:'mw-modal-x','aria-label':'Close',onclick:()=>close()},mwIco('x')),
+        h('div',{class:'mw-modal-b'},h('p',{class:'mw-modal-intro'},s.intro||s.d),
+          h('ul',{class:'mw-modal-list'+((s.list||[]).length>10?' long':'')},(s.list||[]).map(t=>h('li',null,mwIco('check'),t))),
+          h('div',{class:'mw-modal-cta'},h('a',{class:'mw-btn red',href:tel},mwIco('phone'),'Call '+phoneTxt),
+            h('button',{type:'button',class:'mw-btn blue',onclick:()=>{ close(); const sl=form.elements.need; sl.value=s.n; scrollTo('mw-request'); setTimeout(()=>form.elements.name.focus({preventScroll:true}),700); }},'Request This')))));
+    m.addEventListener('click',e=>{ if(e.target===m) close(); });
+    addEventListener('keydown',esc); document.documentElement.classList.add('os-lock'); document.body.append(m); m.querySelector('.mw-modal-x').focus();
+  };
   const f=(n,ph,type)=>h('input',{name:n,placeholder:ph,type:type||'text','aria-label':ph});
   const sel=(n,ph,opts)=>h('select',{name:n,'aria-label':ph},h('option',{value:''},ph),opts.map(o=>h('option',null,o)));
   const form=h('form',{class:'mw-form',novalidate:true},f('name','Name'),f('phone','Phone','tel'),f('truck','Truck make & year'),
-    sel('need','What do you need?',['Truck parts','Accessories','Brake shoes','Repair / chassis shop','Tools & supplies','Something else']),
+    sel('need','What do you need?',svc.map(x=>x.n).concat(['Something else'])),
     h('textarea',{name:'note',placeholder:'Part number or what is going on (optional)','aria-label':'Details',rows:3}),
     h('button',{type:'submit',class:'mw-btn red'},'Send My Request'),h('p',{class:'mw-form-msg',role:'status'}));
   form.addEventListener('submit',e=>{ e.preventDefault(); const v=k=>(form.elements[k].value||'').trim(); const msg=form.querySelector('.mw-form-msg');
