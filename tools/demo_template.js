@@ -2699,7 +2699,7 @@ function realty(C){
   const offAddr=typeof C.x.officeAddr==='string'?C.x.officeAddr:'', offPhone=typeof C.x.officePhone==='string'?C.x.officePhone:'';
   const ehoLogo=okUrl(C.x.ehoLogo), realtorLogo=okUrl(C.x.realtorLogo), idxText=typeof C.x.idxDisclaimer==='string'?C.x.idxDisclaimer:'';
   const licNo=(String(C.x.license||'').match(/#\s*([A-Z0-9-]+)/)||[])[1]||'';
-  const kwLogo=okUrl(C.x.kwLogo);
+  const kwLogo=okUrl(C.x.kwLogo)||(/^keller williams legacy group$/i.test(firm)?'https://riverbendwebco.com/demo/img/kw-legacy-logo.png':'');
   /* official Market Center DBA logo goes in x.kwLogo (file from KW Connect, unmodified); until then a labeled placeholder */
   const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):(()=>{ const f=firm||'Keller Williams Legacy Group'; const m=f.match(/^(Keller Williams)\s+(.+)$/i); return m?[h('b',null,m[1]),h('small',null,m[2])]:[h('b',null,f)]; })());
   const pTitle=person+', REALTOR\u00ae';

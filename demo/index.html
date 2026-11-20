@@ -3796,6 +3796,10 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt.lux p.rt-idxblock{margin:20px 0 0;padding:14px 0 0;border:0;border-top:1px solid rgba(255,255,255,.1);font-size:.74rem;color:#93A0B2;line-height:1.6}
 .rt-legalpg h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:1.6rem;color:var(--navy);margin:28px 0 8px}
 .rt-legalpg ul{margin:0 0 16px 20px;color:#3E4855;line-height:1.8}.rt-legal-upd{font-size:.8rem;color:#8A94A3!important;text-transform:uppercase;letter-spacing:.12em}
+.rt.lux .rt-kw:not(.ph){background:transparent;padding:0!important}
+.rt.lux .rt-kw.nav:not(.ph) img{height:38px;width:auto!important}
+.rt.lux .rt-kw.foot:not(.ph) img{height:52px;width:auto!important}
+@media (max-width:980px){.rt.lux .rt-kw.nav:not(.ph) img{height:26px;width:auto!important}}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}
@@ -6576,7 +6580,7 @@ function realty(C){
   const offAddr=typeof C.x.officeAddr==='string'?C.x.officeAddr:'', offPhone=typeof C.x.officePhone==='string'?C.x.officePhone:'';
   const ehoLogo=okUrl(C.x.ehoLogo), realtorLogo=okUrl(C.x.realtorLogo), idxText=typeof C.x.idxDisclaimer==='string'?C.x.idxDisclaimer:'';
   const licNo=(String(C.x.license||'').match(/#\s*([A-Z0-9-]+)/)||[])[1]||'';
-  const kwLogo=okUrl(C.x.kwLogo);
+  const kwLogo=okUrl(C.x.kwLogo)||(/^keller williams legacy group$/i.test(firm)?'https://riverbendwebco.com/demo/img/kw-legacy-logo.png':'');
   /* official Market Center DBA logo goes in x.kwLogo (file from KW Connect, unmodified); until then a labeled placeholder */
   const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):(()=>{ const f=firm||'Keller Williams Legacy Group'; const m=f.match(/^(Keller Williams)\s+(.+)$/i); return m?[h('b',null,m[1]),h('small',null,m[2])]:[h('b',null,f)]; })());
   const pTitle=person+', REALTOR\u00ae';

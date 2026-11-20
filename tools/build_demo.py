@@ -3549,6 +3549,10 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rt.lux p.rt-idxblock{margin:20px 0 0;padding:14px 0 0;border:0;border-top:1px solid rgba(255,255,255,.1);font-size:.74rem;color:#93A0B2;line-height:1.6}
 .rt-legalpg h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:1.6rem;color:var(--navy);margin:28px 0 8px}
 .rt-legalpg ul{margin:0 0 16px 20px;color:#3E4855;line-height:1.8}.rt-legal-upd{font-size:.8rem;color:#8A94A3!important;text-transform:uppercase;letter-spacing:.12em}
+.rt.lux .rt-kw:not(.ph){background:transparent;padding:0!important}
+.rt.lux .rt-kw.nav:not(.ph) img{height:38px;width:auto!important}
+.rt.lux .rt-kw.foot:not(.ph) img{height:52px;width:auto!important}
+@media (max-width:980px){.rt.lux .rt-kw.nav:not(.ph) img{height:26px;width:auto!important}}
 .rt-foot-b .rt-kw.foot{display:inline-flex;margin-top:4px;width:auto}
 .rt.lux .rt-hv h2,.rt.lux .rt-consult h2,.rt.lux .rt-stats h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.08}
 .rt-brand-t b{white-space:nowrap}
