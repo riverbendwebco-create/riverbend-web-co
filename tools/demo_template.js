@@ -2219,7 +2219,7 @@ function mutual(C){
   const strip=[['clock','Since 1893','Family owned'],['shield','ASE Certified','Service technicians'],['truck','Light to Heavy-Duty','Trucks of every size'],['pin','11 Locations','Iowa & Illinois']];
   const hero=h('section',{class:'mw-hero'},bg(h('div',{class:'mw-hero-bg'}),ok(x.heroPhoto)||D.hero,'linear-gradient(90deg,rgba(12,13,16,.94) 0%,rgba(12,13,16,.78) 45%,rgba(12,13,16,.25) 100%)'),
     h('div',{class:'mw-w mw-hero-in'},
-      h('div',{class:'mw-hero-t'},h('small',{class:'mw-kick'},'Dubuque, Iowa · Truck Parts & Service'),
+      h('div',{class:'mw-hero-t'},h('small',{class:'mw-kick'},'Servicing the Quad Cities since 1893 · Truck Parts & Service'),
         h('h1',null,'Truck Parts, Accessories', h('br'),'& Service ',h('span',null,'You Can Trust')),h('i',{class:'mw-rule'}),
         h('p',null,'Your one-stop source for light, medium and heavy-duty truck parts, accessories and service. Retail and wholesale parts plus a fully equipped chassis repair shop.'),
         h('div',{class:'mw-cta'},h('a',{class:'mw-btn red',href:tel},'Call the Parts Counter'),h('a',{class:'mw-btn blue',href:'#mw-request',onclick:go('mw-request')},'Request a Part or Repair')))),
