@@ -2441,7 +2441,7 @@ function mountaintop2(C){
   const SP=n=>MT_PH[n]?'https://riverbendwebco.com/demo/img/mt-'+MT_PH[n]+'.jpg':'';
   const go=id=>e=>{ e.preventDefault(); scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
-  const links=()=>[A('m2-surfaces','Surfaces'),A('m2-work','Our Work'),A('m2-process','Process'),A('m2-about','About'),A('m2-visit','Contact')];
+  const links=()=>[A('m2-surfaces','Surfaces'),A('m2-work','Our Work'),A('m2-process','Process'),A('m2-team','Our Team'),A('m2-about','About'),A('m2-visit','Contact')];
   const arrow=()=>mtI('arrow');
   /* nav */
   const nav=h('header',{class:'m2-nav'},h('div',{class:'m2-w m2-nav-in'},
