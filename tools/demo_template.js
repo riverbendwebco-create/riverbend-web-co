@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -102,6 +102,8 @@ function build(d){
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
+  if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
+  if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
@@ -2139,6 +2141,113 @@ function zephyr(C){
   return h('div',{class:'zp'},nav,hero,about,sol,prod,revs,visit,foot);
 }
 function zpNav(){ const n=document.querySelector('.zp-nav'); if(!n) return; const f=()=>n.classList.toggle('solid',scrollY>10); addEventListener('scroll',f,{passive:true}); f(); }
+
+/* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
+const MW_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1200&q=72';
+const MW_DATA={
+  addr:'30 Jones St', city:'Dubuque, IA', phone:'5635560800', tollfree:'(800) 798-0080', manager:'Mark Bale',
+  hours:['8am - 5pm','8am - 5pm','8am - 5pm','8am - 5pm','8am - 5pm','8am - 12pm','Closed'],
+  hero:MW_U('1592805144716-feeccccef5ac'),
+  services:[
+    {i:'parts',n:'Truck Parts & Accessories',d:'Retail and wholesale parts for light, medium and heavy-duty trucks.',img:MW_U('1767341372150-b9521fec39a3')},
+    {i:'wrench',n:'Chassis Repair Shop',d:'A fully equipped shop for trucks large and small.',img:MW_U('1727893304219-063d142ce6f3')},
+    {i:'brake',n:'Brakes & Brake Shoes',d:'Top Performance lined brake shoes, made in our own Moline brake shop.',img:MW_U('1619642751034-765dfdf7c58e')},
+    {i:'air',n:'Air Brake Valves',d:'Air brake valve replacement and repair.',img:MW_U('1615906655593-ad0386982a0f')},
+    {i:'frame',n:'Frame Straightening',d:'Heavy repairs, from frames to suspension.',img:MW_U('1727893119356-1702fe921cf9')},
+    {i:'tools',n:'Tools & Shop Supplies',d:'Tools and supplies for your shop and your fleet.',img:MW_U('1760310936486-4dd450aab2a8')}],
+  locs:[['Dubuque, IA','30 Jones St','(563) 556-0800'],['Cedar Rapids, IA','340 Waconia Ct SW','(319) 366-1081'],['Waterloo, IA','2277 Laporte Rd','(319) 234-1231'],['Davenport, IA','',''],
+    ['Moline, IL','2345 4th Ave',''],['Milan, IL','3215 1st Ave E','(309) 757-1234'],['East Peoria, IL','606 N Main St','(309) 694-6211'],['Monmouth, IL','1350 S Main St','(309) 734-8581'],
+    ['Bloomington, IL','15 Quest Dr','(309) 827-3080'],['Quincy, IL','1910 N 43rd St','(217) 228-3360'],['Rockford, IL','','']]
+};
+const MW_ICO={
+  parts:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
+  wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/>',
+  brake:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5a8.5 8.5 0 0 1 8 5.5"/><path d="M5.2 17.4l2.3-1.6M16.5 16l2.3 1.6"/>',
+  air:'<path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3M3 12h8"/>',
+  frame:'<path d="M3 7h18M3 17h18M6 7v10M18 7v10M10 7l-4 10M14 7l4 10"/>',
+  tools:'<path d="M3 21l7-7M14 4l6 6-3 3-6-6zM8 3l2 2-5 5-2-2z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>', phone:'<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
+  truck:'<path d="M2 6h11v10H2zM13 9h4l4 4v3h-8z"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>', boxes:'<path d="M3 10h8v10H3zM13 10h8v10h-8zM8 3h8v7H8z"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 6M18 14c2 .7 3 2.8 3 6"/>', home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v11h14V10"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>', chat:'<path d="M4 5h16v11H9l-5 4z"/>', search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+  wheel:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6"/><path d="M12 3v6.4M12 14.6V21M3 12h6.4M14.6 12H21M5.6 5.6l4.6 4.6M13.8 13.8l4.6 4.6M18.4 5.6l-4.6 4.6M10.2 13.8l-4.6 4.6"/>'
+};
+function mwIco(k){ const s=h('span',{class:'mw-ico','aria-hidden':'true'}); s.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+(MW_ICO[k]||MW_ICO.wheel)+'</svg>'; return s; }
+function mutual(C){
+  const D=MW_DATA, x=C.x, name=C.name||'Mutual Wheel Company';
+  const ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const addr=C.addr||D.addr, city=C.city||D.city, addrTxt=addr+', '+city;
+  const digits=(C.phone||D.phone).replace(/\D/g,'').slice(-10), tel='tel:+1'+digits, phoneTxt='('+digits.slice(0,3)+') '+digits.slice(3,6)+'-'+digits.slice(6);
+  const hours=C.hasHours?C.hours:D.hours, today=hours[todayIx()]||'';
+  const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+addrTxt);
+  const svc=Array.isArray(x.services)&&x.services.length?x.services:D.services;
+  const go=(id)=>e=>{e.preventDefault();scrollTo(id);};
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const logo=ok(x.logoUrl)||C.logo;
+  const brand=h('a',{class:'mw-brand',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},
+    logo?h('img',{src:logo,alt:name}):[mwIco('wheel'),h('span',{class:'mw-wm'},h('b',null,'Mutual Wheel'),h('small',null,'The Truck Experts'))]);
+  const links=()=>[A('mw-services','Services'),A('mw-why','Why Us'),A('mw-request','Request a Part'),A('mw-history','History'),A('mw-visit','Locations')];
+  const nav=h('header',{class:'mw-nav'},h('div',{class:'mw-w mw-nav-in'},brand,h('nav',{class:'mw-links'},links()),
+    h('div',{class:'mw-nav-r'},h('a',{class:'mw-tel',href:tel},mwIco('phone'),phoneTxt),h('a',{class:'mw-btn red sm mw-dk',href:'#mw-request',onclick:go('mw-request')},'Request a Part'),h('a',{class:'mw-btn red sm mw-mb',href:tel},mwIco('phone'),'Call'))),
+    h('nav',{class:'mw-mnav'},links()));
+  const strip=[['clock','Since 1893','Family owned'],['shield','ASE Certified','Service technicians'],['truck','Light to Heavy-Duty','Trucks of every size'],['pin','11 Locations','Iowa & Illinois']];
+  const hero=h('section',{class:'mw-hero'},bg(h('div',{class:'mw-hero-bg'}),ok(x.heroPhoto)||D.hero,'linear-gradient(90deg,rgba(12,13,16,.94) 0%,rgba(12,13,16,.78) 45%,rgba(12,13,16,.25) 100%)'),
+    h('div',{class:'mw-w mw-hero-in'},
+      h('div',{class:'mw-hero-t'},h('small',{class:'mw-kick'},'Dubuque, Iowa · Truck Parts & Service'),
+        h('h1',null,'Truck Parts, Accessories', h('br'),'& Service ',h('span',null,'You Can Trust')),h('i',{class:'mw-rule'}),
+        h('p',null,'Your one-stop source for light, medium and heavy-duty truck parts, accessories and service. Retail and wholesale parts plus a fully equipped chassis repair shop.'),
+        h('div',{class:'mw-cta'},h('a',{class:'mw-btn red',href:tel},'Call the Parts Counter'),h('a',{class:'mw-btn blue',href:'#mw-request',onclick:go('mw-request')},'Request a Part or Repair')))),
+    h('div',{class:'mw-w'},h('div',{class:'mw-strip'},strip.map(([i,a,b])=>h('div',null,mwIco(i),h('span',null,h('b',null,a),h('small',null,b)))))));
+  const head=(a,b,id)=>h('div',{class:'mw-head rv'},h('h2',null,a+' ',h('span',null,b)));
+  const services=h('section',{class:'mw-sec',id:'mw-services'},h('div',{class:'mw-w'},head('Our Truck','Services'),
+    h('div',{class:'mw-grid'},svc.map(s=>bg(h('div',{class:'mw-card rv'},mwIco(s.i||'wrench'),h('b',null,s.n),h('p',null,s.d)),ok(s.img),'linear-gradient(180deg,rgba(12,13,16,.35) 0%,rgba(12,13,16,.92) 100%)'))),
+    h('div',{class:'mw-center'},h('a',{class:'mw-btn line',href:tel},'Call about any part'))));
+  const why=[['boxes','Large Inventory'],['users','Knowledgeable Staff'],['shield','ASE Certified Techs'],['parts','Retail & Wholesale'],['brake','Brake Shoes Made In-House'],['home','Family Owned Since 1940']];
+  const whyS=h('section',{class:'mw-sec mw-soft',id:'mw-why'},h('div',{class:'mw-w'},head('Why Truckers','Choose Us'),
+    h('div',{class:'mw-why'},why.map(([i,t])=>h('div',{class:'rv'},mwIco(i),h('b',null,t))))));
+  const f=(n,ph,type)=>h('input',{name:n,placeholder:ph,type:type||'text','aria-label':ph});
+  const sel=(n,ph,opts)=>h('select',{name:n,'aria-label':ph},h('option',{value:''},ph),opts.map(o=>h('option',null,o)));
+  const form=h('form',{class:'mw-form',novalidate:true},f('name','Name'),f('phone','Phone','tel'),f('truck','Truck make & year'),
+    sel('need','What do you need?',['Truck parts','Accessories','Brake shoes','Repair / chassis shop','Tools & supplies','Something else']),
+    h('textarea',{name:'note',placeholder:'Part number or what is going on (optional)','aria-label':'Details',rows:3}),
+    h('button',{type:'submit',class:'mw-btn red'},'Send My Request'),h('p',{class:'mw-form-msg',role:'status'}));
+  form.addEventListener('submit',e=>{ e.preventDefault(); const v=k=>(form.elements[k].value||'').trim(); const msg=form.querySelector('.mw-form-msg');
+    if(!v('name')||!v('phone')){ msg.textContent='Please add your name and phone number.'; return; }
+    const body='Hi '+name+', this is '+v('name')+' ('+v('phone')+'). '+(v('need')?'I need: '+v('need')+'. ':'')+(v('truck')?'Truck: '+v('truck')+'. ':'')+v('note');
+    if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){ location.href='sms:+1'+digits+(/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body); msg.textContent='Opening your text messages...'; }
+    else msg.textContent='Thanks! Call us at '+phoneTxt+' and mention your request, or text it to the same number.'; });
+  const req=h('section',{class:'mw-sec',id:'mw-request'},h('div',{class:'mw-w'},h('div',{class:'mw-req rv'},
+    bg(h('div',{class:'mw-req-pic'}),MW_U('1701637657912-9e23e32155d1')),
+    h('div',{class:'mw-req-t'},h('h2',null,'Need a Part ',h('span',null,'Today?')),h('p',null,'Tell us what you need and we will check stock and call you back.'),
+      h('ul',null,['Retail and wholesale pricing','Parts for light, medium and heavy-duty trucks','Knowledgeable counter staff','Chassis repair shop on site'].map(t=>h('li',null,mwIco('check'),t)))),
+    form)));
+  const hist=h('section',{class:'mw-sec mw-soft',id:'mw-history'},h('div',{class:'mw-w mw-hist'},
+    h('div',{class:'mw-hist-big rv'},h('b',null,'1893'),h('span',null,'Serving the transportation industry for over 130 years')),
+    h('div',{class:'mw-hist-t rv'},h('h2',null,'Built on ',h('span',null,'130+ Years')),
+      h('p',null,'Mutual Wheel started in 1893, when 11 carriage wheel makers in the Quad Cities joined forces. The Engstrom family has owned the company since 1940, and it has grown with the trucking industry ever since.'),
+      h('p',null,'Today we run 11 locations in Iowa and Illinois, with our main warehouse and corporate offices in Moline. Our Moline brake shop produces Top Performance lined brake shoes for tractor-trailer applications.'),
+      h('div',{class:'mw-badges'},h('div',null,mwIco('shield'),h('span',null,h('b',null,'ASE Certified'),'Service technicians')),h('div',null,mwIco('brake'),h('span',null,h('b',null,'Top Performance'),'Brake shoes made in Moline'))))));
+  const steps=[['phone','Call or Send a Request','Tell us the part or the problem.'],['search','We Check Stock','Our counter finds the right part.'],['truck','Pick Up or Drop Off','Grab your part or bring the truck in.'],['check','Back on the Road','Get rolling again fast.']];
+  const how=h('section',{class:'mw-sec'},h('div',{class:'mw-w'},head('How It','Works'),h('div',{class:'mw-steps'},steps.map(([i,t,d],n)=>h('div',{class:'mw-step rv'},h('span',{class:'mw-step-i'},mwIco(i),h('em',null,String(n+1))),h('b',null,t),h('p',null,d))))));
+  const DAYS3=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const visit=h('section',{class:'mw-visit',id:'mw-visit'},h('div',{class:'mw-w'},
+    h('div',{class:'mw-visit-in'},
+      h('div',{class:'mw-store rv'},h('small',{class:'mw-kick'},'Your local store'),h('h2',null,'Mutual Wheel ',h('span',null,'Dubuque')),
+        h('a',{class:'mw-li',href:maps,target:'_blank',rel:'noopener'},mwIco('pin'),addrTxt),h('a',{class:'mw-li',href:tel},mwIco('phone'),phoneTxt),
+        h('div',{class:'mw-li'},mwIco('phone'),'Toll free '+D.tollfree),today?h('div',{class:'mw-li'},mwIco('clock'),'Open today '+today):null,
+        h('div',{class:'mw-hrs'},DAYS3.map((d,i)=>h('div',{class:i===todayIx()?'on':null},h('span',null,d),h('span',null,hours[i]||'Closed')))),
+        h('p',{class:'mw-mgr'},'Store Manager: '+D.manager)),
+      h('div',{class:'mw-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+addrTxt)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))),
+    h('h3',{class:'mw-locs-h'},'All 11 Locations'),
+    h('div',{class:'mw-locs'},D.locs.map(([c,a,p])=>h('div',{class:'mw-loc'+(c.startsWith('Dubuque')?' on':'')},h('b',null,c),a?h('span',null,a):null,p?h('a',{href:'tel:+1'+p.replace(/\D/g,'')},p):null)))));
+  const foot=h('footer',{class:'mw-foot'},h('div',{class:'mw-w mw-foot-in'},
+    h('div',null,h('div',{class:'mw-brand on-dark'},logo?h('img',{src:logo,alt:name}):[mwIco('wheel'),h('span',{class:'mw-wm'},h('b',null,'Mutual Wheel'),h('small',null,'The Truck Experts'))]),h('p',null,'Truck parts, accessories and service since 1893.')),
+    h('div',null,h('b',null,'Services'),svc.slice(0,6).map(s=>h('span',null,s.n))),
+    h('div',null,h('b',null,'Dubuque Store'),h('span',null,addrTxt),h('a',{href:tel},phoneTxt),h('span',null,'Mon-Fri '+hours[0]),h('span',null,'Sat '+hours[5]))),
+    h('div',{class:'mw-foot-bar'},h('div',{class:'mw-w'},'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'mw'},nav,hero,services,whyS,req,hist,how,visit,foot);
+}
 
 const CL_ICO={
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
