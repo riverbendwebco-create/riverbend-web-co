@@ -2701,7 +2701,7 @@ function realty(C){
   const licNo=(String(C.x.license||'').match(/#\s*([A-Z0-9-]+)/)||[])[1]||'';
   const kwLogo=okUrl(C.x.kwLogo);
   /* official Market Center DBA logo goes in x.kwLogo (file from KW Connect, unmodified); until then a labeled placeholder */
-  const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),title:kwLogo?'':'Placeholder: official '+firm+' logo from KW Connect'},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):[h('b',null,firm||'Keller Williams'),h('small',null,'Official logo placeholder')]);
+  const kwMark=(cls)=>h('span',{class:'rt-kw '+(cls||'')+(kwLogo?'':' ph'),},kwLogo?h('img',{src:kwLogo,alt:firm||'Keller Williams'}):(()=>{ const f=firm||'Keller Williams Legacy Group'; const m=f.match(/^(Keller Williams)\s+(.+)$/i); return m?[h('b',null,m[1]),h('small',null,m[2])]:[h('b',null,f)]; })());
   const pTitle=person+', REALTOR\u00ae';
   const photo=(u=>/\/gill-[\w-]*-bw\.jpg$/.test(u)?'https://riverbendwebco.com/demo/img/gill-4k-color.jpg':u)(okUrl(C.x.photo));
   const site=okUrl(C.x.searchUrl)||'';
@@ -2734,13 +2734,16 @@ function realty(C){
   const inp=(type,ph,req,extra)=>h('input',Object.assign({type,placeholder:ph||''},req?{required:true}:{},extra||{}));
   const sel=(opts,extra)=>h('select',extra||null,opts.map(o=>h('option',{value:o},o)));
   const toggles=(list,multi)=>{ const box=h('div',{class:'rt-tg'}); list.forEach(t=>{ const b=h('button',{type:'button','aria-pressed':'false'},t); b.onclick=()=>{ if(!multi) box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true'); }; box.append(b); }); box.val=()=>[...box.querySelectorAll('[aria-pressed="true"]')].map(b=>b.textContent).join(', '); return box; };
+  /* TCPA consent: unchecked, required, right above the submit button on every form that collects a phone number */
+  const consent=()=>h('label',{class:'rt-consent'},h('input',{type:'checkbox',required:true,'data-consent':'1'}),h('span',null,'By checking this box and submitting, you agree to receive calls and text messages from '+((typeof C.x.legalName==='string'&&C.x.legalName)||name.replace(/\s+Real Estate$/i,''))+' with '+(firm||'Keller Williams Legacy Group')+' regarding your real estate inquiry. Msg & data rates may apply. Reply STOP to opt out.'));
+  const consentOk=f=>{ const c=f.querySelector('[data-consent]'); return !c||c.checked; };
   /* a form shown one step at a time, with a progress bar */
   const stepper=(title,panels,onDone,doneMsg)=>{
     let i=0; const bar=h('i'); const count=h('span',{class:'rt-sp-n'}); const err=h('p',{class:'rt-err',role:'alert'});
     const back=h('button',{type:'button',class:'rt-btn outline'},'Back'), next=h('button',{type:'submit',class:'rt-btn dark'},'Next');
     const done=h('div',{class:'rt-done',hidden:true},h('b',null,'Thanks, your message is ready to send.'),h('p',null,doneMsg));
     const show=()=>{ panels.forEach((p,k)=>p.hidden=k!==i); bar.style.width=((i+1)/panels.length*100)+'%'; count.textContent='Step '+(i+1)+' of '+panels.length; back.hidden=i===0; next.textContent=i===panels.length-1?'Send':'Next'; err.textContent=''; };
-    const form=h('form',{class:'rt-sp',novalidate:true,onsubmit:e=>{ e.preventDefault(); const bad=[...panels[i].querySelectorAll('[required]')].find(x=>!String(x.value).trim()); if(bad){ err.textContent='Please fill in the required fields.'; bad.focus(); return; } if(i<panels.length-1){ i++; show(); return; } onDone(); form.hidden=true; done.hidden=false; }},
+    const form=h('form',{class:'rt-sp',novalidate:true,onsubmit:e=>{ e.preventDefault(); const bad=[...panels[i].querySelectorAll('[required]')].find(x=>x.type==='checkbox'?!x.checked:!String(x.value).trim()); if(bad){ err.textContent=bad.type==='checkbox'?'Please check the consent box to continue.':'Please fill in the required fields.'; bad.focus(); return; } if(i<panels.length-1){ i++; show(); return; } onDone(); form.hidden=true; done.hidden=false; }},
       h('div',{class:'rt-sp-top'},h('b',null,title),count),h('div',{class:'rt-sp-bar'},bar),...panels,err,h('div',{class:'rt-sp-nav'},back,next));
     back.onclick=()=>{ if(i>0){ i--; show(); } };
     show(); return h('div',{class:'rt-tool rv'},form,done);
@@ -2807,7 +2810,7 @@ function realty(C){
     h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Where would you like to live?'),qTowns),
     h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'What are you looking for?'),h('div',{class:'rt-fg'},field('Price range',qPrice,true),field('Bedrooms',qBeds),field('Bathrooms',qBaths)),field('Anything else?',qNote,true)),
     h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'When would you like to move?'),qWhen,h('p',{class:'rt-q'},'Are you pre-approved for a loan?'),qLoan),
-    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Where should '+first+' send matching homes?'),h('div',{class:'rt-fg'},field('Name',qName),field('Phone',qPhone),field('Email',qMail,true)))],
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Where should '+first+' send matching homes?'),h('div',{class:'rt-fg'},field('Name',qName),field('Phone',qPhone),field('Email',qMail,true)),consent())],
     ()=>send('Home search request from '+qName.value,['I am looking for a home.','Towns: '+(qTowns.val()||'Not sure'),'Price range: '+qPrice.value,'Bedrooms: '+qBeds.value+'  Bathrooms: '+qBaths.value,'Moving: '+(qWhen.val()||'Not sure'),'Pre-approved: '+(qLoan.val()||'Not sure'),qNote.value?'Notes: '+qNote.value:'','',qName.value,qPhone.value,qMail.value]),
     first+' will reach out with homes that match what you are looking for.');
   search.id='r-search';
@@ -2848,7 +2851,7 @@ function realty(C){
   const value=stepper('What is my home worth?',[
     h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Which home?'),h('div',{class:'rt-fg'},field('Address',vAddr,true),field('City',vCity,true)),h('p',{class:'rt-q'},'Type of home'),vType),
     h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'Tell '+first+' a little about it'),h('div',{class:'rt-fg'},field('Bedrooms',vBeds),field('Bathrooms',vBaths),field('Square feet',vSq,true)),h('p',{class:'rt-q'},'Condition'),vCond),
-    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'When might you sell?'),vWhen,h('div',{class:'rt-fg'},field('Name',vName),field('Phone',vPhone),field('Email',vMail,true)))],
+    h('div',{class:'rt-sp-p'},h('p',{class:'rt-q'},'When might you sell?'),vWhen,h('div',{class:'rt-fg'},field('Name',vName),field('Phone',vPhone),field('Email',vMail,true)),consent())],
     ()=>send('Home value request: '+vAddr.value,['Please send me a free estimate of what my home is worth.','Address: '+vAddr.value+', '+vCity.value,'Type: '+(vType.val()||'Not given'),'Bedrooms: '+vBeds.value+'  Bathrooms: '+vBaths.value+(vSq.value?'  About '+vSq.value+' sq ft':''),'Condition: '+(vCond.val()||'Not given'),'Selling: '+(vWhen.val()||'Not sure'),'',vName.value,vPhone.value,vMail.value]),
     first+' will look at recent sales near you and get back to you with an estimate.');
   const sell=h('section',{class:'rt-sec gray',id:'r-sell'},h('div',{class:'rt-wrap'},
@@ -2889,8 +2892,9 @@ function realty(C){
 
   /* ---------- contact ---------- */
   const fName=inp('text','First Name *',true,{autocomplete:'given-name'}), lName=inp('text','Last Name',false,{autocomplete:'family-name'}), fMail=inp('email','Email',false,{autocomplete:'email'}), fPhone=inp('tel','Phone *',true,{autocomplete:'tel'}), fMsg=h('textarea',{rows:'4',placeholder:'Message'});
-  const form=h('form',{class:'rt-form',onsubmit:e=>{ e.preventDefault(); send('Website message from '+(fName.value||'a visitor'),[fMsg.value,'',[fName.value,lName.value].join(' ').trim(),fPhone.value,fMail.value]); }},
-    h('div',{class:'rt-f2'},fName,lName),h('div',{class:'rt-f2'},fMail,fPhone),fMsg,h('button',{type:'submit',class:'rt-btn dark'},'Send'));
+  const cErr=h('p',{class:'rt-err',role:'alert'});
+  const form=h('form',{class:'rt-form',onsubmit:e=>{ e.preventDefault(); if(!consentOk(form)){ cErr.textContent='Please check the consent box to send.'; return; } cErr.textContent=''; send('Website message from '+(fName.value||'a visitor'),[fMsg.value,'',[fName.value,lName.value].join(' ').trim(),fPhone.value,fMail.value]); }},
+    h('div',{class:'rt-f2'},fName,lName),h('div',{class:'rt-f2'},fMail,fPhone),fMsg,consent(),cErr,h('button',{type:'submit',class:'rt-btn dark'},'Send'));
   const contact=h('section',{class:'rt-sec',id:'r-contact'},h('div',{class:'rt-wrap rt-contact'},
     h('div',{class:'rv'},h('span',{class:'rt-kick'},'Contact'),h('h2',null,'Your '+(S(C.x.areaName)||'local')+' REALTOR® for buying and selling'),
       h('ul',{class:'rt-cl'},
@@ -2904,9 +2908,9 @@ function realty(C){
     const tp=sel(['Buying a home','Selling a home','Buying and selling','What is my home worth?','Something else']); if(topic) tp.value=topic;
     const dt=inp('date','',false); const tm=sel(['Any time','Morning','Afternoon','Evening']); const how=sel(['In person','Phone call','Video call']); const msg=h('textarea',{rows:'3',placeholder:'Anything '+first+' should know?'});
     const ok=h('p',{class:'rt-done-line',hidden:true},'Thanks! Your request is ready to send, and '+first+' will confirm a time with you.');
-    const f=h('form',{class:'rt-consult-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!n.value.trim()||!ph.value.trim()){ ok.hidden=false; ok.textContent='Please add your name and phone number.'; return; } send('Consultation request from '+n.value,['I would like to schedule a consultation.','Topic: '+tp.value,'Preferred day: '+(dt.value||'Flexible')+', '+tm.value,'Meet by: '+how.value,msg.value?'Notes: '+msg.value:'','',n.value,ph.value,em.value]); ok.hidden=false; ok.textContent='Thanks! Your request is ready to send, and '+first+' will confirm a time with you.'; }},
+    const f=h('form',{class:'rt-consult-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!n.value.trim()||!ph.value.trim()){ ok.hidden=false; ok.textContent='Please add your name and phone number.'; return; } if(!consentOk(f)){ ok.hidden=false; ok.textContent='Please check the consent box to send.'; return; } send('Consultation request from '+n.value,['I would like to schedule a consultation.','Topic: '+tp.value,'Preferred day: '+(dt.value||'Flexible')+', '+tm.value,'Meet by: '+how.value,msg.value?'Notes: '+msg.value:'','',n.value,ph.value,em.value]); ok.hidden=false; ok.textContent='Thanks! Your request is ready to send, and '+first+' will confirm a time with you.'; }},
       h('div',{class:'rt-fg'},field('Name',n),field('Phone',ph),field('Email',em,true),field('What can '+first+' help with?',tp,true),field('Preferred day',dt),field('Time of day',tm),field('Meet by',how,true),field('Notes',msg,true)),
-      h('button',{type:'submit',class:'rt-btn gold'},'Request My Consultation'),ok);
+      consent(),h('button',{type:'submit',class:'rt-btn gold'},'Request My Consultation'),ok);
     return h('section',{class:'rt-sec navy',id},h('div',{class:'rt-wrap rt-consult'},
       h('div',{class:'rv'},h('span',{class:'rt-kick'},'Free consultation'),h('h2',null,'Schedule a consultation with '+person),h('p',{class:'rt-firm-line'},firm),
         h('p',{class:'rt-cp'},'Pick a day and time that works for you. No pressure, just clear answers about your next move.'),
@@ -2920,9 +2924,8 @@ function realty(C){
     h('div',{class:'rv'},h('span',{class:'rt-kick'},'Home valuation'),h('h2',null,'What’s my home worth?'),
       h('p',{class:'rt-cp'},first+' will compare your home with recent sales nearby and send you a free, no-obligation estimate.'),
       h('ul',{class:'rt-checks'},['Based on real local sales','Tips to sell for more','Expert advice, not a robot number'].map(t=>h('li',null,t)))),
-    h('form',{class:'rt-tool rt-hv-f rv',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!qa.value.trim()||!qn.value.trim()||!qp.value.trim()){ qok.hidden=false; qok.textContent='Please add the address, your name and phone.'; return; } send('Home value request: '+qa.value,['Please send me a free estimate of what my home is worth.','Address: '+qa.value,'',qn.value,qp.value,qe.value]); qok.hidden=false; qok.textContent='Thanks! '+first+' will get back to you with your estimate.'; }},
-      h('div',{class:'rt-sp-top'},h('b',null,'Get your free home valuation')),field('Address',qa,true),h('div',{class:'rt-fg'},field('Name',qn),field('Phone',qp),field('Email',qe,true)),h('button',{type:'submit',class:'rt-btn gold'},'Get My Home Value'),qok,
-      h('p',{class:'rt-fine'},'By submitting, you agree to be contacted by '+person+', '+firm+', about your request.'))));
+    h('form',{class:'rt-tool rt-hv-f rv',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!qa.value.trim()||!qn.value.trim()||!qp.value.trim()){ qok.hidden=false; qok.textContent='Please add the address, your name and phone.'; return; } if(!consentOk(e.target)){ qok.hidden=false; qok.textContent='Please check the consent box to send.'; return; } send('Home value request: '+qa.value,['Please send me a free estimate of what my home is worth.','Address: '+qa.value,'',qn.value,qp.value,qe.value]); qok.hidden=false; qok.textContent='Thanks! '+first+' will get back to you with your estimate.'; }},
+      h('div',{class:'rt-sp-top'},h('b',null,'Get your free home valuation')),field('Address',qa,true),h('div',{class:'rt-fg'},field('Name',qn),field('Phone',qp),field('Email',qe,true)),consent(),h('button',{type:'submit',class:'rt-btn gold'},'Get My Home Value'),qok)));
 
   /* ---------- home: featured listings (live MLS listings once IDX is connected) ---------- */
   const LST=A('listings').filter(l=>l&&S(l.a)&&okUrl(l.p)).slice(0,6);
@@ -2949,14 +2952,47 @@ function realty(C){
       h('div',{class:'rt-smap'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&z=11&output=embed',title:'Map of the search area',loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))),
     h('div',{class:'rt-alert rv'},h('div',null,h('span',{class:'rt-kick'},'Saved search'),h('h3',null,'Get new listings before anyone else'),h('p',null,'Save this search and '+first+' will send you new homes that match, price drops and open houses.')),
       h('form',{class:'rt-alert-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!aN.value.trim()||!aE.value.trim()){ aOk.hidden=false; aOk.textContent='Please add your name and email.'; return; } send('Saved search and listing alerts for '+aN.value,['Please send me listing alerts ('+aF.value.toLowerCase()+') for this search:'].concat(filters(),['',aN.value,aE.value])); aOk.hidden=false; aOk.textContent='Saved! You will start getting matching homes by email.'; }},
-        h('div',{class:'rt-fg'},field('Name',aN),field('Email',aE),field('How often',aF,true)),h('button',{type:'submit',class:'rt-btn dark'},'Save Search & Get Alerts'),aOk))));
+        h('div',{class:'rt-fg'},field('Name',aN),field('Email',aE),field('How often',aF,true)),h('button',{type:'submit',class:'rt-btn dark'},'Save Search & Get Alerts'),h('p',{class:'rt-unsub dark'},'Unsubscribe at any time. ',h('a',{href:'#privacy'},'View our Privacy Policy'),'.'),aOk))));
 
   /* ---------- legal pages ---------- */
-  const legalPage=(title,paras)=>h('section',{class:'rt-sec'},h('div',{class:'rt-wrap rt-legalpg'},paras.map(t=>h('p',null,t))));
+  const legalPage=(title,secs)=>h('section',{class:'rt-sec'},h('div',{class:'rt-wrap rt-legalpg'},h('p',{class:'rt-legal-upd'},'Last updated: '+new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})),
+    secs.map(([hd,...ps])=>[hd?h('h2',null,hd):null,ps.map(t=>Array.isArray(t)?h('ul',null,t.map(x=>h('li',null,x))):h('p',null,t))])));
   const today=new Date().getFullYear();
-  const privacy=legalPage('Privacy Policy',['This website is operated by '+person+', '+firm+'. When you send a form on this site, your name, phone, email and the details you enter are used only to answer your request and to send you the information you asked for, such as listing alerts or a home value estimate.','We do not sell your personal information. You can ask to be removed from emails or texts at any time by replying STOP or asking '+first+' directly.','This site may use basic analytics and cookies to understand how visitors use it. Map and listing features may be provided by third parties with their own privacy policies.','Questions about this policy? Contact '+person+', '+firm+', '+office+'.']);
-  const terms=legalPage('Terms of Use',['The information on this website is provided for general information only and is not legal, tax or financial advice. Home values, payment estimates and market information are estimates and are not guaranteed.','Listing information is deemed reliable but not guaranteed and should be independently verified. Prices, availability and details can change without notice.','Using this website does not create an agency relationship. An agency relationship with '+person+', '+firm+', begins only when agreed to in writing.','All content on this site belongs to '+person+' or is used with permission.']);
-  const idx=legalPage('MLS / IDX Disclaimer',['The listing data on this website will come in part from the Internet Data Exchange (IDX) program of the East Central Iowa Association of REALTORS\u00ae MLS once the feed is connected. Listings held by brokerage firms other than '+firm+' are marked with the listing broker’s name.','IDX information is provided exclusively for consumers’ personal, non-commercial use and may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing.','Information is deemed reliable but is not guaranteed accurate by the MLS or '+firm+'. Data last updated: '+today+'.']);
+  const who=person+', REALTOR®, with '+firm;
+  const where=firm+', '+[offAddr,office].filter(Boolean).join(', ');
+  const reach=[C.phoneTxt,C.email].filter(Boolean).join(' or ');
+  const privacy=legalPage('Privacy Policy',[
+    [null,'This Privacy Policy explains how '+who+' ("we," "us") collects, uses and protects information when you use this website. By using the site, you agree to this policy.'],
+    ['Information we collect','When you fill out a form on this site (home valuation, consultation, home search, property alerts or contact), we collect the information you enter, such as:',['Your name, email address and phone number','Property details, such as an address you want valued','Your home search preferences, timeline and any notes you send'],'We may also collect basic technical information automatically, such as browser type, pages visited and general location, through cookies and similar tools.'],
+    ['How we use your information',['To respond to your inquiry and provide the real estate services you request','To send home valuations, listing alerts, market updates and other information you ask for','To schedule and confirm consultations and showings','To improve this website and our services','To comply with legal, licensing and brokerage requirements']],
+    ['Calls and text messages','If you check the consent box on a form, you agree to receive calls and text messages from '+person+' with '+firm+' about your real estate inquiry, which may include automated messages. Consent is not a condition of buying or selling property. Msg & data rates may apply. Reply STOP to opt out at any time, or HELP for help.'],
+    ['Email','You can unsubscribe from marketing emails at any time by using the unsubscribe link in any email or by contacting us. We will honor your request promptly.'],
+    ['How we share information','We do not sell your personal information. We may share it only:',['With '+firm+' and its affiliated Keller Williams Realty systems used to manage client relationships and transactions','With service providers who help us operate this site or send messages, who may use it only for that purpose','With other parties to your transaction (for example, a lender, title company or inspector) when you ask us to','When required by law, regulation or a valid legal request']],
+    ['Third-party services','This site may use third-party tools such as maps, listing (IDX) data providers and analytics. Those providers have their own privacy policies, and we are not responsible for their practices.'],
+    ['Cookies','We may use cookies to remember your preferences and understand how visitors use the site. You can turn off cookies in your browser settings, though some features may not work as intended.'],
+    ['Data security','We use reasonable safeguards to protect your information, but no method of transmission over the internet is completely secure.'],
+    ['Children','This site is not intended for children under 13, and we do not knowingly collect information from them.'],
+    ['Your choices','You may ask us to update or delete the information you have given us, or to stop contacting you, by reaching out at '+(reach||'the contact information below')+'.'],
+    ['Changes to this policy','We may update this policy from time to time. Changes take effect when posted on this page.'],
+    ['Contact',who+'. Office: '+where+'.'+(reach?' Reach us at '+reach+'.':'')]]);
+  const terms=legalPage('Terms of Use',[
+    [null,'These Terms of Use apply to your use of this website, operated by '+who+'. By using the site, you agree to these terms.'],
+    ['Information only','Content on this site, including home value estimates, payment calculators and market information, is for general information only. It is not an appraisal and is not legal, tax, mortgage or financial advice. Estimates are not guaranteed.'],
+    ['Listing information','Property listings and data are deemed reliable but not guaranteed and should be independently verified. Listings may be sold, withdrawn or changed without notice. Square footage, acreage, school and tax information should be confirmed.'],
+    ['No agency relationship','Using this website, sending a form or receiving information does not create an agency or brokerage relationship. A brokerage relationship with '+firm+' begins only when you sign a written agreement as required by Iowa law.'],
+    ['Brokerage','Each Office Is Independently Owned and Operated. '+person+' is licensed to practice real estate in the State of Iowa.'],
+    ['Fair housing','We are committed to the letter and spirit of the federal Fair Housing Act and the Iowa Civil Rights Act. We do not discriminate on the basis of race, color, religion, sex, disability, familial status, national origin, sexual orientation, gender identity or any other protected class.'],
+    ['Acceptable use','You agree not to copy, scrape or resell listing data, interfere with the site, or use it for any unlawful purpose. IDX listing data may be used only for your personal, non-commercial use.'],
+    ['Third-party links','This site may link to other websites, such as listing search tools or maps. We are not responsible for the content or practices of those sites.'],
+    ['Limitation of liability','To the extent allowed by law, '+person+' and '+firm+' are not liable for any loss arising from your use of this site or reliance on its content.'],
+    ['Governing law','These terms are governed by the laws of the State of Iowa.'],
+    ['Contact','Questions about these terms? Contact '+who+', '+where+'.']]);
+  const idx=legalPage('MLS / IDX Disclaimer',[
+    [null,'IDX/MLS listing data and attribution provided by the East Central Iowa Association of REALTORS® (ECIAAR). Information deemed reliable but not guaranteed.'],
+    ['About this data','Listing information on this site comes from the Internet Data Exchange (IDX) program of the MLS. Listings held by brokerage firms other than '+firm+' are marked with the name of the listing brokerage.'],
+    ['Personal use only','IDX information is provided exclusively for consumers’ personal, non-commercial use and may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing.'],
+    ['Accuracy','All information, including square footage, lot size, school districts and taxes, should be independently verified. Data is updated regularly, but listings may change or no longer be available.'],
+    ['Copyright','© '+today+' East Central Iowa Association of REALTORS®. All rights reserved.']]);
 
   /* ---------- footer on every page: brokerage, licensing and fair housing ---------- */
   const eho=()=>{ const d=h('span',{class:'rt-eho',role:'img','aria-label':'Equal Housing Opportunity'}); d.innerHTML='<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 22L24 8l18 14"/><path d="M11 19v21h26V19"/><path d="M17 26h14M17 32h14" stroke-width="3"/></svg><small>EQUAL HOUSING<br>OPPORTUNITY</small>'; return d; };
@@ -2972,12 +3008,12 @@ function realty(C){
       h('div',{class:'rt-comply-t'},
         h('p',{class:'rt-pair'},h('b',null,pTitle),h('span',null,' | '),h('b',null,firm)),
         h('p',null,'Each Office Is Independently Owned and Operated.'),
-        h('p',null,'Licensed in the State of Iowa',licMore?h('span',{class:'rt-lic-more'},', '+licMore):h('span',{class:'rt-ph','data-edit':'licensedStates'},' [Add Illinois or Wisconsin here if licensed]'),licNo?'. Iowa license #'+licNo+'.':'.'),
-        h('p',null,'Main office: '+firm+', ',offAddr?h('span',null,offAddr+', '):h('span',{class:'rt-ph'},'[Office street address], '),office,'  \u00b7  Office: ',offPhone?h('a',{href:'tel:+1'+offPhone.replace(/\D/g,'').slice(-10)},offPhone):h('span',{class:'rt-ph'},'[Main office phone]'),'  \u00b7  '+first+' direct: ',C.tel?h('a',{href:C.tel},C.phoneTxt):h('span',{class:'rt-ph'},'[Direct phone]')),
+        /* Licensing line. To add Illinois or Wisconsin later, set x.licensedStates (for example "Illinois and Wisconsin") and it appends here. */
+        h('p',null,'Licensed to practice real estate in the State of Iowa'+(licMore?' and the State of '+licMore:'')+'.'+(licNo?' Iowa license #'+licNo+'.':'')),
+        h('p',null,'Main office: '+firm+', ',offAddr?h('span',null,offAddr+', '):null,office,offPhone?h('span',{class:'rt-offphone'},'  \u00b7  Office: ',h('a',{href:'tel:+1'+offPhone.replace(/\D/g,'').slice(-10)},offPhone)):h('span',{class:'rt-offphone','data-slot':'officePhone'}),'  \u00b7  '+first+' direct: ',C.tel?h('a',{href:C.tel},C.phoneTxt):null),
         h('p',null,'\u00a9 '+today+' '+person+', '+firm+'.  ',h('a',{href:'#privacy'},'Privacy Policy'),'  \u00b7  ',h('a',{href:'#terms'},'Terms of Use'),'  \u00b7  ',h('a',{href:'#idx'},'MLS / IDX Disclaimer'))),
       h('div',{class:'rt-comply-l'},ehoLogo?h('img',{class:'rt-clogo',src:ehoLogo,alt:'Equal Housing Opportunity'}):eho(),realtorLogo?h('img',{class:'rt-clogo',src:realtorLogo,alt:'REALTOR\u00ae'}):h('span',{class:'rt-realtor',role:'img','aria-label':'REALTOR'},h('b',null,'R'),h('small',null,'REALTOR\u00ae')))),
-    h('div',{class:'rt-idxblock',id:'r-idx-note'},h('b',null,'MLS / IDX data disclaimer'),
-      idxText?h('p',null,idxText):h('p',null,h('span',{class:'rt-ph'},'Reserved for East Central Iowa Association of REALTORS\u00ae MLS/IDX attribution and data disclaimers. This text is added when the Search Homes bar is connected to an active IDX feed.')))));
+    h('p',{class:'rt-idxblock',id:'r-idx-note'},idxText||'IDX/MLS listing data and attribution provided by the East Central Iowa Association of REALTORS\u00ae (ECIAAR). Information deemed reliable but not guaranteed.')));
 
   /* text button that stays on screen on phones */
   const fab=sms?h('a',{class:'rt-fab',href:sms+'?&body='+encodeURIComponent('Hi '+first+', I found you on your website. ')},ico('chat',18,''),'Text '+first):null;
@@ -2996,12 +3032,12 @@ function realty(C){
   const guidesHome=G2.length?h('section',{class:'rt-sec gray'},h('div',{class:'rt-wrap'},head('Neighborhoods','Our local market guides'),
     h('div',{class:'rt-mguides'},G2.slice(0,4).map((g,i)=>h('a',{class:'rt-mguide rv',href:'#neighborhoods'},h('img',{src:IMGS[i%4],alt:'',loading:'lazy'}),h('div',null,h('h3',null,S(g.n)),h('span',null,'Learn More',ico('arrow',13,'')))))))):null;
   const trust=h('section',{class:'rt-sec'},h('div',{class:'rt-wrap rt-bio'},photo?h('img',{class:'rt-bio-ph rv',src:photo,alt:pTitle+', '+firm}):null,
-    h('div',{class:'rv'},h('span',{class:'rt-kick'},'Team lead'),h('h2',null,pTitle),h('p',{class:'rt-firm-line'},firm),h('p',{class:'rt-bio-t'},String(C.about||'').split('\n')[0]),
+    h('div',{class:'rv'},h('span',{class:'rt-kick'},'REALTOR\u00ae'),h('h2',null,pTitle),h('p',{class:'rt-firm-line'},firm),h('p',{class:'rt-bio-t'},String(C.about||'').split('\n')[0]),
       h('ul',{class:'rt-trust'},[['Trusted agent','Clear answers and honest advice at every step.'],['Local expert','Lives in the '+areaTxt+' area and knows the neighborhoods.'],['Prompt response','Calls, texts and emails answered fast.']].map(([t,d])=>h('li',null,h('b',null,t),h('span',null,d)))),
       btn('dark',null,'Schedule a Consultation',false,go('r-consult')))));
   const alN=inp('email','Email address *',true), alOk=h('p',{class:'rt-done-line',hidden:true});
   const alerts=h('section',{class:'rt-alerts'},h('div',{class:'rt-wrap rt-alerts-in rv'},h('div',null,h('h2',null,'Sign up for property alerts & more'),h('p',null,'Get new listings, open houses and market updates from '+first+'.')),
-    h('form',{class:'rt-alerts-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!alN.value.trim()){ alOk.hidden=false; alOk.textContent='Please add your email.'; return; } send('Property alerts sign-up',['Please send me property alerts and market updates.','',alN.value]); alOk.hidden=false; alOk.textContent='Thank you! You are on the list.'; }},alN,h('button',{type:'submit',class:'rt-btn gold'},'Submit'),alOk)));
+    h('form',{class:'rt-alerts-f',novalidate:true,onsubmit:e=>{ e.preventDefault(); if(!alN.value.trim()){ alOk.hidden=false; alOk.textContent='Please add your email.'; return; } send('Property alerts sign-up',['Please send me property alerts and market updates.','',alN.value]); alOk.hidden=false; alOk.textContent='Thank you! You are on the list.'; }},alN,h('button',{type:'submit',class:'rt-btn gold'},'Submit'),h('p',{class:'rt-unsub'},'Unsubscribe at any time. ',h('a',{href:'#privacy'},'View our Privacy Policy'),'.'),alOk)));
   const workWith=h('section',{class:'rt-work'},h('div',{class:'rt-wrap rt-work-in rv'},h('span',{class:'rt-kick'},'Work with us'),h('h2',null,'Ready to make your move?'),h('p',null,'Whether you are buying, selling or just curious about the market, '+first+' is here to help.'),
     h('div',{class:'rt-row'},h('a',{class:'rt-btn gold',href:'#about'},'Contact Us'),btn('line',null,'Schedule a Consultation',false,go('r-consult')))));
   const homePg=h('div',{class:'rt-pg','data-pg':''},hero,areaPanels,whoBand,featured,h('section',{class:'rt-best'},bestHead,cards),guidesHome,proof,homeValue,trust,alerts,workWith);
