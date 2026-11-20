@@ -1325,9 +1325,7 @@ body.t-mt{background:#fff}
 .m2-rail.roll{overflow:hidden;scroll-snap-type:none;padding:0 0 10px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
 .m2-track{display:flex;width:max-content;animation:m2Roll 60s linear infinite;padding-top:8px}
 .m2-track .m2-tile{margin-right:18px}
-.m2-rail.roll:hover .m2-track,.m2-track.hold{animation-play-state:paused}
 @keyframes m2Roll{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.m2-track{animation:none}.m2-rail.roll{overflow-x:auto}}
 .m2-slide{background-position:center 60%}
 .m2-sheet{position:fixed;inset:0;z-index:200;background:rgba(10,10,10,.55);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
 .m2-sheet[hidden],.m2-lb[hidden]{display:none}
@@ -6814,9 +6812,7 @@ function mountaintop2(C){
   const rail=h('div',{class:'m2-rail roll'}), track=h('div',{class:'m2-track'}); rail.append(track);
   const mkTiles=f=>MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
     return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); });
-  const drawS=f=>{ const a=mkTiles(f), b=mkTiles(f); b.forEach(t=>{ t.setAttribute('aria-hidden','true'); t.tabIndex=-1; }); track.replaceChildren(...a,...b); track.style.animationDuration=(a.length*6)+'s'; };
-  let rt0=0; const holdR=()=>{ track.classList.add('hold'); clearTimeout(rt0); rt0=setTimeout(()=>track.classList.remove('hold'),3500); };
-  rail.addEventListener('touchstart',holdR,{passive:true});
+  const drawS=f=>{ const a=mkTiles(f), b=mkTiles(f); b.forEach(t=>{ t.setAttribute('aria-hidden','true'); t.tabIndex=-1; }); track.replaceChildren(...a,...b); track.style.animationDuration=(a.length*2.6)+'s'; };
   const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); }; return b; }));
   drawS('All');
   const railNav=d=>()=>rail.scrollBy({left:d*rail.clientWidth*.8,behavior:'smooth'});

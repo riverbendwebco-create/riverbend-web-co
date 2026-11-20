@@ -2470,9 +2470,7 @@ function mountaintop2(C){
   const rail=h('div',{class:'m2-rail roll'}), track=h('div',{class:'m2-track'}); rail.append(track);
   const mkTiles=f=>MT.surfaces.filter(s=>f==='All'||s[1]===f).map(sv=>{ const [n,t]=sv; const ph=SP(n); const i=MT.surfaces.indexOf(sv);
     return h('button',{type:'button',class:'m2-tile',onclick:()=>openS(sv)},h('span',{class:'m2-tile-ph sw'+i,style:ph?'background-image:url("'+ph+'")':null}),h('span',{class:'m2-tile-c'},h('small',null,t),h('b',null,n),h('em',null,'View details',arrow()))); });
-  const drawS=f=>{ const a=mkTiles(f), b=mkTiles(f); b.forEach(t=>{ t.setAttribute('aria-hidden','true'); t.tabIndex=-1; }); track.replaceChildren(...a,...b); track.style.animationDuration=(a.length*6)+'s'; };
-  let rt0=0; const holdR=()=>{ track.classList.add('hold'); clearTimeout(rt0); rt0=setTimeout(()=>track.classList.remove('hold'),3500); };
-  rail.addEventListener('touchstart',holdR,{passive:true});
+  const drawS=f=>{ const a=mkTiles(f), b=mkTiles(f); b.forEach(t=>{ t.setAttribute('aria-hidden','true'); t.tabIndex=-1; }); track.replaceChildren(...a,...b); track.style.animationDuration=(a.length*2.6)+'s'; };
   const chips=h('div',{class:'m2-chips',role:'tablist'},['All','Natural','Engineered','Fabricated'].map((f,i)=>{ const b=h('button',{type:'button',class:i?'':'on'},f); b.onclick=()=>{ chips.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b)); drawS(f); }; return b; }));
   drawS('All');
   const railNav=d=>()=>rail.scrollBy({left:d*rail.clientWidth*.8,behavior:'smooth'});

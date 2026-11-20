@@ -1078,9 +1078,7 @@ body.t-mt{background:#fff}
 .m2-rail.roll{overflow:hidden;scroll-snap-type:none;padding:0 0 10px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
 .m2-track{display:flex;width:max-content;animation:m2Roll 60s linear infinite;padding-top:8px}
 .m2-track .m2-tile{margin-right:18px}
-.m2-rail.roll:hover .m2-track,.m2-track.hold{animation-play-state:paused}
 @keyframes m2Roll{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.m2-track{animation:none}.m2-rail.roll{overflow-x:auto}}
 .m2-slide{background-position:center 60%}
 .m2-sheet{position:fixed;inset:0;z-index:200;background:rgba(10,10,10,.55);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px}
 .m2-sheet[hidden],.m2-lb[hidden]{display:none}
