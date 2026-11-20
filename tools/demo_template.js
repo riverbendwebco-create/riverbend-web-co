@@ -2451,7 +2451,14 @@ function mountaintop2(C){
     h('nav',{class:'m2-mlinks'},links()));
   /* hero */
   const slides=[h('div',{class:'m2-slide on',style:'background-image:url("https://riverbendwebco.com/demo/img/mt-hero.jpg")'})];
-  const hero=h('section',{class:'m2-hero'},h('div',{class:'m2-hero-media'},slides),
+  const HR=MT.reviews; let hi=0;
+  const hq=h('blockquote',{class:'in'},HR[0][0]), hn=h('cite',null,HR[0][1]);
+  const hdots=HR.map((_,i)=>h('i',{class:i?null:'on'}));
+  const showHq=i=>{ hdots[hi].classList.remove('on'); hi=(i+HR.length)%HR.length; hdots[hi].classList.add('on'); hq.classList.remove('in'); hn.classList.remove('in'); void hq.offsetWidth; hq.textContent=HR[hi][0]; hn.textContent=HR[hi][1]; hq.classList.add('in'); hn.classList.add('in'); };
+  const ht=setInterval(()=>{ if(!hq.isConnected){clearInterval(ht);return;} showHq(hi+1); },5000);
+  const hrev=h('div',{class:'m2-hrev-wrap'},h('div',{class:'m2-w'},h('figure',{class:'m2-hrev','aria-live':'polite'},
+    h('p',{class:'m2-hrev-k'},h('span',{class:'m2-hrev-q'},'\u201C'),'What our clients say'),hq,hn,h('div',{class:'m2-hrev-dots'},hdots))));
+  const hero=h('section',{class:'m2-hero'},h('div',{class:'m2-hero-media'},slides),hrev,
     h('div',{class:'m2-w m2-hero-in'},
       h('p',{class:'m2-eyebrow light'},'Countertops & stone surfaces · Dubuque, Iowa'),
       h('h1',null,'Bring the',h('br'),'outdoors in.'),
@@ -2549,7 +2556,7 @@ function mountaintop2(C){
       h('div',{class:'m2-soc'},h('a',{href:MT.social.facebook,target:'_blank',rel:'noopener','aria-label':'Facebook'},mtI('fb')),h('a',{href:MT.social.instagram,target:'_blank',rel:'noopener','aria-label':'Instagram'},mtI('ig')),h('a',{href:MT.social.youtube,target:'_blank',rel:'noopener','aria-label':'YouTube'},mtI('yt')))),
     h('div',{class:'m2-map'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})));
   const foot=h('footer',{class:'m2-foot'},h('div',{class:'m2-w m2-foot-in'},h('img',{src:logo,alt:name}),h('nav',null,links()),h('small',null,'© '+new Date().getFullYear()+' Mountaintop Stoneworks, Inc. · '+full)));
-  return h('div',{class:'m2'},nav,hero,stats,intro,surfaces,why,work,process,reviews,team,visit,foot,sheet,lb,bio);
+  return h('div',{class:'m2'},nav,hero,stats,intro,surfaces,why,work,process,team,visit,foot,sheet,lb,bio);
 }
 
 const CL_ICO={
