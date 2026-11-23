@@ -29,7 +29,7 @@ function load(){
   };
   const code=fs.readFileSync(require('path').join(__dirname,'../../apps-script/backend.js'),'utf8')+`
   function ss_(){ return __SS; } function applySeeds_(){}
-  return {auth_,team_,authUsers_,AUTH_SEED,doPost,doGet,studio_,pay_,billing_,prorate_,finalMonth_,billTick_,billGet_,billAll_,billView_,billLaunch_,billCancel_,billWebhook_,billCreateFromAgreement_,billCounts_,billByKey_,setFake:f=>{SQ_FAKE=f}, botAuthed_, BOTS};`;
+  return {auth_,team_,authUsers_,AUTH_SEED,doPost,doGet,studio_,pay_,billing_,prorate_,finalMonth_,billTick_,billGet_,billAll_,billView_,billLaunch_,billCancel_,billRefund_,billWebhook_,billCreateFromAgreement_,billCounts_,billByKey_,setFake:f=>{SQ_FAKE=f}, botAuthed_, BOTS};`;
   const B=new Function(...Object.keys(g),'__SS',code)(...Object.values(g),SS);
   // fake Square
   const S=H.sq; let n=0; const id=p=>p+(++n).toString().padStart(6,'0');
@@ -52,7 +52,7 @@ function load(){
     }
     else if(path.startsWith('/v2/payments/')){ const p=S.payments[path.split('/')[3]]; res=p?{ok:true,payment:p}:{ok:false,status:404,errors:[{code:'NOT_FOUND'}]}; }
     else if(path.startsWith('/v2/refunds')&&method==='get') res={ok:true,refunds:S.refunds};
-    else if(path==='/v2/refunds') { const r={id:id('RF'),payment_id:body.payment_id,status:'COMPLETED',amount_money:body.amount_money}; S.refunds.push(r); S.payments[body.payment_id].refunded_money=body.amount_money; res={ok:true,refund:r}; }
+    else if(path==='/v2/refunds') { const r={id:id('RF'),payment_id:body.payment_id,status:'COMPLETED',amount_money:body.amount_money}; S.refunds.push(r); if(S.payments[body.payment_id]) S.payments[body.payment_id].refunded_money=body.amount_money; res={ok:true,refund:r}; if(body.idempotency_key) S.idem[path+body.idempotency_key]=res; if(S.loseNextResponse){ S.loseNextResponse=false; return {ok:false,status:0,network:true,errors:[{code:'NETWORK'}]}; } }
     else if(path==='/v2/disputes') res={ok:true,disputes:S.disputes};
     else if(path.startsWith('/v2/catalog/object/')){ const v=decodeURIComponent(path.split('/')[4]); res={ok:true,object:{id:v,subscription_plan_variation_data:{monthly_billing_anchor_date:1,phases:[{cadence:'MONTHLY',pricing:{type:'STATIC',price_money:{amount:S.prices[v]}}}]}}}; }
     else if(/^\/v2\/cards\/[^/]+$/.test(path)&&method==='get'){ const c=S.cards[decodeURIComponent(path.split('/')[3])]; res=c?{ok:true,card:Object.assign({enabled:true},c)}:{ok:false,status:404,errors:[{code:'NOT_FOUND'}]}; }

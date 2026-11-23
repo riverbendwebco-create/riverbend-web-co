@@ -50,7 +50,7 @@ r=A({action:'auth_login',email:'owen@x.com',dk:dk('Owen-Pass-123',r.salt)});
 ok('Salesperson signs in with password only',r.ok&&r.token&&r.user.role==='sales');
 const owenTok=r.token;
 // permissions: Owen calling owner endpoints directly
-const owner=['billing_list','billing_get','billing_launch','billing_settings','billing_retry','billing_manual','billing_end','billing_cancel','billing_flag','billing_catalog','billing_postest','billing_selftest','billing_verify','billing_tick','billing_paylink','billing_findcard','billing_setup_inperson','team_list','team_invite','team_role','team_commission','team_legacy_off','team_mfa_reset','leads_key'];
+const owner=['billing_list','billing_get','billing_launch','billing_settings','billing_retry','billing_manual','billing_end','billing_cancel','billing_refund','billing_flag','billing_catalog','billing_postest','billing_selftest','billing_verify','billing_tick','billing_paylink','billing_findcard','billing_setup_inperson','team_list','team_invite','team_role','team_commission','team_legacy_off','team_mfa_reset','leads_key'];
 const leaked=owner.filter(a=>{ const x=S({action:a,token:owenTok,id:'x',email:'owen@x.com',role:'owner'}); return !x||x.error!=='auth'; });
 ok('Owen is refused on all '+owner.length+' owner-only endpoints (billing, Square settings, refunds, team, roles, Places key)',leaked.length===0,leaked.join());
 ok('Owen cannot make himself an owner',JSON.parse(H.props.AUTH_USERS)['owen@x.com'].role==='sales');

@@ -1810,11 +1810,11 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23j';
+var BILL_VERSION = '2026-11-23k';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
-  billing_launch: 1, billing_retry: 1, billing_cancel: 1, billing_flag: 1, billing_findcard: 1, billing_tick: 1 };
+  billing_launch: 1, billing_retry: 1, billing_cancel: 1, billing_refund: 1, billing_flag: 1, billing_findcard: 1, billing_tick: 1 };
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
@@ -2068,7 +2068,7 @@ function billView_(a, today) {
     fullPaid: c.full, remaining: a.pay === 'zero' ? Math.max(0, 12 - c.full) : null,
     agreement: 'Signed' + (a.agreement && a.agreement.signed ? ' ' + a.agreement.signed : ''),
     ownership: own.text, ownershipEligible: own.eligible, status: a.status, statusText: statusText,
-    card: a.sq.cardId ? (a.sq.brand || 'Card') + ' ending ' + (a.sq.last4 || '????') : '', flags: a.flags, cancel: a.cancel,
+    card: a.sq.cardId ? (a.sq.brand || 'Card') + ' ending ' + (a.sq.last4 || '????') : '', flags: a.flags, cancel: a.cancel, refunds: (a.refunds || []).filter(function (r) { return r.status !== 'void'; }).map(function (r) { return { id: r.id, period: r.period, paid: r.paid, owed: r.owed, days: r.days, dim: r.dim, amount: r.amount, effective: r.effective, status: r.status, error: r.error || '', approvedBy: r.approvedBy || '' }; }),
     subscription: a.engine !== 'sub' ? 'Riverbend schedule' : a.sq.subId ? 'Square subscription ' + (a.sq.subStatus || '') + (a.sq.subStart ? ', billing on the 1st from ' + longDate_(a.sq.subStart) : '') + (a.sq.subCanceled ? ' (ending)' : '') : (a.launch ? 'Square subscription not created yet' : 'Created at launch'),
     charges: (a.charges || []).map(function (x) { return { kind: x.kind, period: x.period, due: x.due, amount: x.amount, status: x.status, invoice: !!x.invoiceId, refunded: !!x.refunded, disputed: !!x.disputed, attempts: x.attempts || 0, error: x.error || '', manual: !!x.manual }; }),
     log: (a.log || []).slice(-40), created: a.created
@@ -2232,6 +2232,7 @@ function billing_(d) {
     case 'billing_retry': return billRetry_(String(d.id || ''));
     case 'billing_manual': return billManualPaid_(String(d.id || ''), String(d.note || ''));
     case 'billing_cancel': return billCancel_(String(d.id || ''), String(d.date || ''), d.confirm === true);
+    case 'billing_refund': return billRefund_(String(d.id || ''), String(d.refundId || ''), d.confirm === true, String(d.confirmText || ''), d._who);
     case 'billing_end': return billEnd_(String(d.id || ''), String(d.confirmText || ''));
     case 'billing_flag': return billFlag_(String(d.id || ''), String(d.flag || ''), !!d.value);
     case 'billing_settings': return billSetSettings_(d);
@@ -2384,11 +2385,106 @@ function billCancel_(id, notice, confirm) {
   }
   var eff = addDays_(notice, 30), fm = finalMonth_(a.monthly, eff);
   var r2 = { mode: 'notice', notice: notice, effective: eff, finalAmount: fm.amount, text: '30 days’ notice: service ends ' + longDate_(eff) + '. Final charge on ' + longDate_(iso_(ymd_(eff).y, ymd_(eff).m, 1)) + ': ' + usdC_(fm.amount) + ' (' + fm.days + ' of ' + fm.dim + ' days). Nothing is charged after that.' };
-  if (!confirm) return { ok: true, preview: r2 };
+  if (!confirm) {
+    var tmp = JSON.parse(JSON.stringify(a)); tmp.cancel = { mode: 'notice', notice: notice, effective: eff };
+    var owed = billRefundDue_(tmp), tot = owed.reduce(function (t, x) { return t + x.amount; }, 0);
+    if (tot) { r2.refund = tot; r2.text += ' Square already collected ' + usdC_(tot) + ' for days after ' + longDate_(eff) + '. A refund of ' + usdC_(tot) + ' will be proposed for owner approval; nothing is refunded automatically.'; }
+    return { ok: true, preview: r2 };
+  }
   a.cancel = { mode: 'notice', notice: notice, effective: eff, at: new Date().toISOString() };
   if (a.launch) a.status = 'canceling';
   billLog_(a, 'Cancellation notice ' + longDate_(notice) + '. Effective ' + longDate_(eff) + '.');
+  billRefundCheck_(a);
   billSave_(a); return { ok: true, account: billView_(a) };
+}
+/* ---------- Cancellation refunds (owner approval required) ----------
+   If a payment already collected covers days after the cancellation's effective date (for
+   example a notice recorded late, after Square billed the month in full), we work out exactly
+   what was overpaid, per payment, and propose a refund. Nothing is refunded until an owner
+   approves it. Each payment can have only one refund proposal, and the Square refund uses a
+   fixed idempotency key, so the same refund can never be issued twice. */
+function billRefundDue_(a) {
+  var eff = a.cancel && a.cancel.mode === 'notice' && a.cancel.effective; if (!eff) return [];
+  var e = ymd_(eff), pe = period_(eff), out = [];
+  (a.charges || []).forEach(function (c) {
+    if (c.status !== 'paid' || c.disputed || c.kind === 'setup' || !c.period || c.period < pe) return;
+    var y = +c.period.slice(0, 4), m = +c.period.slice(5, 7), dim = dim_(y, m);
+    var from = c.kind === 'prorated' && a.launch && period_(a.launch) === c.period ? ymd_(a.launch).d : 1;
+    var covered = dim - from + 1, used = c.period > pe ? 0 : Math.max(0, Math.min(e.d, dim) - from + 1);
+    if (used >= covered) return; // the payment covers no day after the effective date
+    var owed = used ? Math.round(a.monthly * used / dim) : 0;
+    var before = typeof c.refunded === 'number' ? c.refunded : 0, ours = (a.refunds || []).filter(function (r) { return r.chargeKey === c.key && r.status === 'done'; })[0];
+    if (c.refunded === true && !ours) return; // refunded in Square by hand (amount unknown): owner already handled it
+    if (ours) before = Math.max(before, ours.amount);
+    var amt = Math.max(0, c.amount - owed - before);
+    if (amt > 0) out.push({ key: c.key, paymentId: c.paymentId || '', period: c.period, paid: c.amount, owed: owed, days: used, covered: covered, dim: dim, amount: amt });
+  });
+  return out;
+}
+function billRefundCheck_(a) {
+  if (!a.cancel || a.cancel.mode !== 'notice') return false;
+  a.refunds = a.refunds || [];
+  var due = billRefundDue_(a), changed = false, added = [];
+  due.forEach(function (d) {
+    var id = 'rf-' + d.key, r = a.refunds.filter(function (x) { return x.id === id; })[0];
+    if (r && r.status !== 'proposed') return; // approved, sending or done: never proposed again
+    if (r) { if (r.amount !== d.amount) { r.amount = d.amount; r.owed = d.owed; r.days = d.days; changed = true; } return; }
+    r = { id: id, chargeKey: d.key, paymentId: d.paymentId, period: d.period, paid: d.paid, owed: d.owed, days: d.days, dim: d.dim, amount: d.amount, effective: a.cancel.effective, notice: a.cancel.notice, status: 'proposed', created: new Date().toISOString() };
+    a.refunds.push(r); added.push(r); changed = true;
+  });
+  a.refunds.forEach(function (r) { if (r.status === 'proposed' && !due.some(function (d) { return 'rf-' + d.key === r.id; })) { r.status = 'void'; changed = true; billLog_(a, 'Refund proposal for ' + r.period + ' no longer applies and was withdrawn.'); } });
+  if (added.length) {
+    var tot = added.reduce(function (t, x) { return t + x.amount; }, 0);
+    billLog_(a, 'Refund proposed (owner approval needed): ' + added.map(function (x) { return usdC_(x.amount) + ' of the ' + usdC_(x.paid) + ' ' + x.period + ' payment'; }).join('; ') + '. Service ended ' + longDate_(a.cancel.effective) + '.');
+    billMailOwners_(a, 'Refund needs approval: ' + usdC_(tot), billRefundText_(a, added));
+  }
+  return changed;
+}
+function billRefundText_(a, list) {
+  var paid = (a.charges || []).filter(function (c) { return c.status === 'paid' && c.kind !== 'setup'; }).slice(-4);
+  return 'Customer: ' + a.business + ' (' + a.owner + ', ' + a.email + ')\n' +
+    'Cancellation notice received: ' + longDate_(a.cancel.notice) + '\nCancellation effective (last day of service): ' + longDate_(a.cancel.effective) + '\n\n' +
+    'Payments collected (most recent):\n' + paid.map(function (c) { return '  ' + c.period + '  ' + usdC_(c.amount) + (c.refunded ? ' (refunded ' + (typeof c.refunded === 'number' ? usdC_(c.refunded) : '') + ')' : ''); }).join('\n') + '\n\n' +
+    'Proposed refund:\n' + list.map(function (x) { return '  ' + usdC_(x.amount) + ' from the ' + x.period + ' payment of ' + usdC_(x.paid) + ': service used ' + x.days + ' of ' + x.dim + ' days = ' + usdC_(x.owed) + ' owed'; }).join('\n') +
+    '\n\nNothing has been refunded. An owner must approve it in /billing (open the account, "Approve refund"). Approved refunds go back to the card through Square.';
+}
+function billMailOwners_(a, subject, msg) {
+  if (a.flags && a.flags.selftest) return;
+  var to = [OWNER_EMAIL], u = authUsers_();
+  Object.keys(u).forEach(function (k) { var x = u[k]; if (x.role === 'owner' && x.status === 'active' && x.email && to.indexOf(x.email) < 0) to.push(x.email); });
+  try {
+    MailApp.sendEmail({ to: to.join(','), subject: (billTestMode_(a) ? '[TEST] ' : '') + 'Billing: ' + subject, name: 'Riverbend Billing',
+      body: msg + '\n\nOpen billing: https://' + SITE + '/billing/#' + a.id });
+  } catch (e) { console.error(e); }
+}
+function billRefund_(id, rid, confirm, confirmText, who) {
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(30000)) return { ok: false, error: 'busy' };
+  try {
+    var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
+    var r = (a.refunds || []).filter(function (x) { return x.id === rid; })[0]; if (!r) return { ok: false, error: 'notfound' };
+    if (r.status === 'done') return { ok: true, already: true, detail: 'This refund was already issued (' + usdC_(r.amount) + ', Square refund ' + r.sqRefundId + '). Nothing was sent again.', account: billView_(a) };
+    if (r.status !== 'proposed' && r.status !== 'sending' && r.status !== 'failed') return { ok: false, error: 'state', detail: 'This refund proposal is ' + r.status + '.' };
+    if (r.status === 'proposed') { var cur = billRefundDue_(a).filter(function (d) { return 'rf-' + d.key === r.id; })[0];
+      if (!cur || cur.amount !== r.amount) { billRefundCheck_(a); billSave_(a); return { ok: false, error: 'changed', detail: 'The amount owed changed. Review the updated proposal.', account: billView_(a) }; } }
+    var c = billFindCharge_(a, r.chargeKey);
+    if (!c || !(c.paymentId || r.paymentId)) return { ok: false, error: 'nopayment', detail: 'Square has no payment ID for this charge. Refund it in the Square Dashboard, then record it.' };
+    var info = { business: a.business, period: r.period, paid: r.paid, amount: r.amount, effective: r.effective };
+    if (!confirm) return { ok: true, preview: info };
+    if (confirmText !== 'REFUND') return { ok: false, error: 'confirm' };
+    r.status = 'sending'; r.approvedBy = who || ''; r.approvedAt = new Date().toISOString(); r.key = r.key || 'rbrf-' + sha256Hex_(a.id + '|' + r.id).slice(0, 32);
+    billSave_(a); // saved before calling Square: a retry reuses the same key, so Square cannot refund twice
+    var res = sq_('post', '/v2/refunds', { idempotency_key: r.key, payment_id: c.paymentId || r.paymentId, amount_money: { amount: r.amount, currency: 'USD' }, reason: 'Cancellation effective ' + r.effective + ': service days after that date' }, a.env);
+    if (res.ok && res.refund) {
+      r.status = 'done'; r.sqRefundId = res.refund.id; r.doneAt = new Date().toISOString();
+      c.refunded = (typeof c.refunded === 'number' ? c.refunded : 0) + r.amount;
+      billLedger_(a, c, 'Refunded ' + usdC_(r.amount));
+      billLog_(a, 'Refund of ' + usdC_(r.amount) + ' on the ' + r.period + ' payment issued through Square (approved by ' + (who || 'an owner') + ').');
+      billMailOwners_(a, 'Refund issued: ' + usdC_(r.amount), usdC_(r.amount) + ' was refunded to ' + a.business + "'s card for the days after " + longDate_(r.effective) + ' (approved by ' + (who || 'an owner') + ').');
+    } else if (res.network) { r.error = 'No answer from Square. Press Approve again: the same refund request is resent and Square will not refund twice.'; }
+    else { r.status = 'failed'; r.error = sqErr_(res); billLog_(a, 'Refund of ' + usdC_(r.amount) + ' failed: ' + r.error); }
+    billSave_(a);
+    return { ok: r.status === 'done', error: r.status === 'done' ? undefined : 'square', detail: r.status === 'done' ? 'Refunded ' + usdC_(r.amount) + '.' : r.error, account: billView_(a) };
+  } finally { lock.releaseLock(); }
 }
 function billEnd_(id, confirmText) {
   if (confirmText !== 'END BILLING') return { ok: false, error: 'confirm' };
@@ -2447,6 +2543,7 @@ function billTickOne_(a, today, sum) {
     if (a.sq.subId && billSubSync_(a, today)) changed = true;
     if (a.cancel && a.cancel.mode === 'notice' && a.cancel.effective && !a.sq.subCanceled && period_(a.cancel.effective) <= period_(firstNext_(today))) { billSubCancel_(a, 'Cancellation notice: subscription ends before the final (prorated) month.'); changed = true; }
   }
+  if (a.cancel && a.cancel.mode === 'notice' && billRefundCheck_(a)) changed = true;
   // B. Monthly charge on (or after) the 1st (our own charge; for subscriptions only the final prorated month).
   if ((a.status === 'active' || a.status === 'canceling') && a.launch && !a.flags.paused && !(a.engine === 'sub' && !(a.cancel && a.cancel.mode === 'notice' && a.cancel.effective && period_(a.cancel.effective) === period_(today)))) {
     var per = period_(today);
@@ -2455,6 +2552,7 @@ function billTickOne_(a, today, sum) {
       var ch = null;
       if (a.cancel && a.cancel.mode === 'notice' && a.cancel.effective) {
         if (a.cancel.effective < per + '-01') { a.status = 'ended'; billLog_(a, 'Cancellation took effect ' + longDate_(a.cancel.effective) + '. Billing ended.'); changed = true; }
+        else if (period_(a.cancel.effective) === per && a.engine === 'sub' && today === per + '-01' && !(a.sq.subCancelDate && a.sq.subCancelDate <= today)) { /* Square may still bill this month: wait a day, read its invoice, then decide (no double charge). */ }
         else if (period_(a.cancel.effective) === per) { var fm = finalMonth_(a.monthly, a.cancel.effective); ch = { key: 'final-' + per, kind: 'final', period: per, due: per + '-01', amount: fm.amount, status: 'new', attempts: 0 }; }
       }
       if (!ch && a.status !== 'ended' && a.engine !== 'sub') ch = { key: 'full-' + per, kind: 'full', period: per, due: per + '-01', amount: a.monthly, status: 'new', attempts: 0 };

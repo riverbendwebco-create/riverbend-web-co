@@ -85,6 +85,7 @@ td b{color:#fff;font-weight:600}
   <div class="brandbar"><svg class="rw" aria-hidden="true"><use href="#rw-dark"/></svg><b>Riverbend Billing</b>
     <nav><a class="btn" href="/studio/">Studio</a><a class="btn" href="/leads/">Leads</a><button class="btn" id="out" type="button">Log out</button></nav></div>
   <div class="hd"><div><small>Square payments</small><h1>Billing</h1></div><div class="row2"><span class="mode test" id="mode">TEST MODE</span><button class="btn" id="refresh" type="button">Refresh</button><button class="btn" id="setBtn" type="button">Square settings</button></div></div>
+  <div id="refundBar"></div>
   <div class="stats" id="stats"></div>
   <div class="panel hidden" id="settings"></div>
   <div class="panel hidden" id="detail"></div>
@@ -128,6 +129,8 @@ async function load(){
     el('div',{class:'stat'},el('small',{class:'k',text:'Active clients'}),el('b',{text:String(A.filter(a=>a.status==='active'||a.status==='canceling').length)})),
     el('div',{class:'stat'},el('small',{class:'k',text:'Waiting to launch'}),el('b',{text:String(A.filter(a=>a.status==='building'||a.status==='awaiting_card').length)})),
     el('div',{class:'stat'},el('small',{class:'k',text:'Past due'}),el('b',{text:usd(due),style:due?'color:var(--red)':''})));
+  const wait=r.accounts.flatMap(a=>(a.refunds||[]).filter(f=>f.status!=='done').map(f=>({a,f})));
+  $('#refundBar').replaceChildren(...(wait.length?[el('div',{class:'msg err',style:'display:block;margin-bottom:12px'},el('b',{text:wait.length+' refund'+(wait.length>1?'s':'')+' waiting for owner approval: '}),...wait.map(({a,f},i)=>el('a',{href:'#'+a.id,style:'margin-right:10px',onclick:e=>{e.preventDefault();openAcct(a.id);},text:a.business+' '+usd(f.amount)+(f.status==='failed'?' (failed, retry)':f.status==='sending'?' (no answer from Square, approve again)':'')})))]:[]));
   $('#rows').replaceChildren(...r.accounts.map(a=>el('tr',{class:'row',onclick:()=>openAcct(a.id)},
     el('td',null,el('b',{text:a.business}),el('div',{style:'font-size:.78rem;color:var(--mut)',text:a.owner+(a.env!==r.settings.env?' (test account)':'')})),
     el('td',{text:a.packageName+', '+a.optionName}),el('td',{class:'hide-m',text:usd(a.monthly)}),
@@ -164,6 +167,10 @@ function openAcct(id){
       a.status!=='ended'&&!a.cancel?el('button',{class:'btn',type:'button',text:'Record cancellation notice',onclick:()=>cancelFlow(a)}):null,
       a.status!=='ended'?el('button',{class:'btn danger',type:'button',text:'End billing',onclick:()=>endFlow(a)}):null),
     el('div',{class:'msg',id:'dmsg'}),
+    (a.refunds||[]).length?el('div',null,el('h3',{style:'font-size:.9rem;margin:16px 0 6px',text:'Cancellation refunds'}),el('table',null,el('thead',null,el('tr',null,...['Payment','Collected','Service used','Owed','Refund','Status',''].map(t=>el('th',{text:t})))),el('tbody',null,...a.refunds.map(f=>el('tr',null,
+      el('td',{text:f.period}),el('td',{text:usd(f.paid)}),el('td',{text:f.days+' of '+f.dim+' days (through '+ld(f.effective)+')'}),el('td',{text:usd(f.owed)}),el('td',null,el('b',{text:usd(f.amount)})),
+      el('td',null,el('span',{class:'tag '+(f.status==='done'?'ok':f.status==='failed'?'bad':'warn'),text:f.status==='done'?'refunded'+(f.approvedBy?' ('+f.approvedBy+')':''):f.status==='proposed'?'needs approval':f.status}),f.error?el('div',{style:'font-size:.75rem;color:var(--mut);margin-top:3px',text:f.error}):null),
+      el('td',null,f.status!=='done'?el('button',{class:'btn primary',type:'button',text:'Approve refund',onclick:()=>refundFlow(a,f)}):null)))))):null,
     el('h3',{style:'font-size:.9rem;margin:16px 0 6px',text:'Payments'}),
     a.charges.length?el('table',null,el('thead',null,el('tr',null,...['Type','Period','Due','Amount','Status','Tries'].map(t=>el('th',{text:t})))),el('tbody',null,...a.charges.slice().reverse().map(c=>el('tr',null,
       el('td',{text:{setup:'Setup fee',prorated:'Prorated launch',full:'Full monthly',final:'Final (prorated)'}[c.kind]||c.kind}),el('td',{text:c.period||''}),el('td',{text:ld(c.due)}),el('td',{text:usd(c.amount)}),
@@ -206,6 +213,8 @@ async function cancelFlow(a){
     confirmBox('Record cancellation notice',[['Client',a.business],['Written notice received',ld(p.notice)],['What happens',p.text]],p.mode==='review'?'Record request for review':'Record notice',()=>act({action:'billing_cancel',id:a.id,date:p.notice,confirm:true},'Cancellation recorded.'),el('div',null,el('small',{class:'k',text:'Date the written notice was received'}),inp)); };
   ask(data.today);
 }
+async function refundFlow(a,f){ const r=await api({action:'billing_refund',id:a.id,refundId:f.id,confirm:false}); if(!r.ok){ await load(); dmsg(errText(r)); return; } const p=r.preview; const inp=el('input',{class:'field',placeholder:'Type REFUND'});
+  confirmBox('Approve refund to '+a.business+'?',[['Customer',a.owner+' ('+a.email+')'],['Cancellation effective',ld(f.effective)],['Payment',f.period+': '+usd(f.paid)+' collected'],['Service used',f.days+' of '+f.dim+' days = '+usd(f.owed)],['Refund to their card',usd(p.amount)]],'Refund '+usd(p.amount),()=>act({action:'billing_refund',id:a.id,refundId:f.id,confirm:true,confirmText:inp.value.trim()},'Refund issued.'),inp); }
 function endFlow(a){ const inp=el('input',{class:'field',placeholder:'Type END BILLING'}); confirmBox('End all billing for '+a.business+'?',[['Effect','No more automatic charges. Past payments and records stay.']],'End billing',()=>act({action:'billing_end',id:a.id,confirmText:inp.value.trim()},'Billing ended.'),inp); }
 
 function drawSettings(){

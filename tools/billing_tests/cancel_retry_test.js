@@ -89,3 +89,53 @@ function B_ok(r){ return !r.a.charges.some(c=>c.status==='failed'); }
   ok('Final prorated charge fails Dec 1, retry Dec 3 fails, retry Dec 5 succeeds: one $36.29 charge total',f.status==='paid'&&f.attempts===3&&Object.values(H.sq.payments).filter(p=>p.amount_money.amount===3629).length===1,JSON.stringify(f));
 }
 R.forEach(r=>console.log((r.c?'PASS ':'FAIL ')+r.n+(r.i&&!r.c?'  ['+r.i+']':'')+(r.c&&/LATE|gap/.test(r.n+r.i)?'  ['+r.i+']':''))); console.log(R.filter(r=>r.c).length+'/'+R.length+' passed');
+
+// ===== Cancellation refunds (owner approval) =====
+const R2=[]; const ok2=(n,c,i='')=>R2.push({n,c:!!c,i:String(i)});
+const props=(a)=>a.refunds||[];
+function upfront(){ return setup('custom-once','2026-10-10','2026-10-05'); }
+// normal cancellation: no refund proposed, no customer charge after effective date
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2026-11-15'); B.billCancel_(id,'2026-11-15',true); days(B,H,'2026-11-16','2027-01-05'); const a=B.billGet_(id);
+  ok2('Normal notice (Nov 15, effective Dec 15): no refund proposed, $36.29 final, nothing after Dec 15',props(a).length===0&&!paidCharges(a).some(c=>c.period>'2026-12')&&paidCharges(a).filter(c=>c.period==='2026-12').length===1); }
+// late-recorded notice: Dec 3 records notice dated Nov 1 -> effective Dec 1, December $75 collected for 1 day
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2026-12-03'); H.mails.length=0;
+  const pv=B.billCancel_(id,'2026-11-01',false).preview;
+  ok2('Preview warns: refund of $72.58 will be proposed for owner approval',pv.refund===7258&&/owner approval/.test(pv.text),pv.text);
+  B.billCancel_(id,'2026-11-01',true); let a=B.billGet_(id); const f=props(a)[0];
+  ok2('Late notice: one proposal, Dec payment $75, 1 of 31 days used = $2.42 owed, refund $72.58',props(a).length===1&&f.paid===7500&&f.days===1&&f.owed===242&&f.amount===7258&&f.status==='proposed',JSON.stringify(f));
+  const m=H.mails.find(x=>/Refund needs approval/.test(x.subject));
+  ok2('Owners emailed with customer, cancellation dates, payments collected and proposed refund',m&&/Customer: Biz/.test(m.body)&&/December 1, 2026/.test(m.body)&&/Payments collected/.test(m.body)&&/\$72\.58/.test(m.body),m&&m.subject);
+  days(B,H,'2026-12-04','2026-12-10'); a=B.billGet_(id);
+  ok2('Daily job never refunds by itself and does not propose it twice',props(a).length===1&&props(a)[0].status==='proposed'&&H.sq.refunds.length===0&&H.mails.filter(x=>/Refund needs approval/.test(x.subject)).length===1);
+  ok2('Approval needs the typed confirmation',B.billRefund_(id,f.id,true,'yes','kruz').error==='confirm'&&H.sq.refunds.length===0);
+  H.sq.loseNextResponse=true; let r=B.billRefund_(id,f.id,true,'REFUND','kruz@riverbendwebco.com');
+  ok2('Square answer lost: refund stays "sending", not marked done',!r.ok&&B.billGet_(id).refunds[0].status==='sending');
+  r=B.billRefund_(id,f.id,true,'REFUND','kruz@riverbendwebco.com');
+  ok2('Approve again: same idempotency key, Square returns the same refund (one refund total)',r.ok&&H.sq.refunds.length===1&&H.sq.refunds[0].amount_money.amount===7258);
+  r=B.billRefund_(id,f.id,true,'REFUND','rayaldally@gmail.com');
+  ok2('Second owner approving the same refund: nothing sent again',r.ok&&r.already&&H.sq.refunds.length===1);
+  days(B,H,'2026-12-11','2027-02-03'); a=B.billGet_(id);
+  ok2('After the refund: no new proposal, nothing charged after Dec 1, billing ended',props(a).length===1&&props(a)[0].status==='done'&&!paidCharges(a).some(c=>c.period>'2026-12')&&a.status==='ended'&&H.sq.refunds.length===1); }
+// very late: recorded Jan 5 for a notice dated Nov 1 -> Dec and Jan both collected in full
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2027-01-05'); B.billCancel_(id,'2026-11-01',true); days(B,H,'2027-01-06','2027-02-05'); const a=B.billGet_(id), rf=props(a);
+  const dec=rf.find(x=>x.period==='2026-12'), jan=rf.find(x=>x.period==='2027-01');
+  ok2('Very late notice: Dec refund $72.58 and full Jan refund $75.00 proposed; no Feb charge',rf.length===2&&dec.amount===7258&&jan.amount===7500&&jan.owed===0&&!paidCharges(a).some(c=>c.period>'2027-01'),JSON.stringify(rf)); }
+// month-end: notice Dec 1 -> effective Dec 31 (the regular December payment covers exactly through Dec 31)
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2026-12-01'); B.billCancel_(id,'2026-12-01',true); days(B,H,'2026-12-02','2027-02-03'); const a=B.billGet_(id);
+  ok2('Month-end: notice Dec 1, effective Dec 31: no refund, one $75 December payment, nothing in January',props(a).length===0&&paidCharges(a).filter(c=>c.period==='2026-12').length===1&&!paidCharges(a).some(c=>c.period>'2026-12')); }
+// month-end: notice Jan 29 -> effective Feb 28 (last day of February)
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2027-01-29'); B.billCancel_(id,'2027-01-29',true); days(B,H,'2027-01-30','2027-04-03'); const a=B.billGet_(id), feb=paidCharges(a).filter(c=>c.period==='2027-02');
+  ok2('Month-end: notice Jan 29, effective Feb 28: February billed once at the full $75 (all 28 days), no refund, nothing in March',props(a).length===0&&feb.length===1&&feb[0].amount===7500&&!paidCharges(a).some(c=>c.period>'2027-02'),JSON.stringify(feb)); }
+// 31-day month: notice Dec 1 recorded on Dec 1, plus Jan 31 effective from Jan 1 notice
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2026-12-02'); B.billCancel_(id,'2026-12-02',true); days(B,H,'2026-12-03','2027-02-03'); const a=B.billGet_(id), jan=paidCharges(a).filter(c=>c.period==='2027-01');
+  ok2('Notice Dec 2, effective Jan 1: final Jan 1 charge $75 x 1/31 = $2.42 only, no refund',props(a).length===0&&jan.length===1&&jan[0].amount===242&&jan[0].kind==='final',JSON.stringify(jan)); }
+// Square bills the 1st before our job sees the cancel (race): we wait a day and never double charge
+{ const {B,H,id}=upfront(); days(B,H,'2026-10-11','2026-12-01'); B.billCancel_(id,'2026-12-01',true); const a=B.billGet_(id);
+  ok2('Notice on the 1st: our job makes no extra December charge (Square\'s December payment covers it)',paidCharges(a).filter(c=>c.period==='2026-12').length===1&&!a.charges.some(c=>c.kind==='final')); }
+// $0 Down inside the commitment: no automatic refund logic, owner review only
+{ const {B,H,id}=setup('starter-zero','2026-11-16','2026-11-10'); days(B,H,'2026-11-17','2027-02-05'); B.billCancel_(id,'2027-02-05',true); const a=B.billGet_(id);
+  ok2('$0 Down during the commitment: owner review, no refund proposal, nothing charged automatically for the balance',a.cancel.mode==='review'&&props(a).length===0); }
+{ const {B,H,id}=upfront(); H.props.AUTH_USERS=JSON.stringify({'kruz@riverbendwebco.com':{email:'kruz@riverbendwebco.com',role:'owner',status:'active'},'rayaldally@gmail.com':{email:'rayaldally@gmail.com',role:'owner',status:'active'},'owen@riverbendwebco.com':{email:'owen@riverbendwebco.com',role:'sales',status:'active'}});
+  days(B,H,'2026-10-11','2026-12-03'); H.mails.length=0; B.billCancel_(id,'2026-11-01',true); const m=H.mails.find(x=>/Refund needs approval/.test(x.subject));
+  ok2('Refund email goes to Kruz, Rayald and riverbendwebco@gmail.com, never to the salesperson',m&&/kruz@riverbendwebco\.com/.test(m.to)&&/rayaldally@gmail\.com/.test(m.to)&&/riverbendwebco@gmail\.com/.test(m.to)&&!/owen/.test(m.to),m&&m.to); }
+R2.forEach(r=>console.log((r.c?'PASS ':'FAIL ')+r.n+(r.i&&!r.c?'  ['+r.i+']':''))); console.log(R2.filter(r=>r.c).length+'/'+R2.length+' refund checks passed');
