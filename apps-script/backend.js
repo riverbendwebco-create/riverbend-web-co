@@ -390,6 +390,8 @@ function studio_(d) {
     // Owners only (server-side). Salespeople are refused even if they call this directly.
     if (!(me && me.role === 'owner') && !(legacy && billAuthed_(d.token)) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
     d._who = me ? me.email : (botAuthed_(d.token, d.action) ? 'daily job' : 'shared billing password');
+    // Payment settings, live Square changes and test tools need an individual owner account.
+    if (!me && !botAuthed_(d.token, d.action) && BILL_OWNER_ONLY[d.action]) return { ok: false, error: 'account', detail: 'Sign in with your own owner account (riverbendwebco.com/login) for payment settings.' };
     if (d.action === 'billing_logout') { CacheService.getScriptCache().remove('btok_' + d.token); return { ok: true }; }
     var res;
     try { res = billing_(d); } catch (eb) { console.error(eb); res = { ok: false, error: 'server', detail: String(eb).slice(0, 200) }; }
@@ -1808,7 +1810,8 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23g';
+var BILL_VERSION = '2026-11-23h';
+var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1 };
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
@@ -2235,6 +2238,7 @@ function billing_(d) {
     case 'billing_findcard': return billFindCardAction_(String(d.id || ''));
     case 'billing_postest': return billPosTest_();
     case 'billing_verify': return billVerify_();
+    case 'billing_plans': return billPlansCheck_();
     case 'billing_setup_inperson': return billSetupInPerson_(String(d.id || ''), String(d.note || ''));
   }
   return { ok: false, error: 'unknown' };
@@ -3318,4 +3322,21 @@ function leadsForRep_(d, me) {
     case 'leads_demo': return leadsDemo_(d.lead || {});
   }
   return { ok: false, error: 'auth' };
+}
+
+/* Live Square check (no charges): makes sure the "Riverbend Website Service" subscription plans exist
+   in the current mode's Square account and reads them back: price, monthly, billing day 1, no proration. */
+function billPlansCheck_() {
+  var env = 'production', out = [];
+  if (!sqProp_('TOKEN', env)) return { ok: false, error: 'notoken' };
+  var plans = billPlans_(env);
+  if (plans._error) return { ok: false, error: 'square', detail: plans._error };
+  SUB_KEYS.forEach(function (k) {
+    var t = k.split('-'), T = BILL_TIERS[t[0]], want = t[1] === 'zero' ? T.zero : T.care;
+    var o = sq_('get', '/v2/catalog/object/' + encodeURIComponent(plans[k]), null, env).object || {}, vd = o.subscription_plan_variation_data || {}, ph = (vd.phases || [])[0] || {};
+    var price = ((ph.pricing || {}).price_money || (ph.pricing || {}).price || ph.recurring_price_money || {}).amount;
+    out.push({ plan: vd.name || k, price: price, ok: price === want && ph.cadence === 'MONTHLY' && vd.monthly_billing_anchor_date === 1 && vd.can_prorate !== true, billingDay: vd.monthly_billing_anchor_date, cadence: ph.cadence, prorate: !!vd.can_prorate });
+  });
+  var loc = sq_('get', '/v2/locations/' + encodeURIComponent(sqLocation_(env)), null, env).location || {};
+  return { ok: true, env: env, location: { id: loc.id, name: loc.name, status: loc.status, currency: loc.currency, country: loc.country, cardProcessing: (loc.capabilities || []).indexOf('CREDIT_CARD_PROCESSING') >= 0 }, plans: out };
 }
