@@ -2413,7 +2413,7 @@ function abAuto(C){
   const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
-  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
+  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
   const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
   const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
   const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
@@ -2429,7 +2429,7 @@ function abAuto(C){
     {id:'ab-service',t:'Auto Repair',d:'Diagnostics and repairs for cars, trucks and SUVs, done right by people who care about your vehicle.',img:P.repair},
     {id:'ab-service',t:'Tires & Brakes',d:'Keep your vehicle stopping and rolling safely, season after season.',img:P.tire},
     {id:'ab-sales',t:'Vehicle Sales',d:'Pre-owned cars, trucks and SUVs. Ask what is on the lot.',img:P.sales}];
-  const bullets=['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
+  const bullets=isAB?['ASE Certified','Repairs for cars, trucks and SUVs','Tires, wheels and truck accessories','Pre-owned vehicles for sale']:['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
   const hero=bg(h('section',{class:'ab-hero'+(isAB?' shop':''),id:'ab-top'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.heroPhoto)||P.heroBg),'linear-gradient(90deg,rgba(14,14,16,.9) 0%,rgba(14,14,16,.66) 50%,rgba(14,14,16,.3) 100%)');
   hero.append(h('div',{class:'ab-w ab-hero-in'},
     h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
@@ -2446,6 +2446,14 @@ function abAuto(C){
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
       h('div',{class:'ab-feats'},feats.map(([i,t,ph])=>bg(h('div',{class:'ab-feat'},h('span',null,abI(i)),h('b',null,t)),ph==='SHOP'?'https://riverbendwebco.com/demo/img/ab-shop.jpg':AB_U(ph,600),'linear-gradient(180deg,rgba(10,10,12,.05) 20%,rgba(10,10,12,.85) 100%)')))),
     h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.aboutPhoto)||C.own[0]||P.shop)))));
+  const AREAS=['Dubuque, IA','Epworth, IA','Asbury, IA','Maquoketa, IA','Bellevue, IA','East Dubuque, IL','Galena, IL','Platteville, WI'];
+  const creds=isAB?h('section',{class:'ab-sec',id:'ab-creds'},h('div',{class:'ab-w'},
+    h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Certified, trusted and local'),h('p',{class:'ab-mut'},'ASE Certified service, the parts and products you need, and a shop that serves the whole tri-state area.')),
+    h('div',{class:'ab-creds'},
+      h('div',{class:'ab-cred rv'},h('span',null,abI('shield')),h('small',null,'Certifications'),h('b',null,'ASE Certified'),h('p',null,'Repairs handled by ASE Certified service.')),
+      h('div',{class:'ab-cred rv'},h('span',null,abI('hand')),h('small',null,'Associations'),h('b',null,'NFIB & BBB'),h('p',null,'Member of the National Federation of Independent Business (NFIB) and the BBB.')),
+      h('div',{class:'ab-cred rv'},h('span',null,abI('tire')),h('small',null,'Products'),h('b',null,'Parts & accessories'),h('ul',{class:'ab-tags'},['Tires','Wheels','Wiper blades','Suspension','Truck accessories'].map(t=>h('li',null,t)))),
+      h('div',{class:'ab-cred rv'},h('span',null,abI('pin')),h('small',null,'Areas served'),h('b',null,'Iowa, Illinois & Wisconsin'),h('ul',{class:'ab-tags'},AREAS.map(t=>h('li',null,t))))))):null;
   const svcList=isAB?['CV & drivetrain repair','Suspension','Tires','Batteries','Engine diagnostics','Electrical','A/C','Tune-ups','Brakes','Exhaust']:items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
   const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
     h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
@@ -2481,8 +2489,8 @@ function abAuto(C){
   const foot=h('footer',{class:'ab-foot'},h('div',{class:'ab-w ab-foot-in'},
     h('div',null,brand.cloneNode(true),h('small',null,'© '+new Date().getFullYear()+' '+name)),
     h('div',null,h('b',null,'Contact'),C.tel?h('a',{href:C.tel},C.phoneTxt):null,addrTxt?h('span',null,addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
-    h('div',null,h('b',null,'Company'),links())));
-  return h('div',{class:'ab'},nav,hero,about,why,cta1,service,how,sales,cta2,reviews,contact,foot);
+    h('div',null,h('b',null,'Company'),links())),isAB?h('div',{class:'ab-w ab-foot-x'},h('span',null,'ASE Certified'),h('span',null,'NFIB member'),h('span',null,'BBB'),h('span',null,'Serving '+AREAS.join(' \u00b7 '))):null);
+  return h('div',{class:'ab'},nav,hero,about,why,creds,cta1,service,how,sales,cta2,reviews,contact,foot);
 }
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
