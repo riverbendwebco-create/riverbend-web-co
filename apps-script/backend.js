@@ -1811,7 +1811,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23m';
+var BILL_VERSION = '2026-11-23n';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3355,7 +3355,8 @@ function team_(d, me) {
       u.role = d.role; authEndSessions_(u); authSaveUsers_(users); authLog_(me, 'changed role of ' + e + ' to ' + AUTH_ROLES[d.role]);
       return { ok: true };
     case 'team_commission':
-      var cm = { flat: Math.max(0, Math.round(Number(d.flat || 0) * 100)), setupPct: Math.max(0, Math.min(100, Number(d.setupPct || 0))), monthlyPct: Math.max(0, Math.min(100, Number(d.monthlyPct || 0))), months: Math.max(0, Math.min(120, Math.round(Number(d.months || 12)))) };
+      var cents = function (v) { return Math.max(0, Math.round(Number(v || 0) * 100)); };
+      var cm = { bonus: { starter: cents(d.bStarter), custom: cents(d.bCustom), premium: cents(d.bPremium) }, setupPct: Math.max(0, Math.min(100, Number(d.setupPct || 0))), monthlyPct: Math.max(0, Math.min(100, Number(d.monthlyPct || 0))), months: Math.max(0, Math.min(120, Math.round(Number(d.months == null || d.months === '' ? 12 : d.months)))) }; // months 0 = every monthly payment while the customer stays
       authProps_().setProperty('AUTH_COMMISSION', JSON.stringify(cm)); authLog_(me, 'changed commission settings: ' + JSON.stringify(cm));
       return { ok: true, commission: cm };
     case 'team_legacy_off':
@@ -3366,7 +3367,7 @@ function team_(d, me) {
   }
   return { ok: false, error: 'unknown' };
 }
-function authCommission_() { try { return JSON.parse(authProps_().getProperty('AUTH_COMMISSION') || ''); } catch (e) { return { flat: 0, setupPct: 0, monthlyPct: 0, months: 12 }; } }
+function authCommission_() { try { return JSON.parse(authProps_().getProperty('AUTH_COMMISSION') || ''); } catch (e) { return { bonus: { starter: 0, custom: 0, premium: 0 }, setupPct: 0, monthlyPct: 0, months: 12 }; } }
 function authLog_(u, what) {
   try {
     var ss = ss_(), sh = ss.getSheetByName('Billing Activity');
@@ -3389,8 +3390,10 @@ function salesCustomers_(me) {
     var counted = function (c) { return c.status === 'paid' && !c.refunded && !c.disputed; };
     var monthly = (a.charges || []).filter(function (c) { return (c.kind === 'full' || c.kind === 'prorated' || c.kind === 'final') && counted(c); });
     var monthsPaid = monthly.filter(function (c) { return c.kind === 'full'; }).length;
-    var monthlySum = monthly.filter(function (c, i) { return c.kind !== 'full' || i < (cm.months || 0) + 1; }).reduce(function (s, c) { return s + c.amount; }, 0);
-    var com = (a.status !== 'awaiting_card' ? cm.flat : 0) + (a.setupPaid ? Math.round(a.setup * cm.setupPct / 100) : 0) + Math.round(monthlySum * cm.monthlyPct / 100);
+    var nFull = 0, monthlySum = monthly.filter(function (c) { if (c.kind !== 'full') return true; nFull++; return !cm.months || nFull <= cm.months; }).reduce(function (s, c) { return s + c.amount; }, 0);
+    var bonus = cm.bonus ? (cm.bonus[a.tier] || 0) : (cm.flat || 0);
+    var live = monthly.some(function (c) { return c.kind === 'prorated' || c.kind === 'full'; }); // bonus is earned once the first launch payment goes through
+    var com = (live ? bonus : 0) + (a.setupPaid ? Math.round(a.setup * cm.setupPct / 100) : 0) + Math.round(monthlySum * cm.monthlyPct / 100);
     return { id: a.id, business: a.business, contact: a.owner, phone: a.phone, email: a.email, packageName: BILL_TIERS[a.tier].n, optionName: a.pay === 'zero' ? '$0 Down' : 'Pay Upfront',
       signed: (a.agreement && a.agreement.signed) || String(a.created || '').slice(0, 10), progress: progress(a), launch: a.launch || '', monthsPaid: monthsPaid, commission: com, rep: me.role === 'owner' ? (a.rep || '') : undefined, test: a.env !== 'production' };
   });

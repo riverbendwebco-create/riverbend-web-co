@@ -56,8 +56,11 @@ h2{font-size:1rem;margin:0 0 10px}
   <div class="panel"><h2 id="custTitle">My customers</h2><div id="custs"><div class="msg">Loading...</div></div></div>
   <div class="hidden" id="ownerOnly">
     <div class="panel"><h2>Commission settings</h2>
-      <p class="msg" style="margin-top:0">Used for every salesperson's commission. Leave at 0 until the sales agreement terms are final.</p>
-      <div class="row"><label>Per sale $ <input class="field" id="cFlat" type="number" min="0" step="1" style="width:90px"></label>
+      <p class="msg" style="margin-top:0">Used for every salesperson's commission. The package bonus is earned once the customer's website goes live (first launch payment). Months 0 means every monthly payment for as long as the customer stays.</p>
+      <div class="row"><label>Starter bonus $ <input class="field" id="cBS" type="number" min="0" step="1" style="width:80px"></label>
+        <label>Custom bonus $ <input class="field" id="cBC" type="number" min="0" step="1" style="width:80px"></label>
+        <label>Premium bonus $ <input class="field" id="cBP" type="number" min="0" step="1" style="width:80px"></label></div>
+      <div class="row">
         <label>% of setup fee <input class="field" id="cSetup" type="number" min="0" max="100" step="0.5" style="width:80px"></label>
         <label>% of monthly payments <input class="field" id="cMonthly" type="number" min="0" max="100" step="0.5" style="width:80px"></label>
         <label>for months <input class="field" id="cMonths" type="number" min="0" max="120" style="width:70px"></label>
@@ -95,7 +98,7 @@ async function load(){
 }
 async function team(){
   const r=await api({action:'team_list'}); if(!r.ok) return;
-  const c=r.commission||{}; $('#cFlat').value=(c.flat||0)/100; $('#cSetup').value=c.setupPct||0; $('#cMonthly').value=c.monthlyPct||0; $('#cMonths').value=c.months==null?12:c.months;
+  const c=r.commission||{}; const bo=c.bonus||{starter:c.flat||0,custom:c.flat||0,premium:c.flat||0}; $('#cBS').value=(bo.starter||0)/100; $('#cBC').value=(bo.custom||0)/100; $('#cBP').value=(bo.premium||0)/100; $('#cSetup').value=c.setupPct||0; $('#cMonthly').value=c.monthlyPct||0; $('#cMonths').value=c.months==null?12:c.months;
   $('#users').replaceChildren(...r.users.map(u=>el('div',{class:'user'},el('div',null,el('b',{text:u.name}),el('div',{class:'msg',style:'margin:2px 0 0',text:u.email+' · '+u.roleName+' · '+(u.status==='invited'?'invite sent':u.status)+(u.role==='owner'?(u.mfa?' · two-step on ('+u.recoveryLeft+' recovery codes left)':' · two-step not set up'):'')+(u.lastLogin?' · last sign-in '+u.lastLogin.slice(0,10):'')})),
     u.email===me.email?el('span',{class:'msg',text:'You'}):el('div',{class:'row'},
       el('button',{class:'btn',type:'button',text:u.status==='invited'?'Resend setup link':'Send reset link',onclick:()=>act({action:'team_resend',email:u.email},'Link sent.')}),
@@ -106,7 +109,7 @@ async function team(){
 }
 async function act(b,okText){ const r=await api(b); const m=$('#tMsg'); m.className='msg '+(r.ok?'ok':'err'); m.textContent=r.ok?okText:(r.detail||({exists:'That email already has an account.',bad:'Check the name, email and role.',self:'You cannot do that to your own account.'}[r.error]||'Error: '+r.error)); team(); }
 $('#iSend').addEventListener('click',()=>act({action:'team_invite',name:$('#iName').value.trim(),email:$('#iEmail').value.trim(),role:$('#iRole').value},'Setup link sent.'));
-$('#cSave').addEventListener('click',async()=>{ const r=await api({action:'team_commission',flat:$('#cFlat').value,setupPct:$('#cSetup').value,monthlyPct:$('#cMonthly').value,months:$('#cMonths').value}); const m=$('#cMsg'); m.className='msg '+(r.ok?'ok':'err'); m.textContent=r.ok?'Saved.':'Could not save.'; load(); });
+$('#cSave').addEventListener('click',async()=>{ const r=await api({action:'team_commission',bStarter:$('#cBS').value,bCustom:$('#cBC').value,bPremium:$('#cBP').value,setupPct:$('#cSetup').value,monthlyPct:$('#cMonthly').value,months:$('#cMonths').value}); const m=$('#cMsg'); m.className='msg '+(r.ok?'ok':'err'); m.textContent=r.ok?'Saved.':'Could not save.'; load(); });
 $('#legacyOff').addEventListener('click',async()=>{ if(!confirm('Turn off the shared Studio and billing passwords for good?')) return; const r=await api({action:'team_legacy_off'}); const m=$('#tMsg'); m.className='msg '+(r.ok?'ok':'err'); m.textContent=r.ok?'Shared passwords are off. Only individual accounts work now.':(r.detail||r.error); team(); });
 load();
 })();

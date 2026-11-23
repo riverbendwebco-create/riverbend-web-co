@@ -64,10 +64,18 @@ let sc=S({action:'sales_customers',token:owenTok});
 ok('Customer signed while Owen is logged in is assigned to Owen; others are not visible to him',sc.ok&&sc.customers.length===1&&sc.customers[0].business==='Owen Client');
 ok('A form field cannot assign a customer to a rep',!B.billAll_().find(a=>a.business==='Fake Rep').rep);
 ok('Owen sees progress but no company totals',sc.customers[0].progress&&sc.customers[0].rep===undefined&&sc.totalCommission===0&&sc.mrr===undefined);
-S({action:'team_commission',token:kruzTok,flat:50,setupPct:10,monthlyPct:0,months:12});
+S({action:'team_commission',token:kruzTok,bStarter:25,bCustom:50,bPremium:75,setupPct:0,monthlyPct:10,months:0});
 const oc=B.billAll_().find(a=>a.business==='Owen Client'); H.cache={}; B.pay_({action:'pay_card',key:oc.payKey.split('#')[1],consent:true,source:'cnon:card-nonce-ok'});
 sc=S({action:'sales_customers',token:owenTok});
-ok('Commission is configurable: $50 per sale + 10% of the $499 setup fee = $99.90',sc.customers[0].commission===5000+4990&&sc.totalCommission===9990,JSON.stringify(sc.customers[0]));
+ok('Commission before launch: card saved but website not live = $0 (bonus waits for launch)',sc.customers[0].commission===0,JSON.stringify(sc.customers[0]));
+{ const a0=B.billAll_().find(a=>a.business==='Owen Client'); const t=a0.tier, mo=a0.monthly, bonus={starter:2500,custom:5000,premium:7500}[t];
+  H.today='2026-11-18'; B.billLaunch_(a0.id,'2026-11-18',true); const pr=B.billGet_(a0.id).charges.find(c=>c.kind==='prorated').amount;
+  sc=S({action:'sales_customers',token:owenTok});
+  ok('Website live: '+t+' bonus $'+bonus/100+' + 10% of the prorated launch payment',sc.customers[0].commission===bonus+Math.round(pr*0.10),JSON.stringify(sc.customers[0]));
+  let d='2026-11-19'; for(let i=0;i<460;i++){ H.today=d; B.billTick_(); const x=new Date(d+'T12:00:00Z'); x.setUTCDate(x.getUTCDate()+1); d=x.toISOString().slice(0,10);} 
+  const a1=B.billGet_(a0.id), full=a1.charges.filter(c=>c.kind==='full'&&c.status==='paid').reduce((s,c)=>s+c.amount,0), n=a1.charges.filter(c=>c.kind==='full'&&c.status==='paid').length;
+  sc=S({action:'sales_customers',token:owenTok});
+  ok('10% keeps paying past 12 months while the customer stays ('+n+' monthly payments)',n>12&&sc.customers[0].commission===bonus+Math.round((pr+full)*0.10),JSON.stringify(sc.customers[0])); }
 ok('Owners see every customer and its rep',S({action:'sales_customers',token:kruzTok}).customers.length===3);
 // leads: Owen sees unassigned + his own; cannot edit another rep's lead
 B.studio_({action:'leads_save',token:owenTok,lead:{id:'L1',name:'Joe Bar'}}); B.studio_({action:'leads_save',token:kruzTok,lead:{id:'L2',name:'Owner Lead'}});
