@@ -2404,6 +2404,7 @@ function abI(n){ const P={
   shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',tag:'<path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',chat:'<path d="M4 5h16v11H8l-4 4z"/>',
   gauge:'<path d="M4 18a9 9 0 1 1 16 0"/><path d="m12 13 4-4"/>',hand:'<path d="M7 11V5a2 2 0 0 1 4 0v5M11 10V4a2 2 0 0 1 4 0v6M15 10V6a2 2 0 0 1 4 0v8a7 7 0 0 1-14 0v-3a2 2 0 0 1 4 0"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',quote:'<path d="M5 18c2-1 3-3 3-6H5V6h6v6c0 4-2 6-6 6zM14 18c2-1 3-3 3-6h-3V6h6v6c0 4-2 6-6 6z"/>'};
   const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
+const AB_SVC={"CV & drivetrain repair": "1769218403508-90c67335aab5", "Suspension": "1760836395763-25ea44ae8145", "Tires": "1764015805414-df7de89d405b", "Batteries": "1765211003026-f7666ea3a948", "Engine diagnostics": "1625047509248-ec889cbff17f", "Electrical": "1632733711679-529326f6db12", "A/C": "1773962375418-9f13f00553e7", "Tune-ups": "1782885044133-27c4df887d96", "Brakes": "1747330038945-fb39f6e4b73c", "Exhaust": "1764869427739-cc4bbc7f62fa"};
 function abAuto(C){
   const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
   const town=C.city?C.city.split(',')[0]:'';
@@ -2440,15 +2441,15 @@ function abAuto(C){
   const about=h('section',{class:'ab-sec ab-light',id:'ab-about'},h('div',{class:'ab-w ab-about rv'},
     h('h2',{class:'ab-h2'},name),
     h('div',{class:'ab-about-p'},(C.about?String(C.about).split(/\n+/).filter(Boolean):[name+' is a full-service automotive center and vehicle sales lot'+(town?' in '+town:'')+'. We take care of the vehicle you drive and help you find your next one.','Stop in for maintenance, a repair or a test drive, or give us a call with any questions.']).map(t=>h('p',null,t)))));
-  const feats=[['wrench','Repairs and maintenance'],['tire','Tires and brakes'],['car','Cars, trucks and SUVs'],['tag','Pre-owned vehicle sales'],['chat','Call or stop in with questions'],['hand','Friendly, local service']];
+  const feats=[['wrench','Repairs and maintenance','1615906655593-ad0386982a0f'],['tire','Tires and brakes','1760317890314-e964ffd7e6a6'],['car','Cars, trucks and SUVs','1792010025571-58898f12dc49'],['tag','Pre-owned vehicle sales','1794208709613-1750c1a0483e'],['chat','Call or stop in with questions','1792793176006-a7b35e29c7e1'],['hand','Friendly, local service',isAB?'SHOP':'1767681092416-bccf9410bda4']];
   const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
-      h('div',{class:'ab-feats'},feats.map(([i,t])=>h('div',null,h('span',null,abI(i)),h('b',null,t))))),
-    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.aboutPhoto)||C.own[0]||P.shop)),h('div',{class:'ab-ring'}))));
+      h('div',{class:'ab-feats'},feats.map(([i,t,ph])=>bg(h('div',{class:'ab-feat'},h('span',null,abI(i)),h('b',null,t)),ph==='SHOP'?'https://riverbendwebco.com/demo/img/ab-shop.jpg':AB_U(ph,600),'linear-gradient(180deg,rgba(10,10,12,.05) 20%,rgba(10,10,12,.85) 100%)')))),
+    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.aboutPhoto)||C.own[0]||P.shop)))));
   const svcList=isAB?['CV & drivetrain repair','Suspension','Tires','Batteries','Engine diagnostics','Electrical','A/C','Tune-ups','Brakes','Exhaust']:items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
   const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
     h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
-    h('div',{class:'ab-svc'+(svcList.length===10?' n10':'')},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
+    h('div',{class:'ab-svc'+(svcList.length===10?' n10':'')},svcList.map((t,i)=>{ const ph=AB_SVC[t]||(items[i]&&items[i].photo)||''; return h('a',{class:'ab-svc-i rv',href:C.tel||'#ab-contact',onclick:C.tel?null:go('ab-contact')},ph?bg(h('div',{class:'ab-svc-img'}),/^https/.test(ph)?ph:AB_U(ph,700)):null,h('div',{class:'ab-svc-b'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))); }))));
   const ctaBand=(id,img,title,sub)=>h('section',{class:'ab-sec tight',id:id||null},h('div',{class:'ab-w'},h('div',{class:'ab-cta rv'},bg(h('div',{class:'ab-cta-img'}),img),
     h('div',{class:'ab-cta-t'},h('h2',null,title),h('p',null,sub),C.tel?h('a',{class:'ab-cta-tel',href:C.tel},C.phoneTxt):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Contact us')))));
   const cta1=ctaBand(null,P.grease,'Schedule your service','Save time. Call the shop and we will set up a time that works for you.');
