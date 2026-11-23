@@ -1811,7 +1811,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23n';
+var BILL_VERSION = '2026-11-23o';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3303,9 +3303,11 @@ function authSendLink_(u, kind) {
 }
 function authResetRequest_(d) {
   var e = authEmail_(d.email), users = authUsers_(), u = users[e], c = CacheService.getScriptCache();
-  if (u && u.status === 'active' && !c.get('auth_rr_' + sha256Hex_(e))) {
+  if (u && (u.status === 'active' || u.status === 'invited') && !c.get('auth_rr_' + sha256Hex_(e))) {
     c.put('auth_rr_' + sha256Hex_(e), '1', 300);
-    authSendLink_(u, 'reset'); authSaveUsers_(users); authLog_(u, 'password reset requested');
+    // an account that was never set up gets a fresh setup link instead (the old one stops working)
+    var kind = u.status === 'invited' ? 'setup' : 'reset';
+    authSendLink_(u, kind); authSaveUsers_(users); authLog_(u, kind === 'setup' ? 'new setup link requested' : 'password reset requested');
   }
   return { ok: true }; // same answer whether or not the email has an account
 }

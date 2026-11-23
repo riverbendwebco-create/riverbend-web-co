@@ -99,7 +99,8 @@ label.f{display:block;font-size:.8rem;color:var(--mut);margin:12px 0 5px}
     <h1 id="setTitle">Create password</h1>
     <p id="setSub"></p>
     <input id="setEmail" name="username" type="email" autocomplete="username" class="field" readonly>
-    <label class="f" for="newpw">New password (at least 10 characters)</label>
+    <label class="f" for="newpw">New password</label>
+    <p class="msg" style="margin:0 0 6px">At least 10 characters. A short phrase works well, like "blue truck on main street". It can't contain your name, "riverbend", "dubuque" or "password".</p>
     <input class="field" id="newpw" name="new-password" type="password" autocomplete="new-password" minlength="10" required>
     <label class="f" for="newpw2">Type it again</label>
     <input class="field" id="newpw2" type="password" autocomplete="new-password" minlength="10" required>
@@ -136,7 +137,7 @@ const next=(()=>{ const n=new URLSearchParams(location.search).get('next')||''; 
 const COMMON=['password','password1','password123','qwerty','letmein','welcome','iloveyou','riverbend','dubuque','123456789','1234567890','monkey','dragon','baseball','football','sunshine','princess','trustno1'];
 let pend=null, creds=null;
 function msg(id,t,ok){ const m=$(id); m.className='msg '+(ok?'ok':'err'); m.textContent=t; }
-const ERR={badlogin:'That email and password do not match.',locked:'Too many tries. Wait 15 minutes and try again.',badcode:'That code is not right. Wait for a new code and try again.',expired:'This link has expired or was already used. Ask an owner for a new one, or use Forgot password.',busy:'Busy for a moment. Try again.',network:'Cannot reach the server. Check your connection.'};
+const ERR={badlogin:'That email and password do not match.',locked:'Too many tries. Wait 15 minutes and try again.',badcode:'That code is not right. Wait for a new code and try again.',expired:'This link has expired or was already used. Tap Forgot password below and enter your email: we will send you a new link.',busy:'Busy for a moment. Try again.',network:'Cannot reach the server. Check your connection.'};
 
 async function home(){
   const me=await A.call({action:'auth_me'});
@@ -191,7 +192,8 @@ async function linkFlow(kind,link){
     e.preventDefault(); const p1=$('#newpw').value, p2=$('#newpw2').value, low=p1.toLowerCase();
     if(p1.length<10) return msg('#setMsg','Use at least 10 characters.');
     if(p1!==p2) return msg('#setMsg','The two passwords do not match.');
-    if(COMMON.some(c=>low.includes(c))||low.includes(r.email.split('@')[0])) return msg('#setMsg','That password is too easy to guess. Try a short phrase.');
+    const bad=COMMON.find(c=>low.includes(c))||(low.includes(r.email.split('@')[0])?r.email.split('@')[0]:'')||(r.name.split(' ').map(x=>x.toLowerCase()).find(x=>x.length>2&&low.includes(x))||'');
+    if(bad) return msg('#setMsg','Your password can\'t contain "'+bad+'". Try a short phrase instead.');
     const b=$('#setBtn'); b.disabled=true; b.textContent='Saving...';
     const dk=await A.derive(p1,r.salt); const s=await A.call({action:'auth_set_password',kind,link,salt:r.salt,dk});
     b.disabled=false; b.textContent='Save password';

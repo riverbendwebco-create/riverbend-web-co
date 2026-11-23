@@ -84,6 +84,12 @@ const ls=B.studio_({action:'leads_saved',token:owenTok});
 ok('Owen sees his leads and unassigned leads, not other people\'s',ls.ok&&ls.leads.map(l=>l.id).join()==='L1',ls.leads&&ls.leads.map(l=>l.id).join());
 ok('Owen cannot change another person\'s lead',B.studio_({action:'leads_update',token:owenTok,id:'L2',stage:'Won'}).error==='auth');
 // password reset: link, not password; ends sessions; owner still needs the code
+{ S({action:'team_invite',token:kruzTok,email:'newrep@x.com',name:'New Rep',role:'sales'}); H.mails.length=0; H.cache={};
+  A({action:'auth_reset_request',email:'newrep@x.com'}); const m=H.mails.find(x=>x.to==='newrep@x.com');
+  ok('Forgot password on an account never set up sends a fresh setup link',m&&/Set up your Riverbend account/.test(m.subject)&&/#setup=[a-f0-9]{64}/.test(m.body));
+  const l=m.body.match(/setup=([a-f0-9]{64})/)[1]; let q=A({action:'auth_link_info',kind:'setup',link:l}); const sv=A({action:'auth_set_password',kind:'setup',link:l,salt:q.salt,dk:dk('Blue-Truck-77',q.salt)});
+  q=A({action:'auth_login',email:'newrep@x.com',dk:dk('Blue-Truck-77',q.salt)});
+  ok('...and the salesperson can then create a password and sign in',sv.ok&&q.ok&&q.token); }
 H.mails.length=0; A({action:'auth_reset_request',email:'kruz@x.com'}); A({action:'auth_reset_request',email:'nobody@x.com'});
 const rm=H.mails.filter(m=>/Reset your Riverbend password/.test(m.subject));
 ok('Reset sends a 1-hour link only to real accounts (same reply for unknown emails)',rm.length===1&&/#reset=[a-f0-9]{64}/.test(rm[0].body));
