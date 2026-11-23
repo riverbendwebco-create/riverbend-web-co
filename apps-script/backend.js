@@ -1810,8 +1810,11 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23i';
-var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1 };
+var BILL_VERSION = '2026-11-23j';
+// Everything that charges, changes money or payment settings needs an individual owner account.
+// The old shared billing password can only view billing until owners turn it off.
+var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
+  billing_launch: 1, billing_retry: 1, billing_cancel: 1, billing_flag: 1, billing_findcard: 1, billing_tick: 1 };
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
