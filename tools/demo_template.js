@@ -2311,24 +2311,26 @@ function shadeTree(C){
         isST&&v.t==='Commercial'?h('p',{class:'st-note'},'For businesses and commercial properties.'):null,
         h('div',{class:'st-row'},h('button',{type:'button',class:'st-btn',onclick:()=>ask(v.n)},h('span',null,'Request an Estimate'),h('i',null,stI('arrow'))),
           C.tel?h('a',{class:'st-ghost',href:C.tel},'Call '+C.phoneTxt):null)))); sheet.hidden=false; document.body.style.overflow='hidden'; };
-  const strip=h('div',{class:'st-strip'},h('div',{class:'st-w st-strip-in'},
+  const strip=h('div',{class:'st-w st-hinfo'},h('div',{class:'st-hinfo-in'},
     addrTxt?h('a',{href:C.maps||'#',target:'_blank',rel:'noopener'},stI('pin'),addrTxt):null,C.email?h('a',{class:'st-hide-s',href:'mailto:'+C.email},stI('mail'),C.email):null,
     C.today?h('span',{class:'st-strip-r'},stI('clock'),/closed/i.test(C.today)?'Closed today':'Open today '+C.today.replace(' - ',' to ')):null));
   const menu=h('nav',{class:'st-menu',hidden:true},links(),C.tel?h('a',{class:'st-btn',href:C.tel},h('span',null,'Call '+C.phoneTxt),h('i',null,stI('phone'))):null);
-  const nav=h('header',{class:'st-nav'},strip,h('div',{class:'st-bar'},h('div',{class:'st-w st-bar-in'},brand(),h('nav',{class:'st-links'},links()),
+  const nav=h('header',{class:'st-nav'},h('div',{class:'st-bar'},h('div',{class:'st-w st-bar-in'},brand(),h('nav',{class:'st-links'},links()),
     C.tel?h('a',{class:'st-call',href:C.tel},h('span',{class:'st-call-i'},stI('phone')),h('span',null,h('small',null,'Call Now'),h('b',null,C.phoneTxt))):null,
     h('button',{type:'button',class:'st-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},stI('menu'))),menu));
   const kick=t=>h('p',{class:'st-kick'},h('i'),t,h('i'));
   const trust=isST?['Serving since 1991','Licensed and bonded','Residential & commercial']:[];
-  const hero=h('section',{class:'st-hero',id:'st-top'},h('div',{class:'st-w st-hero-in'},
-    h('div',{class:'st-hero-t'},kick(isST?'Grounds management, tree removal & landscaping':'Tree care for '+town+' homes and businesses'),
+  const heroBg=ST_U('1690777056106-bf26e55b67ce',2200);
+  const hero=bg(h('section',{class:'st-hero',id:'st-top'}),heroBg,'linear-gradient(100deg,rgba(4,38,18,.95) 0%,rgba(4,38,18,.86) 42%,rgba(4,38,18,.55) 100%)');
+  hero.append(strip,h('div',{class:'st-w st-hero-in'},
+    h('div',{class:'st-hero-t'},h('p',{class:'st-kick light'},stI('leaf'),isST?'Grounds management, tree removal & landscaping':'Tree care for '+town+' homes and businesses'),
       h('h1',null,x.headline?x.headline:['Smart Tree Care, ',h('span',null,'Stunning Results')]),
-      h('p',null,C.tag||(isST?'Shade Tree Services has served Frederick, Washington and Carroll County homes and businesses since 1991, from tree and stump removal to lawn care, landscaping and snow removal.':name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
-      h('div',{class:'st-row'},btn('Get an Estimate','#st-contact'),C.tel?h('a',{class:'st-ghost lg',href:C.tel},stI('phone'),C.phoneTxt):null),
-      trust.length?h('ul',{class:'st-trust'},trust.map(t=>h('li',null,h('span',null,stI('check')),t))):null,
-      h('div',{class:'st-finder'},h('small',null,'What do you need help with?'),h('div',{class:'st-chips'},svc.map(v=>h('button',{type:'button',onclick:()=>openSvc(v)},v.n))))),
+      h('p',{class:'st-lead'},C.tag||(isST?'Serving Frederick, Washington and Carroll County homes and businesses since 1991, from tree and stump removal to lawn care, landscaping and snow removal.':name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
+      h('div',{class:'st-row'},btn('Get an Estimate','#st-contact'),C.tel?h('a',{class:'st-ghost lg light',href:C.tel},stI('phone'),C.phoneTxt):null),
+      trust.length?h('ul',{class:'st-trust'},trust.map(t=>h('li',null,h('span',null,stI('check')),t))):null),
     h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero||isST?'':' sharp')+(isST?' trailer':'')}),heroPic),
-      h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,isST?'Since 1991':'Local crew'),h('small',null,isST?'Licensed and bonded':'Serving '+town))))));
+      h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,isST?'Since 1991':'Local crew'),h('small',null,isST?'Licensed and bonded':'Serving '+town))))),
+    h('div',{class:'st-w'},h('div',{class:'st-finder'},h('small',null,'What do you need help with?'),h('div',{class:'st-chips'},svc.map(v=>h('button',{type:'button',onclick:()=>openSvc(v)},v.n))))));
   const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},isST?'Serving Frederick, Washington and Carroll County, MD':'Tree services in '+town+' and nearby')),
     h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));
   /* services with filter tabs */
