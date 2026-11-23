@@ -3741,6 +3741,15 @@ function bbMkArt(){
   const t=setInterval(show,4600); show();
   return h('figure',{class:'mp-photo mp-bbfig'},art,cap);
 }
+/* Service businesses (cleaning, tree care, auto, real estate...) get service wording instead of bar/restaurant wording */
+function mkIsService(C){ if(document.body.classList.contains('t-trade')) return true;
+  if(['realty','zephyr','mutual','homy','shadetree','abauto','cloud'].indexOf(C.variant)>=0) return true;
+  return /clean|maid|tree|lawn|landscap|auto|motor|repair|mechanic|tire|realt|real estate|stone|granite|counter|window|door|glass|wheel|truck|salon|barber|plumb|electric|roof|hvac|heating|construct|contract|paint|pest|pool|moving|storage|vape|smoke|insur|law|dental|clinic|fitness|gym/i.test((C.name||'')+' '+(C.cat||'')); }
+function mkServiceItem(m,C){ const t={
+  club:{name:'Email or text list for reminders and deals',what:'Customers sign up on your site, and we send your seasonal reminders, deals and news to them for you.',more:['A sign-up form on your website, plus a QR code for your counter, truck or invoices','We write and send your reminders, deals and news to everyone on the list','Text or email, whichever your customers prefer','Opt-in only, with an easy way to unsubscribe','A monthly count of how many people have joined'],idea:'A reminder text before your busy season, with a link to book or call.'},
+  qr:{name:'QR signs and review cards',what:'Counter signs, cards or stickers with a QR code that opens your website, booking page or Google reviews.',more:['Designed to match your logo and colors','The QR code opens your live website, so changes never mean reprinting','One scan to leave a Google review or book a job','Print-ready files you can take to any printer'],idea:''},
+  order:{name:'Online booking or quote requests setup',what:'We connect online booking, appointment requests or a quote form to your website. One-time $150 setup fee.',more:['A booking or quote request form on your website, sent to you by email or text','Or we connect the scheduling app you already use','Customers can send photos of the job with their request','We set it up, test it and walk you through it'],idea:'Customers can request an estimate or book a time right from your website, any time of day.'}}[m.id];
+  if(!t) return m; return Object.assign({},m,{name:t.name,what:t.what,more:t.more,idea:()=>t.idea}); }
 function marketing(C){
   const money=n=>'$'+n.toLocaleString('en-US');
   const unit=m=>m.label||(m.per==='mo'?'per month':'one-time');
@@ -3757,8 +3766,11 @@ function marketing(C){
       h('div',{class:'mo-price'},h('b',null,money(m.price)),h('span',null,unit(m)))); };
   const soc=[C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null].filter(Boolean);
   const hide=(Array.isArray(C.x.mkHide)?C.x.mkHide.filter(x=>typeof x==='string'):[]).concat(C.mkHide);
-  const adds=MK.filter(m=>hide.indexOf(m.id)<0), plans=MK_SOCIAL.filter(m=>hide.indexOf(m.id)<0);
-  const webs=MK_WEB.filter(m=>hide.indexOf(m.id)<0); let sn=0; const num=()=>String(++sn).padStart(2,'0');
+  const SVC=mkIsService(C);
+  const svcWeb=m=>!SVC?m:Object.assign({},m,{what:m.what.replace('For busy businesses that want','For businesses that want'),more:m.more.map(t=>t.replace('Monthly event and specials promo banner','Monthly promo banner for your deals and seasonal services').replace('Weekly specials and events banners','Weekly deals and seasonal promo banners').replace('Review requests: QR table cards and a text link','Review requests: QR cards and a text link').replace('Menu or services setup','Services and pricing setup'))});
+  const svcSoc=m=>!SVC?m:Object.assign({},m,{more:m.more.map(t=>t.replace('your specials, events and drawings','your services, jobs and deals').replace("the day's special, live music and last-minute news",'jobs in progress, before-and-afters and openings in your schedule').replace('Reminder posts before events like live music and your monthly drawing','Reminder posts before your busy seasons and deals')),what:m.what.replace(/about your food, specials and events/,'about your work, services and deals')});
+  const adds=MK.filter(m=>hide.indexOf(m.id)<0).map(m=>SVC?mkServiceItem(m,C):m), plans=MK_SOCIAL.filter(m=>hide.indexOf(m.id)<0).map(svcSoc);
+  const webs=MK_WEB.filter(m=>hide.indexOf(m.id)<0).map(svcWeb); let sn=0; const num=()=>String(++sn).padStart(2,'0');
   /* optional recommended package, priced from the live plan list so totals stay right */
   const pickBox=()=>{ const ids=Array.isArray(C.x.mkPick)?C.x.mkPick.filter(x=>typeof x==='string'):[]; const all=MK_WEB.concat(MK_SOCIAL,MK); const items=ids.map(id=>all.find(m=>m.id===id)).filter(Boolean); if(!items.length) return null;
     const mo=items.filter(m=>m.per==='mo').reduce((a,m)=>a+m.price,0), once=items.filter(m=>m.per!=='mo').reduce((a,m)=>a+m.price,0);
