@@ -7392,5 +7392,41 @@
         "8am - 5pm"
       ]
     }
+  },
+  {
+    "key": "cleaning-momma-city-1",
+    "matchName": "Cleaning Momma",
+    "patch": true,
+    "data": {
+      "city": "Frederick, MD",
+      "address": ""
+    }
+  },
+  {
+    "key": "cleaning-momma-city-2",
+    "matchName": "The Cleaning Momma",
+    "patch": true,
+    "data": {
+      "city": "Frederick, MD",
+      "address": ""
+    }
+  },
+  {
+    "key": "cleaning-momma-city-3",
+    "matchName": "Cleaning Momma LLC",
+    "patch": true,
+    "data": {
+      "city": "Frederick, MD",
+      "address": ""
+    }
+  },
+  {
+    "key": "cleaning-momma-city-4",
+    "matchName": "The Cleaning Momma LLC",
+    "patch": true,
+    "data": {
+      "city": "Frederick, MD",
+      "address": ""
+    }
   }
 ]

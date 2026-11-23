@@ -2153,6 +2153,8 @@ function hcI(n){ const P={
   const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
 function homy(C){
   const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  if(/cleaning\s+mom+a/i.test(name)&&!/frederick/i.test(C.city+' '+C.addr)){ C.city='Frederick, MD'; C.addr=''; C.maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', Frederick, MD'); }
+  if(/cleaning\s+mom+a/i.test(name)){ if(/dubuque|iowa\b|\bIA\b/i.test(C.tag)) C.tag=''; if(/dubuque|iowa\b|\bIA\b/i.test(C.about)) C.about=''; }
   const town=C.city?C.city.split(',')[0]:'your area';
   const heroPic=ok(x.heroPhoto)||HC_U('1758273705627-937374bfa978');
   const aboutPic=ok(x.aboutPhoto)||HC_U('1758273238415-01ec03d9ef27');
