@@ -1333,6 +1333,13 @@ body.t-mt{background:#fff}
 .ab-q summary i{flex:none;width:30px;height:30px;border-radius:50%;background:#FDECEC;color:var(--red);display:grid;place-items:center;transition:transform .25s}.ab-q summary i svg{width:15px;height:15px;transform:rotate(90deg)}.ab-q[open] summary i{transform:rotate(180deg)}
 .ab-q p{margin:0;padding:0 20px 20px;color:#4A4C52;line-height:1.7}
 @media(max-width:860px){.ab-faq{grid-template-columns:1fr;gap:24px}.ab-faq-h{position:static}.ab-q summary{padding:16px;font-size:.96rem}.ab-q p{padding:0 16px 16px}}
+.ab-what{display:grid;gap:22px}.ab-wr{display:grid;grid-template-columns:1fr 1.15fr;background:var(--light);border-radius:18px;overflow:hidden}.ab-wr.flip .ab-wr-img{order:2}
+.ab-wr-img{min-height:320px;background-size:cover;background-position:center}.ab-wr-t{padding:40px 42px;display:flex;flex-direction:column;justify-content:center}
+.ab-wr-i{width:48px;height:48px;border-radius:12px;background:var(--red);color:#fff;display:grid;place-items:center;margin-bottom:16px}.ab-wr-i svg{width:24px;height:24px}
+.ab-wr h3{font-size:1.5rem;font-weight:800;text-transform:uppercase;margin:0 0 12px}.ab-wr p{color:#44464D;line-height:1.75;margin:0 0 18px}
+.ab-link{display:inline-flex;align-items:center;gap:7px;color:var(--red);font-weight:700;text-decoration:none;margin-right:18px}.ab-link:hover{text-decoration:underline}
+.ab-also{margin-top:22px;background:#fff;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}.ab-also b{text-transform:uppercase;font-size:.85rem}.ab-also .ab-tags{margin:0}.ab-also .ab-tags li{background:var(--light);border-color:transparent}
+@media(max-width:860px){.ab-wr,.ab-wr.flip{grid-template-columns:1fr}.ab-wr.flip .ab-wr-img{order:0}.ab-wr-img{min-height:220px}.ab-wr-t{padding:26px 22px}.ab-wr h3{font-size:1.25rem}}
 .ab-sales{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}.ab-sales-pic{min-height:420px;border-radius:18px;background-size:cover;background-position:center;box-shadow:0 24px 50px rgba(0,0,0,.15)}
 .ab-checks{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:12px}.ab-checks li{display:flex;align-items:center;gap:10px;font-weight:500}.ab-checks li>span{width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}.ab-checks svg{width:13px;height:13px;stroke-width:3}
 .ab-rev-wrap{display:flex;align-items:center;gap:14px}.ab-revs{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.ab-rev{margin:0;background:#fff;border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:12px;animation:abIn .5s ease both}.ab-rev-h{display:flex;justify-content:space-between;align-items:center}.ab-rev-h b{text-transform:uppercase;font-size:.82rem}.ab-rev-h svg{color:var(--red);fill:var(--red);stroke:none;width:24px;height:24px}.ab-rev blockquote{margin:0;color:#3F4148;line-height:1.6;flex:1}.ab-rev figcaption{font-weight:700;font-size:.92rem}
@@ -7037,7 +7044,7 @@ function abAuto(C){
   const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
-  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-faq','FAQ'):null,A('ab-contact','Contact')];
+  const links=()=>[/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-what','What We Do'):null,A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-faq','FAQ'):null,A('ab-contact','Contact')];
   const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
   const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
   const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
@@ -7049,11 +7056,14 @@ function abAuto(C){
       C.tel?h('a',{class:'ab-nav-tel',href:C.tel},h('small',null,'Call the shop'),h('b',null,C.phoneTxt)):null,
       h('button',{type:'button',class:'ab-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},abI('menu'))),
     h('div',{class:'ab-w ab-nav-links'},links()),menu);
-  const cards=[
+  const cards=isAB?[
+    {id:'ab-what',t:'Auto Repair & Maintenance',d:'Oil changes, brakes, alignments, electrical diagnostics and engine repairs for foreign and domestic vehicles.',img:P.repair},
+    {id:'ab-what',t:'Tires & Towing',d:'Tire sales, installation, balancing and repair, plus towing when your vehicle leaves you stranded.',img:AB_U('1730514785075-b065c757b653')},
+    {id:'ab-sales',t:'Used Car Sales',d:'Quality pre-owned cars, trucks and SUVs to fit a variety of needs and budgets.',img:P.sales}]:[
     {id:'ab-service',t:'Auto Repair',d:'Diagnostics and repairs for cars, trucks and SUVs, done right by people who care about your vehicle.',img:P.repair},
     {id:'ab-service',t:'Tires & Brakes',d:'Keep your vehicle stopping and rolling safely, season after season.',img:P.tire},
     {id:'ab-sales',t:'Vehicle Sales',d:'Pre-owned cars, trucks and SUVs. Ask what is on the lot.',img:P.sales}];
-  const bullets=isAB?['ASE Certified','Repairs for cars, trucks and SUVs','Tires, wheels and truck accessories','Pre-owned vehicles for sale']:['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
+  const bullets=isAB?['ASE Certified','Foreign and domestic repairs','Tires and towing','Quality pre-owned vehicles']:['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
   const hero=bg(h('section',{class:'ab-hero'+(isAB?' shop':''),id:'ab-top'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop2.jpg':(ok(x.heroPhoto)||P.heroBg),'linear-gradient(90deg,rgba(14,14,16,.9) 0%,rgba(14,14,16,.66) 50%,rgba(14,14,16,.3) 100%)');
   hero.append(h('div',{class:'ab-w ab-hero-in'},
     h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
@@ -7065,7 +7075,18 @@ function abAuto(C){
   const about=h('section',{class:'ab-sec ab-light',id:'ab-about'},h('div',{class:'ab-w ab-about rv'},
     h('h2',{class:'ab-h2'},name),
     h('div',{class:'ab-about-p'},(C.about?String(C.about).split(/\n+/).filter(Boolean):[name+' is a full-service automotive center and vehicle sales lot'+(town?' in '+town:'')+'. We take care of the vehicle you drive and help you find your next one.','Stop in for maintenance, a repair or a test drive, or give us a call with any questions.']).map(t=>h('p',null,t)))));
-  const feats=[['wrench','Repairs and maintenance','1615906655593-ad0386982a0f'],['tire','Tires and brakes','1760317890314-e964ffd7e6a6'],['car','Cars, trucks and SUVs','1792010025571-58898f12dc49'],['tag','Pre-owned vehicle sales','1794208709613-1750c1a0483e'],['chat','Call or stop in with questions','1792793176006-a7b35e29c7e1'],['hand','Friendly, local service',isAB?'SHOP':'1767681092416-bccf9410bda4']];
+  const WHAT=isAB?[
+    ['Used Car Sales & Inventory','tag',P.sales,'Looking for a dependable used vehicle? At A & B Automotive Center & Sales, we offer a regularly updated inventory of quality pre-owned cars, trucks, and SUVs to fit a variety of needs and budgets. Every vehicle is carefully selected and backed by the knowledge of an experienced automotive team, giving you added confidence in your purchase. Whether you’re searching for a first vehicle, a reliable commuter, or an upgrade for your family, we’re here to help you find the right fit.','#ab-sales','See vehicle sales'],
+    ['Auto Repair & Maintenance','wrench',P.repair,'Keep your vehicle performing at its best with our comprehensive automotive repair and maintenance services. Our skilled technicians work on both foreign and domestic vehicles, providing everything from oil changes, brake repairs, alignments, and front-end work to electrical diagnostics and engine repairs. We focus on quality workmanship, honest recommendations, and dependable service to help extend the life of your vehicle and keep you safely on the road.','#ab-service','See all services'],
+    ['Specialty Vehicle & RV Services','gauge',AB_U('1636761358757-0a616eb9e17e'),'In addition to traditional automotive repair, we specialize in servicing motorcycles, campers, RVs, and small engines. From routine maintenance and seasonal winterizing to more advanced repairs, our team has the expertise and equipment to keep your recreational and specialty vehicles operating reliably year-round. No matter what you drive or ride, we deliver the same attention to detail and professional care.',null,null],
+    ['Tires & Towing','tire',AB_U('1730514785075-b065c757b653'),'Whether you need new tires, tire repairs, or emergency roadside assistance, A & B Automotive Center & Sales has you covered. We offer tire sales, installation, balancing, and repair services to help maximize safety and performance. If your vehicle leaves you stranded, our reliable towing service is available to get you and your vehicle where you need to be quickly and safely.',null,null],
+    ['Flexible Scheduling','clock','https://riverbendwebco.com/demo/img/ab-shop2.jpg','We know it can be difficult to fit vehicle service into a busy schedule, which is why we offer flexible appointment options, including Saturdays and Sundays by appointment. Our goal is to make maintaining and repairing your vehicle as convenient as possible, providing service when it works best for you.',null,null]]:[];
+  const what=WHAT.length?h('section',{class:'ab-sec',id:'ab-what'},h('div',{class:'ab-w'},
+    h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'What we do'),h('p',{class:'ab-mut'},'Used car sales, full auto repair, specialty vehicles, tires and towing, all from one local shop.')),
+    h('div',{class:'ab-what'},WHAT.map(([t,ic,img,d,href,lab],i)=>h('article',{class:'ab-wr rv'+(i%2?' flip':'')},bg(h('div',{class:'ab-wr-img'}),img),
+      h('div',{class:'ab-wr-t'},h('span',{class:'ab-wr-i'},abI(ic)),h('h3',null,t),h('p',null,d),
+        h('div',{class:'ab-row'},href?h('a',{class:'ab-link',href:href,onclick:go(href.slice(1))},lab,abI('arrow')):null,C.tel?h('a',{class:'ab-link',href:C.tel},'Call '+C.phoneTxt,abI('phone')):null))))))):null;
+  const feats=[['wrench','Repairs and maintenance','1615906655593-ad0386982a0f'],['tire','Tires and brakes','1760317890314-e964ffd7e6a6'],['car','Cars, trucks and SUVs','1792010025571-58898f12dc49'],['tag','Pre-owned vehicle sales','1794208709613-1750c1a0483e'],[isAB?'clock':'chat',isAB?'Saturday and Sunday appointments':'Call or stop in with questions','1792793176006-a7b35e29c7e1'],['hand','Friendly, local service',isAB?'SHOP':'1767681092416-bccf9410bda4']];
   const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
       h('div',{class:'ab-feats'},feats.map(([i,t,ph])=>bg(h('div',{class:'ab-feat'},h('span',null,abI(i)),h('b',null,t)),ph==='SHOP'?'https://riverbendwebco.com/demo/img/ab-shop2.jpg':AB_U(ph,600),'linear-gradient(180deg,rgba(10,10,12,.05) 20%,rgba(10,10,12,.85) 100%)')))),
@@ -7081,7 +7102,7 @@ function abAuto(C){
   const svcList=isAB?['CV & drivetrain repair','Suspension','Tires','Batteries','Engine diagnostics','Electrical','A/C','Tune-ups','Brakes','Exhaust','Inspections','Oil & filter change']:items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
   const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
     h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
-    h('div',{class:'ab-svc'+(svcList.length===10?' n10':'')+(svcList.length===12?' n12':'')},svcList.map((t,i)=>{ const ph=AB_SVC[t]||(items[i]&&items[i].photo)||''; return h('a',{class:'ab-svc-i rv',href:C.tel||'#ab-contact',onclick:C.tel?null:go('ab-contact')},ph?bg(h('div',{class:'ab-svc-img'}),/^https/.test(ph)?ph:AB_U(ph,700)):null,h('div',{class:'ab-svc-b'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))); }))));
+    h('div',{class:'ab-svc'+(svcList.length===10?' n10':'')+(svcList.length===12?' n12':'')},svcList.map((t,i)=>{ const ph=AB_SVC[t]||(items[i]&&items[i].photo)||''; return h('a',{class:'ab-svc-i rv',href:C.tel||'#ab-contact',onclick:C.tel?null:go('ab-contact')},ph?bg(h('div',{class:'ab-svc-img'}),/^https/.test(ph)?ph:AB_U(ph,700)):null,h('div',{class:'ab-svc-b'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))); })),isAB?h('div',{class:'ab-also rv'},h('b',null,'We also handle'),h('ul',{class:'ab-tags'},['Alignments','Front-end work','Transmission work','Tire repair & balancing','Towing','Motorcycles','Campers & RVs','Small engines','Seasonal winterizing','Foreign & domestic vehicles'].map(t=>h('li',null,t)))):null));
   const ctaBand=(id,img,title,sub)=>h('section',{class:'ab-sec tight',id:id||null},h('div',{class:'ab-w'},h('div',{class:'ab-cta rv'},bg(h('div',{class:'ab-cta-img'}),img),
     h('div',{class:'ab-cta-t'},h('h2',null,title),h('p',null,sub),C.tel?h('a',{class:'ab-cta-tel',href:C.tel},C.phoneTxt):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Contact us')))));
   const cta1=ctaBand(null,P.grease,'Schedule your service','Save time. Call the shop and we will set up a time that works for you.');
@@ -7089,8 +7110,8 @@ function abAuto(C){
   const how=bg(h('section',{class:'ab-sec ab-dark',id:'ab-how'}),P.engine,'linear-gradient(rgba(10,10,12,.9),rgba(10,10,12,.94))');
   how.append(h('div',{class:'ab-w'},h('h2',{class:'ab-h2 c'},'How we work'),h('ol',{class:'ab-tl'},steps.map(([t,d],i)=>h('li',{class:'rv '+(i%2?'r':'l')},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('b',null,t),h('p',null,d)))))));
   const sales=h('section',{class:'ab-sec',id:'ab-sales'},h('div',{class:'ab-w ab-sales'},
-    h('div',{class:'ab-sales-t rv'},h('h2',{class:'ab-h2'},'Vehicle Sales'),h('p',{class:'ab-mut'},'Looking for your next car, truck or SUV? Ask about the vehicles on our lot right now. Stop in to look around or call to ask what is available.'),
-      h('ul',{class:'ab-checks'},['Pre-owned cars, trucks and SUVs','Ask what is on the lot today','Test drives welcome'].map(t=>h('li',null,h('span',null,abI('check')),t))),
+    h('div',{class:'ab-sales-t rv'},h('h2',{class:'ab-h2'},'Vehicle Sales'),h('p',{class:'ab-mut'},isAB?'Looking for a dependable used vehicle? We offer a regularly updated inventory of quality pre-owned cars, trucks, and SUVs to fit a variety of needs and budgets. Every vehicle is carefully selected and backed by the knowledge of an experienced automotive team.':'Looking for your next car, truck or SUV? Ask about the vehicles on our lot right now. Stop in to look around or call to ask what is available.'),
+      h('ul',{class:'ab-checks'},(isAB?['Cars, trucks and SUVs','Carefully selected by an experienced team','A first car, a commuter or a family upgrade']:['Pre-owned cars, trucks and SUVs','Ask what is on the lot today','Test drives welcome']).map(t=>h('li',null,h('span',null,abI('check')),t))),
       h('div',{class:'ab-row'},C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),'Ask About Inventory'):null,C.fb?h('a',{class:'ab-btn ghost dk',href:C.fb,target:'_blank',rel:'noopener'},'See vehicles on Facebook'):null)),
     bg(h('div',{class:'ab-sales-pic rv'}),P.lot)));
   const cta2=ctaBand(null,P.sales,'Find your next vehicle','Call to ask what is on the lot, or come by for a test drive.');
@@ -7128,7 +7149,7 @@ function abAuto(C){
     h('div',null,brand.cloneNode(true),h('small',null,'© '+new Date().getFullYear()+' '+name)),
     h('div',null,h('b',null,'Contact'),C.tel?h('a',{href:C.tel},C.phoneTxt):null,addrTxt?h('span',null,addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
     h('div',null,h('b',null,'Company'),links())),isAB?h('div',{class:'ab-w ab-foot-x'},h('span',null,'ASE Certified'),h('span',null,'NFIB member'),h('span',null,'BBB'),h('span',null,'Serving '+AREAS.join(' \u00b7 '))):null);
-  return h('div',{class:'ab'},nav,hero,about,why,creds,cta1,service,how,sales,cta2,reviews,faqSec,contact,foot);
+  return h('div',{class:'ab'},nav,hero,about,what,why,creds,cta1,service,how,sales,cta2,reviews,faqSec,contact,foot);
 }
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
