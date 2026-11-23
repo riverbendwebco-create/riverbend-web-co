@@ -2426,8 +2426,8 @@ function abAuto(C){
   const cards=[
     {id:'ab-service',t:'Auto Repair',d:'Diagnostics and repairs for cars, trucks and SUVs, done right by people who care about your vehicle.',img:P.repair},
     {id:'ab-service',t:'Tires & Brakes',d:'Keep your vehicle stopping and rolling safely, season after season.',img:P.tire},
-    {id:'ab-sales',t:'Vehicle Sales',d:'Quality pre-owned vehicles from a shop that knows what is under the hood.',img:P.sales}];
-  const bullets=['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Straight answers before any work','Local, family-friendly shop'];
+    {id:'ab-sales',t:'Vehicle Sales',d:'Pre-owned cars, trucks and SUVs. Ask what is on the lot.',img:P.sales}];
+  const bullets=['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
   const hero=bg(h('section',{class:'ab-hero',id:'ab-top'}),ok(x.heroPhoto)||P.heroBg,'linear-gradient(90deg,rgba(14,14,16,.92) 0%,rgba(14,14,16,.7) 55%,rgba(120,10,16,.55) 100%)');
   hero.append(h('div',{class:'ab-w ab-hero-in'},
     h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
@@ -2438,25 +2438,25 @@ function abAuto(C){
     h('div',{class:'ab-w ab-cards'},cards.map(c=>bg(h('a',{class:'ab-card',href:'#'+c.id,onclick:go(c.id)},h('div',{class:'ab-card-t'},h('h3',null,c.t),h('p',null,c.d),h('span',null,'Learn more ',abI('arrow')))),c.img,'linear-gradient(180deg,rgba(10,10,12,0) 30%,rgba(10,10,12,.9) 100%)'))));
   const about=h('section',{class:'ab-sec ab-light',id:'ab-about'},h('div',{class:'ab-w ab-about rv'},
     h('h2',{class:'ab-h2'},name),
-    h('div',{class:'ab-about-p'},(C.about?String(C.about).split(/\n+/).filter(Boolean):[name+' is a full-service automotive center and vehicle sales lot'+(town?' in '+town:'')+'. We fix what you drive, and we sell vehicles we would be proud to put our name on.','Stop in for maintenance, a repair or a test drive. We explain what your vehicle needs and what it costs before we start, so there are no surprises.']).map(t=>h('p',null,t)))));
-  const feats=[['wrench','Repairs done right'],['chat','Clear answers on every job'],['shield','We stand behind our work'],['car','Service and sales in one place'],['tag','Fair, upfront pricing'],['hand','Friendly, local service']];
+    h('div',{class:'ab-about-p'},(C.about?String(C.about).split(/\n+/).filter(Boolean):[name+' is a full-service automotive center and vehicle sales lot'+(town?' in '+town:'')+'. We take care of the vehicle you drive and help you find your next one.','Stop in for maintenance, a repair or a test drive, or give us a call with any questions.']).map(t=>h('p',null,t)))));
+  const feats=[['wrench','Repairs and maintenance'],['tire','Tires and brakes'],['car','Cars, trucks and SUVs'],['tag','Pre-owned vehicle sales'],['chat','Call or stop in with questions'],['hand','Friendly, local service']];
   const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
       h('div',{class:'ab-feats'},feats.map(([i,t])=>h('div',null,h('span',null,abI(i)),h('b',null,t))))),
     h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),ok(x.aboutPhoto)||C.own[0]||P.shop),h('div',{class:'ab-ring'}))));
-  const svcList=items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Pre-purchase inspections'];
+  const svcList=items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
   const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
     h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
     h('div',{class:'ab-svc'},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
   const ctaBand=(id,img,title,sub)=>h('section',{class:'ab-sec tight',id:id||null},h('div',{class:'ab-w'},h('div',{class:'ab-cta rv'},bg(h('div',{class:'ab-cta-img'}),img),
     h('div',{class:'ab-cta-t'},h('h2',null,title),h('p',null,sub),C.tel?h('a',{class:'ab-cta-tel',href:C.tel},C.phoneTxt):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Contact us')))));
   const cta1=ctaBand(null,P.grease,'Schedule your service','Save time. Call the shop and we will set up a time that works for you.');
-  const steps=[['Call or stop in','Tell us what is going on with your vehicle.'],['Inspection','We look it over and find the real problem.'],['Clear estimate','You get the price before any work starts.'],['Repair','Our techs fix it with quality parts.'],['Quality check','We test it to make sure it is right.'],['Back on the road','Pay when you are happy and drive away.']];
+  const steps=[['Call or stop in','Tell us what is going on with your vehicle.'],['Inspection','We look it over and find the real problem.'],['Estimate','We go over the work and the cost with you.'],['Repair','Our techs fix it with quality parts.'],['Quality check','We test it to make sure it is right.'],['Back on the road','Pick up your vehicle and get going.']];
   const how=bg(h('section',{class:'ab-sec ab-dark',id:'ab-how'}),P.engine,'linear-gradient(rgba(10,10,12,.9),rgba(10,10,12,.94))');
   how.append(h('div',{class:'ab-w'},h('h2',{class:'ab-h2 c'},'How we work'),h('ol',{class:'ab-tl'},steps.map(([t,d],i)=>h('li',{class:'rv '+(i%2?'r':'l')},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('b',null,t),h('p',null,d)))))));
   const sales=h('section',{class:'ab-sec',id:'ab-sales'},h('div',{class:'ab-w ab-sales'},
-    h('div',{class:'ab-sales-t rv'},h('h2',{class:'ab-h2'},'Vehicle Sales'),h('p',{class:'ab-mut'},'Looking for your next car, truck or SUV? Ask about the vehicles on our lot right now. Every one is looked over by the same people who work on cars every day.'),
-      h('ul',{class:'ab-checks'},['Pre-owned cars, trucks and SUVs','Inspected by our own shop','Test drives welcome'].map(t=>h('li',null,h('span',null,abI('check')),t))),
+    h('div',{class:'ab-sales-t rv'},h('h2',{class:'ab-h2'},'Vehicle Sales'),h('p',{class:'ab-mut'},'Looking for your next car, truck or SUV? Ask about the vehicles on our lot right now. Stop in to look around or call to ask what is available.'),
+      h('ul',{class:'ab-checks'},['Pre-owned cars, trucks and SUVs','Ask what is on the lot today','Test drives welcome'].map(t=>h('li',null,h('span',null,abI('check')),t))),
       h('div',{class:'ab-row'},C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),'Ask About Inventory'):null,C.fb?h('a',{class:'ab-btn ghost dk',href:C.fb,target:'_blank',rel:'noopener'},'See vehicles on Facebook'):null)),
     bg(h('div',{class:'ab-sales-pic rv'}),P.lot)));
   const cta2=ctaBand(null,P.sales,'Find your next vehicle','Call to ask what is on the lot, or come by for a test drive.');
