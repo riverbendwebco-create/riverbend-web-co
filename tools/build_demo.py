@@ -1052,6 +1052,12 @@ body.t-mt{background:#fff}
 .ab-hero{background-size:cover;background-position:center;color:#fff;padding:70px 0 0;position:relative}
 .ab-hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:150px;background:#fff}
 .ab-hero-in{position:relative;z-index:1;max-width:1200px}
+.ab-hrev{position:absolute;right:0;top:0;width:340px;height:206px;margin:0;padding:20px 22px;border-radius:16px;background:rgba(18,18,21,.55);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.ab-hrev-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.ab-hrev-h small{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.65);font-weight:600}
+.ab-hrev p{margin:0 0 10px;line-height:1.5;font-size:.98rem;flex:1}.ab-hrev figcaption b{font-size:.9rem;color:#FF8A8A}
+.ab-hrev .in{animation:abIn .5s ease both}
+@media(max-width:1100px){.ab-hrev{position:static;width:auto;max-width:520px;min-height:0;height:178px;margin-bottom:26px}}
+@media(max-width:760px){.ab-hrev{height:190px;padding:16px 18px}.ab-hrev p{font-size:.92rem}}
 .ab-kick{color:#FF8A8A;font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:.8rem;margin:0 0 14px}
 .ab-hero h1{font-size:clamp(2.6rem,6vw,4.6rem);line-height:1;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin:0 0 18px}.ab-hero h1 span{display:block;color:var(--red)}
 .ab-lead{max-width:560px;font-size:1.08rem;line-height:1.65;color:rgba(255,255,255,.85);margin:0 0 24px}

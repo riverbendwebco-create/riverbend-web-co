@@ -2435,7 +2435,7 @@ function abAuto(C){
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const menu=h('nav',{class:'ab-menu',hidden:true},links(),C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null);
   const nav=h('header',{class:'ab-nav'},h('div',{class:'ab-w ab-nav-top'},brand,
-      addrTxt?h('a',{class:'ab-nav-info ab-hide-s',href:C.maps,target:'_blank',rel:'noopener'},abI('pin'),h('span',null,addrTxt,h('small',null,C.today?(/closed/i.test(C.today)?'Closed today':'Open today '+C.today):'Auto service and vehicle sales'))):null,
+      addrTxt?h('a',{class:'ab-nav-info ab-hide-s',href:C.maps,target:'_blank',rel:'noopener'},abI('pin'),h('span',null,addrTxt,h('small',null,C.today?(/closed/i.test(C.today)?'Closed today':/appointment/i.test(C.today)?'Today: by appointment':'Open today '+C.today):'Auto service and vehicle sales'))):null,
       C.tel?h('a',{class:'ab-nav-tel',href:C.tel},h('small',null,'Call the shop'),h('b',null,C.phoneTxt)):null,
       h('button',{type:'button',class:'ab-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},abI('menu'))),
     h('div',{class:'ab-w ab-nav-links'},links()),menu);
@@ -2448,7 +2448,12 @@ function abAuto(C){
     {id:'ab-sales',t:'Vehicle Sales',d:'Pre-owned cars, trucks and SUVs. Ask what is on the lot.',img:P.sales}];
   const bullets=isAB?['ASE Certified','Foreign and domestic repairs','Tires and towing','Quality pre-owned vehicles']:['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
   const hero=bg(h('section',{class:'ab-hero'+(isAB?' shop':''),id:'ab-top'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop2.jpg':(ok(x.heroPhoto)||P.heroBg),'linear-gradient(90deg,rgba(14,14,16,.9) 0%,rgba(14,14,16,.66) 50%,rgba(14,14,16,.3) 100%)');
+  const hrev=(()=>{ const rv=C.reviews; if(!rv.length) return null; let k=0; const q=h('p',{class:'in'}), nm=h('b',{class:'in'});
+    const put=()=>{ const r=rv[k%rv.length]; [q,nm].forEach(e=>{e.classList.remove('in'); void e.offsetWidth; e.classList.add('in');}); q.textContent='\u201C'+short(r.text,140)+'\u201D'; nm.textContent=r.name; };
+    put(); const t=setInterval(()=>{ if(!q.isConnected){clearInterval(t);return;} k++; put(); },3000);
+    return h('figure',{class:'ab-hrev','aria-live':'polite'},h('div',{class:'ab-hrev-h'},h('span',{class:'ab-stars'},[0,1,2,3,4].map(()=>abI('star'))),h('small',null,C.reviewsSource?C.reviewsSource+' reviews':'Reviews')),q,h('figcaption',null,nm)); })();
   hero.append(h('div',{class:'ab-w ab-hero-in'},
+    hrev,
     h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
     h('h1',null,x.headline||'Automotive Center',h('span',null,'& Sales')),
     h('p',{class:'ab-lead'},C.tag||('From routine maintenance to major repairs, and quality pre-owned vehicles when it is time for something new. '+name+' keeps you on the road.')),
