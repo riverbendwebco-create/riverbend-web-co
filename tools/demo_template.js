@@ -2422,8 +2422,8 @@ function abAuto(C){
       {name:'Allen Langguth',stars:5,text:'We were on a family road trip to Dubuque when our check oil pressure light came on. A nice gentlemen stopped and told us to go to A & B Auto and ask for Adam. Adam was very nice and very helpful. He checked us over and gave us pointers and got us on the road. Thank you to the gentlemen who stopped and thank you to Adam!'}];
   }
   const town=C.city?C.city.split(',')[0]:'';
-  const P={heroBg:AB_U('1767681092416-bccf9410bda4',2200),repair:AB_U('1771340012378-3c86cb649193'),tire:AB_U('1645445522156-9ac06bc7a767'),sales:AB_U('1794208709613-1750c1a0483e'),
-    shop:AB_U('1767681092416-bccf9410bda4',1000),grease:AB_U('1619642751034-765dfdf7c58e'),lot:AB_U('1794208635374-9574f0527c12'),engine:AB_U('1486262715619-67b85e0b08d3',2000),oil:AB_U('1771340742493-52fbd5476ccb')};
+  const P={heroBg:AB_U('1517524206127-48bbd363f3d7',2200),repair:AB_U('1771340012378-3c86cb649193'),tire:AB_U('1645445522156-9ac06bc7a767'),sales:AB_U('1794208709613-1750c1a0483e'),
+    shop:AB_U('1517524206127-48bbd363f3d7',1000),grease:AB_U('1619642751034-765dfdf7c58e'),lot:AB_U('1794208635374-9574f0527c12'),engine:AB_U('1486262715619-67b85e0b08d3',2000),oil:AB_U('1771340742493-52fbd5476ccb')};
   const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
@@ -2474,7 +2474,7 @@ function abAuto(C){
     h('div',{class:'ab-what'},WHAT.map(([t,ic,img,d,href,lab],i)=>h('article',{class:'ab-wr rv'+(i%2?' flip':'')},bg(h('div',{class:'ab-wr-img'}),img),
       h('div',{class:'ab-wr-t'},h('span',{class:'ab-wr-i'},abI(ic)),h('h3',null,t),h('p',null,d),
         h('div',{class:'ab-row'},href?h('a',{class:'ab-link',href:href,onclick:go(href.slice(1))},lab,abI('arrow')):null,C.tel?h('a',{class:'ab-link',href:C.tel},'Call '+C.phoneTxt,abI('phone')):null))))))):null;
-  const feats=[['wrench','Repairs and maintenance','1615906655593-ad0386982a0f'],['tire','Tires and brakes','1760317890314-e964ffd7e6a6'],['car','Cars, trucks and SUVs','1792010025571-58898f12dc49'],['tag','Pre-owned vehicle sales','1794208709613-1750c1a0483e'],[isAB?'clock':'chat',isAB?'Saturday and Sunday appointments':'Call or stop in with questions','1792793176006-a7b35e29c7e1'],['hand','Friendly, local service',isAB?'SHOP':'1767681092416-bccf9410bda4']];
+  const feats=[['wrench','Repairs and maintenance','1615906655593-ad0386982a0f'],['tire','Tires and brakes','1760317890314-e964ffd7e6a6'],['car','Cars, trucks and SUVs','1792010025571-58898f12dc49'],['tag','Pre-owned vehicle sales','1794208709613-1750c1a0483e'],[isAB?'clock':'chat',isAB?'Saturday and Sunday appointments':'Call or stop in with questions','1792793176006-a7b35e29c7e1'],['hand','Friendly, local service',isAB?'SHOP':'1517524206127-48bbd363f3d7']];
   const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
       h('div',{class:'ab-feats'},feats.map(([i,t,ph])=>bg(h('div',{class:'ab-feat'},h('span',null,abI(i)),h('b',null,t)),ph==='SHOP'?'https://riverbendwebco.com/demo/img/ab-shop2.jpg':AB_U(ph,600),'linear-gradient(180deg,rgba(10,10,12,.05) 20%,rgba(10,10,12,.85) 100%)')))),
