@@ -2208,8 +2208,8 @@ function billSettings_() {
 }
 function billSetSettings_(d) {
   var p = PropertiesService.getScriptProperties(), env = d.target === 'production' ? 'production' : 'sandbox', E = env.toUpperCase();
-  if (typeof d.token === 'string' && d.token.trim()) {
-    var t = d.token.trim();
+  if (typeof d.sqToken === 'string' && d.sqToken.trim()) {
+    var t = d.sqToken.trim();
     if (!/^[A-Za-z0-9_\-]{20,200}$/.test(t)) return { ok: false, error: 'badtoken' };
     var prev = p.getProperty('SQUARE_TOKEN_' + E);
     p.setProperty('SQUARE_TOKEN_' + E, t);
