@@ -116,11 +116,12 @@ $('#go').addEventListener('click',async()=>{
   if(!card||!$('#agree').checked) return;
   const b=$('#go'), m=$('#msg'); b.disabled=true; const label=b.textContent; b.textContent='Working...'; m.className='msg'; m.textContent='';
   try{
-    const details={amount:((info.setupDue+info.pastDue)/100||1).toFixed(2),currencyCode:'USD',intent:'STORE',customerInitiated:true,sellerKeyedIn:false,billingContact:{familyName:'',givenName:''}};
-    let t; try{ t=await card.tokenize(details); }catch(_){ t=await card.tokenize(); }
+    // Saving a card on file: Square's STORE intent (no amount). Square runs any bank verification itself.
+    const details={intent:'STORE',customerInitiated:true,sellerKeyedIn:false,billingContact:{}};
+    let t; try{ t=await card.tokenize(details); }catch(_){ t=null; }
+    if(!t||t.status!=='OK'){ try{ t=await card.tokenize(); }catch(_){} }
     if(!t||t.status!=='OK'){ throw {msg:(t&&t.errors&&t.errors[0]&&t.errors[0].message)||'Please check your card details.'}; }
     let ver='';
-    if(payments.verifyBuyer){ try{ const v=await payments.verifyBuyer(t.token,{intent:'STORE',billingContact:{}}); ver=(v&&v.token)||''; }catch(_){} }
     const r=await api({action:'pay_card',source:t.token,verification:ver,consent:true});
     if(r.ok){
       $('#payCard').classList.add('hidden'); $('#done').classList.remove('hidden'); show(r.info);
