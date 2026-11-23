@@ -113,6 +113,7 @@ function agreementEmail_(f, file, driveUrl, sheetUrl) {
   var d = (f['Phone'] || '').replace(/\D/g, '');
   if (d.length >= 10) actions.push(btn_('tel:+1' + d.slice(-10), 'Call', !actions.length));
   if (sheetUrl) actions.push(btn_(sheetUrl, 'Open lead sheet', false));
+  var scope = Object.keys(f).filter(function (k) { return /^Scope: /.test(k) && f[k]; }).map(function (k) { return [k.replace(/^Scope: /, 'Scope: '), f[k]]; });
   var rows = [
     ['Plan', f['Plan']],
     ['Business', f['Business']],
@@ -122,6 +123,7 @@ function agreementEmail_(f, file, driveUrl, sheetUrl) {
     ['Signed', f['Signed']],
     ['Signature', (f['Signature'] || '') + (driveUrl ? ' &nbsp;<a href="' + driveUrl + '" style="color:#0052CC;text-decoration:none;font-weight:600">View in Drive</a>' : '')]
   ];
+  rows = rows.concat(scope);
   var html = layout_({
     label: 'Signed service agreement',
     title: f['Business'],
@@ -130,7 +132,8 @@ function agreementEmail_(f, file, driveUrl, sheetUrl) {
     rows: rows,
     image: file && file.previewable ? { cid: 'preview', caption: 'Signature' } : null,
     steps: [
-      'Send the welcome email and onboarding checklist.',
+      'Send the secure Square link to authorize recurring billing (and collect the setup fee if paying upfront). Do not start development until it is done.',
+      'Confirm the project scope in writing.',
       'Collect logo, hours, menu or services and photos within 5 days.',
       'Build the preview, get approval, and launch.'
     ],
@@ -229,7 +232,7 @@ function log_(kind, f, fileUrl) {
   var un = unesc_;
   var safe = function (s) { s = un(s); return /^[=+\-@]/.test(s) ? "'" + s : s; }; // block spreadsheet formula injection
   if (kind === 'agreement') {
-    ss.getSheetByName('Signed Agreements').appendRow([new Date(), safe(f['Plan']), safe(f['Business']), safe(f['Owner']), safe(f['Phone']), safe(f['Email']), safe(f['Signed']), fileUrl]);
+    ss.getSheetByName('Signed Agreements').appendRow([new Date(), safe(f['Plan']), safe(f['Business']), safe(f['Owner']), safe(f['Phone']), safe(f['Email']), safe(f['Signed']), fileUrl, safe(Object.keys(f).filter(function (k) { return /^Scope: /.test(k) && f[k]; }).map(function (k) { return k.replace(/^Scope: /, '') + ': ' + f[k]; }).join(' | ').slice(0, 5000))]);
   } else {
     ss.getSheetByName('Preview Requests').appendRow([new Date(), safe(f['Business Name']), safe(f['Contact Name']), safe(f['Phone or Email']), safe(f['Business Type']), safe(f['Plan Interest']), fileUrl, 'New']);
   }
