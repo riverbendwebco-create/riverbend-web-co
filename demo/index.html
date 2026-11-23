@@ -1327,6 +1327,12 @@ body.t-mt{background:#fff}
 .ab-tags{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px}.ab-tags li{background:#fff;border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:.82rem;font-weight:500}
 .ab-foot-x{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid rgba(255,255,255,.1);margin-top:34px;padding-top:20px;font-size:.82rem;color:rgba(255,255,255,.55)}
 @media(max-width:980px){.ab-creds{grid-template-columns:1fr 1fr}}@media(max-width:560px){.ab-creds{grid-template-columns:1fr}}
+.ab-faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:start}.ab-faq-h{position:sticky;top:140px}
+.ab-faq-l{display:grid;gap:10px}.ab-q{background:#fff;border-radius:12px;border:1px solid var(--line);overflow:hidden}.ab-q[open]{border-color:var(--red)}
+.ab-q summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:16px;padding:18px 20px;font-weight:600;font-size:1.02rem}.ab-q summary::-webkit-details-marker{display:none}.ab-q summary span{flex:1}
+.ab-q summary i{flex:none;width:30px;height:30px;border-radius:50%;background:#FDECEC;color:var(--red);display:grid;place-items:center;transition:transform .25s}.ab-q summary i svg{width:15px;height:15px;transform:rotate(90deg)}.ab-q[open] summary i{transform:rotate(180deg)}
+.ab-q p{margin:0;padding:0 20px 20px;color:#4A4C52;line-height:1.7}
+@media(max-width:860px){.ab-faq{grid-template-columns:1fr;gap:24px}.ab-faq-h{position:static}.ab-q summary{padding:16px;font-size:.96rem}.ab-q p{padding:0 16px 16px}}
 .ab-sales{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}.ab-sales-pic{min-height:420px;border-radius:18px;background-size:cover;background-position:center;box-shadow:0 24px 50px rgba(0,0,0,.15)}
 .ab-checks{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:12px}.ab-checks li{display:flex;align-items:center;gap:10px;font-weight:500}.ab-checks li>span{width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}.ab-checks svg{width:13px;height:13px;stroke-width:3}
 .ab-rev-wrap{display:flex;align-items:center;gap:14px}.ab-revs{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.ab-rev{margin:0;background:#fff;border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:12px;animation:abIn .5s ease both}.ab-rev-h{display:flex;justify-content:space-between;align-items:center}.ab-rev-h b{text-transform:uppercase;font-size:.82rem}.ab-rev-h svg{color:var(--red);fill:var(--red);stroke:none;width:24px;height:24px}.ab-rev blockquote{margin:0;color:#3F4148;line-height:1.6;flex:1}.ab-rev figcaption{font-weight:700;font-size:.92rem}
@@ -7031,7 +7037,7 @@ function abAuto(C){
   const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
-  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
+  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-faq','FAQ'):null,A('ab-contact','Contact')];
   const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
   const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
   const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
@@ -7095,6 +7101,20 @@ function abAuto(C){
     draw(); setInterval(()=>{ if(!track.isConnected) return; ri=(ri+1)%rv.length; draw(); },6000);
     reviews=h('section',{class:'ab-sec ab-light',id:'ab-reviews'},h('div',{class:'ab-w'},h('h2',{class:'ab-h2'},'Customer reviews'),h('p',{class:'ab-mut'},'What drivers say about '+name+'.'),
       h('div',{class:'ab-rev-wrap'},h('button',{type:'button',class:'ab-arr','aria-label':'Previous',onclick:()=>{ri=(ri-1+rv.length)%rv.length;draw();}},abI('arrow')),track,h('button',{type:'button',class:'ab-arr n','aria-label':'Next',onclick:()=>{ri=(ri+1)%rv.length;draw();}},abI('arrow'))))); }
+  const FAQ=isAB?[
+    ['What automotive services do you offer?','At A & B Automotive Center Inc., we provide a full range of auto repair and maintenance services, including engine diagnostics, brake repair, oil changes, tire services, transmission work, and more. Our goal is to keep your vehicle running safely and efficiently, no matter the issue.'],
+    ['Do you sell pre-owned vehicles?','Yes, we have a selection of high-quality pre-owned vehicles for sale. All our vehicles are inspected thoroughly to ensure they meet safety and performance standards.'],
+    ['Can I bring my car in without an appointment?','While we welcome walk-ins, scheduling an appointment ensures faster service and reduces your wait time.'],
+    ['What payment methods do you accept?','We accept various payment methods including cash, major credit cards, debit cards and personal checks.'],
+    ['Will you work with my insurance company?','Absolutely! We have experience working with all major insurance companies and can assist you with the claims process to ensure a smooth experience.'],
+    ['Do you work on all makes and models?','Yes, our experienced technicians are trained to work on a wide variety of makes and models, both domestic and foreign. No matter what you drive, we can provide reliable service tailored to your vehicle’s needs.'],
+    ['How can I view your current vehicle inventory?','To see what vehicles are currently available, simply click the Inventory tab on our website. There you’ll find up-to-date listings, photos, pricing, and details about each vehicle in stock.'],
+    ['Do you inspect the vehicles you sell?','Yes. As a full-service automotive repair shop, we carefully evaluate our vehicles and use our automotive expertise to help provide dependable transportation options for our customers.'],
+    ['Can I schedule service appointments on weekends?','Yes. We offer Saturday and Sunday appointments to help accommodate busy schedules. Weekend appointments are available by appointment.']]:[];
+  const faqSec=FAQ.length?h('section',{class:'ab-sec ab-light',id:'ab-faq'},h('div',{class:'ab-w ab-faq'},
+    h('div',{class:'ab-faq-h rv'},h('h2',{class:'ab-h2'},'Frequently asked questions'),h('p',{class:'ab-mut'},'Quick answers about service, payment and vehicle sales. Still have a question? Give us a call.'),
+      C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null),
+    h('div',{class:'ab-faq-l'},FAQ.map(([q,a],i)=>h('details',{class:'ab-q',open:i===0?true:null},h('summary',null,h('span',null,q),h('i',null,abI('arrow'))),h('p',null,a)))))):null;
   const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
   const contact=h('section',{class:'ab-sec',id:'ab-contact'},h('div',{class:'ab-w ab-contact'},
     h('div',{class:'rv'},h('h2',{class:'ab-h2'},'Come see us'),h('p',{class:'ab-mut'},'Stop in for service or a test drive.'),
@@ -7108,7 +7128,7 @@ function abAuto(C){
     h('div',null,brand.cloneNode(true),h('small',null,'© '+new Date().getFullYear()+' '+name)),
     h('div',null,h('b',null,'Contact'),C.tel?h('a',{href:C.tel},C.phoneTxt):null,addrTxt?h('span',null,addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
     h('div',null,h('b',null,'Company'),links())),isAB?h('div',{class:'ab-w ab-foot-x'},h('span',null,'ASE Certified'),h('span',null,'NFIB member'),h('span',null,'BBB'),h('span',null,'Serving '+AREAS.join(' \u00b7 '))):null);
-  return h('div',{class:'ab'},nav,hero,about,why,creds,cta1,service,how,sales,cta2,reviews,contact,foot);
+  return h('div',{class:'ab'},nav,hero,about,why,creds,cta1,service,how,sales,cta2,reviews,faqSec,contact,foot);
 }
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */

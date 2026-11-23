@@ -2413,7 +2413,7 @@ function abAuto(C){
   const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
-  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
+  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-faq','FAQ'):null,A('ab-contact','Contact')];
   const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
   const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
   const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
@@ -2477,6 +2477,20 @@ function abAuto(C){
     draw(); setInterval(()=>{ if(!track.isConnected) return; ri=(ri+1)%rv.length; draw(); },6000);
     reviews=h('section',{class:'ab-sec ab-light',id:'ab-reviews'},h('div',{class:'ab-w'},h('h2',{class:'ab-h2'},'Customer reviews'),h('p',{class:'ab-mut'},'What drivers say about '+name+'.'),
       h('div',{class:'ab-rev-wrap'},h('button',{type:'button',class:'ab-arr','aria-label':'Previous',onclick:()=>{ri=(ri-1+rv.length)%rv.length;draw();}},abI('arrow')),track,h('button',{type:'button',class:'ab-arr n','aria-label':'Next',onclick:()=>{ri=(ri+1)%rv.length;draw();}},abI('arrow'))))); }
+  const FAQ=isAB?[
+    ['What automotive services do you offer?','At A & B Automotive Center Inc., we provide a full range of auto repair and maintenance services, including engine diagnostics, brake repair, oil changes, tire services, transmission work, and more. Our goal is to keep your vehicle running safely and efficiently, no matter the issue.'],
+    ['Do you sell pre-owned vehicles?','Yes, we have a selection of high-quality pre-owned vehicles for sale. All our vehicles are inspected thoroughly to ensure they meet safety and performance standards.'],
+    ['Can I bring my car in without an appointment?','While we welcome walk-ins, scheduling an appointment ensures faster service and reduces your wait time.'],
+    ['What payment methods do you accept?','We accept various payment methods including cash, major credit cards, debit cards and personal checks.'],
+    ['Will you work with my insurance company?','Absolutely! We have experience working with all major insurance companies and can assist you with the claims process to ensure a smooth experience.'],
+    ['Do you work on all makes and models?','Yes, our experienced technicians are trained to work on a wide variety of makes and models, both domestic and foreign. No matter what you drive, we can provide reliable service tailored to your vehicle’s needs.'],
+    ['How can I view your current vehicle inventory?','To see what vehicles are currently available, simply click the Inventory tab on our website. There you’ll find up-to-date listings, photos, pricing, and details about each vehicle in stock.'],
+    ['Do you inspect the vehicles you sell?','Yes. As a full-service automotive repair shop, we carefully evaluate our vehicles and use our automotive expertise to help provide dependable transportation options for our customers.'],
+    ['Can I schedule service appointments on weekends?','Yes. We offer Saturday and Sunday appointments to help accommodate busy schedules. Weekend appointments are available by appointment.']]:[];
+  const faqSec=FAQ.length?h('section',{class:'ab-sec ab-light',id:'ab-faq'},h('div',{class:'ab-w ab-faq'},
+    h('div',{class:'ab-faq-h rv'},h('h2',{class:'ab-h2'},'Frequently asked questions'),h('p',{class:'ab-mut'},'Quick answers about service, payment and vehicle sales. Still have a question? Give us a call.'),
+      C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null),
+    h('div',{class:'ab-faq-l'},FAQ.map(([q,a],i)=>h('details',{class:'ab-q',open:i===0?true:null},h('summary',null,h('span',null,q),h('i',null,abI('arrow'))),h('p',null,a)))))):null;
   const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
   const contact=h('section',{class:'ab-sec',id:'ab-contact'},h('div',{class:'ab-w ab-contact'},
     h('div',{class:'rv'},h('h2',{class:'ab-h2'},'Come see us'),h('p',{class:'ab-mut'},'Stop in for service or a test drive.'),
@@ -2490,7 +2504,7 @@ function abAuto(C){
     h('div',null,brand.cloneNode(true),h('small',null,'© '+new Date().getFullYear()+' '+name)),
     h('div',null,h('b',null,'Contact'),C.tel?h('a',{href:C.tel},C.phoneTxt):null,addrTxt?h('span',null,addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
     h('div',null,h('b',null,'Company'),links())),isAB?h('div',{class:'ab-w ab-foot-x'},h('span',null,'ASE Certified'),h('span',null,'NFIB member'),h('span',null,'BBB'),h('span',null,'Serving '+AREAS.join(' \u00b7 '))):null);
-  return h('div',{class:'ab'},nav,hero,about,why,creds,cta1,service,how,sales,cta2,reviews,contact,foot);
+  return h('div',{class:'ab'},nav,hero,about,why,creds,cta1,service,how,sales,cta2,reviews,faqSec,contact,foot);
 }
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
