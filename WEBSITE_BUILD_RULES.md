@@ -127,17 +127,20 @@ These rules come from building and launching riverbendwebco.com. Follow them on 
 
 ## 6. Riverbend pricing (current)
 
-Every package has two ways to pay. The pricing section has a "$0 Down / Pay Upfront" toggle ($0 Down shown first); the agreement has a package picker plus a payment picker. Premium is the featured card (24/7 direct line to a real local person). No per-page pricing anywhere.
+Every package has two ways to pay. Pricing section: "Every package includes" strip, "$0 Down / Pay Upfront" toggle ($0 Down first), three cards (Custom = Most Popular featured card, Premium = 24/7 support card), a $0 Down vs Pay Upfront terms box, and four expandable explainers (setup, updates, 24/7, ownership). No per-page pricing anywhere.
 
-| Package | $0 down (12-month agreement) | Pay upfront (month-to-month) | Updates and support |
-|---|---|---|---|
-| Starter | $109/mo | $499 setup + $50/mo | 1 update/month, standard email support |
-| Custom | $179/mo | $999 setup + $75/mo | 3 updates/month, priority business-hours support |
-| Premium (featured) | $349/mo | $2,499 setup + $100/mo | 6 updates/month, 24/7 direct line to a real local person, priority emergency support |
+| Package | $0 down (12-month agreement) | Pay upfront (month-to-month, 30 days' notice) | Saves over 12 months | Updates and support |
+|---|---|---|---|---|
+| Starter | $109/mo | $499 + $50/mo | $209 | 1 update/month within 3 business days, email support |
+| Custom (most popular) | $179/mo | $999 + $75/mo | $249 | 3 updates/month within 2 business days, priority business-hours support, select new features |
+| Premium | $349/mo | $2,499 + $100/mo | $489 | Unlimited updates (routine within 1 business day), 24/7 support availability, major redesigns and new features planned with the client |
 
-- Extra updates $35 each; larger work $65/hour, quoted first.
-- Pay upfront: setup fee at signing; monthly service starts at launch, month-to-month, 14 days' notice. Client owns the site files once setup is paid.
-- $0 down: nothing at signing, first payment the day the site goes live, 12-month agreement then month-to-month. Site files transfer after 24 consecutive payments. Early exit before 12 months: $299 Starter, $499 Custom, $999 Premium.
+- Every package includes: fully custom design and development, pages based on agreed business needs, mobile-friendly design, hosting and SSL, SEO foundation, security and maintenance.
+- An update = one change request up to 30 minutes of work (hours, pictures, text, contact info, adding to or modifying existing content). Unused updates do not roll over. Extra updates $35 each on Starter and Custom; bigger Starter work $65/hour quoted first.
+- Ownership (same words on the site and in the agreement): $0 down = custom website deliverables after all 12 required payments; pay upfront = once the build fee is paid in full. Hosting, maintenance, support and third-party subscriptions are separate services. After ownership, a client who leaves gets a full copy of the files and help moving the domain.
+- Cancellation: $0 down = 12-month agreement, then month-to-month with 30 days' notice; canceling early makes the remaining payments of the 12 months due, then the deliverables transfer. Pay upfront = month-to-month, 30 days' notice.
+- Premium 24/7: critical emergencies get priority attention around the clock; routine changes follow the normal schedule. Never advertise guaranteed instant fixes.
+- The service agreement language must be reviewed by a lawyer before it is used with customers.
 
 **Payment methods:** credit and debit cards through Square, ACH bank transfer, Venmo and PayPal. Listed in the pricing note, FAQ 08, agreement section 5 and the chat assistant `paymethod` answer.
 
