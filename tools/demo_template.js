@@ -2271,7 +2271,18 @@ function shadeTree(C){
     {n:'Trimming & Pruning',d:'Shape your trees, clear your roof and keep branches healthy and strong.',img:P.prune},
     {n:'Stump Grinding',d:'Grind old stumps down so you can mow, plant or build right over the spot.',img:P.cut},
     {n:'Storm Cleanup',d:'Downed limbs and leaning trees taken care of after the storm passes.',img:P.trim}];
-  const svc=(Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,8).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n)
+  const isST=/^shade\s?tree\b/i.test(name);
+  const STS=isST?[
+    {n:'Tree Removal',t:'Tree Care',d:'Tree removal is hazardous work best left to the experts. Our crew is trained, experienced, and ready to get to work.',img:'https://riverbendwebco.com/demo/img/st-removal.jpg'},
+    {n:'Stump Removal',t:'Tree Care',d:'There is no need to wait years for those unsightly tree stumps to decompose, give us a call today.',img:'https://riverbendwebco.com/demo/img/st-stump.jpg'},
+    {n:'Lot Clearing',t:'Land',d:'Residential and commercial lot clearing doesn\u2019t need to cost a fortune. We offer the best prices in our service area.',img:'https://riverbendwebco.com/demo/img/st-lot.jpg'},
+    {n:'Lawn Care',t:'Lawn',d:'Mowing, trimming, mulching, aeration, seeding: we do it all. No job is too big or small.',img:'https://riverbendwebco.com/demo/img/st-lawn.jpg'},
+    {n:'Power Washing',t:'Exterior',d:'Got green? Our power washing services remove mold, mildew, algae, and moss growing on your sidewalk, deck, brick, or siding.',img:'https://riverbendwebco.com/demo/img/st-wash.jpg'},
+    {n:'Landscaping',t:'Landscape',d:'We offer a variety of landscaping and hardscaping services. Not sure where to start? We can help!',img:'https://riverbendwebco.com/demo/img/st-landscape.jpg'},
+    {n:'Snow Removal',t:'Commercial',d:'Keep your business on schedule with Shade Tree\u2019s commercial snow removal services.',img:ST_U('1768063938563-db941261d2f4')},
+    {n:'Grounds Management',t:'Commercial',d:'Let our crew handle the mowing, trimming, and seeding to keep your business looking sharp.',img:'https://riverbendwebco.com/demo/img/st-grounds.jpg'},
+    {n:'Firewood',t:'Firewood',d:'Our seasoned firewood is available for purchase in small amounts or by the cord (4\u2019H x 8\u2019W x 4\u2019D or 128 cubic ft.).',img:'https://riverbendwebco.com/demo/img/st-firewood.jpg'}]:null;
+  const svc=(STS?STS:Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,8).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n)
     .map((v,i)=>Object.assign({},v,{img:ok(v.img)||(defs[i]||{}).img||[P.ladder,P.climb,P.branch,P.arb][i%4]}));
   const go=id=>e=>{ e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
@@ -2290,17 +2301,17 @@ function shadeTree(C){
     h('button',{type:'button',class:'st-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},stI('menu'))),menu));
   const kick=t=>h('p',{class:'st-kick'},h('i'),t,h('i'));
   const hero=h('section',{class:'st-hero',id:'st-top'},h('div',{class:'st-w st-hero-in'},
-    h('div',{class:'st-hero-t'},kick('Tree care for '+town+' homes and businesses'),
+    h('div',{class:'st-hero-t'},kick((isST?'Tree, lawn and property care':'Tree care')+(C.city?' for '+town+' homes and businesses':' for homes and businesses')),
       h('h1',null,x.headline?x.headline:['Smart Tree Care, ',h('span',null,'Stunning Results')]),
-      h('p',null,C.tag||(name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
+      h('p',null,C.tag||(isST?name+' handles tree removal, stump removal, lot clearing, lawn care, landscaping and more, for homes and businesses.':name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
       h('div',{class:'st-row'},btn(C.tel?'Get an Estimate':'Contact Us')),
       h('div',{class:'st-mini'},
         h('div',{class:'st-mini-card'},h('span',{class:'st-mark sm'},stI('leaf')),h('b',null,C.tel?'Call for an estimate':'Talk to our crew'),C.tel?h('a',{href:C.tel},C.phoneTxt):h('a',{href:'#st-contact',onclick:go('st-contact')},'Get in touch'),h('a',{class:'st-mini-go',href:C.tel||'#st-contact','aria-label':'Call'},stI('arrow'))),
-        bg(h('div',{class:'st-mini-pic'}),P.ladder))),
+        bg(h('div',{class:'st-mini-pic'}),isST?'https://riverbendwebco.com/demo/img/st-stump.jpg':P.ladder))),
     h('div',{class:'st-hero-pic'},bg(h('div',{class:'st-hero-img'}),heroPic),h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,'Local crew'),h('small',null,'Serving '+town))))));
   const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},'Tree services in '+town+' and nearby')),
     h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));
-  const tiles=[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb];
+  const tiles=isST?['https://riverbendwebco.com/demo/img/st-removal.jpg',P.prune,'https://riverbendwebco.com/demo/img/st-lot.jpg','https://riverbendwebco.com/demo/img/st-landscape.jpg',P.climb,'https://riverbendwebco.com/demo/img/st-lawn.jpg']:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb];
   const about=h('section',{class:'st-sec st-about',id:'st-about'},
     h('div',{class:'st-about-tiles','aria-hidden':'true'},tiles.map((u,i)=>bg(h('div',{class:'st-tile t'+i}),u))),
     h('div',{class:'st-w st-about-in rv'},kick('About Our Company'),
@@ -2309,13 +2320,13 @@ function shadeTree(C){
       btn('Talk to Our Crew','#st-contact','sm')));
   about.querySelector('.st-about-in .st-btn').onclick=go('st-contact');
   const services=h('section',{class:'st-sec st-soft',id:'st-services'},h('div',{class:'st-w'},
-    h('div',{class:'st-head rv'},kick('Our Services'),h('h2',null,'Complete tree care, from the roots up')),
-    h('div',{class:'st-cards'},svc.slice(0,8).map(v=>h('article',{class:'st-card rv'},bg(h('div',{class:'st-card-img'}),v.img),
-      h('div',{class:'st-card-b'},h('span',{class:'st-tag'},'Tree Service'),h('h3',null,v.n),v.d?h('p',null,v.d):null,
-        h('div',{class:'st-row'},h('a',{class:'st-ghost',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact')},'Get an Estimate'),h('a',{class:'st-sq',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact'),'aria-label':'Get an estimate'},stI('arrow')))))))));
-  const facts=[[dayRange(C.hours)||'Every week',C.daysOpen?'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week'):'Open all week'],[town,'Local and nearby'],[C.tel?C.phoneTxt:'Call us','Call for an estimate']];
+    h('div',{class:'st-head rv'},kick('Our Services'),h('h2',null,isST?'Tree, lawn and property care, all in one crew':'Complete tree care, from the roots up')),
+    h('div',{class:'st-cards'+(svc.length%3===0&&svc.length>4?' c3':'')},svc.slice(0,9).map(v=>h('article',{class:'st-card rv'},bg(h('div',{class:'st-card-img'}),v.img),
+      h('div',{class:'st-card-b'},h('span',{class:'st-tag'},v.t||'Tree Service'),h('h3',null,v.n),v.d?h('p',null,v.d):null,
+        h('div',{class:'st-row'},h('a',{class:'st-ghost',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact')},'Get an Estimate'),h('a',{class:'st-sq',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact'),'aria-label':'Get an estimate'},stI('arrow'))))))),isST?h('p',{class:'st-more rv'},'And more! ',h('a',{href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact')},'Ask us about your project')):null));
+  const facts=[C.hasHours&&C.daysOpen?[dayRange(C.hours),'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week')]:[svc.length+' services','From one local crew'],[town,'Local and nearby'],[C.tel?C.phoneTxt:'Call us','Call for an estimate']];
   const band=bg(h('section',{class:'st-band'}),P.hero,'linear-gradient(90deg,rgba(6,58,28,.94),rgba(6,58,28,.86))');
-  band.append(h('div',{class:'st-w st-band-in'},h('h2',null,'Tree care',h('br'),'you can count on'),h('div',{class:'st-facts'},facts.map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b))))));
+  band.append(h('div',{class:'st-w st-band-in'},h('h2',null,isST?'Property care':'Tree care',h('br'),'you can count on'),h('div',{class:'st-facts'},facts.map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b))))));
   const note=h('p',{class:'st-form-note',hidden:true});
   const form=h('form',{class:'st-form rv',onsubmit:e=>{ e.preventDefault(); const f=new FormData(e.target); const body=['Name: '+f.get('n'),'Phone: '+f.get('p'),'Email: '+f.get('e'),'Service: '+f.get('s'),'',f.get('m')].join('\n');
       if(C.email){ location.href='mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request from '+(f.get('n')||'the website'))+'&body='+encodeURIComponent(body); }
@@ -2336,7 +2347,7 @@ function shadeTree(C){
   const rv=C.reviews;
   const reviews=rv.length?h('section',{class:'st-sec st-soft',id:'st-reviews'},h('div',{class:'st-w'},h('div',{class:'st-head rv'},kick('Reviews'),h('h2',null,'What our customers say')),
     h('div',{class:'st-revs'},rv.slice(0,3).map(r=>h('figure',{class:'st-rev rv'},h('div',{class:'st-stars'},[0,1,2,3,4].slice(0,r.stars||5).map(()=>stI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,r.name)))))):null;
-  const mos=[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb,P.saw,P.ladder];
+  const mos=isST?['https://riverbendwebco.com/demo/img/st-removal.jpg','https://riverbendwebco.com/demo/img/st-stump.jpg',P.climb,'https://riverbendwebco.com/demo/img/st-lot.jpg','https://riverbendwebco.com/demo/img/st-wash.jpg','https://riverbendwebco.com/demo/img/st-landscape.jpg','https://riverbendwebco.com/demo/img/st-grounds.jpg','https://riverbendwebco.com/demo/img/st-firewood.jpg']:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb,P.saw,P.ladder];
   const cta=h('section',{class:'st-sec st-cta'},h('div',{class:'st-w'},
     h('div',{class:'st-mosaic','aria-hidden':'true'},mos.map((u,i)=>bg(h('div',{class:'st-m m'+i}),u))),
     h('div',{class:'st-cta-t rv'},h('h2',null,'Let’s make your trees the best on the block'),h('p',{class:'st-mut'},'Healthy, good-looking trees take the right care. Call '+name+' and we will take it from here.'),btn(C.tel?'Call '+C.phoneTxt:'Contact Us'))));
