@@ -30,7 +30,7 @@ function load(){
   };
   const code=fs.readFileSync(require('path').join(__dirname,'../../apps-script/backend.js'),'utf8')+`
   function ss_(){ return __SS; } function applySeeds_(){}
-  return {auth_,team_,authUsers_,AUTH_SEED,doPost,doGet,studio_,pay_,billing_,prorate_,finalMonth_,billTick_,billGet_,billAll_,billView_,billLaunch_,billCancel_,billRefund_,billWebhook_,billCreateFromAgreement_,billCounts_,billByKey_,outStyle_,setFake:f=>{SQ_FAKE=f}, botAuthed_, BOTS};`;
+  return {auth_,team_,authUsers_,AUTH_SEED,doPost,doGet,studio_,pay_,billing_,prorate_,finalMonth_,billTick_,billGet_,billAll_,billView_,billLaunch_,billCancel_,billRefund_,billWebhook_,billCreateFromAgreement_,billCounts_,billByKey_,outStyle_,outSampleUrl_,outDraft_,setFake:f=>{SQ_FAKE=f}, botAuthed_, BOTS};`;
   const B=new Function(...Object.keys(g),'__SS',code)(...Object.values(g),SS);
   // fake Square
   const S=H.sq; let n=0; const id=p=>p+(++n).toString().padStart(6,'0');

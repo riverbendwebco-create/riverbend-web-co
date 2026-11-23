@@ -1,0 +1,8 @@
+{"name":"Ironbridge Auto Center","variant":"abauto","style":"trade","category":"Auto repair","city":"Dubuque, IA","phone":"(563) 555-0187",
+ "hours":["7:30am - 5:30pm","7:30am - 5:30pm","7:30am - 5:30pm","7:30am - 5:30pm","7:30am - 5:30pm","8am - 12pm","Closed"],
+ "items":[{"name":"Engine diagnostics"},{"name":"Brakes"},{"name":"Tires"},{"name":"Oil & filter change"},{"name":"Suspension"},{"name":"A/C"},{"name":"Batteries"},{"name":"Electrical"}],
+ "x":{"sample":true,"headline":"Ironbridge Auto",
+  "faq":[["Do I need an appointment?","Walk-ins are welcome, but booking online gets you in faster and holds your spot."],
+         ["Do you work on all makes and models?","Yes. Cars, trucks and SUVs, foreign and domestic."],
+         ["Will you call before doing any work?","Always. You get a clear estimate first and nothing gets done until you say yes."],
+         ["Can I see the vehicles you have for sale?","Call or stop by the lot. We are happy to go over photos, history and pricing on anything in stock."]]}}

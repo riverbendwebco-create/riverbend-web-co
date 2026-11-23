@@ -7067,8 +7067,8 @@ function abAuto(C){
   const links=()=>[/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-what','What We Do'):null,A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-creds','Areas Served'):null,A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,/^a\s*(&|and|n)\s*b\s+auto/i.test(name)?A('ab-faq','FAQ'):null,A('ab-contact','Contact')];
   const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
   const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
-  const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
-    h('span',{class:'ab-brand-t'},h('b',null,'Automotive Center'),h('small',null,'Service & Sales')));
+  const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):isAB?h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')):h('span',{class:'ab-logo'},h('b',null,(name.match(/\b[A-Za-z]/g)||['A']).slice(0,2).join('').toUpperCase())),
+    h('span',{class:'ab-brand-t'},h('b',null,isAB?'Automotive Center':name.replace(/\s+(auto(motive)?\s+)?(center|centre)$/i,'')||name),h('small',null,isAB?'Service & Sales':'Auto Service & Sales')));
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const menu=h('nav',{class:'ab-menu',hidden:true},links(),C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null);
   const nav=h('header',{class:'ab-nav'},h('div',{class:'ab-w ab-nav-top'},brand,
@@ -7156,7 +7156,7 @@ function abAuto(C){
     ['Do you work on all makes and models?','Yes, our experienced technicians are trained to work on a wide variety of makes and models, both domestic and foreign. No matter what you drive, we can provide reliable service tailored to your vehicle’s needs.'],
     ['How can I view your current vehicle inventory?','To see what vehicles are currently available, give us a call at (563) 583-3575 or stop by the lot at 10512 Key W Dr. We\u2019re happy to go over the details, photos and pricing on any vehicle in stock.'],
     ['Do you inspect the vehicles you sell?','Yes. As a full-service automotive repair shop, we carefully evaluate our vehicles and use our automotive expertise to help provide dependable transportation options for our customers.'],
-    ['Can I schedule service appointments on weekends?','Yes. We offer Saturday and Sunday appointments to help accommodate busy schedules. Weekend appointments are available by appointment.']]:[];
+    ['Can I schedule service appointments on weekends?','Yes. We offer Saturday and Sunday appointments to help accommodate busy schedules. Weekend appointments are available by appointment.']]:(Array.isArray(x.faq)?x.faq.filter(q=>Array.isArray(q)&&q.length===2).slice(0,8):[]);
   const faqSec=FAQ.length?h('section',{class:'ab-sec ab-light',id:'ab-faq'},h('div',{class:'ab-w ab-faq'},
     h('div',{class:'ab-faq-h rv'},h('h2',{class:'ab-h2'},'Frequently asked questions'),h('p',{class:'ab-mut'},'Quick answers about service, payment and vehicle sales. Still have a question? Give us a call.'),
       C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null),
@@ -7169,7 +7169,7 @@ function abAuto(C){
         C.tel?h('a',{href:C.tel},abI('phone'),h('span',null,h('small',null,'Phone'),C.phoneTxt)):null,
         C.email?h('a',{href:'mailto:'+C.email},abI('mail'),h('span',null,h('small',null,'Email'),C.email)):null,
         C.hasHours?h('div',null,abI('clock'),h('span',null,h('small',null,'Hours'),h('div',{class:'ab-hours'},hoursRows(C)))):null)),
-    h('div',{class:'ab-map rv'},addrTxt||C.city?h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}):null)));
+    x.sample?null:h('div',{class:'ab-map rv'},(addrTxt||C.city)?h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}):null)));
   const foot=h('footer',{class:'ab-foot'},h('div',{class:'ab-w ab-foot-in'},
     h('div',null,brand.cloneNode(true),h('small',null,'© '+new Date().getFullYear()+' '+name)),
     h('div',null,h('b',null,'Contact'),C.tel?h('a',{href:C.tel},C.phoneTxt):null,addrTxt?h('span',null,addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
@@ -8556,6 +8556,9 @@ function trade(C){
 }
 
 function rbBar(C){
+  if(C.x&&C.x.sample) return h('div',{class:'rb-bar'},h('div',{class:'rb-in'},
+    h('div',{class:'t'},h('b',null,'Sample website'),h('em',{class:'rb-tag'},'Made-up business'),h('br'),h('span',null,'Every Riverbend site is custom-built around your business: your name, photos, colors, services and features.')),
+    h('a',{class:'go',href:'https://riverbendwebco.com/#contact',target:'_blank',rel:'noopener'},'Make it yours')));
   return h('div',{class:'rb-bar'},h('div',{class:'rb-in'},
     h('div',{class:'t'},h('b',null,'Website preview for '+(C.name||'your business')),h('em',{class:'rb-tag'},'Demo · sample content'),h('br'),h('span',null,'Designed by Riverbend Web Co., Dubuque. $0 down, you own your domain.')),
     h('a',{class:'go',href:'https://riverbendwebco.com/#contact',target:'_blank',rel:'noopener'},'Make it yours')));

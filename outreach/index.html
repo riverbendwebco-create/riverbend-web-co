@@ -67,7 +67,7 @@ h2{font-size:1rem;margin:0 0 10px}
 
   <section id="tab-today" class="panel">
     <h2>Send today</h2>
-    <p class="msg" style="margin-top:0">Each email links the sample site that fits the business (bar, restaurant, service or salon) and says their site is built fully custom. Tap Open email (or copy the parts into Zoho), send it, then tap Mark sent. Follow-ups show up here on day 3 and day 8. Replies come to your inbox: mark them here.</p>
+    <p class="msg" style="margin-top:0">Each email links the sample site that fits the business (bar, restaurant, salon, auto shop or service) and says their site is built fully custom. Tap Open email (or copy the parts into Zoho), send it, then tap Mark sent. Follow-ups show up here on day 3 and day 8. Replies come to your inbox: mark them here.</p>
     <div id="today"></div>
   </section>
 
@@ -107,7 +107,7 @@ const el=(t,p,...k)=>{const n=document.createElement(t);if(p)for(const x in p){i
 if(!A.token()) return A.requireLogin('/outreach/');
 async function api(b){ const r=await A.call(b); if(r&&r.error==='auth'){ A.requireLogin('/outreach/'); } return r; }
 let data=null, found=[];
-const SAMPLE={pub:'Bar sample',lounge:'Restaurant sample',trade:'Service sample',salon:'Salon sample'};
+const SAMPLE={pub:'Bar sample',lounge:'Restaurant sample',trade:'Service sample',salon:'Salon sample',auto:'Auto shop sample'};
 async function copy(t,btn){ try{ await navigator.clipboard.writeText(t); const o=btn.textContent; btn.textContent='Copied'; setTimeout(()=>btn.textContent=o,1200);}catch(_){ prompt('Copy:',t);} }
 function tab(n){ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===n)); ['today','find','all','settings'].forEach(x=>$('#tab-'+x).classList.toggle('hidden',x!==n)); }
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
