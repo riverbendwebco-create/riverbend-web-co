@@ -2151,11 +2151,23 @@ function hcI(n){ const P={
   pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
   home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>'};
   const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
+const CM_REVIEWS=[
+  ['Cleaning Momma goes out of her way to make your space sparkle! Very fair pricing, dependable, and communicative. Truly appreciate the move-out clean she provided for us. Will definitely use her company again.','Catherine Griffin'],
+  ['Elizabeth never disappoints! We’ve been booking with her for nearly 2 years now and we can’t imagine using anyone else. She’s been incredibly flexible with scheduling, is very thorough with her work, and is very reasonably priced. I highly recommend Elizabeth!','Amanda Elizabeth'],
+  ['Great communication, excellent work, and affordable! So glad that I’ve found her! Highly recommend!','Sarah Olive Ira'],
+  ['Elizabeth did an amazing job. Everything was cleaned well and we came home to a very clean house. I have a large house and she spent all day cleaning it. I would highly recommend her to anyone. She is also very reasonable in her pricing. I am very pleased with her work.','Katelyn Vaughan'],
+  ['Great cleaning person, friendly, hard working and great job.','Gretchen McCracken Nealon'],
+  ['Very professional. I highly recommend.','Nelly Farge'],
+  ['I have pleasure to count with the services of Cleaning Momma for more than 6 months and she’s consistently do a great job in my house. In addition, she has great rates and a range of options that allows me to select only the services that I need. I recommend her services 100%','Yomara Delgado'],
+  ['I used Cleaning Momma on Sat for the first time, Liz is amazing! When I got home later I was so impressed with the way my home looked. It was a Christmas morning feeling for me. Liz is so nice and very professional. I highly recommend Cleaning Momma and will be using her in the future!','Staci Anderson'],
+  ['She does a thorough job and had a satisfaction promise. I hired her to come clean while I was in labor. My home looked fantastic when we got home and I was able to just relax. She forgot to clean the inside of my fridge and when I pointed it out, she apologized a million times and was over first thing in the morning to clean it. While she was back over she redid what dishes we used and even re cleaned my stove top and counters.','Heather Stone']];
 function homy(C){
   const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
   if(/cleaning\s+mom+a/i.test(name)&&!/frederick/i.test(C.city+' '+C.addr)){ C.city='Frederick, MD'; C.addr=''; C.maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', Frederick, MD'); }
   if(/cleaning\s+mom+a/i.test(name)){ if(/dubuque|iowa\b|\bIA\b/i.test(C.tag)) C.tag=''; if(/dubuque|iowa\b|\bIA\b/i.test(C.about)) C.about=''; }
   const town=C.city?C.city.split(',')[0]:'your area';
+  const isCM=/cleaning\s+mom+a/i.test(name);
+  if(isCM) C.reviews=CM_REVIEWS.map(([text,n])=>({text,name:n}));
   const heroPic=ok(x.heroPhoto)||HC_U('1758273705627-937374bfa978');
   const aboutPic=ok(x.aboutPhoto)||HC_U('1758273238415-01ec03d9ef27');
   const defs=[{n:'Home Cleaning',d:'Regular or one-time cleaning that keeps your home fresh and tidy, on your schedule.',img:HC_U('1646980241033-cd7abda2ee88')},
@@ -2184,7 +2196,7 @@ function homy(C){
         h('h1',null,x.headline||'Home cleaning you can count on'),
         h('p',null,C.tag||('Enjoy a spotless home with friendly, trusted cleaners in '+town+'. Flexible, careful and on time.')),
         h('div',{class:'hc-hero-cta'},book('','Book Now'),h('a',{class:'hc-link light',href:'#hc-services',onclick:go('hc-services')},'See Our Services'))),
-      rv.length?h('div',{class:'hc-hero-rev'},h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('p',null,'“'+short(rv[0].text,90)+'”'),h('small',null,rv[0].name)):
+      rv.length?h('div',{class:'hc-hero-rev'},isCM?h('span',{class:'hc-fb light'},h('span',{class:'hc-fb-i'},'f'),'100% recommend · 15 reviews'):h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('p',null,'“'+short(rv[isCM?2:0].text,110)+'”'),h('small',null,rv[isCM?2:0].name)):
         (C.today?h('div',{class:'hc-hero-rev'},h('b',{class:'hc-open'},hcI('clock'),'Open today'),h('p',null,C.today),h('small',null,town)):null))));
   const about=h('section',{class:'hc-sec',id:'hc-about'},h('div',{class:'hc-w hc-about'},
     h('div',{class:'hc-card hc-about-t rv'},chip('About Us','home'),
@@ -2204,9 +2216,25 @@ function homy(C){
   const how=h('section',{class:'hc-sec',id:'hc-how'},h('div',{class:'hc-w'},h('div',{class:'hc-blue rv'},
     h('div',{class:'hc-blue-h'},h('span',{class:'hc-chip on'},hcI('spark'),'How It Works'),h('h2',null,'Simple steps to a cleaner home'),h('p',null,'Quick, easy and reliable, from booking to enjoying your spotless home.')),
     h('div',{class:'hc-steps'},steps.map(([t,d],i)=>h('div',{class:'hc-step'},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('b',null,t),h('p',null,d))))))));
-  const reviews=rv.length?h('section',{class:'hc-sec',id:'hc-reviews'},h('div',{class:'hc-w'},
-    h('div',{class:'hc-card hc-head rv'},chip('Reviews','star'),h('h2',null,'What our customers say'),h('p',{class:'hc-mut'},'Real words from people who trust '+name+' with their homes.')),
-    h('div',{class:'hc-revs'},rv.slice(0,3).map(r=>h('figure',{class:'hc-card hc-rev rv'},h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,h('span',{class:'hc-av'},r.name.trim()[0]),r.name)))))):null;
+  let reviews=null;
+  if(rv.length){
+    let ri=0; const N=rv.length;
+    const q=h('blockquote',{class:'in'}), who=h('b',{class:'in'}), av=h('span',{class:'hc-av lg'});
+    const bar=h('i',{class:'hc-rbar'});
+    const dots=rv.map((_,i)=>h('button',{type:'button','aria-label':'Review '+(i+1),onclick:()=>{show(i);restart();}}));
+    const show=i=>{ ri=(i+N)%N; const r=rv[ri]; [q,who].forEach(e=>{e.classList.remove('in'); void e.offsetWidth; e.classList.add('in');}); q.textContent='“'+r.text+'”'; who.textContent=r.name; av.textContent=r.name.trim()[0]; dots.forEach((d,j)=>d.classList.toggle('on',j===ri)); bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; };
+    let t=null; const restart=()=>{ clearInterval(t); t=setInterval(()=>{ if(!q.isConnected){clearInterval(t);return;} show(ri+1); },7000); };
+    const arrowBtn=(d,lab)=>h('button',{type:'button',class:'hc-rarr'+(d<0?' back':''),'aria-label':lab,onclick:()=>{show(ri+d);restart();}},hcI('arrow'));
+    reviews=h('section',{class:'hc-sec',id:'hc-reviews'},h('div',{class:'hc-w hc-rgrid'},
+      h('div',{class:'hc-card hc-rhead rv'},chip('Reviews','star'),h('h2',null,'What our customers say'),
+        h('p',{class:'hc-mut'},isCM?'100% of reviewers recommend Cleaning Momma on Facebook (15 reviews).':'Real words from people who trust '+name+' with their homes.'),
+        h('div',{class:'hc-rctl'},arrowBtn(-1,'Previous review'),arrowBtn(1,'Next review'))),
+      h('figure',{class:'hc-card hc-rshow rv','aria-live':'polite'},
+        isCM?h('span',{class:'hc-fb'},h('span',{class:'hc-fb-i'},'f'),'Recommends Cleaning Momma'):h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),
+        q,h('figcaption',null,av,h('div',null,who,h('small',null,isCM?'Facebook review':'Customer review'))),
+        h('div',{class:'hc-rfoot'},h('div',{class:'hc-rdots'},dots),h('span',{class:'hc-rtrack'},bar)))));
+    show(0); restart();
+  }
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
   const contact=h('section',{class:'hc-sec',id:'hc-contact'},h('div',{class:'hc-w hc-contact'},
