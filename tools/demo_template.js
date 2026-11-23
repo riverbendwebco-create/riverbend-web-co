@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -104,6 +104,7 @@ function build(d){
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
   if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
+  if(/^a\s*(&|and|n)\s*b\s+auto/i.test(C.name)||C.variant==='abauto'){ document.body.className='t-ab'; const pg=abAuto(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^shade\s?tree\b/i.test(C.name)||C.variant==='shadetree'){ document.body.className='t-st'; const pg=shadeTree(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); stRoll(pg); return; }
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
@@ -2392,6 +2393,96 @@ function shadeTree(C){
     h('div',{class:'st-w st-foot-c'},'© '+new Date().getFullYear()+' '+name+'. All rights reserved.'));
   return h('div',{class:'st'},nav,hero,roll,services,about,band,area,contact,reviews,cta,foot,sheet);
 }
+/* ===================== A & B AUTOMOTIVE (red / charcoal / green, auto service + sales) ===================== */
+const AB_U=(id,w)=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||1200)+'&q=72';
+function abI(n){ const P={
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',check:'<path d="m5 12 4 4 10-10"/>',phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  wrench:'<path d="M14.7 6.3a4 4 0 0 0 5 5L22 14l-8 8-2.3-2.3a4 4 0 0 0-5-5L4 12l8-8z" transform="scale(.9) translate(1 1)"/>',
+  car:'<path d="M5 17h14M3 17v-4l2-5h14l2 5v4"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M5 12h14"/>',
+  tire:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>',
+  shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',tag:'<path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',chat:'<path d="M4 5h16v11H8l-4 4z"/>',
+  gauge:'<path d="M4 18a9 9 0 1 1 16 0"/><path d="m12 13 4-4"/>',hand:'<path d="M7 11V5a2 2 0 0 1 4 0v5M11 10V4a2 2 0 0 1 4 0v6M15 10V6a2 2 0 0 1 4 0v8a7 7 0 0 1-14 0v-3a2 2 0 0 1 4 0"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',quote:'<path d="M5 18c2-1 3-3 3-6H5V6h6v6c0 4-2 6-6 6zM14 18c2-1 3-3 3-6h-3V6h6v6c0 4-2 6-6 6z"/>'};
+  const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
+function abAuto(C){
+  const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const town=C.city?C.city.split(',')[0]:'';
+  const P={heroBg:AB_U('1767681092416-bccf9410bda4',2200),repair:AB_U('1771340012378-3c86cb649193'),tire:AB_U('1645445522156-9ac06bc7a767'),sales:AB_U('1794208709613-1750c1a0483e'),
+    shop:AB_U('1767681092416-bccf9410bda4',1000),grease:AB_U('1619642751034-765dfdf7c58e'),lot:AB_U('1794208635374-9574f0527c12'),engine:AB_U('1486262715619-67b85e0b08d3',2000),oil:AB_U('1771340742493-52fbd5476ccb')};
+  const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const items=C.items.slice(0,8);
+  const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
+  const logo=ok(x.logoUrl)||C.logo;
+  const brand=h('a',{class:'ab-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
+    h('span',{class:'ab-brand-t'},h('b',null,'Automotive Center'),h('small',null,'Service & Sales')));
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const menu=h('nav',{class:'ab-menu',hidden:true},links(),C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null);
+  const nav=h('header',{class:'ab-nav'},h('div',{class:'ab-w ab-nav-top'},brand,
+      addrTxt?h('a',{class:'ab-nav-info ab-hide-s',href:C.maps,target:'_blank',rel:'noopener'},abI('pin'),h('span',null,addrTxt,h('small',null,C.today?(/closed/i.test(C.today)?'Closed today':'Open today '+C.today):'Auto service and vehicle sales'))):null,
+      C.tel?h('a',{class:'ab-nav-tel',href:C.tel},h('small',null,'Call the shop'),h('b',null,C.phoneTxt)):null,
+      h('button',{type:'button',class:'ab-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},abI('menu'))),
+    h('div',{class:'ab-w ab-nav-links'},links()),menu);
+  const cards=[
+    {id:'ab-service',t:'Auto Repair',d:'Diagnostics and repairs for cars, trucks and SUVs, done right by people who care about your vehicle.',img:P.repair},
+    {id:'ab-service',t:'Tires & Brakes',d:'Keep your vehicle stopping and rolling safely, season after season.',img:P.tire},
+    {id:'ab-sales',t:'Vehicle Sales',d:'Quality pre-owned vehicles from a shop that knows what is under the hood.',img:P.sales}];
+  const bullets=['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Straight answers before any work','Local, family-friendly shop'];
+  const hero=bg(h('section',{class:'ab-hero',id:'ab-top'}),ok(x.heroPhoto)||P.heroBg,'linear-gradient(90deg,rgba(14,14,16,.92) 0%,rgba(14,14,16,.7) 55%,rgba(120,10,16,.55) 100%)');
+  hero.append(h('div',{class:'ab-w ab-hero-in'},
+    h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
+    h('h1',null,x.headline||'Automotive Center',h('span',null,'& Sales')),
+    h('p',{class:'ab-lead'},C.tag||('From routine maintenance to major repairs, and quality pre-owned vehicles when it is time for something new. '+name+' keeps you on the road.')),
+    h('ul',{class:'ab-bul'},bullets.map(b=>h('li',null,h('span',null,abI('check')),b))),
+    h('div',{class:'ab-row'},C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),'Schedule Service'):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Schedule Service'),h('a',{class:'ab-btn ghost',href:'#ab-sales',onclick:go('ab-sales')},'Shop Vehicles',abI('arrow')))),
+    h('div',{class:'ab-w ab-cards'},cards.map(c=>bg(h('a',{class:'ab-card',href:'#'+c.id,onclick:go(c.id)},h('div',{class:'ab-card-t'},h('h3',null,c.t),h('p',null,c.d),h('span',null,'Learn more ',abI('arrow')))),c.img,'linear-gradient(180deg,rgba(10,10,12,0) 30%,rgba(10,10,12,.9) 100%)'))));
+  const about=h('section',{class:'ab-sec ab-light',id:'ab-about'},h('div',{class:'ab-w ab-about rv'},
+    h('h2',{class:'ab-h2'},name),
+    h('div',{class:'ab-about-p'},(C.about?String(C.about).split(/\n+/).filter(Boolean):[name+' is a full-service automotive center and vehicle sales lot'+(town?' in '+town:'')+'. We fix what you drive, and we sell vehicles we would be proud to put our name on.','Stop in for maintenance, a repair or a test drive. We explain what your vehicle needs and what it costs before we start, so there are no surprises.']).map(t=>h('p',null,t)))));
+  const feats=[['wrench','Repairs done right'],['chat','Clear answers on every job'],['shield','We stand behind our work'],['car','Service and sales in one place'],['tag','Fair, upfront pricing'],['hand','Friendly, local service']];
+  const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
+    h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
+      h('div',{class:'ab-feats'},feats.map(([i,t])=>h('div',null,h('span',null,abI(i)),h('b',null,t))))),
+    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),ok(x.aboutPhoto)||C.own[0]||P.shop),h('div',{class:'ab-ring'}))));
+  const svcList=items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Pre-purchase inspections'];
+  const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
+    h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
+    h('div',{class:'ab-svc'},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
+  const ctaBand=(id,img,title,sub)=>h('section',{class:'ab-sec tight',id:id||null},h('div',{class:'ab-w'},h('div',{class:'ab-cta rv'},bg(h('div',{class:'ab-cta-img'}),img),
+    h('div',{class:'ab-cta-t'},h('h2',null,title),h('p',null,sub),C.tel?h('a',{class:'ab-cta-tel',href:C.tel},C.phoneTxt):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Contact us')))));
+  const cta1=ctaBand(null,P.grease,'Schedule your service','Save time. Call the shop and we will set up a time that works for you.');
+  const steps=[['Call or stop in','Tell us what is going on with your vehicle.'],['Inspection','We look it over and find the real problem.'],['Clear estimate','You get the price before any work starts.'],['Repair','Our techs fix it with quality parts.'],['Quality check','We test it to make sure it is right.'],['Back on the road','Pay when you are happy and drive away.']];
+  const how=bg(h('section',{class:'ab-sec ab-dark',id:'ab-how'}),P.engine,'linear-gradient(rgba(10,10,12,.9),rgba(10,10,12,.94))');
+  how.append(h('div',{class:'ab-w'},h('h2',{class:'ab-h2 c'},'How we work'),h('ol',{class:'ab-tl'},steps.map(([t,d],i)=>h('li',{class:'rv '+(i%2?'r':'l')},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('b',null,t),h('p',null,d)))))));
+  const sales=h('section',{class:'ab-sec',id:'ab-sales'},h('div',{class:'ab-w ab-sales'},
+    h('div',{class:'ab-sales-t rv'},h('h2',{class:'ab-h2'},'Vehicle Sales'),h('p',{class:'ab-mut'},'Looking for your next car, truck or SUV? Ask about the vehicles on our lot right now. Every one is looked over by the same people who work on cars every day.'),
+      h('ul',{class:'ab-checks'},['Pre-owned cars, trucks and SUVs','Inspected by our own shop','Test drives welcome'].map(t=>h('li',null,h('span',null,abI('check')),t))),
+      h('div',{class:'ab-row'},C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),'Ask About Inventory'):null,C.fb?h('a',{class:'ab-btn ghost dk',href:C.fb,target:'_blank',rel:'noopener'},'See vehicles on Facebook'):null)),
+    bg(h('div',{class:'ab-sales-pic rv'}),P.lot)));
+  const cta2=ctaBand(null,P.sales,'Find your next vehicle','Call to ask what is on the lot, or come by for a test drive.');
+  const rv=C.reviews; let reviews=null;
+  if(rv.length){ let ri=0; const per=()=>innerWidth<760?1:3;
+    const track=h('div',{class:'ab-revs'});
+    const draw=()=>{ const n=per(); track.replaceChildren(...Array.from({length:Math.min(n,rv.length)},(_,k)=>rv[(ri+k)%rv.length]).map(r=>h('figure',{class:'ab-rev'},h('div',{class:'ab-rev-h'},h('b',null,(r.stars||5)+' stars'),abI('quote')),h('blockquote',null,short(r.text,260)),h('figcaption',null,r.name)))); };
+    draw(); setInterval(()=>{ if(!track.isConnected) return; ri=(ri+1)%rv.length; draw(); },6000);
+    reviews=h('section',{class:'ab-sec ab-light',id:'ab-reviews'},h('div',{class:'ab-w'},h('h2',{class:'ab-h2'},'Customer reviews'),h('p',{class:'ab-mut'},'What drivers say about '+name+'.'),
+      h('div',{class:'ab-rev-wrap'},h('button',{type:'button',class:'ab-arr','aria-label':'Previous',onclick:()=>{ri=(ri-1+rv.length)%rv.length;draw();}},abI('arrow')),track,h('button',{type:'button',class:'ab-arr n','aria-label':'Next',onclick:()=>{ri=(ri+1)%rv.length;draw();}},abI('arrow'))))); }
+  const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
+  const contact=h('section',{class:'ab-sec',id:'ab-contact'},h('div',{class:'ab-w ab-contact'},
+    h('div',{class:'rv'},h('h2',{class:'ab-h2'},'Come see us'),h('p',{class:'ab-mut'},'Stop in for service or a test drive.'),
+      h('div',{class:'ab-ci'},
+        addrTxt?h('a',{href:C.maps,target:'_blank',rel:'noopener'},abI('pin'),h('span',null,h('small',null,'Address'),addrTxt)):null,
+        C.tel?h('a',{href:C.tel},abI('phone'),h('span',null,h('small',null,'Phone'),C.phoneTxt)):null,
+        C.email?h('a',{href:'mailto:'+C.email},abI('mail'),h('span',null,h('small',null,'Email'),C.email)):null,
+        C.hasHours?h('div',null,abI('clock'),h('span',null,h('small',null,'Hours'),h('div',{class:'ab-hours'},hoursRows(C)))):null)),
+    h('div',{class:'ab-map rv'},addrTxt||C.city?h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}):null)));
+  const foot=h('footer',{class:'ab-foot'},h('div',{class:'ab-w ab-foot-in'},
+    h('div',null,brand.cloneNode(true),h('small',null,'© '+new Date().getFullYear()+' '+name)),
+    h('div',null,h('b',null,'Contact'),C.tel?h('a',{href:C.tel},C.phoneTxt):null,addrTxt?h('span',null,addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
+    h('div',null,h('b',null,'Company'),links())));
+  return h('div',{class:'ab'},nav,hero,about,why,cta1,service,how,sales,cta2,reviews,contact,foot);
+}
+
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
 const MW_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1200&q=72';
 const MW_DATA={
