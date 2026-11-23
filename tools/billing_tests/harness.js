@@ -25,7 +25,8 @@ function load(){
     MailApp:{sendEmail:o=>H.mails.push(o)},
     ContentService:{createTextOutput:t=>({t,setMimeType(){return this},text:t}),MimeType:{JSON:1}},
     DriveApp:(()=>{ const F={getFoldersByName:()=>({hasNext:()=>false}),createFolder:()=>F,createFile:f=>{ H.driveFiles=(H.driveFiles||[]).concat([f.n]); return {getUrl:()=>'https://drive/x'}; },getId:()=>'F'}; return {getFolderById:()=>F,createFolder:()=>F,getFileById:()=>({moveTo(){}})}; })(), SpreadsheetApp:{},
-    UrlFetchApp:{fetch:(u)=>{ if(/agreement\.html/.test(u)) return {getResponseCode:()=>200,getContentText:()=>fs.readFileSync(require('path').join(__dirname,'../../apps-script/agreement.html'),'utf8')}; throw new Error('no network in tests'); }}, Logger:{log(){}}, console
+    Session:{getScriptTimeZone:()=>'America/Chicago'},
+    UrlFetchApp:{fetch:(u,o)=>{ if(H.fetch){ const r=H.fetch(u,o); if(r) return r; } if(/agreement\.html/.test(u)) return {getResponseCode:()=>200,getContentText:()=>fs.readFileSync(require('path').join(__dirname,'../../apps-script/agreement.html'),'utf8')}; throw new Error('no network in tests'); }}, Logger:{log(){}}, console
   };
   const code=fs.readFileSync(require('path').join(__dirname,'../../apps-script/backend.js'),'utf8')+`
   function ss_(){ return __SS; } function applySeeds_(){}

@@ -71,6 +71,7 @@ function doPost(e) {
 function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.action === 'version') return json_({ ok: true, billing: BILL_VERSION });
+  if (p.action === 'unsub') { try { return json_(outUnsub_(String(p.t || ''))); } catch (eu) { console.error(eu); return json_({ ok: false, error: 'server' }); } }
   if (p.action === 'demo') {
     try { applySeeds_(); } catch (e0) { console.error(e0); }
     try { return json_(publicDemo_(String(p.slug || ''))); } catch (err) { console.error(err); return json_({ ok: false, error: 'server' }); }
@@ -402,6 +403,7 @@ function studio_(d) {
   if (me) { if (me.role !== 'owner' && !AUTH_SALES_OK[d.action]) return { ok: false, error: 'auth' }; }
   else if (!(legacy && authed_(d.token)) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
   if (me && me.role === 'sales' && /^leads_/.test(d.action)) return leadsForRep_(d, me);
+  if (/^outreach_/.test(String(d.action))) { if (!me || me.role !== 'owner') return { ok: false, error: 'auth' }; return outreach_(d, me); }
   switch (d.action) {
     case 'list': return { ok: true, demos: demoUpdateCounts_(listDemos_()) };
     case 'updates_list': return demoUpdatesList_(String(d.slug || ''));
@@ -1570,7 +1572,7 @@ function leadsDemo_(l) {
   var sh = leadsSheet_(), row = leadsRow_(sh, clip_(l.id, 200));
   if (!row) { leadsSave_(l); row = leadsRow_(sh, clip_(l.id, 200)); }
   if (row) { sh.getRange(row, 13).setValue(r.slug); if (String(sh.getRange(row, 11).getValue() || 'New') === 'New') sh.getRange(row, 11).setValue('Demo built'); }
-  return { ok: true, slug: r.slug, scanned: scanned, items: demo.items.length, photos: demo.photos.length };
+  return { ok: true, slug: r.slug, scanned: scanned, items: demo.items.length, photos: demo.photos.length, email: demo.email || '' };
 }
 
 
@@ -1638,8 +1640,8 @@ function leadsFindFree_(d) {
   if (!raw) return { ok: false, error: 'empty' };
   var town = cityIn.split(',')[0].trim();
   var wide = !!d.wide;
-  var bbox = wide ? OSM_WIDE : (OSM_TOWNS[town] || OSM_BBOX);
-  var cityLabel = wide ? 'Dubuque area' : (OSM_TOWNS[town] ? d.city : 'Dubuque, IA');
+  var bbox = d.bbox || (wide ? OSM_WIDE : (OSM_TOWNS[town] || OSM_BBOX));
+  var cityLabel = d.bbox ? d.city : (wide ? 'Dubuque area' : (OSM_TOWNS[town] ? d.city : 'Dubuque, IA'));
   var sel = '';
   for (var i = 0; i < OSM_CATS.length; i++) if (OSM_CATS[i][0].test(raw)) { sel = OSM_CATS[i][1]; break; }
   if (!sel) { var safeName = raw.replace(/[^a-z0-9 &'-]/g, '').trim(); if (!safeName) return { ok: false, error: 'empty' }; sel = 'nwr["name"~"' + safeName + '",i]'; }
@@ -1674,14 +1676,14 @@ function leadsFindFree_(d) {
     var web = tg.website || tg['contact:website'] || tg.url || '';
     if (web && !/^https?:\/\//i.test(web)) web = 'https://' + web;
     var fb = tg['contact:facebook'] || tg.facebook || '';
-    var city = tg['addr:city'] ? tg['addr:city'] + ', ' + (tg['addr:state'] || 'IA') : cityLabel;
+    var city = tg['addr:city'] ? tg['addr:city'] + ', ' + (tg['addr:state'] || d.state || 'IA') : cityLabel;
     var type = humanTag_(tg);
     return { id: 'osm:' + e.id, name: clip_(tg.name, 120), type: type, ptype: tg.amenity || tg.shop || tg.craft || tg.office || '',
       phone: fmtPhone_(tg.phone || tg['contact:phone'] || ''), website: clip_(web || fb, 300), address: clip_(addr, 160), city: city,
       full: [addr, city].filter(String).join(', '), rating: 0, reviews: 0, brand: !!(tg.brand || tg['brand:wikidata']),
       maps: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(tg.name + ' ' + (addr || '') + ' ' + city),
       hours: [], kind: 'site', issues: [], source: 'free',
-      oh: !!tg.opening_hours, em: !!(tg.email || tg['contact:email']), so: !!(fb || tg['contact:instagram'] || tg.instagram) };
+      oh: !!tg.opening_hours, em: !!(tg.email || tg['contact:email']), email: clip_(tg.email || tg['contact:email'] || '', 100), so: !!(fb || tg['contact:instagram'] || tg.instagram) };
   });
   var fast = !!d.fast;
   leadsVerifyFree_(leads, fast);
@@ -1869,7 +1871,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23r';
+var BILL_VERSION = '2026-11-23s';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3503,4 +3505,160 @@ function billPlansCheck_() {
   });
   var loc = sq_('get', '/v2/locations/' + encodeURIComponent(sqLocation_(env)), null, env).location || {};
   return { ok: true, env: env, location: { id: loc.id, name: loc.name, status: loc.status, currency: loc.currency, country: loc.country, cardProcessing: (loc.capabilities || []).indexOf('CREDIT_CARD_PROCESSING') >= 0 }, plans: out };
+}
+
+
+/* ================= OUTREACH (owner accounts only) =================
+   Cold email done by hand, at human volume: the system finds businesses in any
+   town, checks their website, builds each a demo of its own site and writes a
+   personal email. An owner sends each one from their own inbox (one tap) and marks
+   it sent; follow-ups come due on day 3 and day 8. Every email carries the LLC's
+   postal address and a one-click unsubscribe (CAN-SPAM). Unsubscribed addresses
+   are never shown again. Nothing here sends email by itself. */
+var OUT_COLS = ['Id', 'Business', 'Type', 'City', 'Website', 'Email', 'Issue', 'Demo', 'Status', 'Added', 'Sent', 'Step', 'Next', 'Notes', 'Token', 'Phone'];
+var OUT_FOLLOW = [3, 5]; // days after email 1 for email 2, then after email 2 for email 3
+function outSheet_() {
+  var ss = ss_(), sh = ss.getSheetByName('Outreach');
+  if (!sh) { sh = ss.insertSheet('Outreach'); sh.appendRow(OUT_COLS); sh.setFrozenRows(1); }
+  return sh;
+}
+function outAll_() {
+  var sh = outSheet_(), n = sh.getLastRow();
+  if (n < 2) return [];
+  return sh.getRange(2, 1, n - 1, OUT_COLS.length).getValues().map(function (r, i) {
+    var o = { row: i + 2 }; OUT_COLS.forEach(function (c, j) { var v = r[j]; o[c.toLowerCase()] = v instanceof Date ? v.toISOString().slice(0, 10) : v; }); o.step = Number(o.step) || 0; return o;
+  });
+}
+function outSet_(sh, row, field, val) { sh.getRange(row, OUT_COLS.indexOf(field) + 1).setValue(val); }
+function outSettings_() { var p = authProps_(); return { address: p.getProperty('OUT_ADDRESS') || '', daily: Number(p.getProperty('OUT_DAILY') || 25), from: p.getProperty('OUT_FROM') || 'Kruz Kitelinger' }; }
+function outGeo_(city, state) {
+  var key = (city + ',' + state).toLowerCase().replace(/[^a-z, ]/g, ''), p = authProps_(), m = {};
+  try { m = JSON.parse(p.getProperty('OUT_GEO') || '{}'); } catch (e) {}
+  if (m[key]) return m[key];
+  var r = UrlFetchApp.fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&city=' + encodeURIComponent(city) + '&state=' + encodeURIComponent(state),
+    { muteHttpExceptions: true, headers: { 'User-Agent': 'RiverbendLeads/1.0 (riverbendwebco.com)' } });
+  if (r.getResponseCode() !== 200) return null;
+  var a = (JSON.parse(r.getContentText() || '[]') || [])[0];
+  if (!a || !a.boundingbox) return null;
+  var b = a.boundingbox.map(Number); // [south, north, west, east]
+  // keep it to the town itself (cap at about 25 km across)
+  var lat = (b[0] + b[1]) / 2, lon = (b[2] + b[3]) / 2, dy = Math.min((b[1] - b[0]) / 2, 0.11), dx = Math.min((b[3] - b[2]) / 2, 0.15);
+  var bbox = [(lat - dy).toFixed(3), (lon - dx).toFixed(3), (lat + dy).toFixed(3), (lon + dx).toFixed(3)].join(',');
+  m[key] = bbox; try { p.setProperty('OUT_GEO', JSON.stringify(m).slice(0, 8500)); } catch (e2) {}
+  return bbox;
+}
+function outIssue_(l) {
+  var t = (l.issues || []).join(' ').toLowerCase();
+  if (/phone/.test(t)) return 'it doesn’t adjust to phone screens, and most people look you up on their phone';
+  if (/https|secure/.test(t)) return 'it doesn’t load securely (no https), so some browsers show visitors a “Not secure” warning';
+  var y = t.match(/not updated since (\d{4})/); if (y) return 'it hasn’t been updated since ' + y[1];
+  if (/facebook/.test(t)) return 'right now customers mostly find you through Facebook, which hides your hours behind a login for a lot of people';
+  if (/no website/.test(t)) return 'I couldn’t find a website for you when I searched';
+  return '';
+}
+function outUnsubUrl_(o) { return 'https://' + SITE + '/unsubscribe/#' + o.token; }
+function outDraft_(o, step, cfg) {
+  var demo = 'https://' + SITE + '/demo/?d=' + encodeURIComponent(o.demo), host = hostOf_(o.website || '');
+  var sig = '\n\n' + cfg.from + '\nRiverbend Web Co.\n(608) 306-0135 · riverbendwebco.com';
+  var foot = '\n\n---\nRiverbend Web Co. is a DBA of Outlaw Nightfall LLC, ' + (cfg.address || '[MAILING ADDRESS NEEDED]') +
+    '. This is a business inquiry. To stop hearing from us, use this link: ' + outUnsubUrl_(o);
+  var subj, body;
+  if (step === 1) {
+    subj = 'A new website preview for ' + o.business;
+    body = 'Hi ' + o.business + ' team,\n\nI’m ' + cfg.from.split(' ')[0] + ' with Riverbend Web Co., a small veteran-owned web design team in Dubuque, Iowa. ' +
+      (o.issue ? 'I was looking at ' + (host || 'your website') + ' and noticed ' + o.issue + '.' : 'I was looking for ' + o.business + ' online and thought you could use a stronger website.') +
+      '\n\nSo I built a free preview of what a new site could look like for you, already set up with your name and info:\n' + demo +
+      '\n\nIt works on phones, there’s no cost to look, and if you like it we can have it live in about a week, starting at $0 down.\n\nWorth a quick look?';
+  } else if (step === 2) {
+    subj = 'Re: A new website preview for ' + o.business;
+    body = 'Hi again,\n\nJust making sure this reached you. The preview I built for ' + o.business + ' is still up:\n' + demo +
+      '\n\nHappy to change anything on it, or I can walk you through it in five minutes by phone.';
+  } else {
+    subj = 'Re: A new website preview for ' + o.business;
+    body = 'Last note from me. If a new website isn’t a priority right now, no problem, and I won’t keep emailing. The preview stays up for a couple of weeks if you want to look:\n' + demo;
+  }
+  return { subject: subj, body: body + sig + foot };
+}
+function outView_(o, cfg, today) {
+  var step = o.step + 1, d = step <= 3 && o.email && o.demo ? outDraft_(o, step, cfg) : null;
+  return { id: o.id, business: o.business, type: o.type, city: o.city, website: o.website, email: o.email, phone: o.phone, issue: o.issue, demo: o.demo,
+    status: o.status, sent: o.sent, step: o.step, next: o.next, notes: o.notes, due: o.status === 'Ready' || (o.status === 'Waiting' && o.next && o.next <= today),
+    draft: d, nextStep: step };
+}
+function outreach_(d, me) {
+  var tz = Session.getScriptTimeZone() || 'America/Chicago', today = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd'), cfg = outSettings_();
+  switch (d.action) {
+    case 'outreach_find': {
+      var city = clip_(d.city, 60), st = String(d.state || '').trim().toUpperCase(), q = clip_(d.q, 60);
+      if (!city || !/^[A-Z]{2}$/.test(st) || !q) return { ok: false, error: 'bad', detail: 'Enter a town, a 2-letter state and a type of business.' };
+      var bbox = outGeo_(city, st);
+      if (!bbox) return { ok: false, error: 'geo', detail: 'Could not find ' + city + ', ' + st + ' on the map.' };
+      var r = leadsFindFree_({ q: q, city: city + ', ' + st, state: st, bbox: bbox });
+      if (!r.ok) return r;
+      var have = {}, sup = {};
+      outAll_().forEach(function (o) { have[o.id] = o.status; if (o.status === 'Unsubscribed' && o.email) sup[String(o.email).toLowerCase()] = 1; });
+      var leads = r.leads.filter(function (l) { return l.kind !== 'chain'; }).map(function (l) {
+        return { id: l.id, name: l.name, type: l.type, phone: l.phone, website: l.website, address: l.address, city: l.city, kind: l.kind, issues: l.issues, email: l.email && !sup[l.email.toLowerCase()] ? l.email : '', maps: l.maps, ptype: l.ptype, hours: l.hours, outreach: have[l.id] || '' };
+      });
+      return { ok: true, query: r.query, leads: leads, counts: r.counts };
+    }
+    case 'outreach_add': {
+      var l = d.lead || {}; if (!l.id || !l.name) return { ok: false, error: 'bad' };
+      var all = outAll_(); if (all.some(function (o) { return o.id === l.id; })) return { ok: false, error: 'dup', detail: 'Already in the outreach list.' };
+      var dr = leadsDemo_(l); if (!dr.ok) return dr;
+      var email = String(l.email || dr.email || '').toLowerCase().trim();
+      if (email && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(email)) email = '';
+      if (email && all.some(function (o) { return o.status === 'Unsubscribed' && String(o.email).toLowerCase() === email; })) email = '';
+      var row = [l.id, clip_(l.name, 120), clip_(l.type, 60), clip_(l.city, 60), clip_(l.website, 300), email, outIssue_(l), dr.slug, email ? 'Ready' : 'No email', today, '', 0, '', '', authRand_().slice(0, 24), clip_(l.phone, 30)];
+      var lock = LockService.getScriptLock(); lock.waitLock(15000);
+      try { outSheet_().appendRow(row.map(function (v) { return typeof v === 'string' && /^[=+\-@]/.test(v) ? "'" + v : v; })); } finally { lock.releaseLock(); }
+      return { ok: true, status: row[8], email: email, demo: dr.slug };
+    }
+    case 'outreach_list': {
+      var list = outAll_().map(function (o) { return outView_(o, cfg, today); });
+      var sentToday = outAll_().filter(function (o) { return String(o.notes).indexOf('sent ' + today) >= 0; }).length;
+      var st2 = {}; list.forEach(function (o) { st2[o.status] = (st2[o.status] || 0) + 1; });
+      return { ok: true, items: list, today: today, sentToday: sentToday, daily: cfg.daily, addressSet: !!cfg.address, address: cfg.address, from: cfg.from, counts: st2 };
+    }
+    case 'outreach_sent': {
+      if (!cfg.address) return { ok: false, error: 'address', detail: 'Add your mailing address in Settings first. Every cold email must include it.' };
+      var sh = outSheet_(), o = outAll_().filter(function (x) { return x.id === String(d.id); })[0];
+      if (!o) return { ok: false, error: 'notfound' };
+      if (o.status === 'Unsubscribed') return { ok: false, error: 'unsub' };
+      var n = o.step + 1; if (n > 3) return { ok: false, error: 'done' };
+      var sentNow = outAll_().filter(function (x) { return String(x.notes).indexOf('sent ' + today) >= 0; }).length;
+      if (sentNow >= cfg.daily) return { ok: false, error: 'daily', detail: 'Daily limit of ' + cfg.daily + ' reached. Sending more from one inbox can get it blocked. Continue tomorrow.' };
+      outSet_(sh, o.row, 'Step', n); outSet_(sh, o.row, 'Sent', today); outSet_(sh, o.row, 'Status', n >= 3 ? 'No reply' : 'Waiting');
+      var nx = n < 3 ? addDays_(today, OUT_FOLLOW[n - 1]) : '';
+      outSet_(sh, o.row, 'Next', nx);
+      outSet_(sh, o.row, 'Notes', String(o.notes || '') + (o.notes ? '; ' : '') + 'email ' + n + ' sent ' + today + ' by ' + me.name);
+      return { ok: true };
+    }
+    case 'outreach_status': {
+      var ok = ['Replied', 'Interested', 'Not interested', 'Won', 'Bounced', 'Ready', 'Waiting'];
+      if (ok.indexOf(d.status) < 0) return { ok: false, error: 'bad' };
+      var sh3 = outSheet_(), o3 = outAll_().filter(function (x) { return x.id === String(d.id); })[0];
+      if (!o3) return { ok: false, error: 'notfound' };
+      if (o3.status === 'Unsubscribed') return { ok: false, error: 'unsub' };
+      outSet_(sh3, o3.row, 'Status', d.status); if (d.status !== 'Waiting') outSet_(sh3, o3.row, 'Next', '');
+      if (d.email !== undefined) { var em = String(d.email || '').toLowerCase().trim(); if (em && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(em)) return { ok: false, error: 'email' }; outSet_(sh3, o3.row, 'Email', em); }
+      return { ok: true };
+    }
+    case 'outreach_settings': {
+      var p = authProps_();
+      if (d.address !== undefined) { var ad = clip_(d.address, 200); if (ad && ad.length < 10) return { ok: false, error: 'bad', detail: 'Enter the full mailing address.' }; p.setProperty('OUT_ADDRESS', ad); }
+      if (d.daily !== undefined) p.setProperty('OUT_DAILY', String(Math.max(1, Math.min(50, Math.round(Number(d.daily) || 25)))));
+      if (d.from !== undefined && clip_(d.from, 60)) p.setProperty('OUT_FROM', clip_(d.from, 60));
+      return { ok: true, settings: outSettings_() };
+    }
+  }
+  return { ok: false, error: 'unknown' };
+}
+function outUnsub_(t) {
+  if (!/^[a-f0-9]{24}$/.test(t)) return { ok: false, error: 'bad' };
+  var sh = outSheet_(), all = outAll_(), o = all.filter(function (x) { return x.token === t; })[0];
+  if (!o) return { ok: false, error: 'notfound' };
+  var em = String(o.email || '').toLowerCase();
+  all.forEach(function (x) { if (x.row === o.row || (em && String(x.email).toLowerCase() === em)) { outSet_(sh, x.row, 'Status', 'Unsubscribed'); outSet_(sh, x.row, 'Next', ''); } });
+  return { ok: true, business: o.business };
 }

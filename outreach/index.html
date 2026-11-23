@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'">
+<title>Outreach | Riverbend Web Co.</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#04070D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04070D;--card:#0A101B;--card2:#0F1726;--line:#161F2E;--line2:#232E42;--ink:#E8EEF8;--txt:#CFD8E6;--mut:#8592A6;--dim:#5B6779;--blue:#2F7BFF;--red:#FF5A63;--green:#2BC48A;--amber:#F2B23B;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;--disp:'Barlow Condensed','Arial Narrow',Inter,sans-serif}
+*{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}a{color:#5B9BFF}.hidden{display:none!important}
+svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
+.wrap{max-width:980px;margin:0 auto;padding:18px 16px 60px;padding-top:max(18px,env(safe-area-inset-top))}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.bar b{color:#fff}.bar nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 13px;border-radius:7px;border:1px solid var(--line2);background:var(--card2);font-weight:600;font-size:.84rem;cursor:pointer;color:var(--ink);text-decoration:none;white-space:nowrap}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.danger{color:var(--red);border-color:rgba(255,90,99,.45)}.btn[disabled]{opacity:.5}
+.k{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+h1{font-family:var(--disp);font-style:italic;font-weight:700;font-size:2.4rem;line-height:1;margin:4px 0 14px;text-transform:uppercase;color:#fff}
+h2{font-size:1rem;margin:0 0 10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:12px 14px}.stat b{display:block;font-size:1.3rem;margin-top:4px}
+.panel{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px;margin-bottom:14px}
+.cust{border-top:1px solid var(--line);padding:12px 2px}.cust:first-child{border-top:0}
+.cust .t{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.cust b{color:#fff}
+.cust .m{font-size:.82rem;color:var(--mut);margin-top:3px}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--txt);margin-top:6px}
+.tag.ok{color:var(--green);border-color:rgba(43,196,138,.4)}.tag.warn{color:var(--amber);border-color:rgba(242,178,59,.4)}
+.field{height:40px;border:1px solid var(--line2);border-radius:8px;padding:0 10px;background:var(--bg);color:var(--ink);font-size:16px;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.user{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding:10px 0}.user:first-of-type{border-top:0}
+.msg{min-height:18px;margin-top:8px;font-size:.86rem;color:var(--mut)}.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
+
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.tabs .btn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.item{border-top:1px solid var(--line);padding:12px 2px}.item:first-child{border-top:0}
+.item .t{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}.item b{color:#fff}
+.item .m{font-size:.82rem;color:var(--mut);margin-top:3px;overflow-wrap:anywhere}
+.draft{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:10px;font-size:.84rem;color:var(--txt);margin-top:8px;max-height:260px;overflow:auto}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.note{background:var(--card2);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;font-size:.86rem;color:var(--txt);margin-bottom:14px}
+.note.warn{border-color:rgba(242,178,59,.5)}
+.chk{display:flex;gap:10px;align-items:flex-start}.chk input{width:18px;height:18px;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><svg class="rw" viewBox="0 0 1115 562" aria-hidden="true"><use href="#rw"/></svg><b>Riverbend</b>
+    <nav><a class="btn" href="/studio/">Studio</a><a class="btn" href="/leads/">Leads</a><a class="btn" href="/sales/">Sales</a><a class="btn" href="/login/">Account</a></nav></div>
+  <span class="k">Owners only</span>
+  <h1>Outreach</h1>
+  <div id="addrWarn" class="note warn hidden">Add your mailing address in Settings before sending. Federal law (CAN-SPAM) requires a real postal address in every cold email.</div>
+  <div class="stats" id="stats"></div>
+  <div class="tabs" role="tablist">
+    <button class="btn on" data-tab="today" type="button">Send today</button>
+    <button class="btn" data-tab="find" type="button">Find businesses</button>
+    <button class="btn" data-tab="all" type="button">Pipeline</button>
+    <button class="btn" data-tab="settings" type="button">Settings</button>
+  </div>
+
+  <section id="tab-today" class="panel">
+    <h2>Send today</h2>
+    <p class="msg" style="margin-top:0">For each one: open the demo and check it looks right, tap Open email (or copy the parts into Zoho), send it, then tap Mark sent. Follow-ups show up here on day 3 and day 8. Replies come to your inbox: mark them here.</p>
+    <div id="today"></div>
+  </section>
+
+  <section id="tab-find" class="panel hidden">
+    <h2>Find businesses</h2>
+    <div class="row">
+      <input class="field" id="fq" placeholder="Type: bar, restaurant, auto repair, plumber, salon..." style="flex:2 1 220px" value="restaurant">
+      <input class="field" id="fcity" placeholder="Town" style="flex:1 1 140px" value="Cedar Rapids">
+      <select class="field" id="fst" style="flex:0 0 90px"><option>IA</option><option>WI</option><option>IL</option><option>MN</option><option>MO</option><option>NE</option><option>MD</option></select>
+      <button class="btn primary" id="fgo" type="button">Search</button>
+    </div>
+    <div class="msg" id="fmsg">Best email targets: businesses whose website is outdated, not built for phones or not secure. Their email is usually on their site.</div>
+    <div id="fres"></div>
+    <div class="row hidden" id="faddRow" style="margin-top:10px"><button class="btn primary" id="fadd" type="button">Build demos and add selected</button><span class="msg" id="faddMsg" style="margin:0"></span></div>
+  </section>
+
+  <section id="tab-all" class="panel hidden"><h2>Pipeline</h2><div id="all"></div></section>
+
+  <section id="tab-settings" class="panel hidden">
+    <h2>Settings</h2>
+    <label class="k" for="saddr">Mailing address in every email (required by law)</label>
+    <input class="field" id="saddr" style="width:100%;margin:6px 0 12px" placeholder="Street or PO Box, City, State ZIP">
+    <label class="k" for="sfrom">Your name on the emails</label>
+    <input class="field" id="sfrom" style="width:100%;margin:6px 0 12px">
+    <label class="k" for="sdaily">Most emails per day (keeps your Zoho inbox safe)</label>
+    <input class="field" id="sdaily" type="number" min="1" max="50" style="width:120px;margin:6px 0 12px">
+    <div><button class="btn primary" id="ssave" type="button">Save settings</button></div>
+    <div class="msg" id="smsg"></div>
+  </section>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="rw" viewBox="0 0 1115 562"><path fill="#FFFFFF" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#3B82F6" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol></svg>
+<script src="/login/auth.js"></script>
+<script>
+(()=>{
+const A=window.RBAuth, $=s=>document.querySelector(s);
+const el=(t,p,...k)=>{const n=document.createElement(t);if(p)for(const x in p){if(x==='class')n.className=p[x];else if(x==='text')n.textContent=p[x];else if(x.startsWith('on'))n.addEventListener(x.slice(2),p[x]);else n.setAttribute(x,p[x]);}k.flat().forEach(c=>c&&n.append(c));return n;};
+if(!A.token()) return A.requireLogin('/outreach/');
+async function api(b){ const r=await A.call(b); if(r&&r.error==='auth'){ A.requireLogin('/outreach/'); } return r; }
+let data=null, found=[];
+const demoUrl=s=>location.origin+'/demo/?d='+encodeURIComponent(s);
+async function copy(t,btn){ try{ await navigator.clipboard.writeText(t); const o=btn.textContent; btn.textContent='Copied'; setTimeout(()=>btn.textContent=o,1200);}catch(_){ prompt('Copy:',t);} }
+function tab(n){ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===n)); ['today','find','all','settings'].forEach(x=>$('#tab-'+x).classList.toggle('hidden',x!==n)); }
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
+async function load(){
+  const r=await api({action:'outreach_list'}); if(!r.ok){ $('#today').textContent='Could not load. Owners only.'; return; }
+  data=r; $('#addrWarn').classList.toggle('hidden',r.addressSet);
+  $('#saddr').value=r.address||''; $('#sfrom').value=r.from||''; $('#sdaily').value=r.daily;
+  const c=r.counts||{}; const due=r.items.filter(i=>i.due&&i.draft);
+  $('#stats').replaceChildren(...[['Ready to send',due.length],['Sent today',r.sentToday+' / '+r.daily],['Waiting on reply',c.Waiting||0],['Interested',(c.Interested||0)+(c.Replied||0)],['Won',c.Won||0],['In pipeline',r.items.length]].map(([k,v])=>el('div',{class:'stat'},el('small',{class:'k',text:k}),el('b',{text:String(v)}))));
+  drawToday(due); drawAll(r.items);
+}
+function statusBtns(i){ return el('div',{class:'acts'},...['Replied','Interested','Not interested','Won','Bounced'].map(s=>el('button',{class:'btn',type:'button',text:s,onclick:async()=>{ const x=await api({action:'outreach_status',id:i.id,status:s}); if(!x.ok) alert(x.detail||'Could not save.'); load(); }}))); }
+function drawToday(due){
+  const box=$('#today');
+  if(!due.length){ box.replaceChildren(el('p',{class:'msg',text:'Nothing to send right now. Use Find businesses to add more.'})); return; }
+  box.replaceChildren(...due.map(i=>{
+    const d=i.draft, mail='mailto:'+encodeURIComponent(i.email)+'?subject='+encodeURIComponent(d.subject)+'&body='+encodeURIComponent(d.body);
+    const sent=el('button',{class:'btn primary',type:'button',text:'Mark sent',onclick:async()=>{ sent.disabled=true; const x=await api({action:'outreach_sent',id:i.id}); if(!x.ok){ alert(x.detail||'Could not save.'); sent.disabled=false; return;} load(); }});
+    if(!data.addressSet) sent.disabled=true;
+    return el('div',{class:'item'},
+      el('div',{class:'t'},el('b',{text:i.business}),el('span',{class:'tag '+(i.nextStep===1?'ok':'warn'),text:i.nextStep===1?'First email':'Follow-up '+(i.nextStep-1)})),
+      el('div',{class:'m',text:[i.type,i.city,i.email].filter(Boolean).join(' \u00b7 ')}),
+      i.issue?el('div',{class:'m',text:'Found: '+i.issue}):null,
+      el('div',{class:'acts'},
+        el('a',{class:'btn',href:demoUrl(i.demo),target:'_blank',rel:'noopener',text:'Check demo'}),
+        i.website?el('a',{class:'btn',href:i.website,target:'_blank',rel:'noopener noreferrer',text:'Their site'}):null,
+        el('a',{class:'btn',href:mail,text:'Open email'}),
+        el('button',{class:'btn',type:'button',text:'Copy to',onclick:e=>copy(i.email,e.target)}),
+        el('button',{class:'btn',type:'button',text:'Copy subject',onclick:e=>copy(d.subject,e.target)}),
+        el('button',{class:'btn',type:'button',text:'Copy message',onclick:e=>copy(d.body,e.target)}),
+        sent),
+      el('details',null,el('summary',{class:'m',text:'Show email'}),el('div',{class:'draft',text:'Subject: '+d.subject+'\n\n'+d.body})),
+      i.nextStep>1?statusBtns(i):null);
+  }));
+}
+function drawAll(items){
+  const box=$('#all'); if(!items.length){ box.replaceChildren(el('p',{class:'msg',text:'No businesses yet.'})); return; }
+  const order={'Interested':0,'Replied':1,'Won':2,'Waiting':3,'Ready':4,'No email':5,'No reply':6,'Not interested':7,'Bounced':8,'Unsubscribed':9};
+  box.replaceChildren(...items.slice().sort((a,b)=>(order[a.status]??9)-(order[b.status]??9)).map(i=>el('div',{class:'item'},
+    el('div',{class:'t'},el('b',{text:i.business}),el('span',{class:'tag '+(/Interested|Won|Replied/.test(i.status)?'ok':/Waiting|Ready/.test(i.status)?'warn':''),text:i.status})),
+    el('div',{class:'m',text:[i.type,i.city,i.email||'no email found',i.phone].filter(Boolean).join(' \u00b7 ')}),
+    el('div',{class:'m',text:(i.step?'Emails sent: '+i.step:'')+(i.next?' \u00b7 next follow-up '+i.next:'')}),
+    el('div',{class:'acts'},el('a',{class:'btn',href:demoUrl(i.demo),target:'_blank',rel:'noopener',text:'Demo'}),
+      i.status==='No email'?el('button',{class:'btn',type:'button',text:'Add email',onclick:async()=>{ const em=prompt('Email address for '+i.business+':'); if(!em) return; const x=await api({action:'outreach_status',id:i.id,status:'Ready',email:em}); if(!x.ok) alert('That email does not look right.'); load(); }}):null,
+      i.status!=='Unsubscribed'?statusBtns(i):null))));
+}
+$('#fgo').addEventListener('click',async()=>{
+  const b=$('#fgo'); b.disabled=true; $('#fmsg').textContent='Searching the map and checking each website. This can take a minute...'; $('#fres').replaceChildren(); $('#faddRow').classList.add('hidden');
+  const r=await api({action:'outreach_find',q:$('#fq').value.trim(),city:$('#fcity').value.trim(),state:$('#fst').value}); b.disabled=false;
+  if(!r.ok){ $('#fmsg').textContent=r.detail||r.message||'Search failed. Try again.'; return; }
+  found=r.leads; const good=found.filter(l=>!l.outreach&&(l.kind==='weak'||l.email));
+  $('#fmsg').textContent=r.query+': '+found.length+' found. '+good.length+' are good email targets (weak website or listed email). Pick the ones to add.';
+  $('#fres').replaceChildren(...found.map((l,ix)=>el('label',{class:'item chk'},
+    el('input',{type:'checkbox','data-ix':String(ix),...(l.outreach?{disabled:'true'}:{}),...(!l.outreach&&(l.kind==='weak'||l.email)?{checked:'true'}:{})}),
+    el('div',null,el('div',{class:'t'},el('b',{text:l.name}),el('span',{class:'tag '+(l.kind==='weak'?'ok':''),text:l.outreach?('In outreach: '+l.outreach):({none:'No website',social:'Social page only',weak:'Weak website',site:'Has a website'}[l.kind]||l.kind)})),
+      el('div',{class:'m',text:[l.type,l.city,l.phone].filter(Boolean).join(' \u00b7 ')}),
+      el('div',{class:'m',text:(l.issues||[]).join('; ')})))));
+  $('#faddRow').classList.remove('hidden');
+});
+$('#fadd').addEventListener('click',async()=>{
+  const ix=[...document.querySelectorAll('#fres input:checked')].map(x=>+x.dataset.ix); if(!ix.length) return;
+  const b=$('#fadd'); b.disabled=true; let ok=0,noEmail=0;
+  for(let n=0;n<ix.length;n++){ const l=found[ix[n]]; $('#faddMsg').textContent='Building demo '+(n+1)+' of '+ix.length+': '+l.name+'...';
+    const r=await api({action:'outreach_add',lead:l}); if(r&&r.ok){ ok++; if(!r.email) noEmail++; } }
+  b.disabled=false; $('#faddMsg').textContent='Added '+ok+'. '+(noEmail?noEmail+' had no email on their site (in Pipeline as "No email": call them or add an email).':'');
+  load();
+});
+$('#ssave').addEventListener('click',async()=>{ const r=await api({action:'outreach_settings',address:$('#saddr').value.trim(),from:$('#sfrom').value.trim(),daily:$('#sdaily').value}); $('#smsg').className='msg '+(r.ok?'ok':'err'); $('#smsg').textContent=r.ok?'Saved.':(r.detail||'Could not save.'); if(r.ok) load(); });
+load();
+})();
+</script>
+</body>
+</html>

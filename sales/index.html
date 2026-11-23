@@ -49,7 +49,7 @@ h2{font-size:1rem;margin:0 0 10px}
 </svg>
 <div class="wrap">
   <div class="bar"><svg class="rw" aria-hidden="true"><use href="#rw-dark"/></svg><b id="who">Riverbend</b>
-    <nav><a class="btn" href="/studio/">Studio</a><a class="btn" href="/leads/">Leads</a><a class="btn hidden" id="billLink" href="/billing/">Billing</a><a class="btn" href="/login/">Account</a></nav></div>
+    <nav><a class="btn" href="/studio/">Studio</a><a class="btn" href="/leads/">Leads</a><a class="btn hidden" id="billLink" href="/billing/">Billing</a><a class="btn hidden" id="outLink" href="/outreach/">Outreach</a><a class="btn" href="/login/">Account</a></nav></div>
   <small class="k" id="roleK">Sales</small><h1>Sales</h1>
   <div class="row" style="margin-bottom:14px"><a class="btn primary" href="/?signup=1#pricing">Sign up a customer</a></div>
   <div class="stats" id="stats"></div>
@@ -85,7 +85,7 @@ async function api(b){ const r=await A.call(b); if(r&&r.error==='auth'){ A.clear
 async function load(){
   const m=await api({action:'auth_me'}); if(!m.ok) return; me=m.user;
   $('#who').textContent=me.name; $('#roleK').textContent=me.roleName;
-  const owner=me.role==='owner'; $('#billLink').classList.toggle('hidden',!owner); $('#ownerOnly').classList.toggle('hidden',!owner); $('#custTitle').textContent=owner?'All customers':'My customers';
+  const owner=me.role==='owner'; $('#billLink').classList.toggle('hidden',!owner); $('#outLink').classList.toggle('hidden',!owner); $('#ownerOnly').classList.toggle('hidden',!owner); $('#custTitle').textContent=owner?'All customers':'My customers';
   const r=await api({action:'sales_customers'});
   if(!r.ok){ $('#custs').replaceChildren(el('div',{class:'msg err',text:'Could not load customers.'})); return; }
   const live=r.customers.filter(c=>c.progress==='Website live').length;
