@@ -127,17 +127,22 @@ These rules come from building and launching riverbendwebco.com. Follow them on 
 
 ## 6. Riverbend pricing (current)
 
-| Plan | Price | Term | File ownership |
+Every plan has two ways to pay. The pricing section has a "Pay once / $0 down" toggle; the agreement has a plan picker plus a payment picker.
+
+| Plan | Pay once | $0 down | Updates |
 |---|---|---|---|
-| Essentials | $79/mo + $499 setup | Month-to-month, 14 days' notice | Client owns files once setup is paid |
-| Growth (most popular) | $149/mo, $0 down, first payment due at launch | 6-month minimum, then month-to-month | After 6 consecutive payments |
-| Partner | $299/mo, $0 down, first payment due at launch | 6-month minimum, then month-to-month | After 6 consecutive payments |
+| Starter | $499 build + $50/mo care | $99/mo | 2 small updates a month within 3 business days; extra changes $35 each, bigger work $65/hour quoted first |
+| Custom (most popular) | $999 build + $75/mo care | $149/mo | Unlimited updates and changes within 24 to 48 hours |
+| Premium | $2,499 build + $100/mo care | $299/mo | Unlimited changes within 2 hours, 24/7 direct line |
+
+- Pay once: build fee due at signing; care plan starts at launch, month-to-month, 14 days' notice. Client owns the site files once the build fee is paid.
+- $0 down: nothing at signing, first payment the day the site goes live, 12-month minimum then month-to-month. Site files transfer after 24 consecutive payments. Early exit before 12 months: $299 Starter, $499 Custom, $999 Premium.
+- $0 down is priced to break even with pay-once at about 10 to 13 months, then cost more.
 
 **Payment methods:** credit and debit cards through Square, ACH bank transfer, Venmo and PayPal. Listed in the pricing note, FAQ 08, agreement section 5 and the chat assistant `paymethod` answer.
 
 **Main call to action:** "Request Free Web Preview" (no "10-minute chat" wording anywhere).
 
-- Early exit on $0-down plans before 6 months: one-time $299 fee.
 - Add-ons: photo shoot $150 to $300, logo $150 to $250, QR menu and table tents $75, online ordering or reservations setup $150, extra page $100 each, email or text club $49/mo, Google Business Profile management only $99/mo.
 - Market context: $0-down managed website plans commonly run about $149 to $599/mo; Google Business Profile management alone commonly runs $125 to $400/mo. Riverbend sits at the friendly low end on purpose. Do not compete with Wix on price; sell "done for you."
 - Whenever pricing changes, update **every** place it appears: pricing cards, terms strip, FAQ, service agreement (plan cards, summary boxes, term text, ownership text), chat assistant answers, and the hero or guarantee wording.
