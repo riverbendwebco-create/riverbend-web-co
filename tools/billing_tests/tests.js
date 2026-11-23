@@ -185,7 +185,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   H.cache['bot_'+'c'.repeat(64)]='billing';
   ok('Billing robot can run the daily billing check',B.studio_({action:'billing_tick',token:'c'.repeat(64)}).ok);
   ok('Billing robot cannot list or change accounts',B.studio_({action:'billing_list',token:'c'.repeat(64)}).error==='auth'&&B.studio_({action:'billing_launch',token:'c'.repeat(64)}).error==='auth');
-  ok('Going live needs the typed confirmation and production keys',B.billing_({action:'billing_settings',mode:'production',confirmText:'GO LIVE'}).error==='notready'&&B.billing_({action:'billing_settings',mode:'production'}).error==='confirm');
+  ok('Going live needs the typed confirmation and the live access token',B.billing_({action:'billing_settings',mode:'production',confirmText:'GO LIVE'}).error==='notready'&&B.billing_({action:'billing_settings',mode:'production'}).error==='confirm');
 }
 const pass=R.filter(r=>r.pass).length;
 R.forEach(r=>console.log((r.pass?'PASS ':'FAIL ')+r.name+(r.pass?'':'  ['+r.info+']')));

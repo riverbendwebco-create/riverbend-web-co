@@ -1869,7 +1869,9 @@ function billLog_(a, msg) { a.log = a.log || []; a.log.push({ t: new Date().toIS
 
 /* ---------- Square ---------- */
 function sqEnv_() { return PropertiesService.getScriptProperties().getProperty('SQUARE_ENV') === 'production' ? 'production' : 'sandbox'; }
-function sqProp_(k, env) { return PropertiesService.getScriptProperties().getProperty('SQUARE_' + k + '_' + (env || sqEnv_()).toUpperCase()) || ''; }
+/* Application IDs are public (they appear in the payment page); access tokens are secret and live only in Script Properties. */
+var SQ_APP_IDS = { sandbox: 'sandbox-sq0idb-2tEEA0lrBti3HxT7KjIobg', production: 'sq0idp-44LaryylblBhPEjQ7tjeAg' };
+function sqProp_(k, env) { env = env || sqEnv_(); return PropertiesService.getScriptProperties().getProperty('SQUARE_' + k + '_' + env.toUpperCase()) || (k === 'APP' ? SQ_APP_IDS[env] : '') || ''; }
 function sqBase_(env) { return (env || sqEnv_()) === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com'; }
 var SQ_FAKE = null; // tests only
 function sq_(method, path, body, env) {
@@ -2217,7 +2219,7 @@ function billSetSettings_(d) {
   }
   if (typeof d.appId === 'string' && d.appId.trim()) {
     var app = d.appId.trim();
-    if (!/^(sandbox-)?sq0idp-[A-Za-z0-9_\-]{10,60}$/.test(app)) return { ok: false, error: 'badapp' };
+    if (!/^(sandbox-)?sq0id[a-z]-[A-Za-z0-9_\-]{10,60}$/.test(app)) return { ok: false, error: 'badapp' };
     if ((env === 'sandbox') !== /^sandbox-/.test(app)) return { ok: false, error: 'appenv' };
     p.setProperty('SQUARE_APP_' + E, app);
   }
