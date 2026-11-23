@@ -1808,7 +1808,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23f';
+var BILL_VERSION = '2026-11-23g';
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
@@ -2587,7 +2587,7 @@ function billSelfTest_() {
     var rf = sq_('post', '/v2/refunds', { idempotency_key: 'rb-test-refund-' + F.id, payment_id: pc.paymentId, amount_money: { amount: pc.amount, currency: 'USD' }, reason: 'Sandbox self-test' });
     ok('Refund of the subscription payment sent to Square sandbox', rf.ok, rf.ok ? '' : sqErr_(rf));
     var gone = false;
-    for (var w2 = 0; w2 < 5 && !gone; w2++) { Utilities.sleep(3000); billSubSync_(F, billToday_()); gone = billCounts_(F).full === 0; }
+    for (var w2 = 0; w2 < 5 && !gone; w2++) { Utilities.sleep(3000); billSubSync_(F, billToday_()); billSave_(F); billReconcile_({ refunds: 0 }); F = billGet_(F.id); gone = billCounts_(F).full === 0; }
     ok('Refunded subscription payment no longer counts toward 12', gone);
   } else ok('Refund of the subscription payment sent to Square sandbox', false, 'no payment id on the invoice');
   // 8. Ending billing cancels the Square subscription
