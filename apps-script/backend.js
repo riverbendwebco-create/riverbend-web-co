@@ -680,7 +680,19 @@ function demoUpdateAdd_(slug, text, me) {
     // A leading = + - @ would make Sheets treat the message as a formula: store it as plain text.
     demoUpdatesSheet_().appendRow([new Date(), slug, biz, me.name, me.email, me.role === 'owner' ? 'Owner' : 'Salesperson', /^[=+\-@]/.test(text) ? "'" + text : text]);
   } finally { lock.releaseLock(); }
+  try { demoUpdateNotify_(slug, biz, text, me); } catch (e) { console.error(e); }
   return demoUpdatesList_(slug);
+}
+// Email everyone else on the team (active accounts) when someone posts in a demo's thread.
+function demoUpdateNotify_(slug, biz, text, me) {
+  var u = authUsers_(), to = [];
+  Object.keys(u).forEach(function (k) { var x = u[k]; if (x.status === 'active' && x.email && x.email !== me.email) to.push(x.email); });
+  if (!to.length) return 0;
+  var role = me.role === 'owner' ? 'Owner' : 'Salesperson', link = 'https://' + SITE + '/studio/#update=' + encodeURIComponent(slug);
+  MailApp.sendEmail({ to: to.join(','), name: 'Riverbend Web Co.', subject: (me.role === 'owner' ? 'Reply' : 'Update') + ' on ' + (biz || 'a demo') + ' from ' + me.name,
+    body: me.name + ' (' + role + ') posted on ' + (biz || 'a demo') + ':\n\n' + text + '\n\nOpen the thread to reply:\n' + link +
+      '\n\nReplies to this email are not posted. Reply in the Demo Studio so the whole team sees it.\n\nRiverbend Web Co.' });
+  return to.length;
 }
 function setDemoStatus_(slug, status) {
   if (DEMO_STATUS.indexOf(status) < 0) return { ok: false, error: 'status' };
@@ -1857,7 +1869,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23q';
+var BILL_VERSION = '2026-11-23r';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,

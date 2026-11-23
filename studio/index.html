@@ -503,11 +503,13 @@ function showApp(){ $('#login').classList.add('hidden'); $('#app').classList.rem
 /* ---------- List ---------- */
 async function showList(){
   $('#editView').classList.add('hidden'); $('#listView').classList.remove('hidden'); document.body.classList.remove('editing'); cur=null; dirty=false;
+  const wantUpd=(location.hash.match(/^#update=(.+)$/)||[])[1];
   history.replaceState(null,'',location.pathname);
   const c=$('#cards'); c.replaceChildren(el('div',{class:'loading'},el('div',{class:'spin'}),document.createTextNode('Loading demos…')));
   const r=await api({action:'list'});
   if(!r.ok){ if(r.error!=='auth') c.replaceChildren(el('div',{class:'empty'},el('h3',{text:'Couldn’t load demos'}),el('p',{text:'Check your connection and refresh.'}))); return; }
   demos=r.demos||[]; renderCards();
+  if(wantUpd){ const d=demos.find(x=>x.slug===decodeURIComponent(wantUpd)); if(d) openUpdates(d); }
 }
 function renderCards(){
   const q=$('#q').value.trim().toLowerCase(), st=$('#fStatus').value;
@@ -548,7 +550,7 @@ async function openUpdates(d){
   const esc=e=>{ if(e.key==='Escape') close(); };
   const back=el('div',{class:'upd-back',onclick:e=>{ if(e.target===back) close(); }},
     el('div',{class:'upd',role:'dialog','aria-modal':'true','aria-label':'Current update for '+(d.name||'this demo')},
-      el('div',{class:'upd-h'},el('div',{style:'flex:1;min-width:0'},el('h3',{text:'Current update: '+(d.name||'Untitled')}),el('p',{text:'Sales updates and owner replies for this business. Everyone on the team can see this.'})),
+      el('div',{class:'upd-h'},el('div',{style:'flex:1;min-width:0'},el('h3',{text:'Current update: '+(d.name||'Untitled')}),el('p',{text:'Sales updates and owner replies for this business. Everyone on the team can see this and gets an email when someone posts.'})),
         el('button',{class:'icon-btn',type:'button','aria-label':'Close',onclick:close,text:'\u00d7'})),
       list,
       el('div',{class:'upd-f'},el('label',{for:'updText',class:'sr-only',text:'Message'}),ta,el('div',{class:'row2'},note,post))));

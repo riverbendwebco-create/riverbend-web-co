@@ -90,6 +90,12 @@ ok('Owen cannot change another person\'s lead',B.studio_({action:'leads_update',
   const l=S({action:'updates_list',token:owenTok,slug});
   ok('Owen posts an update and an owner replies; both see the thread in order',p1.ok&&p2.ok&&l.ok&&l.updates.length===2&&l.updates[0].name==='Owen Seffrood'&&l.updates[0].role==='Salesperson'&&l.updates[1].role==='Owner'&&/call back Friday/.test(l.updates[0].text),JSON.stringify(l));
   const li=S({action:'list',token:owenTok}).demos.find(x=>x.slug===slug);
+  { const us0=JSON.parse(H.props.AUTH_USERS); us0['rayald@x.com']&&(us0['rayald@x.com'].status='active'); H.props.AUTH_USERS=JSON.stringify(us0); H.mails.length=0;
+    S({action:'updates_add',token:owenTok,slug,text:'Signed! Card saved.'}); const m1=H.mails.find(m=>/Update on Update Test Tap from Owen Seffrood/.test(m.subject));
+    S({action:'updates_add',token:kruzTok,slug,text:'Great job.'}); const m2=H.mails.find(m=>/Reply on Update Test Tap from Kruz Kitelinger/.test(m.subject));
+    ok('Owen posts: owners are emailed (not Owen); an owner replies: Owen and the other owner are emailed (not the poster); link opens the thread',
+      m1&&/kruz@x\.com/.test(m1.to)&&/rayald@x\.com/.test(m1.to)&&!/owen@x\.com/.test(m1.to)&&/Signed! Card saved\./.test(m1.body)&&/\/studio\/#update=/.test(m1.body)&&
+      m2&&/owen@x\.com/.test(m2.to)&&/rayald@x\.com/.test(m2.to)&&!/kruz@x\.com/.test(m2.to),JSON.stringify([m1&&m1.to,m2&&m2.to])); }
   ok('Demo list shows the update count and latest poster',li&&li.updates&&li.updates.n===2&&li.updates.role==='Owner',JSON.stringify(li&&li.updates));
   H.cache['tok_'+'d'.repeat(64)]=H.props.STUDIO_PW_GEN||'1';
   const lg=S({action:'updates_add',token:'d'.repeat(64),slug,text:'x'});
