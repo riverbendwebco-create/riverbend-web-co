@@ -72,10 +72,11 @@ td b{color:#fff;font-weight:600}
     <svg class="rw" style="width:54px" aria-label="Riverbend Web Co."><use href="#rw-dark"/></svg>
     <small style="margin-top:18px">RIVERBEND WEB CO.</small>
     <h1>Billing</h1>
-    <p>Client payments, launches and past-due accounts. Same password as the Demo Studio.</p>
+    <p>Client payments, launches and past-due accounts. Owners only: this is a separate password from the Demo Studio.</p>
     <input class="field" id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
     <button class="btn primary" type="submit" id="loginBtn" style="width:100%;height:44px;margin-top:12px">Log In</button>
     <div class="msg" id="loginMsg" role="alert"></div>
+    <button class="btn" type="button" id="pwReset" style="width:100%;margin-top:8px">Email me a new password</button>
   </form>
 </section>
 <section class="hidden" id="app"><div class="wrap">
@@ -96,14 +97,15 @@ const $=s=>document.querySelector(s);
 function el(tag,props,...kids){ const n=document.createElement(tag); if(props) for(const k in props){ const v=props[k]; if(v==null||v===false) continue; if(k==='class') n.className=v; else if(k==='text') n.textContent=v; else if(k.slice(0,2)==='on') n.addEventListener(k.slice(2),v); else n.setAttribute(k,v);} kids.flat(Infinity).forEach(c=>{ if(c==null||c===false) return; n.appendChild(typeof c==='string'?document.createTextNode(c):c); }); return n; }
 const usd=c=>'$'+((c||0)/100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const ld=s=>{ if(!s) return ''; const d=new Date(s+'T12:00:00'); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); };
-let token=''; try{ token=sessionStorage.getItem('rbStudio')||''; }catch(_){}
+let token=''; try{ token=sessionStorage.getItem('rbBilling')||''; }catch(_){}
 let data={accounts:[],settings:{}}, openId='';
 async function api(body){ let r; try{ const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({token},body))}); r=await res.json(); }catch(_){ return {ok:false,error:'network'}; } if(r&&r.error==='auth') signOut(true); return r||{ok:false,error:'server'}; }
 $('#loginForm').addEventListener('submit',async e=>{ e.preventDefault(); const pw=$('#pw').value; if(!pw) return; const b=$('#loginBtn'); b.disabled=true; b.textContent='Checking...';
-  const r=await api({action:'login',password:pw}); b.disabled=false; b.textContent='Log In';
-  if(r.ok){ token=r.token; try{sessionStorage.setItem('rbStudio',token);}catch(_){} $('#pw').value=''; start(); return; }
-  $('#loginMsg').className='msg err'; $('#loginMsg').textContent={badpassword:'That password is not right.',locked:'Too many tries. Wait 15 minutes.',network:'Cannot reach the server.'}[r.error]||'Something went wrong.'; });
-function signOut(expired){ if(!expired&&token) api({action:'logout'}); token=''; try{sessionStorage.removeItem('rbStudio');}catch(_){} $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); if(expired){ $('#loginMsg').className='msg err'; $('#loginMsg').textContent='Your session ended. Log in again.'; } }
+  const r=await api({action:'billing_login',password:pw}); b.disabled=false; b.textContent='Log In';
+  if(r.ok){ token=r.token; try{sessionStorage.setItem('rbBilling',token);}catch(_){} $('#pw').value=''; start(); return; }
+  $('#loginMsg').className='msg err'; $('#loginMsg').textContent={badpassword:'That password is not right. This is the billing password, not the Studio password.',locked:'Too many tries. Wait 15 minutes.',network:'Cannot reach the server.',nopassword:'No billing password yet. Tap "Email me a new password".'}[r.error]||'Something went wrong.'; });
+$('#pwReset').addEventListener('click',async()=>{ const m=$('#loginMsg'); m.className='msg'; m.textContent='Sending...'; const r=await api({action:'billing_reset'}); m.className='msg '+(r.ok?'ok':'err'); m.textContent=r.detail||(r.ok?'Sent.':'Could not send. Try again.'); });
+function signOut(expired){ if(!expired&&token) api({action:'billing_logout'}); token=''; try{sessionStorage.removeItem('rbBilling');}catch(_){} $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); if(expired){ $('#loginMsg').className='msg err'; $('#loginMsg').textContent='Your session ended. Log in again.'; } }
 $('#out').addEventListener('click',()=>signOut(false));
 $('#refresh').addEventListener('click',()=>load());
 $('#setBtn').addEventListener('click',()=>{ $('#settings').classList.toggle('hidden'); drawSettings(); });
@@ -222,6 +224,7 @@ function drawSettings(){
           el('div',{class:'row2',style:'justify-content:flex-end;margin-top:12px'},el('button',{class:'btn',type:'button',text:'Cancel',onclick:closeModal}),el('button',{class:'btn go',type:'button',text:'Update Square',onclick:async ev=>{ ev.target.disabled=true; ev.target.textContent='Updating...'; const r2=await api({action:'billing_catalog',apply:true}); closeModal(); sm(r2.ok?'Square item library updated. Open the Square app and the new plans are under Items.':errText(r2),r2.ok); }})));
         $('#modal').classList.remove('hidden'); }}),
       el('button',{class:'btn',type:'button',text:'$1 Square app test link',onclick:async()=>{ const r=await api({action:'billing_postest'}); if(!r.ok){ sm(errText(r)); return; } const inp=el('input',{class:'field',value:r.url,readonly:'readonly'}); $('#mbox').replaceChildren(el('h2',{text:'$1 Square app test'}),el('p',{style:'color:var(--mut);font-size:.88rem',text:'Open this link on the phone that has the Square app, tap "Charge $1.00 in Square app", pay with your own card, then tap Save Card. Refund the $1 in Square afterward.'}),inp,el('div',{class:'row2',style:'justify-content:flex-end;margin-top:12px'},el('button',{class:'btn',type:'button',text:'Close',onclick:()=>{closeModal();load();}}),el('button',{class:'btn primary',type:'button',text:'Copy',onclick:e=>{ inp.select(); try{navigator.clipboard.writeText(r.url);}catch(_){document.execCommand('copy');} e.target.textContent='Copied'; }}),el('button',{class:'btn go',type:'button',text:'Open it',onclick:()=>{ location.href=r.url; }}))); $('#modal').classList.remove('hidden'); }}),
+      el('button',{class:'btn',type:'button',text:'Check Square subscriptions',onclick:async e=>{ e.target.disabled=true; const r=await api({action:'billing_verify'}); e.target.disabled=false; if(!r.ok){ sm(errText(r)); return; } res.replaceChildren(...(r.accounts.length?r.accounts.map(x=>el('div',null,el('span',{class:'tag '+(x.ok?'ok':'bad'),text:x.ok?'OK':'CHECK'}),' '+x.business+(x.ok?': right price, saved card, billed on the 1st, no extra charges':': '+x.problems.join('; ')))):[el('div',{text:'No launched subscription clients yet.'})])); }}),
       el('button',{class:'btn',type:'button',text:'Run daily billing check now',onclick:async()=>{ const r=await api({action:'billing_tick'}); sm(r.ok?'Done: '+JSON.stringify(r.summary):errText(r),r.ok); load(); }}),
       s.env==='production'?el('button',{class:'btn',type:'button',text:'Switch back to test mode',onclick:async()=>{ const r=await api({action:'billing_settings',mode:'sandbox'}); if(r.ok){data.settings=r.settings;} load(); drawSettings(); }})
       :el('button',{class:'btn danger',type:'button',text:'Go live with real cards',onclick:()=>{ const inp=el('input',{class:'field',placeholder:'Type GO LIVE'}); confirmBox('Switch to live payments?',[['Effect','New agreements get a real Square payment link and real cards are charged.'],['Test accounts','Stay in test mode and are never charged.']],'Go live',async()=>{ const r=await api({action:'billing_settings',mode:'production',confirmText:inp.value.trim()}); closeModal(); if(!r.ok){ sm(r.error==='notready'?'Save the live access token and application ID first.':errText(r)); return; } data.settings=r.settings; load(); drawSettings(); },inp); }})),

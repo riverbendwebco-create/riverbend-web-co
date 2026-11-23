@@ -43,6 +43,8 @@ function doPost(e) {
     var bill = null;
     if (kind === 'agreement') { try { bill = billCreateFromAgreement_(f); } catch (eb) { console.error(eb); } }
 
+    var pdf = null;
+    if (kind === 'agreement') { try { pdf = agreementPdf_(f, file); } catch (ep) { console.error(ep); } }
     var mail = kind === 'agreement' ? agreementEmail_(f, file, driveUrl, sheetUrl, bill) : leadEmail_(f, file, driveUrl, sheetUrl);
     var reply = /@/.test(f['Phone or Email'] || f['Email'] || '') ? (f['Phone or Email'] || f['Email']) : '';
     var opts = { to: OWNER_EMAIL, subject: mail.subject, htmlBody: mail.html, body: mail.text, name: 'Riverbend Website' };
@@ -51,7 +53,9 @@ function doPost(e) {
       opts.attachments = [file.blob];
       if (file.previewable) opts.inlineImages = { preview: file.blob };
     }
+    if (pdf) opts.attachments = (opts.attachments || []).concat([pdf]);
     MailApp.sendEmail(opts);
+    if (kind === 'agreement' && pdf) { try { agreementToClient_(f, pdf); } catch (ec) { console.error(ec); } }
     // The client only gets the payment link on screen once Square is live (owner approved).
     // Practice runs: a business named "TEST ..." gets the payment button in test mode too.
     var showPay = bill && (bill.account.env === 'production' || /^test\b/i.test(bill.account.business));
@@ -64,6 +68,7 @@ function doPost(e) {
 
 function doGet(e) {
   var p = (e && e.parameter) || {};
+  if (p.action === 'version') return json_({ ok: true, billing: BILL_VERSION });
   if (p.action === 'demo') {
     try { applySeeds_(); } catch (e0) { console.error(e0); }
     try { return json_(publicDemo_(String(p.slug || ''))); } catch (err) { console.error(err); return json_({ ok: false, error: 'server' }); }
@@ -373,8 +378,18 @@ function studio_(d) {
   try { applySeeds_(); } catch (e) { console.error(e); }
   if (d.action === 'login') return login_(String(d.password || ''));
   if (d.action === 'bot_login') return botLogin_(String(d.jwt || ''));
+  // Billing has its own owner-only login (not the Studio password).
+  if (d.action === 'billing_login') return billLogin_(String(d.password || ''));
+  if (d.action === 'billing_reset') return billPwReset_();
+  if (/^billing_/.test(String(d.action))) {
+    if (!billAuthed_(d.token) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
+    if (d.action === 'billing_logout') { CacheService.getScriptCache().remove('btok_' + d.token); return { ok: true }; }
+    var res;
+    try { res = billing_(d); } catch (eb) { console.error(eb); res = { ok: false, error: 'server', detail: String(eb).slice(0, 200) }; }
+    billAudit_(d, res);
+    return res;
+  }
   if (!authed_(d.token) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
-  if (/^billing_/.test(String(d.action))) { try { return billing_(d); } catch (eb) { console.error(eb); return { ok: false, error: 'server', detail: String(eb).slice(0, 200) }; } }
   switch (d.action) {
     case 'list': return { ok: true, demos: listDemos_() };
     case 'get': return getDemo_(String(d.slug || ''), true);
@@ -1783,6 +1798,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
+var BILL_VERSION = '2026-11-23c';
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
@@ -2158,7 +2174,8 @@ function billMailCustomer_(a, kind, ch) {
     subj = { failed: 'Your payment to Riverbend Web Co. did not go through', remind: 'Reminder: payment to Riverbend Web Co. is still due', pastdue: 'Your Riverbend Web Co. account is past due', final: 'Final notice before services are paused' }[kind];
     head = { failed: 'We could not process your payment', remind: 'Friendly reminder', pastdue: 'Your account is past due', final: 'Final notice' }[kind];
     body.push(billDesc_(a, ch).replace('Riverbend Web Co. ', '') + ' of <b>' + usdC_(ch.amount) + '</b> was due ' + due + '.' + (v.pastDue > ch.amount ? ' Total past due: <b>' + amt + '</b>.' : ''));
-    if (kind === 'failed') body.push('Please update your card using the secure link below. You have until ' + longDate_(addDays_(ch.due, 4)) + ' with no interruption.');
+    if (kind === 'failed') body.push((ch.invoiceUrl ? 'Please pay the open invoice using the secure Square link below' : 'Please update your card using the secure link below') + '. You have until ' + longDate_(addDays_(ch.due, 4)) + ' with no interruption.');
+    if (ch.invoiceUrl && a.payKey) body.push('To change the card used for future monthly payments: <a href="' + a.payKey + '" style="color:#0052CC">update your card</a>.');
     if (kind === 'remind') body.push('Your grace period ends ' + longDate_(addDays_(ch.due, 4)) + '. Updating your card takes a minute.');
     if (kind === 'pastdue') body.push('Your account is now past due. There is no late fee. If the balance stays unpaid, ongoing maintenance, routine updates and non-emergency support may be suspended. Your website stays online and your domain is always yours.');
     if (kind === 'final') body.push('If the balance is not paid by ' + longDate_(addDays_(ch.due, 14)) + ', Riverbend may suspend non-essential ongoing services (maintenance, routine updates and non-emergency support) until it is paid. Your website is not taken offline automatically and your domain is never withheld.');
@@ -2207,6 +2224,7 @@ function billing_(d) {
     case 'billing_catalog': return billCatalog_(d.apply === true);
     case 'billing_findcard': return billFindCardAction_(String(d.id || ''));
     case 'billing_postest': return billPosTest_();
+    case 'billing_verify': return billVerify_();
     case 'billing_setup_inperson': return billSetupInPerson_(String(d.id || ''), String(d.note || ''));
   }
   return { ok: false, error: 'unknown' };
@@ -2321,7 +2339,9 @@ function billRetry_(id) {
 }
 function billManualPaid_(id, note) {
   var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
-  var c = (a.charges || []).filter(function (x) { return x.status === 'failed' && x.kind !== 'setup'; }).sort(function (x, y) { return x.due < y.due ? -1 : 1; })[0];
+  if ((a.charges || []).some(function (x) { return x.status === 'failed' && x.invoiceId; }) && !(a.charges || []).some(function (x) { return x.status === 'failed' && !x.invoiceId && x.kind !== 'setup'; }))
+    return { ok: false, error: 'invoice', detail: 'This is a Square subscription invoice. Mark it paid in Square (Dashboard > Invoices > the invoice > Mark as paid) so Square stops collecting it; the dashboard updates on the next check.' };
+  var c = (a.charges || []).filter(function (x) { return x.status === 'failed' && x.kind !== 'setup' && !x.invoiceId; }).sort(function (x, y) { return x.due < y.due ? -1 : 1; })[0];
   if (!c) return { ok: false, error: 'nothing' };
   c.status = 'paid'; c.manual = true; c.paidAt = new Date().toISOString(); c.error = '';
   billLedger_(a, c, 'Recorded by an owner as paid outside Square: ' + note.slice(0, 200));
@@ -2384,6 +2404,8 @@ function billTick_(asOf, onlyId) {
         if (changed) billSave_(a);
       } catch (e) { sum.errors++; console.error(e); }
     });
+    if (!onlyId) { try { var vf = billVerify_(); var bad = (vf.accounts || []).filter(function (x) { return !x.ok; }); sum.subProblems = bad.length;
+      if (bad.length) MailApp.sendEmail({ to: OWNER_EMAIL, subject: 'Billing: check ' + bad.length + ' Square subscription' + (bad.length > 1 ? 's' : ''), name: 'Riverbend Billing', body: bad.map(function (x) { return x.business + ': ' + x.problems.join('; '); }).join('\n') + '\n\nOpen https://' + SITE + '/billing' }); } catch (ev) { console.error(ev); } }
     if (!onlyId) PropertiesService.getScriptProperties().setProperty('BILL_LAST_TICK', new Date().toISOString() + ' ' + JSON.stringify(sum));
   } finally { lock.releaseLock(); }
   return { ok: true, summary: sum };
@@ -2849,10 +2871,147 @@ function billSubSync_(a, today) {
       } else if (st === 'failed') {
         c.error = 'Square could not charge the card; Square emailed the client an invoice to pay.';
         billLedger_(a, c); billLog_(a, 'Monthly payment ' + usdC_(c.amount) + ' (' + c.period + ') failed. Square emailed the invoice.');
-        c.notices = c.notices || {}; c.notices.d0 = 1; // Square already emailed the client; we email the owner
+        c.notices = c.notices || {}; c.notices.d0 = 1;
+        billMailCustomer_(a, 'failed', c); // agreement: client emailed right away (Square also emails its invoice)
         billMailOwner_(a, 'Payment failed: ' + a.business, 'The ' + usdC_(c.amount) + ' monthly payment due ' + longDate_(due) + ' did not go through. Square emailed the client an invoice to pay' + (c.invoiceUrl ? ' (' + c.invoiceUrl + ')' : '') + '. Reminders follow the agreement schedule.');
       } else if (was === 'new') billLedger_(a, c, 'Square subscription invoice ' + v.status);
     }
   });
   return changed;
+}
+
+/* ---------- Signed agreement PDF (emailed to the client and to Riverbend) ----------
+   The agreement wording lives in apps-script/agreement.html (same text as the website and the
+   lawyer PDF). We fill in the client's plan, details, scope and signature and convert to PDF. */
+var AGREEMENT_URL = 'https://' + SITE + '/apps-script/agreement.html';
+function agreementTemplate_() {
+  var c = CacheService.getScriptCache(), t = c.get('rb_agreement_tpl');
+  if (t) return t;
+  var r = UrlFetchApp.fetch(AGREEMENT_URL + '?t=' + Date.now(), { muteHttpExceptions: true });
+  t = r.getResponseCode() === 200 ? r.getContentText() : '';
+  if (t.indexOf('{{SIGNATURES}}') < 0) throw new Error('agreement template missing');
+  if (t.length < 95000) c.put('rb_agreement_tpl', t, 3600);
+  return t;
+}
+function agreementPdf_(f, file) {
+  var e = function (k) { return String(f[k] || ''); }; // already HTML-escaped by clean_
+  var row = function (k, v) { return v ? '<tr><td>' + k + '</td><td>' + v + '</td></tr>' : ''; };
+  var pk = billPlanKey_(unesc_(e('Plan Key')));
+  var sched = 'Not selected';
+  if (pk) {
+    var T = BILL_TIERS[pk.tier], mo = pk.pay === 'zero' ? T.zero : T.care;
+    sched = pk.pay === 'zero'
+      ? '$0 at signing. At launch, a prorated charge of ' + usdC_(mo) + ' ÷ days in that month × days remaining (counting launch day); a launch on the 1st is charged ' + usdC_(mo) + ' once. Then 12 full monthly payments of ' + usdC_(mo) + ' on the 1st of each month beginning the 1st after launch, then month-to-month.'
+      : usdC_(T.once) + ' setup fee at signing. At launch, a prorated charge of ' + usdC_(mo) + ' ÷ days in that month × days remaining (counting launch day); a launch on the 1st is charged ' + usdC_(mo) + ' once. Then ' + usdC_(mo) + ' on the 1st of each month, month-to-month.';
+  }
+  var scope = Object.keys(f).filter(function (k) { return /^Scope: /.test(k) && f[k]; }).map(function (k) { return row(k.replace(/^Scope: /, ''), e(k)); }).join('');
+  var sigImg = file && file.blob && /^image\/(png|jpeg)$/.test(file.blob.getContentType()) ? '<img src="data:' + file.blob.getContentType() + ';base64,' + Utilities.base64Encode(file.blob.getBytes()) + '" alt="Signature">' : '';
+  var html = agreementTemplate_()
+    .replace('{{DATE}}', e('Signed'))
+    .replace('{{PLAN}}', e('Plan'))
+    .replace('{{SCHEDULE}}', sched)
+    .replace('{{SCOPE}}', scope ? '<table class="kv">' + scope + '</table>' : '<p>No scope details were entered at signing.</p>')
+    .replace('{{CLIENT}}', '<table class="kv">' + row('Business', e('Business')) + row('Owner / manager', e('Owner')) + row('Phone', e('Phone')) + row('Email', e('Email')) + '</table>')
+    .replace('{{SIGNATURES}}', '<table class="kv sig">' + row('Client signature', (sigImg || '') + '<div>' + e('Signature') + '</div>') + row('Signed by', e('Owner') + ' for ' + e('Business')) + row('Signed electronically', e('Signed') + ' on ' + SITE) + row('Riverbend Web Co.', 'Kruz Kitelinger and Rayald Ally, Co-Owners') + '</table>');
+  var name = 'Riverbend-Service-Agreement-' + (unesc_(e('Business')).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'Client') + '.pdf';
+  var pdf = Utilities.newBlob(html, 'text/html', 'agreement.html').getAs('application/pdf').setName(name);
+  try { folder_('Signed Agreements').createFile(pdf.copyBlob().setName(name)); } catch (e2) { console.error(e2); }
+  return pdf;
+}
+function agreementToClient_(f, pdf) {
+  var to = unesc_(String(f['Email'] || '')), biz = unesc_(String(f['Business'] || ''));
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(to)) return;
+  var test = /^test\b/i.test(biz);
+  MailApp.sendEmail({ to: test ? OWNER_EMAIL : to, subject: (test ? '[TEST to ' + to + '] ' : '') + 'Your signed Riverbend Web Co. service agreement', name: 'Riverbend Web Co.', replyTo: OWNER_EMAIL,
+    body: 'Hi ' + first_(unesc_(String(f['Owner'] || ''))) + ',\n\nThank you for choosing Riverbend Web Co. Your signed service agreement is attached as a PDF for your records.\n\nPlan: ' + unesc_(String(f['Plan'] || '')) + '\nSigned: ' + unesc_(String(f['Signed'] || '')) + '\n\nQuestions? Call or text (608) 306-0135 or reply to this email.\n\nRiverbend Web Co.\nDubuque, Iowa',
+    attachments: [pdf] });
+}
+
+/* ---------- Owner-only billing login (separate from the Studio password) ----------
+   The password is generated on the server and emailed only to the owner inbox. Only a salted
+   hash is stored (Script Properties). "Email me a new password" on /billing replaces it. */
+var BILL_TOKEN_TTL = 2 * 60 * 60;
+function billPwReset_() {
+  var c = CacheService.getScriptCache();
+  if (c.get('rb_bpw_reset')) return { ok: false, error: 'wait', detail: 'A new password was emailed in the last 10 minutes. Check ' + OWNER_EMAIL + '.' };
+  c.put('rb_bpw_reset', '1', 600);
+  var words = ['river', 'bluff', 'harbor', 'maple', 'cedar', 'granite', 'prairie', 'lantern', 'anchor', 'summit', 'willow', 'copper', 'meadow', 'falcon', 'timber', 'canyon'];
+  var b = Utilities.getUuid().replace(/-/g, '');
+  var pick = function (i) { return words[parseInt(b.substr(i * 2, 2), 16) % words.length]; };
+  var pw = pick(0) + '-' + pick(1) + '-' + pick(2) + '-' + parseInt(b.substr(8, 4), 16) % 9000 + 1000 + '-' + pick(3);
+  var salt = Utilities.getUuid().replace(/-/g, '');
+  var P = PropertiesService.getScriptProperties();
+  P.setProperty('BILLING_PW_SALT', salt); P.setProperty('BILLING_PW_HASH', sha256Hex_(salt + pw));
+  P.setProperty('BILLING_PW_GEN', String(Number(P.getProperty('BILLING_PW_GEN') || 0) + 1)); // signs out old sessions
+  MailApp.sendEmail({ to: OWNER_EMAIL, subject: 'Your Riverbend billing password', name: 'Riverbend Billing',
+    body: 'Billing dashboard password (owners only, not the Studio password):\n\n' + pw + '\n\nLog in at https://' + SITE + '/billing\nKeep it private. To change it, click "Email me a new password" on the login page.' });
+  billAudit_({ action: 'billing_password_emailed' }, { ok: true });
+  return { ok: true, detail: 'A new billing password was emailed to ' + OWNER_EMAIL + '.' };
+}
+function billLogin_(pw) {
+  var c = CacheService.getScriptCache(), P = PropertiesService.getScriptProperties();
+  var fails = Number(c.get('rb_bfail') || 0);
+  if (fails >= 6) return { ok: false, error: 'locked' };
+  var hash = P.getProperty('BILLING_PW_HASH');
+  if (!hash) return { ok: false, error: 'nopassword', detail: 'No billing password yet. Click "Email me a new password".' };
+  var ok = !!pw && sameHex_(sha256Hex_(P.getProperty('BILLING_PW_SALT') + pw), hash);
+  billAudit_({ action: 'billing_login' }, { ok: ok });
+  if (!ok) { c.put('rb_bfail', String(fails + 1), 900); Utilities.sleep(600); return { ok: false, error: 'badpassword' }; }
+  c.remove('rb_bfail');
+  var token = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
+  c.put('btok_' + token, P.getProperty('BILLING_PW_GEN') || '1', BILL_TOKEN_TTL);
+  return { ok: true, token: token };
+}
+function billAuthed_(token) {
+  if (!token || !/^[a-f0-9]{64}$/.test(String(token))) return false;
+  var c = CacheService.getScriptCache(), v = c.get('btok_' + token);
+  if (!v || v !== (PropertiesService.getScriptProperties().getProperty('BILLING_PW_GEN') || '1')) return false;
+  c.put('btok_' + token, v, BILL_TOKEN_TTL);
+  return true;
+}
+/* Activity log: every billing action that changes something, plus logins (never passwords or keys). */
+var BILL_READONLY = { billing_list: 1, billing_get: 1, billing_verify: 1, billing_logout: 1 };
+function billAudit_(d, res) {
+  if (BILL_READONLY[d.action]) return;
+  try {
+    var ss = ss_(), sh = ss.getSheetByName('Billing Activity');
+    if (!sh) { sh = ss.insertSheet('Billing Activity'); sh.appendRow(['Time', 'Action', 'Account', 'Details', 'Result']); sh.setFrozenRows(1); sh.getRange(1, 1, 1, 5).setFontWeight('bold').setBackground('#0F172A').setFontColor('#FFFFFF'); }
+    var det = ['date', 'flag', 'value', 'mode', 'target', 'apply', 'confirm', 'note'].filter(function (k) { return d[k] !== undefined && d[k] !== ''; }).map(function (k) { return k + '=' + String(d[k]).slice(0, 80); });
+    if (d.sqToken) det.push('Square key saved (not logged)');
+    var who = d.action === 'billing_tick' && d.token && CacheService.getScriptCache().get('bot_' + d.token) ? 'daily job' : '';
+    sh.appendRow([new Date(), d.action + (who ? ' (' + who + ')' : ''), String(d.id || ''), det.join(', '), res && res.ok ? 'ok' : 'error: ' + ((res && (res.error || res.detail)) || '')]);
+  } catch (e) { console.error(e); }
+}
+/* ---------- Subscription check: price, card, billing day, no extra charges ---------- */
+function billVerify_() {
+  var out = [], vars = {};
+  billAll_().forEach(function (a) {
+    if (a.engine !== 'sub' || !a.launch || a.flags.selftest || a.flags.postest) return;
+    var probs = [], T = BILL_TIERS[a.tier], want = a.pay === 'zero' ? T.zero : T.care;
+    if (want !== a.monthly) probs.push('account monthly ' + usdC_(a.monthly) + ' does not match the ' + T.n + ' price ' + usdC_(want));
+    if (a.status !== 'ended' && !a.sq.subId) probs.push('no Square subscription');
+    if (a.sq.subId) {
+      var sub = sq_('get', '/v2/subscriptions/' + encodeURIComponent(a.sq.subId), null, a.env).subscription;
+      if (!sub) probs.push('Square subscription not found');
+      else {
+        if (!vars[sub.plan_variation_id]) vars[sub.plan_variation_id] = sq_('get', '/v2/catalog/object/' + encodeURIComponent(sub.plan_variation_id), null, a.env).object || {};
+        var vd = vars[sub.plan_variation_id].subscription_plan_variation_data || {}, ph = (vd.phases || [])[0] || {};
+        var price = sub.price_override_money ? sub.price_override_money.amount : ((ph.pricing || {}).price_money || (ph.pricing || {}).price || ph.recurring_price_money || {}).amount;
+        if (price !== want) probs.push('Square price ' + usdC_(price) + ', expected ' + usdC_(want));
+        if (ph.cadence !== 'MONTHLY') probs.push('not monthly');
+        if ((sub.monthly_billing_anchor_date || vd.monthly_billing_anchor_date) !== 1) probs.push('billing day is not the 1st');
+        if (String(sub.start_date || '').slice(8) !== '01' && sub.start_date !== a.launch) probs.push('starts ' + sub.start_date + ', not on a 1st');
+        if (a.status !== 'ended' && !a.sq.subCanceled && ['ACTIVE', 'PENDING'].indexOf(sub.status) < 0) probs.push('Square status ' + sub.status);
+        if (sub.card_id !== a.sq.cardId) probs.push('Square subscription uses a different card than the one on file');
+        var card = sub.card_id ? sq_('get', '/v2/cards/' + encodeURIComponent(sub.card_id), null, a.env).card : null;
+        if (!card || card.enabled === false) probs.push('saved card missing or disabled');
+      }
+    }
+    var per = {};
+    (a.charges || []).forEach(function (c) { if (c.status === 'paid' && !c.refunded && c.kind !== 'setup' && c.period) per[c.period] = (per[c.period] || 0) + 1; });
+    Object.keys(per).forEach(function (k) { if (per[k] > 1) probs.push('more than one payment for ' + k); });
+    (a.charges || []).forEach(function (c) { if (c.invoiceId && c.amount !== want && c.status !== 'canceled') probs.push('Square invoice for ' + c.period + ' is ' + usdC_(c.amount)); });
+    out.push({ id: a.id, business: a.business, ok: !probs.length, problems: probs });
+  });
+  return { ok: true, accounts: out };
 }

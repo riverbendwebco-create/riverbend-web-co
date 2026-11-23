@@ -17,11 +17,14 @@ function load(){
       formatDate:(d,tz,f)=> f==='yyyy-MM-dd'?H.today: f==='yyyyMMdd'?H.today.replace(/-/g,''):String(d),
       computeDigest:(alg,v)=>Array.from(crypto.createHash('sha256').update(String(v)).digest()).map(b=>b>127?b-256:b),
       DigestAlgorithm:{SHA_256:1,MD5:2}, Charset:{UTF_8:1},
-      base64Decode:s=>Array.from(Buffer.from(s,'base64')), newBlob:(b,t,n)=>({b,t,n,getDataAsString:()=>Buffer.from(b).toString()}),
+      base64Decode:s=>Array.from(Buffer.from(s,'base64')), base64Encode:b=>Buffer.from(b).toString('base64'),
+      newBlob:(b,t,n)=>{ const o={b,t,n,getDataAsString:()=>Buffer.from(b).toString(),getContentType:()=>t,getBytes:()=>Array.from(Buffer.from(b)),setName(x){o.n=x;return o},copyBlob(){return o},getName:()=>o.n,
+        getAs:(m)=>{ H.lastPdfHtml=String(b); const pdf={pdf:true,n:o.n,setName(x){pdf.n=x;return pdf},copyBlob(){return pdf},getName:()=>pdf.n}; return pdf; }}; return o; },
       base64EncodeWebSafe:s=>Buffer.from(String(s)).toString('base64url'), base64DecodeWebSafe:s=>Array.from(Buffer.from(s,'base64url')) },
     MailApp:{sendEmail:o=>H.mails.push(o)},
     ContentService:{createTextOutput:t=>({t,setMimeType(){return this},text:t}),MimeType:{JSON:1}},
-    DriveApp:{}, SpreadsheetApp:{}, UrlFetchApp:{fetch:()=>{throw new Error('no network in tests')}}, Logger:{log(){}}, console
+    DriveApp:(()=>{ const F={getFoldersByName:()=>({hasNext:()=>false}),createFolder:()=>F,createFile:f=>{ H.driveFiles=(H.driveFiles||[]).concat([f.n]); return {getUrl:()=>'https://drive/x'}; },getId:()=>'F'}; return {getFolderById:()=>F,createFolder:()=>F,getFileById:()=>({moveTo(){}})}; })(), SpreadsheetApp:{},
+    UrlFetchApp:{fetch:(u)=>{ if(/agreement\.html/.test(u)) return {getResponseCode:()=>200,getContentText:()=>fs.readFileSync(require('path').join(__dirname,'../../apps-script/agreement.html'),'utf8')}; throw new Error('no network in tests'); }}, Logger:{log(){}}, console
   };
   const code=fs.readFileSync(require('path').join(__dirname,'../../apps-script/backend.js'),'utf8')+`
   function ss_(){ return __SS; } function applySeeds_(){}
@@ -50,9 +53,11 @@ function load(){
     else if(path.startsWith('/v2/refunds')&&method==='get') res={ok:true,refunds:S.refunds};
     else if(path==='/v2/refunds') { const r={id:id('RF'),payment_id:body.payment_id,status:'COMPLETED',amount_money:body.amount_money}; S.refunds.push(r); S.payments[body.payment_id].refunded_money=body.amount_money; res={ok:true,refund:r}; }
     else if(path==='/v2/disputes') res={ok:true,disputes:S.disputes};
+    else if(path.startsWith('/v2/catalog/object/')){ const v=decodeURIComponent(path.split('/')[4]); res={ok:true,object:{id:v,subscription_plan_variation_data:{monthly_billing_anchor_date:1,phases:[{cadence:'MONTHLY',pricing:{type:'STATIC',price_money:{amount:S.prices[v]}}}]}}}; }
+    else if(/^\/v2\/cards\/[^/]+$/.test(path)&&method==='get'){ const c=S.cards[decodeURIComponent(path.split('/')[3])]; res=c?{ok:true,card:Object.assign({enabled:true},c)}:{ok:false,status:404,errors:[{code:'NOT_FOUND'}]}; }
     else if(path==='/v2/catalog/object') res={ok:true,catalog_object:{id:id('PLAN')}};
     else if(path==='/v2/catalog/batch-upsert') res={ok:true,id_mappings:body.batches[0].objects.map(o=>{ const v=id('VAR'); S.prices[v]=o.subscription_plan_variation_data.phases[0].pricing.price_money.amount; return {client_object_id:o.id,object_id:v}; })};
-    else if(path==='/v2/subscriptions'&&method==='post'){ const sub={id:id('SUB'),start_date:body.start_date,status:body.start_date>H.today?'PENDING':'ACTIVE',card_id:body.card_id,customer_id:body.customer_id,version:1,plan:body.plan_variation_id}; S.subs[sub.id]=sub; res={ok:true,subscription:sub}; }
+    else if(path==='/v2/subscriptions'&&method==='post'){ const sub={id:id('SUB'),start_date:body.start_date,status:body.start_date>H.today?'PENDING':'ACTIVE',card_id:body.card_id,customer_id:body.customer_id,version:1,plan:body.plan_variation_id,plan_variation_id:body.plan_variation_id}; S.subs[sub.id]=sub; res={ok:true,subscription:sub}; }
     else if(/^\/v2\/subscriptions\/[^/]+$/.test(path)){ const sub=S.subs[decodeURIComponent(path.split('/')[3])]; if(method==='put'&&sub){ if(body.subscription.card_id) sub.card_id=body.subscription.card_id; sub.version++; } res=sub?{ok:true,subscription:sub}:{ok:false,status:404,errors:[{code:'NOT_FOUND'}]}; }
     else if(/\/v2\/subscriptions\/[^/]+\/cancel$/.test(path)){ const sub=S.subs[decodeURIComponent(path.split('/')[3])]; const t=new Date(H.today+'T12:00:00Z'); const nx=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,1)).toISOString().slice(0,10); sub.canceled_date=sub.start_date>H.today?sub.start_date:nx; res={ok:true,subscription:sub}; }
     else if(/\/v2\/subscriptions\/[^/]+\/(pause|resume)$/.test(path)) res={ok:true};

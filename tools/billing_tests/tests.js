@@ -39,7 +39,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   ok('Card is not saved without the consent checkbox',B.pay_({action:'pay_card',key:s2.key,consent:false,source:'cnon:card-nonce-ok'}).error==='consent');
   const s3=sign(B,H,'custom-once','Declined setup'); const r3=pay(B,H,s3.key,'cnon:card-nonce-declined');
   ok('Declined card at setup: client sees an error, nothing charged, account still waiting',!r3.ok&&B.billGet_(s3.acct.id).status==='awaiting_card');
-  ok('Raw card numbers never stored (only Square IDs)',!JSON.stringify(B.billAll_()).match(/\b4111|\d{13,19}\b/));
+  ok('Raw card numbers never stored (only Square IDs)',!/4111|cnon:/.test(JSON.stringify(B.billAll_()))&&B.billAll_().every(a=>Object.keys(a.sq).every(k=>['customerId','cardId','brand','last4','exp','source','subId','subStatus','subStart','subTries','subCanceled','subCancelDate'].includes(k))));
 }
 
 /* 3. Launch activation, duplicate clicks, launch date rules */
@@ -191,6 +191,43 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   ok('Billing robot can run the daily billing check',B.studio_({action:'billing_tick',token:'c'.repeat(64)}).ok);
   ok('Billing robot cannot list or change accounts',B.studio_({action:'billing_list',token:'c'.repeat(64)}).error==='auth'&&B.studio_({action:'billing_launch',token:'c'.repeat(64)}).error==='auth');
   ok('Going live needs the typed confirmation and the live access token',B.billing_({action:'billing_settings',mode:'production',confirmText:'GO LIVE'}).error==='notready'&&B.billing_({action:'billing_settings',mode:'production'}).error==='confirm');
+}
+/* 12. Signed agreement PDF, owner-only billing login, activity log, subscription check */
+{ const {B,H}=load(); H.today='2026-11-10'; H.cache={};
+  B.doPost({postData:{contents:JSON.stringify({kind:'agreement',fields:{'Plan Key':'custom-zero','Plan':'Custom ($0 Down + $179/mo on the 1st, 12 full payments)','Business':'Lock & Dam Tap','Owner':'Pat Owner','Phone':'(563) 555-0100','Email':'pat@example.com','Signed':'November 10, 2026 at 2:00 PM','Signature':'Typed: Pat Owner','Scope: Goals':'More bookings'},file:{type:'image/png',name:'s.png',data:'data:image/png;base64,iVBORw0KGgo='}})}});
+  const toClient=H.mails.find(m=>m.to==='pat@example.com'), toOwner=H.mails.find(m=>m.to==='riverbendwebco@gmail.com'&&/Signed agreement/.test(m.subject));
+  ok('Signed agreement PDF emailed to the client',toClient&&toClient.attachments&&toClient.attachments.some(a=>a.pdf)&&/Riverbend-Service-Agreement-Lock-Dam-Tap\.pdf/.test(toClient.attachments[0].n));
+  ok('Signed agreement PDF emailed to Riverbend (with the signature image)',toOwner&&toOwner.attachments.some(a=>a.pdf));
+  const html=H.lastPdfHtml||'';
+  ok('PDF has the full agreement text, plan, schedule, client info, scope and signature',/Failed payments and service suspension/.test(html)&&/Custom \(\$0 Down \+ \$179\/mo/.test(html)&&/12 full monthly payments of \$179\.00/.test(html)&&/More bookings/.test(html)&&/pat@example\.com/.test(html)&&/data:image\/png;base64/.test(html)&&!/\{\{/.test(html));
+  ok('PDF copy also saved to Google Drive',(H.driveFiles||[]).some(n=>/Riverbend-Service-Agreement/.test(n)));
+  ok('Studio password session cannot open billing',(()=>{ H.cache['tok_'+'d'.repeat(64)]='3'; return B.studio_({action:'billing_list',token:'d'.repeat(64)}).error==='auth'; })());
+  ok('Billing login: no password yet tells the owner to request one',B.studio_({action:'billing_login',password:'x'}).error==='nopassword');
+  const rs=B.studio_({action:'billing_reset'}); const pwMail=H.mails.find(m=>/Your Riverbend billing password/.test(m.subject));
+  ok('New billing password is emailed only to the owner inbox, stored as a hash',rs.ok&&pwMail.to==='riverbendwebco@gmail.com'&&H.props.BILLING_PW_HASH&&!JSON.stringify(H.props).includes(pwMail.body.split('\n')[2]));
+  const pw=pwMail.body.split('\n')[2];
+  ok('Wrong billing password refused',B.studio_({action:'billing_login',password:'wrong'}).error==='badpassword');
+  H.cache.rb_bfail='0'; const lg=B.studio_({action:'billing_login',password:pw});
+  ok('Right billing password gives a billing session',lg.ok&&B.studio_({action:'billing_list',token:lg.token}).ok);
+  ok('Billing session cannot open the Studio',B.studio_({action:'list',token:lg.token}).error==='auth');
+  B.studio_({action:'billing_settings',token:lg.token,target:'sandbox',sqToken:'EAAAsecretsecretsecretsecret'});
+  const act=H.sheets['Billing Activity'].rows.map(r=>r.join(' | ')).join('\n');
+  ok('Activity log records logins and changes, never the password or the Square key',/billing_login/.test(act)&&/billing_settings/.test(act)&&/Square key saved \(not logged\)/.test(act)&&!act.includes('EAAAsecret')&&!act.includes(pw));
+  const a=B.billAll_()[0]; H.cache={}; B.pay_({action:'pay_card',key:a.payKey.split('#')[1],consent:true,source:'cnon:card-nonce-ok'});
+  H.today='2026-11-16'; B.billLaunch_(a.id,'2026-11-16',true); H.today='2026-12-02'; B.billTick_();
+  let v=B.billing_({action:'billing_verify'}).accounts[0];
+  ok('Subscription check passes: $179 price, saved card, billed on the 1st, one payment per month',v.ok,JSON.stringify(v.problems));
+  const sub=Object.values(H.sq.subs)[0]; sub.card_id='ccof:other';
+  v=B.billing_({action:'billing_verify'}).accounts[0];
+  ok('Subscription check catches a wrong card',!v.ok&&/different card/.test(v.problems.join()));
+  sub.card_id=B.billGet_(a.id).sq.cardId; H.sq.prices[sub.plan]=9999;
+  v=B.billing_({action:'billing_verify'}).accounts[0];
+  ok('Subscription check catches a wrong price',!v.ok&&/expected \$179\.00/.test(v.problems.join()));
+  H.sq.prices[sub.plan]=17900; H.sq.declineCards.add(sub.card_id); H.today='2027-01-01'; B.billTick_();
+  const mp=B.billing_({action:'billing_manual',id:a.id,note:'cash'});
+  ok('A failed Square invoice cannot be marked paid outside Square (prevents Square collecting it again)',mp.error==='invoice');
+  H.cache={}; const info=B.pay_({action:'pay_info',key:a.payKey.split('#')[1]}).info;
+  ok('Client payment page shows the open Square invoice to pay',info.invoices.length===1&&/pay-invoice/.test(info.invoices[0].url));
 }
 const pass=R.filter(r=>r.pass).length;
 R.forEach(r=>console.log((r.pass?'PASS ':'FAIL ')+r.name+(r.pass?'':'  ['+r.info+']')));
