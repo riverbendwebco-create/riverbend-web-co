@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -104,6 +104,7 @@ function build(d){
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
   if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
+  if(/^shade\s?tree\b/i.test(C.name)||C.variant==='shadetree'){ document.body.className='t-st'; const pg=shadeTree(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); stRoll(pg); return; }
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
@@ -2251,6 +2252,101 @@ function homy(C){
     addrTxt?h('div',{class:'hc-card hc-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):bg(h('div',{class:'hc-card hc-map rv'}),extra[0])));
   const foot=h('footer',{class:'hc-foot'},h('div',{class:'hc-w hc-foot-in'},h('b',null,name),h('nav',null,links()),h('small',null,'© '+new Date().getFullYear()+' '+name+(C.city?' · '+C.city:''))));
   return h('div',{class:'hc'},nav,hero,about,statRow,services,how,reviews,contact,foot);
+}
+
+/* ===================== SHADE TREE (tree service, green + lime, light) ===================== */
+const ST_U=(id,w)=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||1200)+'&q=72';
+function stI(n){ const P={
+  arrow:'<path d="M7 17 17 7M8 7h9v9"/>',phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  tree:'<path d="M12 22v-6"/><path d="M12 16c-4.4 0-7-2.3-7-5.5 0-2 1.2-3.5 2.8-4.2C8.4 4 10 2.5 12 2.5s3.6 1.5 4.2 3.8c1.6.7 2.8 2.2 2.8 4.2 0 3.2-2.6 5.5-7 5.5z"/>',leaf:'<path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19 13 11"/>',check:'<path d="m5 12 4 4 10-10"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>'};
+  const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
+function stRoll(pg){ const t=pg.querySelector('.st-roll-t'); if(!t) return; [...t.children].forEach(c=>t.appendChild(c.cloneNode(true))); }
+function shadeTree(C){
+  const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const town=C.city?C.city.split(',')[0]:'your area';
+  const P={hero:ST_U('1765064519883-651c506ec70d',1400),saw:ST_U('1781642945922-b9452456d658'),prune:ST_U('1754321902809-5c21cbc67228'),ladder:ST_U('1754321871548-61bdbc6f1506'),cut:ST_U('1684332666088-f35b252b5aca'),climb:ST_U('1626828476637-5bd713ef9f22'),helmet:ST_U('1588878309774-4b3f42a19a8f'),trim:ST_U('1754321889123-0485c7fea5f1'),sit:ST_U('1669065054992-3151b15aab08'),branch:ST_U('1765064520296-1e56ebb82e17'),arb:ST_U('1754322449185-31f56117ed87')};
+  const heroPic=ok(x.heroPhoto)||C.own[0]||P.hero;
+  const defs=[{n:'Tree Removal',d:'Safe removal of dead, damaged or unwanted trees, near houses, fences and power lines.',img:P.saw},
+    {n:'Trimming & Pruning',d:'Shape your trees, clear your roof and keep branches healthy and strong.',img:P.prune},
+    {n:'Stump Grinding',d:'Grind old stumps down so you can mow, plant or build right over the spot.',img:P.cut},
+    {n:'Storm Cleanup',d:'Downed limbs and leaning trees taken care of after the storm passes.',img:P.trim}];
+  const svc=(Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,8).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n)
+    .map((v,i)=>Object.assign({},v,{img:ok(v.img)||(defs[i]||{}).img||[P.ladder,P.climb,P.branch,P.arb][i%4]}));
+  const go=id=>e=>{ e.preventDefault(); menu.hidden=true; scrollTo(id); };
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const links=()=>[A('st-top','Home'),A('st-about','About'),A('st-services','Services'),C.reviews.length?A('st-reviews','Reviews'):null,A('st-contact','Contact')];
+  const btn=(t,href,cls)=>h('a',{class:'st-btn '+(cls||''),href:href||(C.tel||'#st-contact'),onclick:href||C.tel?null:go('st-contact')},h('span',null,t),h('i',null,stI('arrow')));
+  const logo=ok(x.logoUrl)||C.logo;
+  const brand=h('a',{class:'st-brand',href:'#',onclick:go('st-top')},logo?h('img',{src:logo,alt:name}):h('span',{class:'st-mark'},stI('tree')),h('span',null,name));
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const strip=h('div',{class:'st-strip'},h('div',{class:'st-w st-strip-in'},
+    addrTxt?h('span',null,stI('pin'),addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},stI('mail'),C.email):null,
+    C.today?h('span',{class:'st-hide-s'},stI('clock'),/closed/i.test(C.today)?'Closed today':'Open today '+C.today):null,
+    h('span',{class:'st-strip-r'},C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null)));
+  const menu=h('nav',{class:'st-menu',hidden:true},links(),C.tel?h('a',{class:'st-btn',href:C.tel},h('span',null,'Call '+C.phoneTxt),h('i',null,stI('phone'))):null);
+  const nav=h('header',{class:'st-nav'},strip,h('div',{class:'st-bar'},h('div',{class:'st-w st-bar-in'},brand,h('nav',{class:'st-links'},links()),
+    C.tel?h('a',{class:'st-call',href:C.tel},h('span',{class:'st-call-i'},stI('phone')),h('span',null,h('small',null,'Call Now'),h('b',null,C.phoneTxt))):null,
+    h('button',{type:'button',class:'st-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},stI('menu'))),menu));
+  const kick=t=>h('p',{class:'st-kick'},h('i'),t,h('i'));
+  const hero=h('section',{class:'st-hero',id:'st-top'},h('div',{class:'st-w st-hero-in'},
+    h('div',{class:'st-hero-t'},kick('Tree care for '+town+' homes and businesses'),
+      h('h1',null,x.headline?x.headline:['Smart Tree Care, ',h('span',null,'Stunning Results')]),
+      h('p',null,C.tag||(name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
+      h('div',{class:'st-row'},btn(C.tel?'Get an Estimate':'Contact Us')),
+      h('div',{class:'st-mini'},
+        h('div',{class:'st-mini-card'},h('span',{class:'st-mark sm'},stI('leaf')),h('b',null,C.tel?'Call for an estimate':'Talk to our crew'),C.tel?h('a',{href:C.tel},C.phoneTxt):h('a',{href:'#st-contact',onclick:go('st-contact')},'Get in touch'),h('a',{class:'st-mini-go',href:C.tel||'#st-contact','aria-label':'Call'},stI('arrow'))),
+        bg(h('div',{class:'st-mini-pic'}),P.ladder))),
+    h('div',{class:'st-hero-pic'},bg(h('div',{class:'st-hero-img'}),heroPic),h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,'Local crew'),h('small',null,'Serving '+town))))));
+  const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},'Tree services in '+town+' and nearby')),
+    h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));
+  const tiles=[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb];
+  const about=h('section',{class:'st-sec st-about',id:'st-about'},
+    h('div',{class:'st-about-tiles','aria-hidden':'true'},tiles.map((u,i)=>bg(h('div',{class:'st-tile t'+i}),u))),
+    h('div',{class:'st-w st-about-in rv'},kick('About Our Company'),
+      h('h2',{class:'st-big'},'At '+name+', we believe every yard deserves ',h('span',null,'trees that are healthy, safe and beautiful. We bring careful, professional tree care to every job.')),
+      C.about?h('p',{class:'st-about-p'},short(C.about,360)):null,
+      btn('Talk to Our Crew','#st-contact','sm')));
+  about.querySelector('.st-about-in .st-btn').onclick=go('st-contact');
+  const services=h('section',{class:'st-sec st-soft',id:'st-services'},h('div',{class:'st-w'},
+    h('div',{class:'st-head rv'},kick('Our Services'),h('h2',null,'Complete tree care, from the roots up')),
+    h('div',{class:'st-cards'},svc.slice(0,8).map(v=>h('article',{class:'st-card rv'},bg(h('div',{class:'st-card-img'}),v.img),
+      h('div',{class:'st-card-b'},h('span',{class:'st-tag'},'Tree Service'),h('h3',null,v.n),v.d?h('p',null,v.d):null,
+        h('div',{class:'st-row'},h('a',{class:'st-ghost',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact')},'Get an Estimate'),h('a',{class:'st-sq',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact'),'aria-label':'Get an estimate'},stI('arrow')))))))));
+  const facts=[[dayRange(C.hours)||'Every week',C.daysOpen?'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week'):'Open all week'],[town,'Local and nearby'],[C.tel?C.phoneTxt:'Call us','Call for an estimate']];
+  const band=bg(h('section',{class:'st-band'}),P.hero,'linear-gradient(90deg,rgba(6,58,28,.94),rgba(6,58,28,.86))');
+  band.append(h('div',{class:'st-w st-band-in'},h('h2',null,'Tree care',h('br'),'you can count on'),h('div',{class:'st-facts'},facts.map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b))))));
+  const note=h('p',{class:'st-form-note',hidden:true});
+  const form=h('form',{class:'st-form rv',onsubmit:e=>{ e.preventDefault(); const f=new FormData(e.target); const body=['Name: '+f.get('n'),'Phone: '+f.get('p'),'Email: '+f.get('e'),'Service: '+f.get('s'),'',f.get('m')].join('\n');
+      if(C.email){ location.href='mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request from '+(f.get('n')||'the website'))+'&body='+encodeURIComponent(body); }
+      note.hidden=false; note.textContent=C.tel?'Thanks! This is a demo, so for now call '+C.phoneTxt+' and we will get you on the schedule.':'Thanks! This is a demo form.'; }},
+    h('h3',null,'Request an Estimate'),
+    h('div',{class:'st-f2'},h('label',null,'Your name',h('input',{name:'n',required:true,placeholder:'Full name'})),h('label',null,'Phone',h('input',{name:'p',type:'tel',placeholder:'(555) 555-5555'}))),
+    h('div',{class:'st-f2'},h('label',null,'Email',h('input',{name:'e',type:'email',placeholder:'you@email.com'})),h('label',null,'Service',h('select',{name:'s'},h('option',null,'Choose a service'),svc.map(v=>h('option',null,v.n))))),
+    h('label',null,'Tell us about your trees',h('textarea',{name:'m',rows:4,placeholder:'How many trees, what you need done, anything we should know'})),
+    h('div',{class:'st-row'},h('button',{type:'submit',class:'st-submit'},'Send Request'),h('span',{class:'st-sq light'},stI('arrow'))),note);
+  const contact=h('section',{class:'st-sec',id:'st-contact'},h('div',{class:'st-w st-contact'},
+    h('div',{class:'st-contact-t rv'},kick('Get in Touch'),h('h2',null,'Talk to tree pros who care about your yard'),
+      h('p',{class:'st-mut'},'Tell us what you need and we will help you plan the right work for your trees and your budget.'),
+      addrTxt?h('a',{class:'st-li',href:C.maps,target:'_blank',rel:'noopener'},h('span',{class:'st-li-i'},stI('pin')),h('span',null,h('small',null,'Location'),addrTxt)):null,
+      C.email?h('a',{class:'st-li',href:'mailto:'+C.email},h('span',{class:'st-li-i'},stI('mail')),h('span',null,h('small',null,'Email'),C.email)):null,
+      C.tel?h('a',{class:'st-li',href:C.tel},h('span',{class:'st-li-i'},stI('phone')),h('span',null,h('small',null,'Phone'),C.phoneTxt)):null,
+      C.hasHours?h('div',{class:'st-hours'},hoursRows(C)):null),
+    form));
+  const rv=C.reviews;
+  const reviews=rv.length?h('section',{class:'st-sec st-soft',id:'st-reviews'},h('div',{class:'st-w'},h('div',{class:'st-head rv'},kick('Reviews'),h('h2',null,'What our customers say')),
+    h('div',{class:'st-revs'},rv.slice(0,3).map(r=>h('figure',{class:'st-rev rv'},h('div',{class:'st-stars'},[0,1,2,3,4].slice(0,r.stars||5).map(()=>stI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,r.name)))))):null;
+  const mos=[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb,P.saw,P.ladder];
+  const cta=h('section',{class:'st-sec st-cta'},h('div',{class:'st-w'},
+    h('div',{class:'st-mosaic','aria-hidden':'true'},mos.map((u,i)=>bg(h('div',{class:'st-m m'+i}),u))),
+    h('div',{class:'st-cta-t rv'},h('h2',null,'Let’s make your trees the best on the block'),h('p',{class:'st-mut'},'Healthy, good-looking trees take the right care. Call '+name+' and we will take it from here.'),btn(C.tel?'Call '+C.phoneTxt:'Contact Us'))));
+  const foot=h('footer',{class:'st-foot'},h('div',{class:'st-w st-foot-in'},
+    h('div',{class:'st-foot-b'},brand.cloneNode(true),h('p',null,name+' is your local partner for tree care'+(C.city?' in '+C.city:'')+'.')),
+    h('div',null,h('b',null,'Quick Links'),links()),
+    h('div',null,h('b',null,'Our Services'),svc.slice(0,5).map(v=>h('a',{href:'#st-services',onclick:go('st-services')},v.n))),
+    h('div',null,h('b',null,'Contact'),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null)),
+    h('div',{class:'st-w st-foot-c'},'© '+new Date().getFullYear()+' '+name+'. All rights reserved.'));
+  return h('div',{class:'st'},nav,hero,roll,about,services,band,contact,reviews,cta,foot);
 }
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
