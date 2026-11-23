@@ -58,6 +58,12 @@ ul.sched li::before{content:"";position:absolute;left:4px;top:18px;width:8px;hei
       <ul class="sched" id="sched"></ul>
       <div class="due" id="dueBox"><span id="dueLbl">Due today</span><b id="dueAmt"></b></div>
     </div>
+    <div class="card hidden" id="posCard">
+      <div class="k">In person</div>
+      <p class="sub" style="margin-bottom:12px">Tap, insert or swipe a card with the Square app. After the payment, tap <b>Save Card</b> so monthly billing is set up automatically.</p>
+      <button class="btn" id="posGo" type="button">Charge in Square app</button>
+      <div class="msg" id="posMsg" role="alert"></div>
+    </div>
     <div class="card" id="payCard">
       <div class="k" id="cardTitle">Your card</div>
       <p class="sub" id="cardNow"></p>
@@ -104,6 +110,8 @@ async function init(){
   if(!r.ok){ $('#bad').classList.remove('hidden'); if(r.error==='network'||r.error==='busy'){ $('#bad h1').textContent='We could not load this page'; $('#bad p').textContent='Check your connection and refresh. If it keeps happening, call or text (608) 306-0135.'; } return; }
   $('#main').classList.remove('hidden'); show(r.info);
   if(r.info.status==='ended'){ $('#payCard').classList.add('hidden'); return; }
+  const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(mobile&&!r.info.test&&(r.info.setupDue+r.info.pastDue)>0){ $('#posCard').classList.remove('hidden'); $('#posGo').textContent='Charge '+usd(r.info.setupDue+r.info.pastDue)+' in Square app'; }
   if(!r.info.appId||!r.info.locationId){ $('#msg').className='msg err'; $('#msg').textContent='Card setup is not turned on yet. We will text you when it is ready.'; return; }
   try{
     await loadSquare(r.info.test);
@@ -133,6 +141,26 @@ $('#go').addEventListener('click',async()=>{
     throw {msg:{declined:'Your card was declined'+(r.detail?' ('+String(r.detail).replace(/^[A-Z_]+: /,'')+')':'')+'. Try another card.',consent:'Please check the authorization box.',busy:'We are busy for a moment. Try again in a minute.',network:'No connection. Check your internet and try again.',ended:'This account is closed.'}[r.error]||'Something went wrong. Nothing was charged. Call (608) 306-0135.'};
   }catch(e){ m.className='msg err'; m.textContent=e.msg||'Something went wrong. Nothing was charged.'; }
   b.textContent=label; b.disabled=!$('#agree').checked;
+});
+$('#posGo').addEventListener('click',async()=>{
+  const b=$('#posGo'), m=$('#posMsg'); b.disabled=true; m.className='msg'; m.textContent='Opening Square...';
+  const r=await api({action:'pay_pos'});
+  if(!r.ok){ b.disabled=false; m.className='msg err'; m.textContent=r.detail||'Could not open the Square app. Use the card form below.'; return; }
+  const p=r.pos;
+  try{ sessionStorage.setItem('rbPosKey',key); }catch(_){}
+  if(/Android/i.test(navigator.userAgent)){
+    const q=['action=com.squareup.pos.action.CHARGE','package=com.squareup','S.com.squareup.pos.WEB_CALLBACK_URI='+p.callback,'S.com.squareup.pos.CLIENT_ID='+p.clientId,'S.com.squareup.pos.API_VERSION=v2.0',
+      'i.com.squareup.pos.TOTAL_AMOUNT='+p.amount,'S.com.squareup.pos.CURRENCY_CODE=USD','S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD,com.squareup.pos.TENDER_CARD_ON_FILE',
+      'S.com.squareup.pos.CUSTOMER_ID='+p.customerId,'S.com.squareup.pos.NOTE='+encodeURIComponent(p.note),'S.com.squareup.pos.REQUEST_METADATA='+key,'S.browser_fallback_url='+encodeURIComponent('https://play.google.com/store/apps/details?id=com.squareup')];
+    if(p.locationId) q.push('S.com.squareup.pos.LOCATION_ID='+p.locationId);
+    location.href='intent:#Intent;'+q.join(';')+';end';
+  } else {
+    const data={amount_money:{amount:p.amount,currency_code:'USD'},callback_url:p.callback,client_id:p.clientId,version:'1.3',notes:p.note,customer_id:p.customerId,state:key,
+      options:{supported_tender_types:['CREDIT_CARD','CARD_ON_FILE'],auto_return:true}};
+    if(p.locationId) data.location_id=p.locationId;
+    location.href='square-commerce-v1://payment/create?data='+encodeURIComponent(JSON.stringify(data));
+  }
+  setTimeout(()=>{ b.disabled=false; m.textContent='If the Square app did not open, make sure it is installed and signed in, then try again.'; },2500);
 });
 init();
 })();

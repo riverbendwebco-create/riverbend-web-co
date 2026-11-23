@@ -2049,6 +2049,8 @@ function pay_(d) {
   if (!a) return { ok: false, error: 'notfound' };
   if (d.action === 'pay_info') return { ok: true, info: payInfo_(a) };
   if (d.action === 'pay_card') return payCard_(a, d);
+  if (d.action === 'pay_pos') return payPos_(a);
+  if (d.action === 'pay_pos_done') return payPosDone_(a);
   return { ok: false, error: 'unknown' };
 }
 function payInfo_(a) {
@@ -2200,6 +2202,7 @@ function billing_(d) {
     case 'billing_selftest': return billSelfTest_();
     case 'billing_catalog': return billCatalog_(d.apply === true);
     case 'billing_findcard': return billFindCardAction_(String(d.id || ''));
+    case 'billing_postest': return billPosTest_();
     case 'billing_setup_inperson': return billSetupInPerson_(String(d.id || ''), String(d.note || ''));
   }
   return { ok: false, error: 'unknown' };
@@ -2263,6 +2266,7 @@ function billLaunch_(id, date, confirm) {
     var a = billGet_(id);
     if (!a) return { ok: false, error: 'notfound' };
     if (a.launch) return { ok: true, already: true, account: billView_(a), detail: 'Billing was already activated on ' + longDate_(a.launch) + '. Nothing was charged again.' };
+    if (a.flags && a.flags.postest) return { ok: false, error: 'test', detail: 'This is the $1 Square app test account. It is never launched.' };
     if (a.status === 'awaiting_card') return { ok: false, error: 'nocard', detail: 'The client has not set up payment yet' + (a.pay === 'once' ? ' or paid the setup fee' : '') + '.' };
     if (a.status !== 'building') return { ok: false, error: 'status' };
     var p = prorate_(a.monthly, date);
@@ -2655,4 +2659,59 @@ function billFindCardAction_(id) {
   if (!r.ok) return r;
   if (r.changed) billSave_(a);
   return { ok: true, found: r.found, setupPaid: r.setupPaid, account: billView_(a), detail: r.found ? 'Found the card saved in the Square app.' : 'No saved card found yet. In the Square app, add the customer with the same email or phone as the agreement and tap Save Card.' };
+}
+
+/* ---------- Charge in the Square app (Point of Sale API, phones and tablets) ----------
+   The /pay page opens the Square app with the amount, a note and the client's Square
+   customer already filled in. After the tap and "Save card", Square returns to
+   /pay/done/, which calls pay_pos_done: we find the payment and the saved card for this
+   customer (billFindSquareCard_). Live Square account only (no sandbox for this API). */
+var POS_CALLBACK = 'https://' + SITE + '/pay/done/';
+function billEnsureCustomer_(a) {
+  if (a.sq.customerId) return a.sq.customerId;
+  var found = [];
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(a.email)) found = sq_('post', '/v2/customers/search', { limit: 5, query: { filter: { email_address: { exact: a.email } } } }, a.env).customers || [];
+  if (found.length) { a.sq.customerId = found[0].id; return a.sq.customerId; }
+  var c = sq_('post', '/v2/customers', { idempotency_key: ('rb-cust-' + a.id).slice(0, 45), company_name: a.business.slice(0, 100), given_name: a.owner.slice(0, 100),
+    email_address: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(a.email) ? a.email : undefined, phone_number: billDigits_(a.phone).length === 10 ? '+1' + billDigits_(a.phone) : undefined, reference_id: a.id }, a.env);
+  if (c.ok && c.customer) a.sq.customerId = c.customer.id;
+  return a.sq.customerId || '';
+}
+function payPos_(a) {
+  if (a.env !== 'production') return { ok: false, error: 'test', detail: 'The Square app only works in live mode.' };
+  if (a.status === 'ended') return { ok: false, error: 'ended' };
+  var v = billView_(a), due = (a.pay === 'once' && !a.setupPaid ? a.setup : 0) + v.pastDue;
+  if (!due) return { ok: false, error: 'nothingdue', detail: 'Nothing is due today, so there is nothing to charge in the Square app. Use the card form on this page to save the card.' };
+  var cust = billEnsureCustomer_(a);
+  if (!cust) return { ok: false, error: 'square', detail: 'Could not create the Square customer.' };
+  a.posStarted = new Date().toISOString(); billLog_(a, 'Opened the Square app to charge ' + usdC_(due) + '.'); billSave_(a);
+  var T = BILL_TIERS[a.tier];
+  return { ok: true, pos: { clientId: SQ_APP_IDS.production, customerId: cust, amount: due, locationId: sqLocation_('production'), callback: POS_CALLBACK,
+    note: (a.flags.postest ? 'TEST $1 ' : '') + T.n + ' Website (' + (a.pay === 'zero' ? '$0 Down' : 'Pay Upfront') + ') - ' + (a.pay === 'once' && !a.setupPaid ? 'Setup Fee' : 'Past-due balance') + ' - ' + a.business } };
+}
+function payPosDone_(a) {
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  try {
+    a = billGet_(a.id);
+    var r = billFindSquareCard_(a);
+    // a past-due balance paid in the app: mark the oldest failed charges paid up to the amount found
+    if (r.changed) billSave_(a);
+    return { ok: true, setupPaid: !!a.setupPaid, card: a.sq.cardId ? (a.sq.brand || 'Card') + ' ending ' + (a.sq.last4 || '') : '', info: payInfo_(a) };
+  } finally { lock.releaseLock(); }
+}
+/* $1 live test of the Square app checkout. The account is live but flagged as a test:
+   it has a $1.00 "setup fee", is never launched and never billed monthly. */
+function billPosTest_() {
+  if (!sqProp_('TOKEN', 'production')) return { ok: false, error: 'notoken', detail: 'Save the live access token first.' };
+  var key = (Utilities.getUuid() + Utilities.getUuid()).replace(/-/g, '').slice(0, 48);
+  var a = {
+    id: 'rb' + Utilities.getUuid().replace(/-/g, '').slice(0, 10), created: new Date().toISOString(), env: 'production',
+    business: 'TEST Square App $1', owner: 'Kruz Kitelinger', email: OWNER_EMAIL, phone: '(608) 306-0135',
+    tier: 'starter', pay: 'once', monthly: 5000, setup: 100, agreement: { signed: 'test', plan: 'Square app $1 test' },
+    payHash: sha256Hex_('pay:' + key), payKey: billPayUrl_(key), status: 'awaiting_card', setupPaid: false,
+    sq: {}, launch: '', charges: [], cancel: null, flags: { postest: true, paused: true }, log: []
+  };
+  billLog_(a, '$1 live test of the Square app checkout. Never launched or billed monthly. Refund the $1 in Square afterward.');
+  billSave_(a);
+  return { ok: true, url: billPayUrl_(key), id: a.id };
 }

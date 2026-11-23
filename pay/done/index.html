@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://*.squarecdn.com https://js.squareup.com https://js.squareupsandbox.com https://*.cardinalcommerce.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.squarecdn.com; font-src https://fonts.gstatic.com https://*.squarecdn.com https://d1g145x70srn7h.cloudfront.net data:; img-src 'self' data: https://*.squarecdn.com https://*.squareup.com https://*.squareupsandbox.com; connect-src https://script.google.com https://script.googleusercontent.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.squarecdn.com https://*.squareup.com https://*.squareupsandbox.com https://*.cardinalcommerce.com https://o160250.ingest.sentry.io; frame-src https://*.squarecdn.com https://*.squareup.com https://*.squareupsandbox.com https://*.cardinalcommerce.com; form-action 'none'; base-uri 'none'; object-src 'none'">
+<title>Payment complete | Riverbend Web Co.</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F172A;--txt:#334155;--mut:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--blue:#0052CC;--green:#16A34A;--red:#DC2626;--amber:#B45309}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.top{background:var(--ink);color:#fff;padding:16px 20px}
+.top .in{max-width:620px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top b{font-weight:800;letter-spacing:.01em}.top b span{color:#60A5FA}
+.top small{color:#94A3B8;font-size:.78rem;display:flex;align-items:center;gap:6px}
+.wrap{max-width:620px;margin:0 auto;padding:24px 16px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px 22px;margin-bottom:16px}
+h1{font-size:1.6rem;line-height:1.2;margin:0 0 6px}
+.sub{color:var(--mut);margin:0 0 4px}
+.k{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+ul.sched{list-style:none;padding:0;margin:14px 0 0}
+ul.sched li{padding:11px 0 11px 26px;border-top:1px solid #EEF2F6;position:relative;color:var(--txt);line-height:1.5;font-size:.95rem}
+ul.sched li:first-child{border-top:0}
+ul.sched li::before{content:"";position:absolute;left:4px;top:18px;width:8px;height:8px;border-radius:2px;background:var(--blue)}
+.due{display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:16px}
+.due b{font-size:1.5rem}
+#card-container{min-height:90px;margin:14px 0 6px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--txt);line-height:1.5;margin:14px 0}
+.consent input{margin-top:3px;width:18px;height:18px;flex:none}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;border:0;border-radius:9px;background:var(--blue);color:#fff;font:inherit;font-weight:700;font-size:1rem;cursor:pointer}
+.btn[disabled]{opacity:.55;cursor:default}
+.msg{min-height:22px;margin-top:12px;font-size:.92rem}
+.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.test{background:#FEF3C7;border:1px solid #F59E0B;color:#78350F;border-radius:10px;padding:10px 14px;font-size:.88rem;margin-bottom:16px}
+.done{text-align:center}.done svg{width:52px;height:52px;color:var(--green)}
+.fine{font-size:.82rem;color:var(--mut);line-height:1.5}
+.fine a{color:var(--blue)}
+.lock{width:14px;height:14px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><b>Riverbend <span>Web Co.</span></b><small>Secured by Square</small></div></div>
+<main class="wrap">
+  <div class="card done" id="box">
+    <h1 id="h">Finishing up...</h1>
+    <p class="sub" id="t">Checking the payment with Square.</p>
+    <ul class="sched" id="sched" style="text-align:left"></ul>
+    <a class="btn hidden" id="back" style="margin-top:16px;text-decoration:none" href="/pay/">Back to payment page</a>
+  </div>
+</main>
+<script>
+(function(){
+'use strict';
+const API='https://script.google.com/macros/s/AKfycbwkosfcFSHGXy8EUaAFZ7Q-SFDFllV_k4n8qBABRxoj2hv59RspTU9APLQabwP_ohaW/exec';
+const $=s=>document.querySelector(s), q=new URLSearchParams(location.search);
+let st='', err='', txn='';
+try{ const d=q.get('data'); if(d){ const j=JSON.parse(d); st=j.state||''; err=j.status==='error'?(j.error_code||'error'):''; txn=j.transaction_id||j.client_transaction_id||''; } }catch(_){}
+if(!st) st=q.get('com.squareup.pos.REQUEST_METADATA')||'';
+if(!err) err=q.get('com.squareup.pos.ERROR_CODE')||'';
+if(!txn) txn=q.get('com.squareup.pos.SERVER_TRANSACTION_ID')||q.get('com.squareup.pos.CLIENT_TRANSACTION_ID')||'';
+if(!/^[a-f0-9]{48}$/.test(st)){ try{ st=sessionStorage.getItem('rbPosKey')||''; }catch(_){} }
+const back=$('#back'); if(/^[a-f0-9]{48}$/.test(st)) back.href='/pay/#'+st;
+const show=(h,t,ok)=>{ $('#h').textContent=h; $('#t').textContent=t; $('#h').style.color=ok?'':'#DC2626'; back.classList.remove('hidden'); };
+if(err){ show('Payment not completed',({payment_canceled:'The payment was canceled in the Square app.',TRANSACTION_CANCELED:'The payment was canceled in the Square app.',not_logged_in:'Sign in to the Square app and try again.',USER_NOT_LOGGED_IN:'Sign in to the Square app and try again.',customer_management_not_supported:'Turn on Card on File in the Square app (More > Settings > Checkout > Customer management) and try again.',CUSTOMER_MANAGEMENT_NOT_SUPPORTED:'Turn on Card on File in the Square app (More > Settings > Checkout > Customer management) and try again.'}[err])||('Square said: '+err+'. Nothing was saved. Try again or use the card form.'),false); return; }
+if(!/^[a-f0-9]{48}$/.test(st)){ show('Payment received','Square finished the payment. Open the client in riverbendwebco.com/billing and tap "Find card saved in Square app".',true); return; }
+let tries=0;
+async function check(){
+  tries++;
+  let r; try{ r=await (await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'pay_pos_done',key:st,txn})})).json(); }catch(_){ r={ok:false}; }
+  if(r.ok&&r.setupPaid&&r.card){ $('#sched').replaceChildren(...r.info.lines.map(t=>{ const li=document.createElement('li'); li.textContent=t; return li; })); show("You're all set",'Payment received and '+r.card+' saved. Monthly billing is set up automatically.',true); return; }
+  if(tries<6){ setTimeout(check,4000); return; }
+  if(r.ok&&r.setupPaid) show('Payment received, card not saved','The payment went through, but no saved card was found. In the Square app, open this customer and tap Save Card (insert or type the card; phone wallets cannot be saved). Billing will pick it up automatically.',false);
+  else show('Still checking with Square','Square can take a minute. Riverbend will confirm it, or open riverbendwebco.com/billing and tap "Find card saved in Square app".',false);
+}
+check();
+})();
+</script>
+</body>
+</html>
