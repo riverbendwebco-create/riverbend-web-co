@@ -1790,8 +1790,14 @@ function siteFromResults_(html, name) {
 }
 
 
+// fetchAll fails as a whole when one site has a bad certificate or dead domain. Instead of
+// opening every site one at a time (very slow), split the batch in half and retry, so the
+// bad site is isolated while the rest still load in parallel.
 function leadsFetchEach_(reqs) {
-  return reqs.map(function (q) { try { return UrlFetchApp.fetch(q.url, q); } catch (e) { return null; } });
+  if (reqs.length <= 1) return reqs.map(function (q) { try { return UrlFetchApp.fetch(q.url, q); } catch (e) { return null; } });
+  var h = Math.ceil(reqs.length / 2);
+  var part = function (x) { try { return UrlFetchApp.fetchAll(x); } catch (e) { return leadsFetchEach_(x); } };
+  return part(reqs.slice(0, h)).concat(part(reqs.slice(h)));
 }
 
 /* Try the web addresses local businesses usually use: name.com, namedbq.com, namedubuque.com.
@@ -1871,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23t';
+var BILL_VERSION = '2026-11-23u';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
