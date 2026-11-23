@@ -58,6 +58,7 @@ ul.sched li::before{content:"";position:absolute;left:4px;top:18px;width:8px;hei
       <ul class="sched" id="sched"></ul>
       <div class="due" id="dueBox"><span id="dueLbl">Due today</span><b id="dueAmt"></b></div>
     </div>
+    <div class="card hidden" id="invoices"><div class="k">Open invoice</div><p class="sub">This monthly payment did not go through. Pay it securely on Square, and update your card below so next month goes through automatically.</p></div>
     <div class="card hidden" id="posCard">
       <div class="k">In person</div>
       <p class="sub" style="margin-bottom:12px">Tap, insert or swipe a card with the Square app. After the payment, tap <b>Save Card</b> so monthly billing is set up automatically.</p>
@@ -99,6 +100,7 @@ function show(i){
   $('#consentText').textContent=i.consent;
   $('#testBar').classList.toggle('hidden',!i.test);
   $('#cardNow').textContent=i.card?'On file: '+i.card+'. Enter a new card below to replace it.':'';
+  const iv=$('#invoices'); iv.replaceChildren(...(i.invoices||[]).map(x=>{ const b=document.createElement('a'); b.className='btn'; b.style.marginTop='8px'; b.style.textDecoration='none'; b.href=x.url; b.target='_blank'; b.rel='noopener'; b.textContent='Pay open invoice: '+usd(x.amount)+' ('+x.period+')'; return b; })); iv.classList.toggle('hidden',!(i.invoices||[]).length);
   $('#cardTitle').textContent=i.card?'Update your card':'Your card';
   $('#go').textContent=due?'Authorize and pay '+usd(due):'Authorize payment';
 }

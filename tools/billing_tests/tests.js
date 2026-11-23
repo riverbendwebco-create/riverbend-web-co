@@ -54,6 +54,8 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   const a1=B.billLaunch_(s.acct.id,'2026-11-16',true), a2=B.billLaunch_(s.acct.id,'2026-11-16',true), a3=B.billLaunch_(s.acct.id,'2026-11-16',true);
   const pays=Object.values(H.sq.payments);
   ok('Website Live: $54.50 prorated charge on Nov 16',a1.charged.amount===5450&&a1.charged.status==='paid');
+  const sb=Object.values(H.sq.subs);
+  ok('Website Live: one Square subscription, $109 monthly, card on file, starts Dec 1 (billed on the 1st)',sb.length===1&&sb[0].start_date==='2026-12-01'&&H.sq.prices[sb[0].plan]===10900&&sb[0].card_id);
   ok('Duplicate Go Live clicks: still exactly one charge',pays.length===1&&a2.already&&a3.already);
   const v=B.billView_(B.billGet_(s.acct.id));
   ok('Dashboard after launch: next bill Dec 1 $109, 0 of 12, 12 remaining',v.nextDate==='2026-12-01'&&v.nextAmount===10900&&v.fullPaid===0&&v.remaining===12,v.nextText);
@@ -71,7 +73,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   const s=sign(B,H,'premium-zero','First Day Co'); pay(B,H,s.key);
   H.today='2026-12-01'; const r=B.billLaunch_(s.acct.id,'2026-12-01',true);
   const a=B.billGet_(s.acct.id);
-  ok('Launch on Dec 1: full $349 once, no separate prorated charge',r.charged.amount===34900&&a.charges.length===1&&a.charges[0].kind==='full');
+  ok('Launch on Dec 1: Square subscription starts that day and charges the full $349 once, no separate prorated charge',r.charged.amount===34900&&a.charges.length===1&&a.charges[0].kind==='full'&&a.charges[0].invoiceId,JSON.stringify(r));
   ok('Launch-on-1st charge counts as full payment 1 of 12',B.billCounts_(a).full===1);
   tickRange(B,H,'2026-12-01','2027-01-02');
   ok('No second charge on Dec 1; next charge Jan 1',B.billGet_(s.acct.id).charges.map(c=>c.period).join()==='2026-12,2027-01');
@@ -90,7 +92,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   ok('After payment #12 (Nov 1, 2027): ownership eligible, continues month-to-month',v.ownershipEligible&&v.fullPaid===13&&v.remaining===0&&a.status==='active',v.ownership);
   const b=JSON.parse(JSON.stringify(a)); b.charges=b.charges.filter(c=>c.due<='2027-10-01');
   ok('After 11 full payments: not eligible yet ("1 more")',!B.billView_(b).ownershipEligible&&/1 more full payment/.test(B.billView_(b).ownership),B.billView_(b).ownership);
-  ok('Receipts say "payment N of 12"',H.mails.some(m=>/Full monthly payment 12 of 12/.test(m.body||'')));
+  ok('Monthly receipts come from Square (no duplicate Riverbend receipt each month)',!H.mails.some(m=>/Receipt: \$109/.test(m.subject)));
 }
 
 /* 6. Failed monthly payment: reminders, grace, past due, suspension approval, card update */
@@ -103,17 +105,21 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   for(let i=0;i<16;i++){ H.today=d; const m0=H.mails.length; B.billTick_(); const a=B.billGet_(s.acct.id); log.push(d.slice(8)+': '+H.mails.slice(m0).map(m=>m.subject.replace(/\[TEST[^\]]*\] /,'')).join(' | ')+' => '+B.billView_(a).payStatus); const t=new Date(d+'T12:00:00Z'); t.setUTCDate(t.getUTCDate()+1); d=t.toISOString().slice(0,10); }
   require('fs').writeFileSync(require('os').tmpdir()+'/rb-dunning.txt',log.join('\n'));
   const a=B.billGet_(s.acct.id), ch=a.charges.find(c=>c.period==='2026-12');
-  ok('Dec 1 failure: client notified right away',/did not go through/.test(log[0]));
-  ok('Dec 3: retry + reminder',ch.attempts>=2&&/Reminder/.test(log[2]));
-  ok('Dec 5: retry, grace period ends',ch.attempts===3);
+  ok('Dec 1 failure: owner notified right away',/Payment failed/.test(log[0]));
+  ok('Dec 1: Square could not charge the card; owner emailed, Square emails the client its invoice',ch.invoiceId&&ch.status==='failed'&&ch.invoiceUrl);
+  ok('Dec 3: reminder with the Square invoice link (no extra charge attempt that could double charge)',/Reminder/.test(log[2])&&ch.attempts===1&&H.mails.some(m=>/Pay this invoice/.test(m.htmlBody||'')));
   ok('Dec 6: marked past due, no late fee added',/past due/.test(log[5])&&B.billView_(a).pastDue===17900);
   ok('Dec 10: final suspension warning',/Final notice/.test(log[9]));
   ok('Dec 15: suspension needs owner approval (nothing automatic)',/approval/.test(log[14])&&a.flags.suspendEligible&&!a.flags.suspended);
   ok('Failed payment does not count toward 12',B.billCounts_(a).full===0);
   ok('No duplicate emails on days without a stage',log[1].split('=>')[0].trim()==='02:'&&log[3].split('=>')[0].trim()==='04:');
   H.sq.declineCards.clear(); H.today='2026-12-16';
-  const r=pay(B,H,s.key); const a2=B.billGet_(s.acct.id);
-  ok('Client updates card: balance charged once, account current, counts as payment 1',r.ok&&B.billView_(a2).payStatus==='Current'&&B.billCounts_(a2).full===1&&!a2.flags.suspendEligible);
+  const n0=Object.keys(H.sq.payments).length;
+  const r=pay(B,H,s.key); const sub=Object.values(H.sq.subs)[0];
+  ok('Client updates card: new card goes on the Square subscription, nothing charged directly',r.ok&&sub.card_id===B.billGet_(s.acct.id).sq.cardId&&Object.keys(H.sq.payments).length===n0);
+  Object.values(H.sq.invoices).forEach(v=>{ if(v.status==='UNPAID'){ v.status='PAID'; v.payment_requests[0].total_completed_amount_money.amount=v.payment_requests[0].computed_amount_money.amount; } });
+  B.billTick_(); const a2=B.billGet_(s.acct.id);
+  ok('Client pays the Square invoice: account current, counts as payment 1, suspension flag cleared',B.billView_(a2).payStatus==='Current'&&B.billCounts_(a2).full===1&&!a2.flags.suspendEligible);
 }
 
 /* 7. Failed launch payment uses the launch date */
@@ -142,10 +148,9 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   const s=sign(B,H,'starter-zero','Refund Co'); pay(B,H,s.key); H.today='2026-11-16'; B.billLaunch_(s.acct.id,'2026-11-16',true);
   tickRange(B,H,'2026-12-01','2027-01-01');
   let a=B.billGet_(s.acct.id); ok('Two full payments counted',B.billCounts_(a).full===2);
-  const p1=a.charges.find(c=>c.period==='2026-12').paymentId;
-  H.sq.refunds.push({payment_id:p1,status:'COMPLETED',amount_money:{amount:10900}});
+  const inv1=Object.values(H.sq.invoices).find(v=>v.payment_requests[0].due_date==='2026-12-01'); inv1.status='REFUNDED';
   H.today='2027-01-02'; B.billTick_(); a=B.billGet_(s.acct.id);
-  ok('Refunded payment no longer counts (daily check catches it even with no webhook)',B.billCounts_(a).full===1);
+  ok('Refunded payment no longer counts (daily check catches it even with no webhook)',B.billCounts_(a).full===1,JSON.stringify(a.charges.map(c=>[c.period,c.status,c.refunded])));
   const p2=a.charges.find(c=>c.period==='2027-01').paymentId;
   H.sq.disputes.push({state:'EVIDENCE_REQUIRED',disputed_payment:{payment_id:p2}}); B.billTick_(); a=B.billGet_(s.acct.id);
   ok('Disputed (chargeback) payment no longer counts',B.billCounts_(a).full===0);
@@ -162,7 +167,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   ok('Upfront cancel notice Nov 20: effective Dec 20, final Dec 1 charge $32.26 (20 of 31 days)',pv.preview.effective==='2026-12-20'&&pv.preview.finalAmount===3226,pv.preview.text);
   B.billCancel_(s.acct.id,'2026-11-20',true); tickRange(B,H,'2026-11-21','2027-02-03');
   const a=B.billGet_(s.acct.id);
-  ok('Final prorated charge on Dec 1, nothing after, billing ended',a.charges.map(c=>c.kind+':'+c.amount).join()==='setup:49900,prorated:2500,final:3226'&&a.status==='ended');
+  ok('Square subscription ended before the final month; final prorated charge on Dec 1, nothing after, billing ended',a.charges.map(c=>c.kind+':'+c.amount).join()==='setup:49900,prorated:2500,final:3226'&&a.status==='ended'&&a.sq.subCanceled,a.charges.map(c=>c.kind+':'+c.amount).join()+' '+a.status);
   const z=sign(B,H,'premium-zero','Cancel Zero'); H.today='2027-02-03'; pay(B,H,z.key); B.billLaunch_(z.acct.id,'2027-02-03',true);
   tickRange(B,H,'2027-02-04','2027-04-02');
   const n0=Object.keys(H.sq.payments).length;
@@ -174,7 +179,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   ok('Billing keeps running monthly until an owner decides',B.billGet_(z.acct.id).charges.some(c=>c.period==='2027-05'));
   ok('End billing needs the typed confirmation',B.billing_({action:'billing_end',id:z.acct.id,confirmText:'yes'}).error==='confirm'&&B.billing_({action:'billing_end',id:z.acct.id,confirmText:'END BILLING'}).ok);
   tickRange(B,H,'2027-06-01','2027-06-01');
-  ok('Ended account is not charged again',!B.billGet_(z.acct.id).charges.some(c=>c.period==='2027-06'));
+  ok('Ended account is not charged again (Square subscription canceled)',!B.billGet_(z.acct.id).charges.some(c=>c.period==='2027-06')&&B.billGet_(z.acct.id).sq.subCanceled);
 }
 
 /* 11. Access control */

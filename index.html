@@ -3469,7 +3469,8 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
       try{ const blob=await (await fetch(img)).blob(); fd.append('Signature Image',blob,'signature.png'); }catch(_){}
       return fetch('https://formsubmit.co/ajax/riverbendwebco@gmail.com',{method:'POST',headers:{'Accept':'application/json'},body:fd}); })())
       .then(r=>r.ok?r.json():Promise.reject()).then(j=>{ if(!j||String(j.success)!=='true') throw 0; note.innerHTML='<svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> A copy was sent to Riverbend Web Co.';
-        if(payUrl){ const pb=document.createElement('a'); pb.href=payUrl; pb.target='_blank'; pb.rel='noopener'; pb.className='btn btn-amber btn-sm no-print'; pb.style.marginTop='10px'; pb.textContent='Set up secure payment with Square'; note.appendChild(document.createElement('br')); note.appendChild(pb); } })
+        if(payUrl){ const pb=document.createElement('a'); pb.href=payUrl; pb.className='btn btn-amber btn-sm no-print'; pb.style.marginTop='10px'; pb.textContent='Continue to secure payment'; note.appendChild(document.createElement('br')); note.appendChild(document.createTextNode('Taking you to secure payment with Square...')); note.appendChild(document.createElement('br')); note.appendChild(pb);
+          setTimeout(()=>{ location.href=payUrl; },2500); } })
       .catch(()=>{ note.textContent='Couldn’t send a copy automatically. Please save it as a PDF and email it to riverbendwebco@gmail.com.'; });
   });
 

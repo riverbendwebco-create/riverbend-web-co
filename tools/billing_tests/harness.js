@@ -50,10 +50,21 @@ function load(){
     else if(path.startsWith('/v2/refunds')&&method==='get') res={ok:true,refunds:S.refunds};
     else if(path==='/v2/refunds') { const r={id:id('RF'),payment_id:body.payment_id,status:'COMPLETED',amount_money:body.amount_money}; S.refunds.push(r); S.payments[body.payment_id].refunded_money=body.amount_money; res={ok:true,refund:r}; }
     else if(path==='/v2/disputes') res={ok:true,disputes:S.disputes};
+    else if(path==='/v2/catalog/object') res={ok:true,catalog_object:{id:id('PLAN')}};
+    else if(path==='/v2/catalog/batch-upsert') res={ok:true,id_mappings:body.batches[0].objects.map(o=>{ const v=id('VAR'); S.prices[v]=o.subscription_plan_variation_data.phases[0].pricing.price_money.amount; return {client_object_id:o.id,object_id:v}; })};
+    else if(path==='/v2/subscriptions'&&method==='post'){ const sub={id:id('SUB'),start_date:body.start_date,status:body.start_date>H.today?'PENDING':'ACTIVE',card_id:body.card_id,customer_id:body.customer_id,version:1,plan:body.plan_variation_id}; S.subs[sub.id]=sub; res={ok:true,subscription:sub}; }
+    else if(/^\/v2\/subscriptions\/[^/]+$/.test(path)){ const sub=S.subs[decodeURIComponent(path.split('/')[3])]; if(method==='put'&&sub){ if(body.subscription.card_id) sub.card_id=body.subscription.card_id; sub.version++; } res=sub?{ok:true,subscription:sub}:{ok:false,status:404,errors:[{code:'NOT_FOUND'}]}; }
+    else if(/\/v2\/subscriptions\/[^/]+\/cancel$/.test(path)){ const sub=S.subs[decodeURIComponent(path.split('/')[3])]; const t=new Date(H.today+'T12:00:00Z'); const nx=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,1)).toISOString().slice(0,10); sub.canceled_date=sub.start_date>H.today?sub.start_date:nx; res={ok:true,subscription:sub}; }
+    else if(/\/v2\/subscriptions\/[^/]+\/(pause|resume)$/.test(path)) res={ok:true};
+    else if(path==='/v2/invoices/search'){ S.genInvoices(); res={ok:true,invoices:Object.values(S.invoices).filter(v=>v.customer_id===body.query.filter.customer_ids[0])}; }
+    else if(path.startsWith('/v2/orders/')){ const v=Object.values(S.invoices).find(x=>x.order_id===path.split('/')[3]); res={ok:true,order:{tenders:[{payment_id:v&&v.payment_id}]}}; }
     else res={ok:false,status:404,errors:[{code:'UNHANDLED',detail:method+' '+path}]};
     if(body&&body.idempotency_key) S.idem[path+body.idempotency_key]=res;
     return JSON.parse(JSON.stringify(res));
   });
+  S.subs={}; S.invoices={};
+  S.genInvoices=()=>{ Object.values(S.subs).forEach(sub=>{ let d=sub.start_date; while(d<=H.today&&(!sub.canceled_date||d<sub.canceled_date)){ const k=sub.id+d; if(!S.invoices[k]){ const bad=S.declineCards.has(sub.card_id); const pid=bad?'':id('PAYINV'); const amt=S.prices[sub.plan]||0; S.invoices[k]={id:'inv:'+k,subscription_id:sub.id,customer_id:sub.customer_id,order_id:'ORD'+k,payment_id:pid,status:bad?'UNPAID':'PAID',public_url:'https://squareup.com/pay-invoice/'+k,payment_requests:[{due_date:d,computed_amount_money:{amount:amt},total_completed_amount_money:{amount:bad?0:amt}}]}; if(pid) S.payments[pid]={id:pid,status:'COMPLETED',amount_money:{amount:amt}}; } const t=new Date(d+'T12:00:00Z'); d=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,1)).toISOString().slice(0,10); } if(sub.status==='PENDING'&&sub.start_date<=H.today) sub.status='ACTIVE'; }); };
+  S.prices={};
   H.props.SQUARE_TOKEN_SANDBOX='x'; H.props.SQUARE_APP_SANDBOX='sandbox-sq0idp-test';
   return {B,H};
 }

@@ -1922,7 +1922,7 @@ function billCreateFromAgreement_(f) {
     tier: pk.tier, pay: pk.pay, monthly: pk.pay === 'zero' ? T.zero : T.care, setup: pk.pay === 'once' ? T.once : 0,
     agreement: { signed: unesc_(f['Signed'] || ''), plan: unesc_(f['Plan'] || '') },
     payHash: sha256Hex_('pay:' + key), payKey: billPayUrl_(key), status: 'awaiting_card', setupPaid: false,
-    sq: {}, launch: '', charges: [], cancel: null, flags: {}, log: []
+    sq: {}, launch: '', charges: [], cancel: null, flags: {}, log: [], engine: 'sub'
   };
   billLog_(a, 'Agreement signed. Waiting for the client to set up payment.');
   billSave_(a);
@@ -1967,7 +1967,7 @@ function billCharge_(a, ch, opts) {
 }
 function billAfterCharge_(a, ch, why) {
   if (ch.status === 'paid') {
-    billMailCustomer_(a, 'receipt', ch);
+    if (!ch.invoiceId) billMailCustomer_(a, 'receipt', ch);
     if (ch.kind === 'setup') a.setupPaid = true;
     var stillOwed = (a.charges || []).filter(function (c) { return c.status === 'failed' && c.kind !== 'setup'; }).length;
     if (!stillOwed && a.flags.suspended) { a.flags.suspended = false; billMailOwner_(a, 'Balance paid: restore services', 'The overdue balance is paid. Restore any suspended services within 1 business day.'); }
@@ -2037,7 +2037,8 @@ function billView_(a, today) {
     agreement: 'Signed' + (a.agreement && a.agreement.signed ? ' ' + a.agreement.signed : ''),
     ownership: own.text, ownershipEligible: own.eligible, status: a.status, statusText: statusText,
     card: a.sq.cardId ? (a.sq.brand || 'Card') + ' ending ' + (a.sq.last4 || '????') : '', flags: a.flags, cancel: a.cancel,
-    charges: (a.charges || []).map(function (x) { return { kind: x.kind, period: x.period, due: x.due, amount: x.amount, status: x.status, refunded: !!x.refunded, disputed: !!x.disputed, attempts: x.attempts || 0, error: x.error || '', manual: !!x.manual }; }),
+    subscription: a.engine !== 'sub' ? 'Riverbend schedule' : a.sq.subId ? 'Square subscription ' + (a.sq.subStatus || '') + (a.sq.subStart ? ', billing on the 1st from ' + longDate_(a.sq.subStart) : '') + (a.sq.subCanceled ? ' (ending)' : '') : (a.launch ? 'Square subscription not created yet' : 'Created at launch'),
+    charges: (a.charges || []).map(function (x) { return { kind: x.kind, period: x.period, due: x.due, amount: x.amount, status: x.status, invoice: !!x.invoiceId, refunded: !!x.refunded, disputed: !!x.disputed, attempts: x.attempts || 0, error: x.error || '', manual: !!x.manual }; }),
     log: (a.log || []).slice(-40), created: a.created
   };
 }
@@ -2069,7 +2070,9 @@ function payInfo_(a) {
   }
   return {
     business: a.business, packageName: T.n, optionName: v.optionName, monthly: a.monthly, setup: a.setup, setupDue: a.pay === 'once' && !a.setupPaid ? a.setup : 0,
-    pastDue: v.pastDue, card: v.card, status: a.status, lines: lines, test: a.env !== 'production',
+    pastDue: (a.charges || []).filter(function (c) { return c.status === 'failed' && c.kind !== 'setup' && !c.invoiceId; }).reduce(function (t, c) { return t + c.amount; }, 0),
+    invoices: (a.charges || []).filter(function (c) { return c.status === 'failed' && c.invoiceUrl; }).map(function (c) { return { amount: c.amount, period: c.period, url: c.invoiceUrl }; }),
+    card: v.card, status: a.status, lines: lines, test: a.env !== 'production',
     appId: sqProp_('APP', a.env), locationId: sqLocation_(a.env), consent: payConsent_(a)
   };
 }
@@ -2119,7 +2122,8 @@ function payCard_(a, d) {
       if (ch.status !== 'paid') { billSave_(a); return { ok: false, error: ch.status === 'failed' ? 'declined' : 'pending', detail: ch.error, info: payInfo_(a) }; }
     }
     // 4. Past-due balance (card update after a failure)
-    (a.charges || []).filter(function (x) { return x.status === 'failed' && x.kind !== 'setup'; }).forEach(function (x) {
+    if (a.sq.subId) billSubSetCard_(a);
+    (a.charges || []).filter(function (x) { return x.status === 'failed' && x.kind !== 'setup' && !x.invoiceId; }).forEach(function (x) {
       billCharge_(a, x); billAfterCharge_(a, x, 'Charged after the client updated their card.');
       results.push({ kind: x.kind, amount: x.amount, status: x.status });
     });
@@ -2160,14 +2164,14 @@ function billMailCustomer_(a, kind, ch) {
     if (kind === 'final') body.push('If the balance is not paid by ' + longDate_(addDays_(ch.due, 14)) + ', Riverbend may suspend non-essential ongoing services (maintenance, routine updates and non-emergency support) until it is paid. Your website is not taken offline automatically and your domain is never withheld.');
     body.push('Need a payment arrangement? Just reply or call (608) 306-0135.');
   } else return;
-  var link = (kind !== 'receipt' && a.payKey) ? a.payKey : '';
+  var link = kind !== 'receipt' ? ((ch && ch.invoiceUrl) || a.payKey || '') : '';
   var html = '<!doctype html><html><body style="margin:0;background:#F1F5F9"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F1F5F9"><tr><td align="center" style="padding:26px 12px">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden">' +
     '<tr><td style="background:#0F172A;padding:16px 28px;' + font + 'color:#fff;font-size:15px;font-weight:800">Riverbend <span style="color:#60A5FA">Web Co.</span></td></tr>' +
     '<tr><td style="padding:26px 28px 8px;' + font + 'font-size:22px;font-weight:800;color:#0F172A">' + head + '</td></tr>' +
     '<tr><td style="padding:0 28px 6px;' + font + 'font-size:14px;color:#64748B">' + esc_(a.business) + ' &middot; ' + T.n + ' (' + v.optionName + ')</td></tr>' +
     body.map(function (p) { return '<tr><td style="padding:10px 28px 0;' + font + 'font-size:15px;line-height:1.55;color:#1E293B">' + p + '</td></tr>'; }).join('') +
-    (link ? '<tr><td style="padding:18px 28px 0"><a href="' + link + '" style="' + font + 'display:inline-block;background:#0052CC;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 20px;border-radius:8px">Update payment method</a></td></tr>' : '') +
+    (link ? '<tr><td style="padding:18px 28px 0"><a href="' + link + '" style="' + font + 'display:inline-block;background:#0052CC;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 20px;border-radius:8px">' + (ch && ch.invoiceUrl ? 'Pay this invoice' : 'Update payment method') + '</a></td></tr>' : '') +
     '<tr><td style="padding:22px 28px 26px;' + font + 'font-size:12px;color:#94A3B8">Riverbend Web Co. &middot; Dubuque, Iowa &middot; (608) 306-0135 &middot; riverbendwebco@gmail.com<br>Monthly payments are billed on the 1st as described in your service agreement.</td></tr>' +
     '</table></td></tr></table></body></html>';
   var text = head + '\n\n' + body.map(function (p) { return p.replace(/<[^>]+>/g, ''); }).join('\n') + (link ? '\n\nUpdate payment method: ' + link : '');
@@ -2278,6 +2282,20 @@ function billLaunch_(id, date, confirm) {
     if (!confirm) return { ok: true, preview: preview };
     // Record the launch first, then charge: a second click finds a.launch set and stops above.
     a.launch = date; a.status = 'active';
+    if (a.engine === 'sub') {
+      // Square subscription bills the 1st. Launch on the 1st: it starts today and Square charges the full month now.
+      // Otherwise we charge the exact prorated amount ourselves and the subscription starts on the next 1st.
+      billLog_(a, 'Website marked live ' + longDate_(date) + '. Billing activated.');
+      var pch = null;
+      if (!p.full) { pch = { key: 'prorated', kind: 'prorated', period: period_(date), due: date, amount: p.amount, status: 'new', attempts: 0 }; a.charges.push(pch); }
+      billSave_(a);
+      if (pch) { billCharge_(a, pch); billAfterCharge_(a, pch, 'This was the launch payment: it was due today (' + longDate_(date) + '), and reminders follow from that date.'); }
+      var sr = billSubCreate_(a, p.full ? date : firstNext_(date));
+      if (p.full) { Utilities.sleep(2500); billSubSync_(a, billToday_()); }
+      billSave_(a);
+      var fc = pch || (a.charges || []).filter(function (c) { return c.invoiceId; })[0] || { amount: a.monthly, status: 'pending' };
+      return { ok: true, charged: { amount: fc.amount, status: fc.status, error: (fc.error || '') + (sr.ok ? '' : ' Subscription not created yet: ' + sr.detail + ' (the daily check retries).') }, account: billView_(a) };
+    }
     var ch = p.full ? { key: 'full-' + period_(date), kind: 'full', launch: true, period: period_(date), due: date, amount: a.monthly, status: 'new', attempts: 0 }
       : { key: 'prorated', kind: 'prorated', period: period_(date), due: date, amount: p.amount, status: 'new', attempts: 0 };
     a.charges.push(ch);
@@ -2294,7 +2312,7 @@ function billRetry_(id) {
   try {
     var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
     var out = [];
-    (a.charges || []).filter(function (c) { return c.status === 'failed' || c.status === 'unknown'; }).forEach(function (c) {
+    (a.charges || []).filter(function (c) { return (c.status === 'failed' || c.status === 'unknown') && !c.invoiceId; }).forEach(function (c) {
       billCharge_(a, c, { sameAttempt: c.status === 'unknown' }); billAfterCharge_(a, c, 'Retried by an owner.'); out.push({ kind: c.kind, amount: c.amount, status: c.status, error: c.error || '' });
     });
     billSave_(a);
@@ -2339,6 +2357,7 @@ function billEnd_(id, confirmText) {
   if (confirmText !== 'END BILLING') return { ok: false, error: 'confirm' };
   var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
   a.status = 'ended'; billLog_(a, 'Billing ended by an owner. No further automatic charges.');
+  if (a.sq.subId && !a.sq.subCanceled) billSubCancel_(a, 'Billing ended by an owner.');
   billSave_(a); return { ok: true, account: billView_(a) };
 }
 function billFlag_(id, flag, value) {
@@ -2346,6 +2365,7 @@ function billFlag_(id, flag, value) {
   if (!allowed[flag]) return { ok: false, error: 'flag' };
   var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
   a.flags[flag] = value; billLog_(a, allowed[flag] + ': ' + (value ? 'on' : 'off') + ' (by an owner).');
+  if (flag === 'paused' && a.sq.subId && !a.sq.subCanceled) { var pr = sq_('post', '/v2/subscriptions/' + encodeURIComponent(a.sq.subId) + (value ? '/pause' : '/resume'), value ? {} : { resume_change_timing: 'IMMEDIATE' }, a.env); billLog_(a, 'Square subscription ' + (value ? 'pause' : 'resume') + ': ' + (pr.ok ? 'done' : sqErr_(pr))); }
   billSave_(a); return { ok: true, account: billView_(a) };
 }
 
@@ -2381,8 +2401,15 @@ function billTickOne_(a, today, sum) {
       else if (st === 'FAILED' || st === 'CANCELED') { c.status = 'failed'; c.error = st; billLedger_(a, c); billAfterCharge_(a, c); changed = true; }
     }
   });
-  // B. Monthly charge on (or after) the 1st.
-  if ((a.status === 'active' || a.status === 'canceling') && a.launch && !a.flags.paused) {
+  // B (subscriptions). Square charges the 1st; we read its invoices, make sure the subscription exists,
+  // and end it before a cancellation's final month (that month is charged prorated below).
+  if (a.engine === 'sub' && a.launch && a.status !== 'ended') {
+    if (!a.sq.subId) { if (billSubCreate_(a, today.slice(8) === '01' ? today : firstNext_(today)).ok) changed = true; }
+    if (a.sq.subId && billSubSync_(a, today)) changed = true;
+    if (a.cancel && a.cancel.mode === 'notice' && a.cancel.effective && !a.sq.subCanceled && period_(a.cancel.effective) <= period_(firstNext_(today))) { billSubCancel_(a, 'Cancellation notice: subscription ends before the final (prorated) month.'); changed = true; }
+  }
+  // B. Monthly charge on (or after) the 1st (our own charge; for subscriptions only the final prorated month).
+  if ((a.status === 'active' || a.status === 'canceling') && a.launch && !a.flags.paused && !(a.engine === 'sub' && !(a.cancel && a.cancel.mode === 'notice' && a.cancel.effective && period_(a.cancel.effective) === period_(today)))) {
     var per = period_(today);
     var have = (a.charges || []).some(function (c) { return c.period === per && (c.kind === 'full' || c.kind === 'final' || c.kind === 'prorated'); });
     if (!have && a.launch < per + '-01') {
@@ -2391,7 +2418,7 @@ function billTickOne_(a, today, sum) {
         if (a.cancel.effective < per + '-01') { a.status = 'ended'; billLog_(a, 'Cancellation took effect ' + longDate_(a.cancel.effective) + '. Billing ended.'); changed = true; }
         else if (period_(a.cancel.effective) === per) { var fm = finalMonth_(a.monthly, a.cancel.effective); ch = { key: 'final-' + per, kind: 'final', period: per, due: per + '-01', amount: fm.amount, status: 'new', attempts: 0 }; }
       }
-      if (!ch && a.status !== 'ended') ch = { key: 'full-' + per, kind: 'full', period: per, due: per + '-01', amount: a.monthly, status: 'new', attempts: 0 };
+      if (!ch && a.status !== 'ended' && a.engine !== 'sub') ch = { key: 'full-' + per, kind: 'full', period: per, due: per + '-01', amount: a.monthly, status: 'new', attempts: 0 };
       if (ch) {
         a.charges.push(ch); billSave_(a); // save first so a crash cannot lead to a second charge
         billCharge_(a, ch); billAfterCharge_(a, ch); sum.charged++; if (ch.status === 'paid') sum.paid++; if (ch.status === 'failed') sum.failed++;
@@ -2411,7 +2438,7 @@ function billTickOne_(a, today, sum) {
     var top = due[due.length - 1];
     due.forEach(function (s) { c.notices[s[1]] = 1; });
     changed = true;
-    if (top[2] && a.sq.cardId && days <= 5) {
+    if (top[2] && a.sq.cardId && days <= 5 && !c.invoiceId) {
       billCharge_(a, c);
       if (c.status === 'paid') { billAfterCharge_(a, c); sum.paid++; return; }
     }
@@ -2454,6 +2481,11 @@ function billReconcile_(sum) {
 function billWebhook_(data) {
   try {
     var o = (data.data && data.data.object) || {};
+    var inv = o.invoice || {}, subId = inv.subscription_id || (o.subscription && o.subscription.id) || '';
+    if (subId) {
+      billAll_().filter(function (x) { return x.sq && x.sq.subId === subId; }).forEach(function (x) { if (billSubSync_(x, billToday_())) billSave_(x); });
+      return { ok: true };
+    }
     var pid = (o.payment && o.payment.id) || (o.refund && o.refund.payment_id) || '';
     if (!/^[A-Za-z0-9]{10,64}$/.test(pid)) return { ok: true };
     var all = billAll_();
@@ -2498,27 +2530,41 @@ function billSelfTest_() {
   var pr = prorate_(Z.monthly, billToday_());
   ok('Launch: one charge of ' + usdC_(pr.amount) + ' for ' + billToday_(), Z.charges.length === 1 && Z.charges[0].amount === pr.amount && Z.charges[0].status === 'paid', l1.charged && l1.charged.status);
   ok('Launch: second click charged nothing', l2.already === true && Z.charges.length === 1);
-  // 4. Monthly renewal on the next 1st
-  var t1 = billTick_(firstNext_(billToday_()), Z.id);
-  Z = billGet_(Z.id);
-  var full = Z.charges.filter(function (c) { return c.kind === 'full'; });
-  ok('Renewal: ' + usdC_(Z.monthly) + ' charged on ' + firstNext_(billToday_()), full.length === 1 && full[0].status === 'paid', JSON.stringify(t1.summary));
-  var t2 = billTick_(firstNext_(billToday_()), Z.id);
-  Z = billGet_(Z.id);
-  ok('Renewal: running the daily job twice the same day charged once', Z.charges.filter(function (c) { return c.kind === 'full'; }).length === 1);
-  // 5. Declined card
+  // 4. Square subscription created at launch: starts on the next 1st, right price, card on file
+  var sub = Z.sq.subId ? sq_('get', '/v2/subscriptions/' + encodeURIComponent(Z.sq.subId)).subscription : null;
+  ok('Square subscription created at launch, billed on the 1st from ' + firstNext_(billToday_()), sub && sub.start_date === firstNext_(billToday_()) && sub.card_id === Z.sq.cardId, sub ? sub.status + ' ' + sub.start_date : 'missing');
+  var plans = billPlans_('sandbox'), vr = sub ? sq_('get', '/v2/catalog/object/' + encodeURIComponent(sub.plan_variation_id)).object : null;
+  var ph = vr && vr.subscription_plan_variation_data && vr.subscription_plan_variation_data.phases[0];
+  ok('Subscription plan: $179.00 monthly, billing day 1, no Square proration', ph && ph.cadence === 'MONTHLY' && ((ph.pricing && ph.pricing.price_money) || ph.recurring_price_money || {}).amount === 17900 && vr.subscription_plan_variation_data.monthly_billing_anchor_date === 1, JSON.stringify(ph || {}).slice(0, 160));
+  // 5. A subscription that starts today (launch on the 1st): Square charges the full month right away
+  var f = mk('premium-zero');
+  payCard_(f.account, { consent: true, source: 'cnon:card-nonce-ok' });
+  var F = billGet_(f.account.id);
+  F.launch = billToday_(); F.status = 'active'; billSubCreate_(F, billToday_()); billSave_(F);
+  var paidNow = false;
+  for (var w = 0; w < 6 && !paidNow; w++) { Utilities.sleep(4000); billSubSync_(F, billToday_()); paidNow = (F.charges || []).some(function (c) { return c.invoiceId && c.status === 'paid'; }); }
+  billSave_(F);
+  ok('Square subscription charged the full $349.00 on its start date and it counts as payment 1 of 12', paidNow && billCounts_(F).full === 1, JSON.stringify((F.charges || []).map(function (c) { return [c.amount, c.status]; })));
+  // 6. Declined card is recorded as failed (our own charges: setup fee and prorated launch payment)
   var dcl = { key: 'test-decline', kind: 'full', period: 'test', due: billToday_(), amount: 100, status: 'new', attempts: 0 };
   billCharge_(Z, dcl, { source: 'cnon:card-nonce-declined' });
   ok('Declined card is recorded as failed', dcl.status === 'failed', dcl.error);
-  // 6. Refund stops a payment from counting
-  var paid = Z.charges.filter(function (c) { return c.kind === 'full' && c.paymentId; })[0];
-  var rf = sq_('post', '/v2/refunds', { idempotency_key: 'rb-test-refund-' + Z.id, payment_id: paid.paymentId, amount_money: { amount: paid.amount, currency: 'USD' }, reason: 'Sandbox self-test' });
-  ok('Refund sent to Square sandbox', rf.ok, rf.ok ? '' : sqErr_(rf));
-  billWebhook_({ data: { object: { refund: { payment_id: paid.paymentId } } } });
-  Z = billGet_(Z.id);
-  ok('Refunded payment no longer counts toward 12', billCounts_(Z).full === 0);
+  // 7. Refund of a subscription payment stops it from counting
+  var pc = (F.charges || []).filter(function (c) { return c.invoiceId && c.paymentId; })[0];
+  if (pc) {
+    var rf = sq_('post', '/v2/refunds', { idempotency_key: 'rb-test-refund-' + F.id, payment_id: pc.paymentId, amount_money: { amount: pc.amount, currency: 'USD' }, reason: 'Sandbox self-test' });
+    ok('Refund of the subscription payment sent to Square sandbox', rf.ok, rf.ok ? '' : sqErr_(rf));
+    var gone = false;
+    for (var w2 = 0; w2 < 5 && !gone; w2++) { Utilities.sleep(3000); billSubSync_(F, billToday_()); gone = billCounts_(F).full === 0; }
+    ok('Refunded subscription payment no longer counts toward 12', gone);
+  } else ok('Refund of the subscription payment sent to Square sandbox', false, 'no payment id on the invoice');
+  // 8. Ending billing cancels the Square subscription
+  F.status = 'ended'; billSubCancel_(F, 'Self-test.'); billSave_(F);
+  ok('Ending billing cancels the Square subscription', F.sq.subCanceled);
+  if (Z.sq.subId && !Z.sq.subCanceled) billSubCancel_(Z, 'Self-test.');
+  Z.status = 'ended'; billSave_(Z);
   // clean up: end the test accounts
-  [A.id, Z.id].forEach(function (id) { var x = billGet_(id); x.status = 'ended'; x.flags.selftest = true; billLog_(x, 'Sandbox self-test account (ended).'); billSave_(x); });
+  [A.id, Z.id, f.account.id].forEach(function (id) { var x = billGet_(id); x.status = 'ended'; x.flags.selftest = true; billLog_(x, 'Sandbox self-test account (ended).'); billSave_(x); });
   return { ok: true, results: out };
 }
 
@@ -2714,4 +2760,99 @@ function billPosTest_() {
   billLog_(a, '$1 live test of the Square app checkout. Never launched or billed monthly. Refund the $1 in Square afterward.');
   billSave_(a);
   return { ok: true, url: billPayUrl_(key), id: a.id };
+}
+
+/* ---------- Square subscriptions (monthly charges on the 1st) ----------
+   One Square subscription plan, "Riverbend Website Service", with a variation per package and
+   payment option: MONTHLY, STATIC price, billed on the 1st, no Square proration (we charge the
+   exact prorated launch amount ourselves and start the subscription on the next 1st). */
+var SUB_KEYS = ['starter-zero', 'starter-once', 'custom-zero', 'custom-once', 'premium-zero', 'premium-once'];
+function billPlans_(env) {
+  var P = PropertiesService.getScriptProperties(), k = 'SQUARE_PLANS_' + env.toUpperCase();
+  var have = {}; try { have = JSON.parse(P.getProperty(k) || '{}'); } catch (e) { have = {}; }
+  if (SUB_KEYS.every(function (x) { return have[x]; })) return have;
+  var plan = have._plan;
+  if (!plan) {
+    var r = sq_('post', '/v2/catalog/object', { idempotency_key: Utilities.getUuid(), object: { type: 'SUBSCRIPTION_PLAN', id: '#rbplan', subscription_plan_data: { name: 'Riverbend Website Service' } } }, env);
+    if (!r.ok || !r.catalog_object) return { _error: sqErr_(r) };
+    plan = have._plan = r.catalog_object.id; P.setProperty(k, JSON.stringify(have));
+  }
+  var objs = [];
+  SUB_KEYS.forEach(function (key, i) {
+    if (have[key]) return;
+    var t = key.split('-'), T = BILL_TIERS[t[0]], amt = t[1] === 'zero' ? T.zero : T.care;
+    objs.push({ type: 'SUBSCRIPTION_PLAN_VARIATION', id: '#rbvar' + i, subscription_plan_variation_data: {
+      name: T.n + ' Website (' + (t[1] === 'zero' ? '$0 Down' : 'Pay Upfront') + ') - Monthly', subscription_plan_id: plan, monthly_billing_anchor_date: 1, can_prorate: false,
+      phases: [{ cadence: 'MONTHLY', ordinal: 0, pricing: { type: 'STATIC', price_money: { amount: amt, currency: 'USD' } } }] } });
+  });
+  var b = sq_('post', '/v2/catalog/batch-upsert', { idempotency_key: Utilities.getUuid(), batches: [{ objects: objs }] }, env);
+  if (!b.ok) return { _error: sqErr_(b) };
+  (b.id_mappings || []).forEach(function (m) { var i = +String(m.client_object_id).replace('#rbvar', ''); var key = SUB_KEYS.filter(function (x, j) { return j === i; })[0]; if (key) have[key] = m.object_id; });
+  P.setProperty(k, JSON.stringify(have));
+  return have;
+}
+function billSubCreate_(a, start) {
+  if (a.sq.subId) return { ok: true };
+  if (!a.sq.cardId || !a.sq.customerId) return { ok: false, detail: 'no saved card' };
+  var plans = billPlans_(a.env);
+  var varId = plans[a.tier + '-' + a.pay];
+  if (!varId) { billLog_(a, 'Square subscription plan missing: ' + (plans._error || '')); return { ok: false, detail: plans._error || 'plan missing' }; }
+  a.sq.subTries = (a.sq.subTries || 0) + 1;
+  var r = sq_('post', '/v2/subscriptions', { idempotency_key: ('rb-sub-' + a.id + '-' + a.sq.subTries).slice(0, 45), location_id: sqLocation_(a.env), plan_variation_id: varId,
+    customer_id: a.sq.customerId, card_id: a.sq.cardId, start_date: start, timezone: BILL_TZ, source: { name: 'Riverbend Billing' } }, a.env);
+  if (!r.ok || !r.subscription) {
+    if (r.network) a.sq.subTries--; // same key next time: Square returns the first result
+    billLog_(a, 'Square subscription not created: ' + sqErr_(r));
+    billMailOwner_(a, 'Subscription not created: ' + a.business, 'Square did not create the monthly subscription (' + sqErr_(r) + '). The daily check retries automatically.');
+    return { ok: false, detail: sqErr_(r) };
+  }
+  var sub = r.subscription;
+  a.sq.subId = sub.id; a.sq.subStatus = sub.status; a.sq.subStart = sub.start_date || start;
+  billLog_(a, 'Square subscription created: ' + usdC_(a.monthly) + ' on the 1st, first charge ' + longDate_(a.sq.subStart) + ' (' + sub.status + ').');
+  if (sub.start_date && sub.start_date !== start) billMailOwner_(a, 'Check subscription start date', 'Asked Square to start the subscription on ' + start + ' but Square stored ' + sub.start_date + '. Check it in Square > Subscriptions.');
+  return { ok: true };
+}
+function billSubCancel_(a, why) {
+  var r = sq_('post', '/v2/subscriptions/' + encodeURIComponent(a.sq.subId) + '/cancel', {}, a.env);
+  if (r.ok || /already/i.test(sqErr_(r))) { a.sq.subCanceled = true; a.sq.subCancelDate = (r.subscription && r.subscription.canceled_date) || ''; }
+  billLog_(a, 'Square subscription cancel: ' + (r.ok ? 'done' + (a.sq.subCancelDate ? ', last billed period ends ' + longDate_(a.sq.subCancelDate) : '') : sqErr_(r)) + '. ' + (why || ''));
+  return r.ok;
+}
+function billSubSetCard_(a) {
+  var g = sq_('get', '/v2/subscriptions/' + encodeURIComponent(a.sq.subId), null, a.env);
+  var r = sq_('put', '/v2/subscriptions/' + encodeURIComponent(a.sq.subId), { subscription: { card_id: a.sq.cardId, version: g.subscription && g.subscription.version } }, a.env);
+  billLog_(a, 'Square subscription card updated: ' + (r.ok ? a.sq.brand + ' ending ' + a.sq.last4 : sqErr_(r)) + '. Open invoices are paid from Square\'s invoice link.');
+}
+/* Read the subscription's invoices from Square and mirror them as charges (paid, failed, refunded). */
+function billSubSync_(a, today) {
+  var changed = false, loc = sqLocation_(a.env);
+  var g = sq_('get', '/v2/subscriptions/' + encodeURIComponent(a.sq.subId), null, a.env);
+  if (g.subscription) { if (a.sq.subStatus !== g.subscription.status) { a.sq.subStatus = g.subscription.status; changed = true; } }
+  var r = sq_('post', '/v2/invoices/search', { limit: 100, query: { filter: { location_ids: [loc], customer_ids: [a.sq.customerId] }, sort: { field: 'INVOICE_SORT_DATE', order: 'DESC' } } }, a.env);
+  (r.invoices || []).filter(function (v) { return v.subscription_id === a.sq.subId; }).forEach(function (v) {
+    var pr = (v.payment_requests || [])[0] || {}, due = pr.due_date || String(v.created_at || today).slice(0, 10);
+    var amt = (pr.computed_amount_money || {}).amount || a.monthly, done = (pr.total_completed_amount_money || {}).amount || 0;
+    var st = v.status === 'PAID' || v.status === 'REFUNDED' || v.status === 'PARTIALLY_REFUNDED' || (done && done >= amt) ? 'paid'
+      : v.status === 'CANCELED' ? 'canceled' : (v.status === 'FAILED' || (v.status === 'UNPAID' && due <= today)) ? 'failed' : 'pending';
+    var key = 'inv-' + v.id, c = billFindCharge_(a, key);
+    if (!c) { c = { key: key, kind: 'full', period: due.slice(0, 7), due: due, amount: amt, status: 'new', attempts: 1, invoiceId: v.id }; a.charges.push(c); changed = true; }
+    c.invoiceUrl = v.public_url || c.invoiceUrl || '';
+    var refunded = v.status === 'REFUNDED' || v.status === 'PARTIALLY_REFUNDED';
+    if (refunded && !c.refunded) { c.refunded = true; billLog_(a, 'Refund on the ' + c.period + ' payment (no longer counts toward the 12).'); changed = true; }
+    if (c.status !== st) {
+      var was = c.status; c.status = st; changed = true;
+      if (st === 'paid') {
+        c.paidAt = new Date().toISOString(); c.error = '';
+        if (!c.paymentId && v.order_id) { var o = sq_('get', '/v2/orders/' + encodeURIComponent(v.order_id), null, a.env); var tn = ((o.order || {}).tenders || [])[0]; if (tn) c.paymentId = tn.payment_id || tn.id; }
+        billLedger_(a, c, 'Square subscription invoice paid'); billLog_(a, 'Monthly payment ' + usdC_(c.amount) + ' (' + c.period + ') paid through the Square subscription.');
+        billAfterCharge_(a, c);
+      } else if (st === 'failed') {
+        c.error = 'Square could not charge the card; Square emailed the client an invoice to pay.';
+        billLedger_(a, c); billLog_(a, 'Monthly payment ' + usdC_(c.amount) + ' (' + c.period + ') failed. Square emailed the invoice.');
+        c.notices = c.notices || {}; c.notices.d0 = 1; // Square already emailed the client; we email the owner
+        billMailOwner_(a, 'Payment failed: ' + a.business, 'The ' + usdC_(c.amount) + ' monthly payment due ' + longDate_(due) + ' did not go through. Square emailed the client an invoice to pay' + (c.invoiceUrl ? ' (' + c.invoiceUrl + ')' : '') + '. Reminders follow the agreement schedule.');
+      } else if (was === 'new') billLedger_(a, c, 'Square subscription invoice ' + v.status);
+    }
+  });
+  return changed;
 }
