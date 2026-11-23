@@ -391,7 +391,7 @@ function studio_(d) {
     if (!(me && me.role === 'owner') && !(legacy && billAuthed_(d.token)) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
     d._who = me ? me.email : (botAuthed_(d.token, d.action) ? 'daily job' : 'shared billing password');
     // Payment settings, live Square changes and test tools need an individual owner account.
-    if (!me && !botAuthed_(d.token, d.action) && BILL_OWNER_ONLY[d.action]) return { ok: false, error: 'account', detail: 'Sign in with your own owner account (riverbendwebco.com/login) for payment settings.' };
+    if (!me && !botAuthed_(d.token, d.action) && BILL_OWNER_ONLY[d.action]) { var den = { ok: false, error: 'account', detail: 'Sign in with your own owner account (riverbendwebco.com/login) for payment settings.' }; billAudit_(d, den); return den; }
     if (d.action === 'billing_logout') { CacheService.getScriptCache().remove('btok_' + d.token); return { ok: true }; }
     var res;
     try { res = billing_(d); } catch (eb) { console.error(eb); res = { ok: false, error: 'server', detail: String(eb).slice(0, 200) }; }
@@ -1810,7 +1810,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23h';
+var BILL_VERSION = '2026-11-23i';
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1 };
 var BILL_CONSENT_V = '2026-11-22';
 
