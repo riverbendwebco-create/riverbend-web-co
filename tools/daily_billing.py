@@ -28,6 +28,13 @@ def call(body, tries=3):
 
 
 def main():
+    if os.environ.get('GITHUB_EVENT_NAME') == 'schedule':
+        import datetime
+        from zoneinfo import ZoneInfo
+        local = datetime.datetime.now(ZoneInfo('America/Chicago'))
+        if local.hour != 6:
+            print('SUMMARY: skipped (it is %s in Chicago; the other daily trigger runs at 6:20 AM)' % local.strftime('%H:%M'))
+            return
     url, bearer = os.environ.get('ACTIONS_ID_TOKEN_REQUEST_URL'), os.environ.get('ACTIONS_ID_TOKEN_REQUEST_TOKEN')
     if not url or not bearer:
         sys.exit('Run this from the Daily billing GitHub workflow (needs id-token: write).')

@@ -6,7 +6,11 @@ name: Daily billing
 # workflow run the daily billing check (billing_tick). Test mode until an owner goes live.
 on:
   schedule:
-    - cron: '20 12 * * *'   # 6:20 AM CST / 7:20 AM CDT
+    # GitHub cron runs on UTC. Two triggers cover 6:20 AM Central all year:
+    # 11:20 UTC = 6:20 AM CDT (summer), 12:20 UTC = 6:20 AM CST (winter).
+    # tools/daily_billing.py skips the one that is not 6 AM in Chicago.
+    - cron: '20 11 * * *'
+    - cron: '20 12 * * *'
   workflow_dispatch:
 
 permissions:
