@@ -57,7 +57,7 @@ Key reminders:
 
 ## Outreach (/outreach, owners only)
 - Cold email done by hand at human volume from the owner's own Zoho inbox (kruz@riverbendwebco.com is Zoho Mail; SPF/DKIM/DMARC set). The system never sends cold email itself: Zoho blocks automated bulk sending.
-- Find businesses in any US town (`outreach_find`: Nominatim city lookup -> the free OSM finder with that box), add them (`outreach_add`: builds a demo with leadsDemo_ and takes the email from their site scan or the map listing), then the "Send today" list shows personal drafts (email 1, follow-ups on day 3 and day 8). The owner sends from their inbox and taps Mark sent (`outreach_sent`, daily cap OUT_DAILY, default 25).
+- Find businesses in any US town (`outreach_find`: Nominatim city lookup -> the free OSM finder with that box), add them (`outreach_add`: no per-business demo; takes the email from the map listing or a site scan and picks one of the 4 homepage samples by business type with outStyle_: pub, lounge, trade, salon), then the "Send today" list shows personal drafts that link riverbendwebco.com/?preview=<sample> and say the site is fully custom (email 1, follow-ups on day 3 and day 8). The owner sends from their inbox and taps Mark sent (`outreach_sent`, daily cap OUT_DAILY, default 25).
 - CAN-SPAM: every draft has the LLC/DBA line, the postal address (Script Property OUT_ADDRESS, set in Outreach > Settings; sending is refused without it) and an unsubscribe link (/unsubscribe/#token -> GET ?action=unsub). Unsubscribed addresses are never emailed or re-added.
 - Data: "Outreach" tab of the Riverbend Leads sheet. Tests: node tools/billing_tests/outreach_test.js.
 
