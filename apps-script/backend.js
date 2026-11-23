@@ -1686,7 +1686,7 @@ function leadsFindFree_(d) {
       oh: !!tg.opening_hours, em: !!(tg.email || tg['contact:email']), email: clip_(tg.email || tg['contact:email'] || '', 100), so: !!(fb || tg['contact:instagram'] || tg.instagram) };
   });
   var fast = !!d.fast;
-  leadsVerifyFree_(leads, fast);
+  leadsVerifyFree_(leads, fast || !!d.noSearch);
   leadsCheckSites_(leads, !fast && d.check !== false);
   leadsFinish_(leads);
   var saved = {};
@@ -1871,7 +1871,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23s';
+var BILL_VERSION = '2026-11-23t';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3593,7 +3593,8 @@ function outreach_(d, me) {
       if (!city || !/^[A-Z]{2}$/.test(st) || !q) return { ok: false, error: 'bad', detail: 'Enter a town, a 2-letter state and a type of business.' };
       var bbox = outGeo_(city, st);
       if (!bbox) return { ok: false, error: 'geo', detail: 'Could not find ' + city + ', ' + st + ' on the map.' };
-      var r = leadsFindFree_({ q: q, city: city + ', ' + st, state: st, bbox: bbox });
+      // noSearch: skip the slow web search for businesses with no website (no email to reach them by)
+      var r = leadsFindFree_({ q: q, city: city + ', ' + st, state: st, bbox: bbox, noSearch: true });
       if (!r.ok) return r;
       var have = {}, sup = {};
       outAll_().forEach(function (o) { have[o.id] = o.status; if (o.status === 'Unsubscribed' && o.email) sup[String(o.email).toLowerCase()] = 1; });
