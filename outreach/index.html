@@ -67,7 +67,7 @@ h2{font-size:1rem;margin:0 0 10px}
 
   <section id="tab-today" class="panel">
     <h2>Send today</h2>
-    <p class="msg" style="margin-top:0">For each one: open the demo and check it looks right, tap Open email (or copy the parts into Zoho), send it, then tap Mark sent. Follow-ups show up here on day 3 and day 8. Replies come to your inbox: mark them here.</p>
+    <p class="msg" style="margin-top:0">Each email links the sample site that fits the business (bar, restaurant, service or salon) and says their site is built fully custom. Tap Open email (or copy the parts into Zoho), send it, then tap Mark sent. Follow-ups show up here on day 3 and day 8. Replies come to your inbox: mark them here.</p>
     <div id="today"></div>
   </section>
 
@@ -81,7 +81,7 @@ h2{font-size:1rem;margin:0 0 10px}
     </div>
     <div class="msg" id="fmsg">Best email targets: businesses whose website is outdated, not built for phones or not secure. Their email is usually on their site.</div>
     <div id="fres"></div>
-    <div class="row hidden" id="faddRow" style="margin-top:10px"><button class="btn primary" id="fadd" type="button">Build demos and add selected</button><span class="msg" id="faddMsg" style="margin:0"></span></div>
+    <div class="row hidden" id="faddRow" style="margin-top:10px"><button class="btn primary" id="fadd" type="button">Add selected</button><span class="msg" id="faddMsg" style="margin:0"></span></div>
   </section>
 
   <section id="tab-all" class="panel hidden"><h2>Pipeline</h2><div id="all"></div></section>
@@ -107,7 +107,7 @@ const el=(t,p,...k)=>{const n=document.createElement(t);if(p)for(const x in p){i
 if(!A.token()) return A.requireLogin('/outreach/');
 async function api(b){ const r=await A.call(b); if(r&&r.error==='auth'){ A.requireLogin('/outreach/'); } return r; }
 let data=null, found=[];
-const demoUrl=s=>location.origin+'/demo/?d='+encodeURIComponent(s);
+const SAMPLE={pub:'Bar sample',lounge:'Restaurant sample',trade:'Service sample',salon:'Salon sample'};
 async function copy(t,btn){ try{ await navigator.clipboard.writeText(t); const o=btn.textContent; btn.textContent='Copied'; setTimeout(()=>btn.textContent=o,1200);}catch(_){ prompt('Copy:',t);} }
 function tab(n){ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===n)); ['today','find','all','settings'].forEach(x=>$('#tab-'+x).classList.toggle('hidden',x!==n)); }
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
@@ -132,7 +132,7 @@ function drawToday(due){
       el('div',{class:'m',text:[i.type,i.city,i.email].filter(Boolean).join(' \u00b7 ')}),
       i.issue?el('div',{class:'m',text:'Found: '+i.issue}):null,
       el('div',{class:'acts'},
-        el('a',{class:'btn',href:demoUrl(i.demo),target:'_blank',rel:'noopener',text:'Check demo'}),
+        el('a',{class:'btn',href:i.sample,target:'_blank',rel:'noopener',text:SAMPLE[i.demo]||'Sample site'}),
         i.website?el('a',{class:'btn',href:i.website,target:'_blank',rel:'noopener noreferrer',text:'Their site'}):null,
         el('a',{class:'btn',href:mail,text:'Open email'}),
         el('button',{class:'btn',type:'button',text:'Copy to',onclick:e=>copy(i.email,e.target)}),
@@ -150,7 +150,7 @@ function drawAll(items){
     el('div',{class:'t'},el('b',{text:i.business}),el('span',{class:'tag '+(/Interested|Won|Replied/.test(i.status)?'ok':/Waiting|Ready/.test(i.status)?'warn':''),text:i.status})),
     el('div',{class:'m',text:[i.type,i.city,i.email||'no email found',i.phone].filter(Boolean).join(' \u00b7 ')}),
     el('div',{class:'m',text:(i.step?'Emails sent: '+i.step:'')+(i.next?' \u00b7 next follow-up '+i.next:'')}),
-    el('div',{class:'acts'},el('a',{class:'btn',href:demoUrl(i.demo),target:'_blank',rel:'noopener',text:'Demo'}),
+    el('div',{class:'acts'},el('a',{class:'btn',href:i.sample,target:'_blank',rel:'noopener',text:SAMPLE[i.demo]||'Sample site'}),
       i.status==='No email'?el('button',{class:'btn',type:'button',text:'Add email',onclick:async()=>{ const em=prompt('Email address for '+i.business+':'); if(!em) return; const x=await api({action:'outreach_status',id:i.id,status:'Ready',email:em}); if(!x.ok) alert('That email does not look right.'); load(); }}):null,
       i.status!=='Unsubscribed'?statusBtns(i):null))));
 }
@@ -170,7 +170,7 @@ $('#fgo').addEventListener('click',async()=>{
 $('#fadd').addEventListener('click',async()=>{
   const ix=[...document.querySelectorAll('#fres input:checked')].map(x=>+x.dataset.ix); if(!ix.length) return;
   const b=$('#fadd'); b.disabled=true; let ok=0,noEmail=0;
-  for(let n=0;n<ix.length;n++){ const l=found[ix[n]]; $('#faddMsg').textContent='Building demo '+(n+1)+' of '+ix.length+': '+l.name+'...';
+  for(let n=0;n<ix.length;n++){ const l=found[ix[n]]; $('#faddMsg').textContent='Adding '+(n+1)+' of '+ix.length+': '+l.name+' (looking up their email)...';
     const r=await api({action:'outreach_add',lead:l}); if(r&&r.ok){ ok++; if(!r.email) noEmail++; } }
   b.disabled=false; $('#faddMsg').textContent='Added '+ok+'. '+(noEmail?noEmail+' had no email on their site (in Pipeline as "No email": call them or add an email).':'');
   load();

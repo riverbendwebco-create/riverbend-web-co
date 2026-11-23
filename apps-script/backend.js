@@ -1877,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23u';
+var BILL_VERSION = '2026-11-23v';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3562,32 +3562,45 @@ function outIssue_(l) {
   if (/no website/.test(t)) return 'I couldn’t find a website for you when I searched';
   return '';
 }
+// Which of the 4 sample sites on riverbendwebco.com fits this business (no per-business demo).
+var OUT_SAMPLES = { pub: 'a neighborhood bar', lounge: 'a restaurant', trade: 'a local service business', salon: 'a salon and boutique' };
+function outStyle_(type) {
+  var t = String(type || '').toLowerCase();
+  if (/hair|salon|barber|beauty|nail|spa|cosmetic|boutique|cloth|apparel|fashion|jewel|gift|florist|bridal/.test(t)) return 'salon';
+  if (/bar|pub|tavern|saloon|brew|winer|distill|nightclub|lounge/.test(t)) return 'pub';
+  if (/restaurant|cafe|coffee|food|pizza|bbq|barbecue|diner|bakery|grill|juice|ice cream|deli|burger|taco|sandwich/.test(t)) return 'lounge';
+  return 'trade';
+}
+function outSampleKey_(o) { return OUT_SAMPLES[o.demo] ? o.demo : outStyle_(o.type); }
+function outSampleUrl_(o) { return 'https://' + SITE + '/?preview=' + outSampleKey_(o); }
 function outUnsubUrl_(o) { return 'https://' + SITE + '/unsubscribe/#' + o.token; }
 function outDraft_(o, step, cfg) {
-  var demo = 'https://' + SITE + '/demo/?d=' + encodeURIComponent(o.demo), host = hostOf_(o.website || '');
+  var st = outSampleKey_(o), demo = outSampleUrl_(o), host = hostOf_(o.website || '');
+  var custom = 'It’s a sample. Your site would be designed from scratch around ' + o.business + ': your name, photos, colors, ' +
+    (st === 'trade' ? 'services' : st === 'salon' ? 'services and prices' : 'menu') + ', and whatever features you want.';
   var sig = '\n\n' + cfg.from + '\nRiverbend Web Co.\n(608) 306-0135 · riverbendwebco.com';
   var foot = '\n\n---\nRiverbend Web Co. is a DBA of Outlaw Nightfall LLC, ' + (cfg.address || '[MAILING ADDRESS NEEDED]') +
     '. This is a business inquiry. To stop hearing from us, use this link: ' + outUnsubUrl_(o);
   var subj, body;
   if (step === 1) {
-    subj = 'A new website preview for ' + o.business;
+    subj = 'A better website for ' + o.business;
     body = 'Hi ' + o.business + ' team,\n\nI’m ' + cfg.from.split(' ')[0] + ' with Riverbend Web Co., a small veteran-owned web design team in Dubuque, Iowa. ' +
       (o.issue ? 'I was looking at ' + (host || 'your website') + ' and noticed ' + o.issue + '.' : 'I was looking for ' + o.business + ' online and thought you could use a stronger website.') +
-      '\n\nSo I built a free preview of what a new site could look like for you, already set up with your name and info:\n' + demo +
-      '\n\nIt works on phones, there’s no cost to look, and if you like it we can have it live in about a week, starting at $0 down.\n\nWorth a quick look?';
+      '\n\nHere’s an example of a site we build for ' + OUT_SAMPLES[st] + ':\n' + demo + '\n\n' + custom +
+      ' It works on phones, and we can have yours live in about a week, starting at $0 down.\n\nWant me to put together a free preview with your own name and info on it?';
   } else if (step === 2) {
-    subj = 'Re: A new website preview for ' + o.business;
-    body = 'Hi again,\n\nJust making sure this reached you. The preview I built for ' + o.business + ' is still up:\n' + demo +
-      '\n\nHappy to change anything on it, or I can walk you through it in five minutes by phone.';
+    subj = 'Re: A better website for ' + o.business;
+    body = 'Hi again,\n\nJust making sure this reached you. Here’s the example site again:\n' + demo +
+      '\n\nEvery site we build is fully custom, so yours would look and work the way you want. Happy to put together a free preview for ' + o.business + ', or walk you through it in five minutes by phone.';
   } else {
-    subj = 'Re: A new website preview for ' + o.business;
-    body = 'Last note from me. If a new website isn’t a priority right now, no problem, and I won’t keep emailing. The preview stays up for a couple of weeks if you want to look:\n' + demo;
+    subj = 'Re: A better website for ' + o.business;
+    body = 'Last note from me. If a new website isn’t a priority right now, no problem, and I won’t keep emailing. If that changes, just reply and I’ll put together a free preview for ' + o.business + '.\n\nExample site: ' + demo;
   }
   return { subject: subj, body: body + sig + foot };
 }
 function outView_(o, cfg, today) {
-  var step = o.step + 1, d = step <= 3 && o.email && o.demo ? outDraft_(o, step, cfg) : null;
-  return { id: o.id, business: o.business, type: o.type, city: o.city, website: o.website, email: o.email, phone: o.phone, issue: o.issue, demo: o.demo,
+  var step = o.step + 1, d = step <= 3 && o.email ? outDraft_(o, step, cfg) : null;
+  return { id: o.id, business: o.business, type: o.type, city: o.city, website: o.website, email: o.email, phone: o.phone, issue: o.issue, demo: outSampleKey_(o), sample: outSampleUrl_(o),
     status: o.status, sent: o.sent, step: o.step, next: o.next, notes: o.notes, due: o.status === 'Ready' || (o.status === 'Waiting' && o.next && o.next <= today),
     draft: d, nextStep: step };
 }
@@ -3612,14 +3625,14 @@ function outreach_(d, me) {
     case 'outreach_add': {
       var l = d.lead || {}; if (!l.id || !l.name) return { ok: false, error: 'bad' };
       var all = outAll_(); if (all.some(function (o) { return o.id === l.id; })) return { ok: false, error: 'dup', detail: 'Already in the outreach list.' };
-      var dr = leadsDemo_(l); if (!dr.ok) return dr;
-      var email = String(l.email || dr.email || '').toLowerCase().trim();
+      var email = String(l.email || '').toLowerCase().trim();
+      if (!email && l.website && !LEADS_SOCIAL.test(hostOf_(l.website))) { try { var sc = scanSite_(l.website); if (sc.ok && sc.found && sc.found.email) email = String(sc.found.email).toLowerCase().trim(); } catch (es) {} }
       if (email && !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(email)) email = '';
       if (email && all.some(function (o) { return o.status === 'Unsubscribed' && String(o.email).toLowerCase() === email; })) email = '';
-      var row = [l.id, clip_(l.name, 120), clip_(l.type, 60), clip_(l.city, 60), clip_(l.website, 300), email, outIssue_(l), dr.slug, email ? 'Ready' : 'No email', today, '', 0, '', '', authRand_().slice(0, 24), clip_(l.phone, 30)];
+      var row = [l.id, clip_(l.name, 120), clip_(l.type, 60), clip_(l.city, 60), clip_(l.website, 300), email, outIssue_(l), outStyle_(l.type), email ? 'Ready' : 'No email', today, '', 0, '', '', authRand_().slice(0, 24), clip_(l.phone, 30)];
       var lock = LockService.getScriptLock(); lock.waitLock(15000);
       try { outSheet_().appendRow(row.map(function (v) { return typeof v === 'string' && /^[=+\-@]/.test(v) ? "'" + v : v; })); } finally { lock.releaseLock(); }
-      return { ok: true, status: row[8], email: email, demo: dr.slug };
+      return { ok: true, status: row[8], email: email, sample: row[7] };
     }
     case 'outreach_list': {
       var list = outAll_().map(function (o) { return outView_(o, cfg, today); });

@@ -15,11 +15,12 @@ ok('Salesperson is refused (owners only), even calling the server directly',S({a
 ok('No session is refused',S({action:'outreach_list'}).error==='auth');
 // seed two businesses as if added
 const sh=H.sheets['Outreach']; const cols=sh.rows[0];
-const row=(id,biz,email,issue)=>{ const r=[id,biz,'Bar','Galena, IL','http://'+id+'.com',email,issue,'demo-'+id,email?'Ready':'No email','2026-11-23','',0,'','','a'.repeat(23)+id.slice(-1),'(815) 555-0100']; sh.rows.push(r); };
+const row=(id,biz,email,issue)=>{ const r=[id,biz,'Bar','Galena, IL','http://'+id+'.com',email,issue,'pub',email?'Ready':'No email','2026-11-23','',0,'','','a'.repeat(23)+id.slice(-1),'(815) 555-0100']; sh.rows.push(r); };
 row('osm:1','Sample Tap','owner@sampletap.com','it doesn’t adjust to phone screens, and most people look you up on their phone');
 row('osm:2','Other Tap','info@othertap.com','');
 l=S({action:'outreach_list',token:K}); const a=l.items.find(i=>i.id==='osm:1');
-ok('Draft 1 is personal: business name, the real website issue, demo link',/Hi Sample Tap team/.test(a.draft.body)&&/doesn’t adjust to phone screens/.test(a.draft.body)&&/\/demo\/\?d=demo-osm%3A1|\/demo\/\?d=demo-osm:1/.test(a.draft.body),a.draft.body);
+ok('Draft 1 is personal: business name, real website issue, the matching sample, and says it is fully custom',/Hi Sample Tap team/.test(a.draft.body)&&/doesn’t adjust to phone screens/.test(a.draft.body)&&/riverbendwebco\.com\/\?preview=pub/.test(a.draft.body)&&/designed from scratch around Sample Tap/.test(a.draft.body),a.draft.body);
+ok('Sample picked by business type',B.outStyle_('Tavern')==='pub'&&B.outStyle_('Hair salon')==='salon'&&B.outStyle_('Barber shop')==='salon'&&B.outStyle_('Clothing boutique')==='salon'&&B.outStyle_('Pizza restaurant')==='lounge'&&B.outStyle_('Plumber')==='trade'&&B.outStyle_('Auto repair')==='trade');
 ok('Every email names Outlaw Nightfall LLC as the DBA owner and has an unsubscribe link',/Riverbend Web Co\. is a DBA of Outlaw Nightfall LLC/.test(a.draft.body)&&/\/unsubscribe\/#a{23}1/.test(a.draft.body));
 ok('Without a mailing address: the draft says so and Mark sent is refused',/\[MAILING ADDRESS NEEDED\]/.test(a.draft.body)&&S({action:'outreach_sent',token:K,id:'osm:1'}).error==='address'&&!l.addressSet);
 ok('Address must look real',S({action:'outreach_settings',token:K,address:'abc'}).error==='bad');

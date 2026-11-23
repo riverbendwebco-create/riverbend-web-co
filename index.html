@@ -1259,7 +1259,10 @@ footer{background:var(--ink-0)}
 .demo-custom .dc-btn{flex:none;white-space:nowrap}
 @media (max-width:760px){.demo-custom{flex-direction:column;align-items:flex-start;text-align:left;padding:22px;margin-top:40px}.demo-custom .dc-btn{width:100%;justify-content:center}}
 /* Pick a Look cards */
-.lk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.lk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media (max-width:1200px){.lk-grid{grid-template-columns:repeat(2,1fr);gap:32px}}
+.lm-sl b{font-family:Georgia,serif;font-weight:400}
+.lm-k{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F5D0FE;border:1px solid rgba(245,208,254,.5);padding:4px 9px;border-radius:6px}
 .lk{display:flex;flex-direction:column;text-align:left;background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer}
 .lk-img{position:relative;aspect-ratio:4/3.4;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(0,0,0,.9);transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .3s;background-size:cover;background-position:center}
 .lk:hover .lk-img{transform:translateY(-6px);box-shadow:0 0 0 1px rgba(96,165,250,.45),0 40px 70px -28px rgba(0,82,204,.6)}
@@ -1282,6 +1285,47 @@ footer{background:var(--ink-0)}
 .lk-meta ul{list-style:none;border-top:1px solid rgba(255,255,255,.1)}
 .lk-meta li{font-size:.86rem;color:#D4D4D8;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1)}
 @media (max-width:900px){.lk-grid{grid-template-columns:1fr;gap:44px}.lk-img{aspect-ratio:16/11}}
+/* ===== Salon & boutique sample ===== */
+.demo.salon{background:#fff;color:#1F1720}
+.sl-top{background:#120A12;color:#E9D5E4;font-size:.8rem;padding:7px 28px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.sl-top b{color:#fff}
+.sl-nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:18px;padding:14px 28px;background:rgba(255,255,255,.97);border-bottom:1px solid #EDE4EC;backdrop-filter:blur(8px)}
+.sl-logo{font-family:Georgia,serif;font-size:1.35rem;color:#120A12;line-height:1}.sl-logo small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;color:#86507A;margin-top:4px}
+.sl-nav nav{display:flex;gap:4px;margin-left:auto}.sl-nav nav button{background:none;border:0;font:inherit;font-weight:600;font-size:.9rem;color:#3F2A3B;padding:8px 10px;cursor:pointer}
+.sl-cta{background:#120A12;color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:700;font-size:.9rem;cursor:pointer}
+.sl-hero{padding:72px 28px 64px;color:#fff}
+.sl-eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#F5D0FE}.sl-eyebrow.dark{color:#86507A}
+.sl-hero h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(2rem,4.6vw,3.1rem);line-height:1.08;margin:12px 0 12px;max-width:620px}
+.sl-hero p{color:#F3E8F1;max-width:520px;font-size:1.04rem;margin:0 0 22px}
+.sl-btns{display:flex;gap:10px;flex-wrap:wrap}
+.sl-btn{background:#C026D3;color:#fff;border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
+.sl-btn.ghost{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.5)}
+.sl-sec{padding:44px 28px 8px}
+.sl-sec h3{font-family:Georgia,serif;font-weight:400;font-size:1.7rem;color:#120A12;margin:0}
+.sl-lead{color:#6B5A68;margin:6px 0 18px}
+.sl-svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sl-svc{border:1px solid #EDE4EC;border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:2px 10px}
+.sl-svc b{color:#120A12}.sl-svc span{grid-column:1;color:#86507A;font-size:.82rem}.sl-svc em{grid-row:1/3;grid-column:2;align-self:center;font-style:normal;font-weight:700;color:#120A12}
+.sl-bookwrap{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.sl-book{border:1px solid #EDE4EC;border-radius:12px;padding:20px;box-shadow:0 20px 40px -28px rgba(18,10,18,.35)}
+.sl-book h4{margin:0 0 10px;font-size:1.1rem;color:#120A12}
+.sl-l{display:block;font-size:.78rem;font-weight:700;color:#6B5A68;margin:10px 0 6px}
+.sl-book select,.sl-book input{width:100%;border:1px solid #DCCFDA;border-radius:8px;padding:11px 12px;font:inherit;font-size:16px;margin-bottom:8px;background:#fff;color:#1F1720}
+.sl-chips{display:flex;gap:6px;flex-wrap:wrap}.sl-chips button{border:1px solid #DCCFDA;background:#fff;border-radius:8px;padding:8px 12px;font:inherit;font-size:.88rem;cursor:pointer;color:#3F2A3B}
+.sl-chips button.on{background:#120A12;border-color:#120A12;color:#fff}
+.sl-book .sl-btn{width:100%;margin-top:6px}.sl-fine{font-size:.78rem;color:#86507A;margin:8px 0 0;text-align:center}
+.sl-ok{display:none;padding:24px 4px;text-align:center}.sl-ok strong{font-size:1.15rem;color:#120A12}.sl-ok p{color:#6B5A68;font-size:.9rem;margin-top:6px}
+.sl-book.done form{display:none}.sl-book.done .sl-ok{display:block}
+.sl-why ul,.sl-list{list-style:none;padding:0;margin:12px 0 0}.sl-why li,.sl-list li{padding:10px 0;border-bottom:1px solid #EDE4EC;color:#3F2A3B}
+.sl-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.sl-gal .ph{aspect-ratio:4/5;border-radius:10px;position:relative;background-size:cover;background-position:center}
+.sl-gal em{position:absolute;left:10px;bottom:10px;font-style:normal;font-size:.78rem;font-weight:700;color:#fff;background:rgba(18,10,18,.72);padding:4px 8px;border-radius:6px}
+.sl-shop{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;padding-bottom:36px}
+.sl-shopimg{aspect-ratio:4/3;border-radius:12px;background-size:cover;background-position:center}
+.sl-shop h3{margin-top:8px}
+.sl-foot{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;background:#120A12;color:#D8C7D4;padding:26px 28px;font-size:.88rem;line-height:1.6}
+.sl-foot h5{color:#fff;margin:0 0 6px;font-size:.95rem}
+@media (max-width:760px){.sl-nav nav{display:none}.sl-cta{margin-left:auto}.sl-svcs{grid-template-columns:1fr}.sl-bookwrap,.sl-shop{grid-template-columns:1fr}.sl-gal{grid-template-columns:1fr 1fr}.sl-foot{grid-template-columns:1fr}.sl-hero{padding:52px 20px 48px}.sl-sec{padding:36px 20px 6px}.sl-top,.sl-nav{padding-left:20px;padding-right:20px}}
+
 /* ===== v11 ===== */
 /* Recent work: compact, auto-scrolling, clickable */
 .work{padding:64px 0 56px}
@@ -2020,13 +2064,13 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     <div class="section-head center reveal">
       <span class="kicker"><b>04</b>Live demo styles</span>
       <h2>Pick a Look. Click to Try It.</h2>
-      <p>Three sample styles to spark ideas. Tap any card to open a working preview. Your site is designed from scratch around your business.</p>
+      <p>Four sample styles to spark ideas. Tap any card to open a working preview. Your site is designed from scratch around your business: your colors, photos, layout and features.</p>
     </div>
     <div class="lk-grid">
       <button class="lk reveal" data-demo="pub" aria-haspopup="dialog">
         <div class="lk-img ph lk-pub" data-img="1535958636474-b021ee887b13" data-ov="linear-gradient(0deg,rgba(8,8,10,.92) 8%,rgba(8,8,10,.25) 70%)" data-fb="radial-gradient(circle at 70% 30%,#b45309,#2a1405 55%,#0d0d0f)"><div class="lk-mini lm-pub"><span class="lm-b"><i></i>Open tonight</span><b>COLD BEER.<br>BIG SCREENS.</b></div><span class="lk-open">Open live preview <svg width="14" height="14"><use href="#arrow"/></svg></span></div>
         <div class="lk-meta">
-          <span class="lk-n">01 / 03</span>
+          <span class="lk-n">01 / 04</span>
           <h3>Neighborhood Pub &amp; Sports Bar</h3>
           <span class="lk-aud">Bars · Sports bars · Taverns</span>
           <p>Bold and high-energy. Gets people in the door tonight.</p>
@@ -2036,7 +2080,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <button class="lk reveal" data-demo="lounge" aria-haspopup="dialog">
         <div class="lk-img ph lk-lounge" data-img="1551632436-cbf8dd35adfa" data-ov="linear-gradient(0deg,rgba(12,10,9,.92) 8%,rgba(12,10,9,.25) 70%)" data-fb="radial-gradient(circle at 60% 30%,#78350f,#1c1917 60%)"><div class="lk-mini lm-lg"><span class="lm-s">Ember &amp; Oak</span><b>An evening worth<br>dressing up for.</b></div><span class="lk-open">Open live preview <svg width="14" height="14"><use href="#arrow"/></svg></span></div>
         <div class="lk-meta">
-          <span class="lk-n">02 / 03</span>
+          <span class="lk-n">02 / 04</span>
           <h3>Modern Lounge &amp; Eatery</h3>
           <span class="lk-aud">Restaurants · Lounges · Supper clubs</span>
           <p>Sleek and moody. Sells the experience and the private room.</p>
@@ -2046,11 +2090,21 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <button class="lk reveal" data-demo="trade" aria-haspopup="dialog">
         <div class="lk-img ph lk-trade" data-img="1632759145351-1d592919f522" data-ov="linear-gradient(0deg,rgba(15,23,42,.92) 8%,rgba(15,23,42,.2) 70%)" data-fb="linear-gradient(135deg,#1e3a8a,#0f172a)"><div class="lk-mini lm-tr"><span class="lm-g">Free estimate</span><b>Trusted local crew<br>since 1998.</b></div><span class="lk-open">Open live preview <svg width="14" height="14"><use href="#arrow"/></svg></span></div>
         <div class="lk-meta">
-          <span class="lk-n">03 / 03</span>
+          <span class="lk-n">03 / 04</span>
           <h3>Local Service &amp; Trade Pro</h3>
           <span class="lk-aud">Contractors · Auto shops · Retail</span>
           <p>Bright and trust-first. Turns visitors into estimate requests.</p>
           <ul><li>Clear service list</li><li>Project gallery &amp; reviews</li><li>Instant estimate form</li></ul>
+        </div>
+      </button>
+      <button class="lk reveal" data-demo="salon" aria-haspopup="dialog">
+        <div class="lk-img ph lk-salon" data-img="1675599193990-33d71150902b" data-ov="linear-gradient(0deg,rgba(24,14,24,.92) 8%,rgba(24,14,24,.15) 70%)" data-fb="linear-gradient(135deg,#4a1d3f,#120a12)"><div class="lk-mini lm-sl"><span class="lm-k">Book online</span><b>Cuts, color<br>and fades.</b></div><span class="lk-open">Open live preview <svg width="14" height="14"><use href="#arrow"/></svg></span></div>
+        <div class="lk-meta">
+          <span class="lk-n">04 / 04</span>
+          <h3>Salon, Barber &amp; Boutique</h3>
+          <span class="lk-aud">Salons · Barbershops · Boutiques</span>
+          <p>Clean and stylish. Fills the chair and moves the racks.</p>
+          <ul><li>Services &amp; price list</li><li>Online booking request</li><li>Gallery &amp; boutique shop</li></ul>
         </div>
       </button>
     </div>
@@ -2666,6 +2720,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         <button role="tab" data-switch="pub">Pub</button>
         <button role="tab" data-switch="lounge">Lounge</button>
         <button role="tab" data-switch="trade">Trade Pro</button>
+        <button role="tab" data-switch="salon">Salon</button>
       </div>
       <button class="close" id="closeModal" aria-label="Close preview"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
     </div>
@@ -2932,6 +2987,77 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         </div>
       </div>
 
+      <div class="demo salon" data-demo-panel="salon">
+        <div class="sl-top"><span>Open today 9 AM to 7 PM</span><span>Walk-ins welcome · <b>(563) 555-0142</b></span></div>
+        <div class="sl-nav">
+          <span class="sl-logo">Studio Nine<small>SALON &amp; SUPPLY</small></span>
+          <nav><button data-jump="sl-svc">Services</button><button data-jump="sl-book">Book</button><button data-jump="sl-shop">Shop</button></nav>
+          <button class="sl-cta" data-jump="sl-book">Book Now</button>
+        </div>
+        <section class="sl-hero ph" data-img="1600948836101-f9ffda59d250" data-ov="linear-gradient(90deg,rgba(18,10,18,.9) 0%,rgba(18,10,18,.65) 55%,rgba(18,10,18,.25) 100%)" data-fb="linear-gradient(135deg,#4a1d3f,#120a12)">
+          <span class="sl-eyebrow">Hair · Color · Barber · Boutique</span>
+          <h2>Cuts, color and fades that fit you.</h2>
+          <p>Book your chair online in under a minute, see real prices up front, and shop new arrivals while you wait.</p>
+          <div class="sl-btns"><button class="sl-btn" data-jump="sl-book">Book an appointment</button><button class="sl-btn ghost" data-jump="sl-svc">See prices</button></div>
+        </section>
+        <section class="sl-sec" id="sl-svc">
+          <h3>Services &amp; Prices</h3>
+          <p class="sl-lead">No surprises at the register.</p>
+          <div class="sl-svcs">
+            <div class="sl-svc"><b>Haircut &amp; Style</b><span>45 min</span><em>from $45</em></div>
+            <div class="sl-svc"><b>Color &amp; Highlights</b><span>2 hr</span><em>from $85</em></div>
+            <div class="sl-svc"><b>Men&rsquo;s Cut &amp; Fade</b><span>30 min</span><em>$28</em></div>
+            <div class="sl-svc"><b>Blowout</b><span>40 min</span><em>$35</em></div>
+            <div class="sl-svc"><b>Beard Trim &amp; Line-up</b><span>20 min</span><em>$18</em></div>
+            <div class="sl-svc"><b>Kids Cut</b><span>25 min</span><em>$20</em></div>
+          </div>
+        </section>
+        <section class="sl-sec sl-bookwrap" id="sl-book">
+          <div class="sl-book">
+            <form id="slForm">
+              <h4>Request an appointment</h4>
+              <label class="sl-l" for="slSvc">Service</label>
+              <select id="slSvc"><option>Haircut &amp; Style</option><option>Color &amp; Highlights</option><option>Men&rsquo;s Cut &amp; Fade</option><option>Blowout</option></select>
+              <span class="sl-l">Day</span>
+              <div class="sl-chips" data-group="day"><button type="button" class="on">Today</button><button type="button">Tomorrow</button><button type="button">Saturday</button></div>
+              <span class="sl-l">Time</span>
+              <div class="sl-chips" data-group="time"><button type="button">10:00 AM</button><button type="button" class="on">1:30 PM</button><button type="button">3:00 PM</button><button type="button">5:15 PM</button></div>
+              <input required placeholder="Your name" aria-label="Your name">
+              <input required placeholder="Phone number" aria-label="Phone number" inputmode="tel">
+              <button type="submit" class="sl-btn">Request My Appointment</button>
+              <p class="sl-fine">We text you to confirm. Change or cancel anytime.</p>
+            </form>
+            <div class="sl-ok" id="slOk"><strong>Request sent!</strong><p>Studio Nine will text you to confirm your time. (Sample site: nothing was sent.)</p></div>
+          </div>
+          <div class="sl-why">
+            <h3>Booking that works while you&rsquo;re busy</h3>
+            <ul><li>Clients pick a service, day and time from their phone</li><li>Requests land in your inbox or text, even at midnight</li><li>Your real prices and hours, updated whenever you text us</li></ul>
+          </div>
+        </section>
+        <section class="sl-sec">
+          <h3>Recent Work</h3>
+          <div class="sl-gal">
+            <div class="ph" data-img="1580618672591-eb180b1a973f" data-fb="linear-gradient(135deg,#6b2148,#1f0d18)"><em>Blowout &amp; style</em></div>
+            <div class="ph" data-img="1605497788044-5a32c7078486" data-fb="linear-gradient(135deg,#3f3f46,#18181b)"><em>Skin fade</em></div>
+            <div class="ph" data-img="1621645539688-b4b6a1c3699d" data-fb="linear-gradient(135deg,#7f1d1d,#1c1917)"><em>The barber chair</em></div>
+          </div>
+        </section>
+        <section class="sl-sec sl-shop" id="sl-shop">
+          <div class="sl-shopimg ph" data-img="1441984904996-e0b6ba687e04" data-fb="linear-gradient(135deg,#52525b,#18181b)"></div>
+          <div>
+            <span class="sl-eyebrow dark">The Boutique</span>
+            <h3>New arrivals every Friday</h3>
+            <p class="sl-lead">Tops, denim and accessories picked for the Tri-State, plus the salon products we use in the chair.</p>
+            <ul class="sl-list"><li>Shop by size and style</li><li>Hold an item for pickup</li><li>Gift cards for any amount</li></ul>
+          </div>
+        </section>
+        <div class="sl-foot">
+          <div><h5>Studio Nine Salon &amp; Supply</h5>1180 Main Street, Dubuque, IA 52001<br>(563) 555-0142</div>
+          <div><h5>Hours</h5>Tue&ndash;Fri 9 AM&ndash;7 PM<br>Sat 8 AM&ndash;3 PM<br>Sun&ndash;Mon closed</div>
+          <div><h5>Follow</h5>New looks and new arrivals<br>posted every week</div>
+        </div>
+      </div>
+
     </div>
     <div class="modal-foot">
       <p><span class="demo-note" style="color:#64748B;background:var(--mist)">Demo · sample content</span>&nbsp; Like this style? We’ll build it with <strong>your</strong> name, menu, and photos.</p>
@@ -3119,7 +3245,8 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
   const meta={
     pub:{url:'lockanddamtap.com',cta:'Get the Pub Style for My Bar'},
     lounge:{url:'emberandoak-dbq.com',cta:'Get the Lounge Style for My Place'},
-    trade:{url:'bluffcitypro.com',cta:'Get the Trade Pro Style'}
+    trade:{url:'bluffcitypro.com',cta:'Get the Trade Pro Style'},
+    salon:{url:'studioninesalon.com',cta:'Get the Salon Style for My Shop'}
   };
   let lastFocus=null, current='pub';
   function showDemo(key){
@@ -3160,7 +3287,7 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
     }
   });
   $('#modalCta').addEventListener('click',()=>{
-    const map={pub:'Bar/Restaurant',lounge:'Bar/Restaurant',trade:'Service/Trade'};
+    const map={pub:'Bar/Restaurant',lounge:'Bar/Restaurant',trade:'Service/Trade',salon:'Retail/Other'};
     const r=$(`input[name="Business Type"][value="${map[current]}"]`); if(r) r.checked=true;
   });
 
@@ -3180,11 +3307,18 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
   $$('[data-jump]').forEach(b=>b.addEventListener('click',()=>{
     const t=document.getElementById(b.dataset.jump); if(!t) return;
     const panel=t.closest('[data-demo-panel]');
-    const nav=panel && panel.querySelector('.pub-nav,.lg-nav,.tr-nav');
+    const nav=panel && panel.querySelector('.pub-nav,.lg-nav,.tr-nav,.sl-nav');
     const off=(nav?nav.offsetHeight:0)+8;
     const y=t.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - off;
     body.scrollTo({top:y,behavior:'smooth'});
   }));
+
+  /* Salon: booking chips + sample request */
+  $$('.sl-chips').forEach(g=>g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; $$('button',g).forEach(x=>x.classList.toggle('on',x===b)); }));
+  const slForm=$('#slForm'); if(slForm) slForm.addEventListener('submit',e=>{ e.preventDefault(); slForm.closest('.sl-book').classList.add('done'); });
+
+  /* Direct links to a sample: riverbendwebco.com/?preview=pub|lounge|trade|salon */
+  try{ const pv=new URLSearchParams(location.search).get('preview'); if(pv && meta[pv]) setTimeout(()=>openModal(pv),300); }catch(e){}
 
   /* Pub: call/directions toasts */
   let tt;
