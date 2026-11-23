@@ -170,6 +170,8 @@ a.tag:hover,button.tag:hover{color:#fff;border-color:var(--blue)}
     <small>RIVERBEND WEB CO.</small>
     <h1>Leads</h1>
     <p>Find Dubuque businesses that need a website. Same password as the Demo Studio.</p>
+    <a class="btn primary" href="/login/?next=/leads/" style="width:100%;height:46px;font-size:.95rem;margin-bottom:12px;text-decoration:none">Sign in with your Riverbend account</a>
+    <small style="display:block;margin:2px 0 8px;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;color:var(--dim);text-transform:uppercase">Or shared password (temporary)</small>
     <input class="field" id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
     <button class="btn primary" id="loginBtn" type="submit" style="width:100%;margin-top:12px;height:46px;font-size:.95rem">Log In</button>
     <div class="msg" id="loginMsg" role="alert"></div>
@@ -194,6 +196,7 @@ a.tag:hover,button.tag:hover{color:#fff;border-color:var(--blue)}
   </nav>
 </section>
 
+<script src="/login/auth.js"></script>
 <script>
 (function(){
 'use strict';
@@ -206,7 +209,7 @@ function el(tag,props,...kids){
   kids.flat(Infinity).forEach(c=>{ if(c==null||c===false) return; n.appendChild(typeof c==='string'?document.createTextNode(c):c); });
   return n;
 }
-let token=''; try{ token=sessionStorage.getItem('rbStudio')||''; }catch(_){}
+let token=''; try{ token=(window.RBAuth&&RBAuth.token())||sessionStorage.getItem('rbStudio')||''; }catch(_){}
 let status={hasKey:false,stages:['New','Contacted','Demo built','Pitched','Won','Lost']};
 
 async function api(body){
@@ -230,7 +233,7 @@ $('#loginForm').addEventListener('submit',async e=>{
   m.className='msg err';
   m.textContent={badpassword:'That password is not right.',locked:'Too many tries. Wait 15 minutes and try again.',network:'Cannot reach the server. Check your connection.'}[r.error]||'Something went wrong. Try again.';
 });
-function signOut(expired){
+function signOut(expired){ if(window.RBAuth&&token&&token===RBAuth.token()){ if(!expired) RBAuth.call({action:'auth_logout'}); RBAuth.clear(); location.href='/login/?next=/leads/'; return; }
   if(!expired&&token) api({action:'logout'});
   token=''; try{sessionStorage.removeItem('rbStudio');}catch(_){}
   $('#app').classList.add('hidden'); $('#login').classList.remove('hidden');

@@ -251,6 +251,8 @@ body.editing .as{bottom:86px;height:min(620px,calc(100vh - 170px))}
     <svg class="rw" aria-label="Riverbend Web Co."><use href="#rw-light"/></svg>
     <h1>Demo Studio</h1>
     <p>Riverbend Web Co. team login</p>
+    <a class="btn btn-primary" href="/login/?next=/studio/" style="width:100%;margin-bottom:12px">Sign in with your Riverbend account</a>
+    <p style="margin:0 0 6px;font-size:.78rem">Or shared password (temporary)</p>
     <div class="fg">
       <label class="f" for="pw">Password</label>
       <input class="i" id="pw" type="password" autocomplete="current-password" required maxlength="200">
@@ -431,6 +433,7 @@ body.editing .as{bottom:86px;height:min(620px,calc(100vh - 170px))}
 </section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="/login/auth.js"></script>
 <script>
 (function(){
 'use strict';
@@ -447,8 +450,7 @@ const $=s=>document.querySelector(s);
 const el=(tag,props,...kids)=>{const n=document.createElement(tag);if(props)for(const k in props){if(k==='class')n.className=props[k];else if(k==='text')n.textContent=props[k];else if(k.startsWith('on'))n.addEventListener(k.slice(2),props[k]);else n.setAttribute(k,props[k]);}kids.flat().forEach(c=>c&&n.append(c));return n;};
 const svgUse=id=>{const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('width','16');s.setAttribute('height','16');const u=document.createElementNS('http://www.w3.org/2000/svg','use');u.setAttribute('href','#'+id);s.append(u);return s;};
 
-let token='';
-try{ token=sessionStorage.getItem('rbStudio')||''; }catch(_){}
+let token=''; try{ token=(window.RBAuth&&RBAuth.token())||sessionStorage.getItem('rbStudio')||''; }catch(_){}
 let demos=[], cur=null, dirty=false, pending={logo:null,hero:null,removeLogo:false,removeHero:false};
 
 function toast(msg,err){const t=$('#toast');t.textContent=msg;t.classList.toggle('err',!!err);t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2600);}
@@ -474,7 +476,7 @@ $('#loginForm').addEventListener('submit',async e=>{
   m.className='msg err';
   m.textContent={badpassword:'That password is not right.',locked:'Too many tries. Wait 15 minutes and try again.',nopassword:'Your password was just emailed to riverbendwebco@gmail.com. Check your inbox, then log in.',network:'Can’t reach the server. Check your connection.'}[r.error]||'Something went wrong. Try again.';
 });
-function signOut(expired){
+function signOut(expired){ if(window.RBAuth&&token&&token===RBAuth.token()){ if(!expired) RBAuth.call({action:'auth_logout'}); RBAuth.clear(); location.href='/login/?next=/studio/'; return; }
   if(!expired && token) api({action:'logout'});
   token=''; try{sessionStorage.removeItem('rbStudio');}catch(_){}
   $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); $('#asFab').classList.add('hidden'); $('#as').classList.add('hidden');

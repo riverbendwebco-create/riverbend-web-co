@@ -73,6 +73,8 @@ td b{color:#fff;font-weight:600}
     <small style="margin-top:18px">RIVERBEND WEB CO.</small>
     <h1>Billing</h1>
     <p>Client payments, launches and past-due accounts. Owners only: this is a separate password from the Demo Studio.</p>
+    <a class="btn primary" href="/login/?next=/billing/" style="width:100%;height:46px;font-size:.95rem;margin-bottom:12px;text-decoration:none">Sign in with your Riverbend account</a>
+    <small style="display:block;margin:2px 0 8px;font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;color:var(--dim);text-transform:uppercase">Or shared password (temporary)</small>
     <input class="field" id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
     <button class="btn primary" type="submit" id="loginBtn" style="width:100%;height:44px;margin-top:12px">Log In</button>
     <div class="msg" id="loginMsg" role="alert"></div>
@@ -89,6 +91,7 @@ td b{color:#fff;font-weight:600}
   <div class="panel" style="padding:6px 10px"><table><thead><tr><th>Business</th><th>Package</th><th class="hide-m">Monthly</th><th>Status</th><th class="hide-m">Payments</th><th>Next bill</th></tr></thead><tbody id="rows"></tbody></table><div class="msg" id="listMsg"></div></div>
 </div></section>
 <div class="modal hidden" id="modal"><div class="box" id="mbox"></div></div>
+<script src="/login/auth.js"></script>
 <script>
 (function(){
 'use strict';
@@ -97,7 +100,7 @@ const $=s=>document.querySelector(s);
 function el(tag,props,...kids){ const n=document.createElement(tag); if(props) for(const k in props){ const v=props[k]; if(v==null||v===false) continue; if(k==='class') n.className=v; else if(k==='text') n.textContent=v; else if(k.slice(0,2)==='on') n.addEventListener(k.slice(2),v); else n.setAttribute(k,v);} kids.flat(Infinity).forEach(c=>{ if(c==null||c===false) return; n.appendChild(typeof c==='string'?document.createTextNode(c):c); }); return n; }
 const usd=c=>'$'+((c||0)/100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const ld=s=>{ if(!s) return ''; const d=new Date(s+'T12:00:00'); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); };
-let token=''; try{ token=sessionStorage.getItem('rbBilling')||''; }catch(_){}
+let token=''; try{ token=(window.RBAuth&&RBAuth.token())||sessionStorage.getItem('rbBilling')||''; }catch(_){}
 let data={accounts:[],settings:{}}, openId='';
 async function api(body){ let r; try{ const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({token},body))}); r=await res.json(); }catch(_){ return {ok:false,error:'network'}; } if(r&&r.error==='auth') signOut(true); return r||{ok:false,error:'server'}; }
 $('#loginForm').addEventListener('submit',async e=>{ e.preventDefault(); const pw=$('#pw').value; if(!pw) return; const b=$('#loginBtn'); b.disabled=true; b.textContent='Checking...';
@@ -105,7 +108,7 @@ $('#loginForm').addEventListener('submit',async e=>{ e.preventDefault(); const p
   if(r.ok){ token=r.token; try{sessionStorage.setItem('rbBilling',token);}catch(_){} $('#pw').value=''; start(); return; }
   $('#loginMsg').className='msg err'; $('#loginMsg').textContent={badpassword:'That password is not right. This is the billing password, not the Studio password.',locked:'Too many tries. Wait 15 minutes.',network:'Cannot reach the server.',nopassword:'No billing password yet. Tap "Email me a new password".'}[r.error]||'Something went wrong.'; });
 $('#pwReset').addEventListener('click',async()=>{ const m=$('#loginMsg'); m.className='msg'; m.textContent='Sending...'; const r=await api({action:'billing_reset'}); m.className='msg '+(r.ok?'ok':'err'); m.textContent=r.detail||(r.ok?'Sent.':'Could not send. Try again.'); });
-function signOut(expired){ if(!expired&&token) api({action:'billing_logout'}); token=''; try{sessionStorage.removeItem('rbBilling');}catch(_){} $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); if(expired){ $('#loginMsg').className='msg err'; $('#loginMsg').textContent='Your session ended. Log in again.'; } }
+function signOut(expired){ if(window.RBAuth&&token&&token===RBAuth.token()){ if(!expired) RBAuth.call({action:'auth_logout'}); RBAuth.clear(); location.href='/login/?next=/billing/'; return; } if(!expired&&token) api({action:'billing_logout'}); token=''; try{sessionStorage.removeItem('rbBilling');}catch(_){} $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); if(expired){ $('#loginMsg').className='msg err'; $('#loginMsg').textContent='Your session ended. Log in again.'; } }
 $('#out').addEventListener('click',()=>signOut(false));
 $('#refresh').addEventListener('click',()=>load());
 $('#setBtn').addEventListener('click',()=>{ $('#settings').classList.toggle('hidden'); drawSettings(); });

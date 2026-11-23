@@ -2938,7 +2938,8 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
    Leave empty to fall back to FormSubmit. */
 const RB_FORM_URL='https://script.google.com/macros/s/AKfycbwkosfcFSHGXy8EUaAFZ7Q-SFDFllV_k4n8qBABRxoj2hv59RspTU9APLQabwP_ohaW/exec';
 function rbSend(kind,fields,file){
-  return fetch(RB_FORM_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind,fields,file})})
+  let token=''; if(kind==='agreement'){ try{ token=localStorage.getItem('rbAuth')||sessionStorage.getItem('rbAuth')||''; }catch(_){} } // a signed-in salesperson gets credit for the sale
+  return fetch(RB_FORM_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(token?{kind,fields,file,token}:{kind,fields,file})})
     .then(r=>r.ok?r.json():Promise.reject()).then(j=>{ if(!j||!j.ok) throw 0; return j; });
 }
 function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res({type:f.type||'',name:f.name,data:r.result}); r.onerror=rej; r.readAsDataURL(f); }); }

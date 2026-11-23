@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'">
+<title>Sign in | Riverbend Web Co.</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Riverbend">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#04070D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04070D;--card:#0A101B;--card2:#0F1726;--line:#161F2E;--line2:#232E42;--ink:#E8EEF8;--txt:#CFD8E6;--mut:#8592A6;--dim:#5B6779;--blue:#2F7BFF;--red:#FF5A63;--green:#2BC48A;--amber:#F2B23B;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;--disp:'Barlow Condensed','Arial Narrow',Inter,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}a{color:#5B9BFF}.hidden{display:none!important}
+svg.rw{width:54px;height:auto;aspect-ratio:1115/562;display:block}
+.wrap{min-height:100vh;display:grid;place-items:center;padding:24px 16px;padding-top:max(24px,env(safe-area-inset-top))}
+.card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:28px 24px}
+.k{display:block;margin-top:18px;font-family:var(--mono);font-size:.66rem;letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+h1{font-family:var(--disp);font-style:italic;font-weight:700;font-size:2.3rem;line-height:1;margin:4px 0 8px;text-transform:uppercase;color:#fff}
+p{color:var(--mut);font-size:.92rem;margin:0 0 14px;line-height:1.5}
+label.f{display:block;font-size:.8rem;color:var(--mut);margin:12px 0 5px}
+.field{display:block;width:100%;height:48px;border:1px solid var(--line2);border-radius:9px;padding:0 14px;outline:none;background:var(--bg);color:var(--ink);font-size:16px}
+.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,123,255,.2)}
+.code{letter-spacing:.3em;font-family:var(--mono);text-align:center;font-size:20px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:48px;margin-top:14px;border-radius:9px;border:1px solid var(--line2);background:var(--card2);font-weight:700;cursor:pointer;color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn[disabled]{opacity:.55}
+.link{background:none;border:0;color:#5B9BFF;cursor:pointer;padding:0;margin-top:14px;font-size:.88rem}
+.check{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:.88rem;color:var(--txt)}.check input{width:18px;height:18px}
+.msg{min-height:20px;margin-top:10px;font-size:.88rem;color:var(--mut)}.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.qr{background:#fff;border-radius:10px;padding:10px;width:max-content;margin:6px auto 10px}
+.secret{font-family:var(--mono);font-size:.85rem;word-break:break-all;background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:10px;color:#fff;text-align:center}
+.codes{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family:var(--mono);background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:12px;color:#fff;text-align:center}
+.nav a{display:flex;justify-content:space-between;align-items:center;height:52px;padding:0 14px;margin-top:10px;border:1px solid var(--line2);border-radius:10px;background:var(--card2);color:var(--ink);text-decoration:none;font-weight:600}
+.nav a span{color:var(--mut);font-weight:500;font-size:.82rem}
+.who{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.who b{color:#fff}.who span{font-family:var(--mono);font-size:.7rem;color:var(--amber);letter-spacing:.12em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="rw-light" viewBox="0 0 1115 562"><path fill="#1E293B" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#0052CC" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol>
+    <symbol id="rw-dark" viewBox="0 0 1115 562"><path fill="#FFFFFF" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#3B82F6" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol>
+  </defs>
+</svg>
+<main class="wrap"><div class="card">
+  <svg class="rw" aria-label="Riverbend Web Co."><use href="#rw-dark"/></svg>
+  <small class="k">Riverbend Web Co.</small>
+
+  <form id="vLogin" class="hidden" autocomplete="on">
+    <h1>Sign in</h1>
+    <label class="f" for="email">Email</label>
+    <input class="field" id="email" name="username" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required>
+    <label class="f" for="password">Password</label>
+    <input class="field" id="password" name="password" type="password" autocomplete="current-password" required>
+    <label class="check"><input type="checkbox" id="trust"> Keep me signed in on this device (30 days)</label>
+    <button class="btn primary" id="loginBtn" type="submit">Sign in</button>
+    <div class="msg" id="loginMsg" role="alert"></div>
+    <button class="link" type="button" id="toForgot">Forgot password?</button>
+  </form>
+
+  <form id="vCode" class="hidden" autocomplete="on">
+    <h1>Verify</h1>
+    <p>Enter the 6-digit code from your authenticator app.</p>
+    <input class="field code" id="code" name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" required>
+    <button class="btn primary" type="submit" id="codeBtn">Continue</button>
+    <div class="msg" id="codeMsg" role="alert"></div>
+    <button class="link" type="button" id="useRecovery">Lost your phone? Use a recovery code</button>
+  </form>
+
+  <form id="vEnroll" class="hidden" autocomplete="off">
+    <h1>Two-step sign-in</h1>
+    <p>Owners protect the account with an authenticator app (iPhone Passwords, Google Authenticator or similar). Scan the code, or on this iPhone tap the button.</p>
+    <div class="qr" id="qr"></div>
+    <a class="btn" id="otpLink" href="#">Add to authenticator on this device</a>
+    <label class="f">Or enter this setup key</label>
+    <div class="secret" id="secret"></div>
+    <label class="f" for="ecode">Then enter the 6-digit code it shows</label>
+    <input class="field code" id="ecode" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" required>
+    <button class="btn primary" type="submit" id="enrollBtn">Turn on two-step sign-in</button>
+    <div class="msg" id="enrollMsg" role="alert"></div>
+  </form>
+
+  <div id="vRecovery" class="hidden">
+    <h1>Recovery codes</h1>
+    <p>Save these somewhere safe (your password manager notes work well). Each one works once if you lose your phone. They will not be shown again.</p>
+    <div class="codes" id="codes"></div>
+    <button class="btn" type="button" id="copyCodes">Copy codes</button>
+    <button class="btn primary" type="button" id="codesDone">I saved them</button>
+  </div>
+
+  <form id="vSet" class="hidden" autocomplete="on">
+    <h1 id="setTitle">Create password</h1>
+    <p id="setSub"></p>
+    <input id="setEmail" name="username" type="email" autocomplete="username" class="field" readonly>
+    <label class="f" for="newpw">New password (at least 10 characters)</label>
+    <input class="field" id="newpw" name="new-password" type="password" autocomplete="new-password" minlength="10" required>
+    <label class="f" for="newpw2">Type it again</label>
+    <input class="field" id="newpw2" type="password" autocomplete="new-password" minlength="10" required>
+    <button class="btn primary" type="submit" id="setBtn">Save password</button>
+    <div class="msg" id="setMsg" role="alert"></div>
+  </form>
+
+  <form id="vForgot" class="hidden">
+    <h1>Reset password</h1>
+    <p>Enter your email. If it has an account, we will email a reset link that works for 1 hour.</p>
+    <input class="field" id="femail" type="email" autocomplete="username" inputmode="email" autocapitalize="none" required>
+    <button class="btn primary" type="submit" id="forgotBtn">Email me a reset link</button>
+    <div class="msg" id="forgotMsg" role="alert"></div>
+    <button class="link" type="button" id="backLogin">Back to sign in</button>
+  </form>
+
+  <div id="vHome" class="hidden">
+    <div class="who"><b id="hName"></b><span id="hRole"></span></div>
+    <p id="hEmail" style="margin-top:4px"></p>
+    <div class="nav" id="hNav"></div>
+    <button class="btn" type="button" id="outBtn">Sign out</button>
+    <button class="link" type="button" id="outAll">Sign out on all devices</button>
+  </div>
+</div></main>
+<script src="/login/qr.js"></script>
+<script src="/login/auth.js"></script>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), A=window.RBAuth;
+const views=['vLogin','vCode','vEnroll','vRecovery','vSet','vForgot','vHome'];
+function show(v){ views.forEach(x=>$('#'+x).classList.toggle('hidden',x!==v)); const f=$('#'+v+' input:not([readonly])'); if(f) setTimeout(()=>f.focus(),50); }
+const next=(()=>{ const n=new URLSearchParams(location.search).get('next')||''; return /^\/(studio|leads|billing|sales)\/?$/.test(n)?n:''; })();
+const COMMON=['password','password1','password123','qwerty','letmein','welcome','iloveyou','riverbend','dubuque','123456789','1234567890','monkey','dragon','baseball','football','sunshine','princess','trustno1'];
+let pend=null, creds=null;
+function msg(id,t,ok){ const m=$(id); m.className='msg '+(ok?'ok':'err'); m.textContent=t; }
+const ERR={badlogin:'That email and password do not match.',locked:'Too many tries. Wait 15 minutes and try again.',badcode:'That code is not right. Wait for a new code and try again.',expired:'This link has expired or was already used. Ask an owner for a new one, or use Forgot password.',busy:'Busy for a moment. Try again.',network:'Cannot reach the server. Check your connection.'};
+
+async function home(){
+  const me=await A.call({action:'auth_me'});
+  if(!me.ok){ A.clear(); show('vLogin'); return; }
+  if(next){ location.replace(next); return; }
+  const u=me.user; $('#hName').textContent=u.name; $('#hRole').textContent=u.roleName; $('#hEmail').textContent=u.email;
+  const links=[['/sales/','Sales','Customers and commissions'],['/studio/','Studio','Website demos'],['/leads/','Leads','Find businesses']];
+  if(u.role==='owner') links.push(['/billing/','Billing','Payments and launches']);
+  $('#hNav').replaceChildren(...links.map(l=>{ const a=document.createElement('a'); a.href=l[0]; a.innerHTML='<b></b><span></span>'; a.firstChild.textContent=l[1]; a.lastChild.textContent=l[2]; return a; }));
+  show('vHome');
+}
+$('#vLogin').addEventListener('submit',async e=>{
+  e.preventDefault(); const b=$('#loginBtn'); b.disabled=true; b.textContent='Signing in...'; $('#loginMsg').textContent='';
+  const email=$('#email').value.trim().toLowerCase(), pw=$('#password').value, trust=$('#trust').checked;
+  try{
+    const pre=await A.call({action:'auth_prelogin',email}); if(!pre.ok) throw pre;
+    const dk=await A.derive(pw,pre.salt); creds={email,dk,trust};
+    const r=await A.call({action:'auth_login',email,dk,trust});
+    if(r.ok&&r.token){ A.save(r.token,trust); home(); }
+    else if(r.ok&&r.step==='mfa'){ show('vCode'); }
+    else if(r.ok&&r.step==='mfa_enroll'){ pend=r; $('#qr').innerHTML=RBQR.svg(r.uri,190); $('#secret').textContent=r.secret.replace(/(.{4})/g,'$1 ').trim(); $('#otpLink').href=r.uri; show('vEnroll'); }
+    else msg('#loginMsg',ERR[r.error]||'Something went wrong. Try again.');
+  }catch(x){ msg('#loginMsg',ERR[x&&x.error]||'Something went wrong. Try again.'); }
+  b.disabled=false; b.textContent='Sign in';
+});
+let recoveryMode=false;
+$('#useRecovery').addEventListener('click',()=>{ recoveryMode=!recoveryMode; const c=$('#code'); c.value=''; c.maxLength=recoveryMode?11:6; c.inputMode=recoveryMode?'text':'numeric'; c.autocomplete=recoveryMode?'off':'one-time-code'; c.removeAttribute('pattern'); $('#vCode p').textContent=recoveryMode?'Enter one of your recovery codes (like abcde-12345).':'Enter the 6-digit code from your authenticator app.'; $('#useRecovery').textContent=recoveryMode?'Use the authenticator code instead':'Lost your phone? Use a recovery code'; c.focus(); });
+$('#vCode').addEventListener('submit',async e=>{
+  e.preventDefault(); if(!creds){ show('vLogin'); return; } const b=$('#codeBtn'); b.disabled=true;
+  const v=$('#code').value.trim(); const r=await A.call(Object.assign({action:'auth_login'},creds,recoveryMode?{recovery:v}:{code:v}));
+  b.disabled=false;
+  if(r.ok&&r.token){ creds=null; A.save(r.token,r.trusted); home(); } else msg('#codeMsg',ERR[r.error]||'Something went wrong.');
+});
+$('#vEnroll').addEventListener('submit',async e=>{
+  e.preventDefault(); const b=$('#enrollBtn'); b.disabled=true;
+  const r=await A.call({action:'auth_mfa_enroll',pending:pend.pending,code:$('#ecode').value.trim(),trust:creds&&creds.trust});
+  b.disabled=false;
+  if(r.ok){ A.save(r.token,creds&&creds.trust); creds=null; $('#codes').replaceChildren(...r.recovery.map(c=>{ const d=document.createElement('div'); d.textContent=c; return d; })); show('vRecovery'); }
+  else msg('#enrollMsg',ERR[r.error]||'Something went wrong.');
+});
+$('#copyCodes').addEventListener('click',e=>{ const t=[...document.querySelectorAll('#codes div')].map(d=>d.textContent).join('\n'); try{ navigator.clipboard.writeText('Riverbend recovery codes\n'+t); e.target.textContent='Copied'; }catch(_){} });
+$('#codesDone').addEventListener('click',home);
+// setup and reset links
+async function linkFlow(kind,link){
+  history.replaceState(null,'',location.pathname+location.search);
+  const r=await A.call({action:'auth_link_info',kind,link});
+  if(!r.ok){ show('vLogin'); msg('#loginMsg',ERR.expired); return; }
+  $('#setTitle').textContent=kind==='reset'?'New password':'Welcome, '+r.name.split(' ')[0];
+  $('#setSub').textContent=kind==='reset'?'Choose a new password. All your devices will be signed out.':'Create your password for your Riverbend '+r.role+' account.'+(r.owner?' Next you will set up two-step sign-in.':'');
+  $('#setEmail').value=r.email; show('vSet');
+  $('#vSet').onsubmit=async e=>{
+    e.preventDefault(); const p1=$('#newpw').value, p2=$('#newpw2').value, low=p1.toLowerCase();
+    if(p1.length<10) return msg('#setMsg','Use at least 10 characters.');
+    if(p1!==p2) return msg('#setMsg','The two passwords do not match.');
+    if(COMMON.some(c=>low.includes(c))||low.includes(r.email.split('@')[0])) return msg('#setMsg','That password is too easy to guess. Try a short phrase.');
+    const b=$('#setBtn'); b.disabled=true; b.textContent='Saving...';
+    const dk=await A.derive(p1,r.salt); const s=await A.call({action:'auth_set_password',kind,link,salt:r.salt,dk});
+    b.disabled=false; b.textContent='Save password';
+    if(!s.ok) return msg('#setMsg',ERR[s.error]||'Something went wrong.');
+    $('#email').value=r.email; $('#password').value=p1; show('vLogin'); msg('#loginMsg','Password saved. Sign in to continue.',true);
+  };
+}
+$('#toForgot').addEventListener('click',()=>{ $('#femail').value=$('#email').value; show('vForgot'); });
+$('#backLogin').addEventListener('click',()=>show('vLogin'));
+$('#vForgot').addEventListener('submit',async e=>{ e.preventDefault(); const b=$('#forgotBtn'); b.disabled=true; await A.call({action:'auth_reset_request',email:$('#femail').value.trim()}); b.disabled=false; msg('#forgotMsg','If that email has an account, a reset link is on its way. Check spam too.',true); });
+$('#outBtn').addEventListener('click',async()=>{ await A.call({action:'auth_logout'}); A.clear(); show('vLogin'); });
+$('#outAll').addEventListener('click',async()=>{ await A.call({action:'auth_logout_all'}); A.clear(); show('vLogin'); msg('#loginMsg','Signed out on all devices.',true); });
+const h=new URLSearchParams(location.hash.slice(1));
+if(h.get('setup')) linkFlow('setup',h.get('setup'));
+else if(h.get('reset')) linkFlow('reset',h.get('reset'));
+else if(A.token()) home(); else show('vLogin');
+})();
+</script>
+</body>
+</html>

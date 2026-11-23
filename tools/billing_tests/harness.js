@@ -5,18 +5,19 @@ function load(){
     getValues(){ const o=[]; for(let i=0;i<nr;i++){const row=[];for(let j=0;j<nc;j++) row.push(((sh.rows[r-1+i]||[])[c-1+j])??''); o.push(row);} return o; },
     getValue(){ return this.getValues()[0][0]; },
     setValues(v){ for(let i=0;i<nr;i++){ sh.rows[r-1+i]=sh.rows[r-1+i]||[]; for(let j=0;j<nc;j++) sh.rows[r-1+i][c-1+j]=v[i][j]; } return this; },
-    setFontWeight(){return this}, setBackground(){return this}, setFontColor(){return this} }; }
-  function Sheet(name){ const sh={name,rows:[], appendRow(r){sh.rows.push(r.slice())}, getLastRow(){return sh.rows.length}, getRange(r,c,nr,nc){return Range(sh,r,c,nr,nc)}, setFrozenRows(){}, hideColumns(){}, setName(n){sh.name=n;return sh} }; return sh; }
+    setValue(v){ return this.setValues([[v]]); }, setFontWeight(){return this}, setBackground(){return this}, setFontColor(){return this} }; }
+  function Sheet(name){ const sh={name,rows:[], appendRow(r){sh.rows.push(r.slice())}, deleteRow(i){sh.rows.splice(i-1,1)}, getLastRow(){return sh.rows.length}, getRange(r,c,nr,nc){return Range(sh,r,c,nr,nc)}, setFrozenRows(){}, hideColumns(){}, setName(n){sh.name=n;return sh} }; return sh; }
   const SS={ getSheetByName(n){return H.sheets[n]||null}, insertSheet(n){return H.sheets[n]=Sheet(n)}, getUrl(){return 'https://sheet'}, getSheets(){return Object.values(H.sheets)} };
   ['Signed Agreements','Preview Requests'].forEach(n=>H.sheets[n]=Sheet(n));
   const g={
-    PropertiesService:{getScriptProperties:()=>({getProperty:k=>H.props[k]??null,setProperty:(k,v)=>{H.props[k]=String(v)},deleteProperty:k=>{delete H.props[k]}})},
+    PropertiesService:{getScriptProperties:()=>({getProperty:k=>H.props[k]??null,setProperty:(k,v)=>{H.props[k]=String(v)},deleteProperty:k=>{delete H.props[k]},getProperties:()=>Object.assign({},H.props)})},
     CacheService:{getScriptCache:()=>({get:k=>H.cache[k]??null,put:(k,v)=>{H.cache[k]=String(v)},remove:k=>{delete H.cache[k]},removeAll(){}})},
     LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock(){},waitLock(){}})},
     Utilities:{ getUuid:()=>crypto.randomUUID(), sleep(){},
       formatDate:(d,tz,f)=> f==='yyyy-MM-dd'?H.today: f==='yyyyMMdd'?H.today.replace(/-/g,''):String(d),
-      computeDigest:(alg,v)=>Array.from(crypto.createHash('sha256').update(String(v)).digest()).map(b=>b>127?b-256:b),
-      DigestAlgorithm:{SHA_256:1,MD5:2}, Charset:{UTF_8:1},
+      computeDigest:(alg,v)=>Array.from(crypto.createHash(alg===2?'md5':'sha256').update(String(v)).digest()).map(b=>b>127?b-256:b),
+      DigestAlgorithm:{SHA_256:1,MD5:2}, Charset:{UTF_8:1}, MacAlgorithm:{HMAC_SHA_1:'sha1'},
+      computeHmacSignature:(alg,msg,key)=>Array.from(crypto.createHmac(alg,Buffer.from(key.map(b=>b&255))).update(Buffer.from(msg.map(b=>b&255))).digest()).map(b=>b>127?b-256:b),
       base64Decode:s=>Array.from(Buffer.from(s,'base64')), base64Encode:b=>Buffer.from(b).toString('base64'),
       newBlob:(b,t,n)=>{ const o={b,t,n,getDataAsString:()=>Buffer.from(b).toString(),getContentType:()=>t,getBytes:()=>Array.from(Buffer.from(b)),setName(x){o.n=x;return o},copyBlob(){return o},getName:()=>o.n,
         getAs:(m)=>{ H.lastPdfHtml=String(b); const pdf={pdf:true,n:o.n,setName(x){pdf.n=x;return pdf},copyBlob(){return pdf},getName:()=>pdf.n}; return pdf; }}; return o; },
@@ -28,7 +29,7 @@ function load(){
   };
   const code=fs.readFileSync(require('path').join(__dirname,'../../apps-script/backend.js'),'utf8')+`
   function ss_(){ return __SS; } function applySeeds_(){}
-  return {doPost,doGet,studio_,pay_,billing_,prorate_,finalMonth_,billTick_,billGet_,billAll_,billView_,billLaunch_,billCancel_,billWebhook_,billCreateFromAgreement_,billCounts_,billByKey_,setFake:f=>{SQ_FAKE=f}, botAuthed_, BOTS};`;
+  return {auth_,team_,authUsers_,AUTH_SEED,doPost,doGet,studio_,pay_,billing_,prorate_,finalMonth_,billTick_,billGet_,billAll_,billView_,billLaunch_,billCancel_,billWebhook_,billCreateFromAgreement_,billCounts_,billByKey_,setFake:f=>{SQ_FAKE=f}, botAuthed_, BOTS};`;
   const B=new Function(...Object.keys(g),'__SS',code)(...Object.values(g),SS);
   // fake Square
   const S=H.sq; let n=0; const id=p=>p+(++n).toString().padStart(6,'0');

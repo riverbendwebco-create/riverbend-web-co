@@ -23,6 +23,7 @@ function doPost(e) {
     var data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     if (data.type && data.event_id && data.merchant_id) return json_(billWebhook_(data)); // Square webhook (nudge only)
     if (data.action && /^pay_/.test(String(data.action))) return json_(pay_(data)); // client payment page (private link)
+    if (data.action && /^auth_/.test(String(data.action))) return json_(auth_(data)); // sign-in (individual accounts)
     if (data.action) return json_(studio_(data)); // Demo Studio (password protected)
     if (data._honey) return json_({ ok: true }); // bot trap: pretend success
     if (!throttle_()) return json_({ ok: false, error: 'busy' });
@@ -41,7 +42,8 @@ function doPost(e) {
     }
     var sheetUrl = log_(kind, f, driveUrl);
     var bill = null;
-    if (kind === 'agreement') { try { bill = billCreateFromAgreement_(f); } catch (eb) { console.error(eb); } }
+    var signer = kind === 'agreement' && data.token ? authSession_(String(data.token)) : null;
+    if (kind === 'agreement') { try { bill = billCreateFromAgreement_(f, signer); } catch (eb) { console.error(eb); } }
 
     var pdf = null;
     if (kind === 'agreement') { try { pdf = agreementPdf_(f, file); } catch (ep) { console.error(ep); } }
@@ -379,17 +381,24 @@ function studio_(d) {
   if (d.action === 'login') return login_(String(d.password || ''));
   if (d.action === 'bot_login') return botLogin_(String(d.jwt || ''));
   // Billing has its own owner-only login (not the Studio password).
-  if (d.action === 'billing_login') return billLogin_(String(d.password || ''));
-  if (d.action === 'billing_reset') return billPwReset_();
+  var me = authSession_(d.token), legacy = authLegacyOn_();
+  if (d.action === 'billing_login') return legacy ? billLogin_(String(d.password || '')) : { ok: false, error: 'disabled' };
+  if (d.action === 'billing_reset') return legacy ? billPwReset_() : { ok: false, error: 'disabled' };
+  if (/^team_/.test(String(d.action))) { if (!me || me.role !== 'owner') return { ok: false, error: 'auth' }; return team_(d, me); }
+  if (d.action === 'sales_customers') { if (!me) return { ok: false, error: 'auth' }; return salesCustomers_(me); }
   if (/^billing_/.test(String(d.action))) {
-    if (!billAuthed_(d.token) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
+    // Owners only (server-side). Salespeople are refused even if they call this directly.
+    if (!(me && me.role === 'owner') && !(legacy && billAuthed_(d.token)) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
+    d._who = me ? me.email : (botAuthed_(d.token, d.action) ? 'daily job' : 'shared billing password');
     if (d.action === 'billing_logout') { CacheService.getScriptCache().remove('btok_' + d.token); return { ok: true }; }
     var res;
     try { res = billing_(d); } catch (eb) { console.error(eb); res = { ok: false, error: 'server', detail: String(eb).slice(0, 200) }; }
     billAudit_(d, res);
     return res;
   }
-  if (!authed_(d.token) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
+  if (me) { if (me.role !== 'owner' && !AUTH_SALES_OK[d.action]) return { ok: false, error: 'auth' }; }
+  else if (!(legacy && authed_(d.token)) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
+  if (me && me.role === 'sales' && /^leads_/.test(d.action)) return leadsForRep_(d, me);
   switch (d.action) {
     case 'list': return { ok: true, demos: listDemos_() };
     case 'get': return getDemo_(String(d.slug || ''), true);
@@ -499,6 +508,7 @@ function sameHex_(a, b) {
 }
 
 function login_(pw) {
+  if (!authLegacyOn_()) return { ok: false, error: 'disabled' };
   var cache = CacheService.getScriptCache();
   var fails = Number(cache.get('rb_fail') || 0);
   if (fails >= 8) return { ok: false, error: 'locked' };
@@ -1798,7 +1808,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23c';
+var BILL_VERSION = '2026-11-23e';
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
@@ -1925,7 +1935,7 @@ function billPlanKey_(k) {
   var m = String(k || '').match(/^(starter|custom|premium)-(zero|once)$/);
   return m ? { tier: m[1], pay: m[2] } : null;
 }
-function billCreateFromAgreement_(f) {
+function billCreateFromAgreement_(f, signer) {
   var pk = billPlanKey_(unesc_(f['Plan Key'] || ''));
   if (!pk) return null;
   var T = BILL_TIERS[pk.tier];
@@ -1938,7 +1948,7 @@ function billCreateFromAgreement_(f) {
     tier: pk.tier, pay: pk.pay, monthly: pk.pay === 'zero' ? T.zero : T.care, setup: pk.pay === 'once' ? T.once : 0,
     agreement: { signed: unesc_(f['Signed'] || ''), plan: unesc_(f['Plan'] || '') },
     payHash: sha256Hex_('pay:' + key), payKey: billPayUrl_(key), status: 'awaiting_card', setupPaid: false,
-    sq: {}, launch: '', charges: [], cancel: null, flags: {}, log: [], engine: 'sub'
+    sq: {}, launch: '', charges: [], cancel: null, flags: {}, log: [], engine: 'sub', rep: signer ? signer.email : ''
   };
   billLog_(a, 'Agreement signed. Waiting for the client to set up payment.');
   billSave_(a);
@@ -2979,6 +2989,7 @@ function billAudit_(d, res) {
     var det = ['date', 'flag', 'value', 'mode', 'target', 'apply', 'confirm', 'note'].filter(function (k) { return d[k] !== undefined && d[k] !== ''; }).map(function (k) { return k + '=' + String(d[k]).slice(0, 80); });
     if (d.sqToken) det.push('Square key saved (not logged)');
     var who = d.action === 'billing_tick' && d.token && CacheService.getScriptCache().get('bot_' + d.token) ? 'daily job' : '';
+    if (d._who && !who) who = d._who;
     sh.appendRow([new Date(), d.action + (who ? ' (' + who + ')' : ''), String(d.id || ''), det.join(', '), res && res.ok ? 'ok' : 'error: ' + ((res && (res.error || res.detail)) || '')]);
   } catch (e) { console.error(e); }
 }
@@ -3014,4 +3025,293 @@ function billVerify_() {
     out.push({ id: a.id, business: a.business, ok: !probs.length, problems: probs });
   });
   return { ok: true, accounts: out };
+}
+
+/* =====================================================================
+   ACCOUNTS: individual logins with roles (owner, sales)
+   - Passwords: the browser stretches the password with PBKDF2-SHA256 (600,000 rounds, WebCrypto)
+     using a unique random per-user salt; the server then stores SHA-256(unique server salt +
+     that result). The plain password never leaves the device; only salted hashes are stored.
+   - Owners must use an authenticator app (TOTP, RFC 6238) plus 8 one-time recovery codes.
+   - Sessions: random 256-bit tokens; only their SHA-256 is stored (Script Properties) with an
+     expiry (12 hours, or 30 days on a trusted device). Password reset or role change ends them.
+   - Setup and reset links: random one-time tokens, stored hashed, 72 h / 1 h expiry.
+   - Every action is checked here on the server against the role (AUTH_PERMS).
+   - Users live in Script Properties (AUTH_USERS), readable only by the script owner.
+   ===================================================================== */
+var AUTH_ROLES = { owner: 'Owner', sales: 'Salesperson' };
+var AUTH_SESSION_MS = 12 * 3600 * 1000, AUTH_TRUST_MS = 30 * 864e5, AUTH_SETUP_MS = 72 * 3600 * 1000, AUTH_RESET_MS = 3600 * 1000;
+/* Emails allowed to self-start setup (stored as SHA-256 so the public file has no addresses).
+   auth_bootstrap emails each one a setup link if the account does not exist yet. */
+var AUTH_SEED = [];
+var AUTH_SALES_OK = { list: 1, get: 1, save: 1, delete: 1, status: 1, scan: 1, image: 1, logout: 1,
+  leads_status: 1, leads_find: 1, leads_verify: 1, leads_saved: 1, leads_save: 1, leads_update: 1, leads_demo: 1, sales_customers: 1 };
+
+function authProps_() { return PropertiesService.getScriptProperties(); }
+function authUsers_() { try { return JSON.parse(authProps_().getProperty('AUTH_USERS') || '{}'); } catch (e) { return {}; } }
+function authSaveUsers_(u) { authProps_().setProperty('AUTH_USERS', JSON.stringify(u)); }
+function authRand_() { return (Utilities.getUuid() + Utilities.getUuid()).replace(/-/g, ''); }
+function authKey_() { var p = authProps_(), k = p.getProperty('AUTH_KEY'); if (!k) { k = authRand_(); p.setProperty('AUTH_KEY', k); } return k; }
+function authEmail_(e) { e = String(e || '').trim().toLowerCase(); return /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,}$/.test(e) ? e : ''; }
+function authLegacyOn_() { return authProps_().getProperty('AUTH_LEGACY_OFF') !== '1'; }
+function authHex_(s) { return /^[a-f0-9]{64}$/.test(String(s || '')); }
+
+/* ---- sessions ---- */
+function authNewSession_(u, trusted) {
+  var t = authRand_(), now = Date.now();
+  authProps_().setProperty('AUTH_S_' + sha256Hex_('s:' + t), JSON.stringify({ e: u.email, x: now + (trusted ? AUTH_TRUST_MS : AUTH_SESSION_MS), g: u.gen || 1, t: !!trusted }));
+  authCleanSessions_();
+  return t;
+}
+function authSession_(token) {
+  if (!authHex_(token)) return null;
+  var k = 'AUTH_S_' + sha256Hex_('s:' + token), raw = authProps_().getProperty(k);
+  if (!raw) return null;
+  var s; try { s = JSON.parse(raw); } catch (e) { return null; }
+  var u = authUsers_()[s.e];
+  if (!u || u.status !== 'active' || (u.gen || 1) !== s.g || s.x < Date.now()) { authProps_().deleteProperty(k); return null; }
+  return u;
+}
+function authCleanSessions_() {
+  var p = authProps_(), all = p.getProperties(), now = Date.now();
+  Object.keys(all).forEach(function (k) { if (k.indexOf('AUTH_S_') === 0) { try { if (JSON.parse(all[k]).x < now) p.deleteProperty(k); } catch (e) { p.deleteProperty(k); } } });
+}
+function authEndSessions_(u) { u.gen = (u.gen || 1) + 1; }
+
+/* ---- TOTP (RFC 6238, SHA-1, 6 digits, 30 s) ---- */
+var B32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function b32enc_(bytes) { var bits = '', out = ''; bytes.forEach(function (b) { bits += ('00000000' + (b & 255).toString(2)).slice(-8); }); for (var i = 0; i + 5 <= bits.length; i += 5) out += B32[parseInt(bits.substr(i, 5), 2)]; return out; }
+function b32dec_(s) { var bits = ''; String(s).replace(/=+$/, '').toUpperCase().split('').forEach(function (c) { var v = B32.indexOf(c); if (v >= 0) bits += ('00000' + v.toString(2)).slice(-5); }); var out = []; for (var i = 0; i + 8 <= bits.length; i += 8) out.push(parseInt(bits.substr(i, 8), 2) > 127 ? parseInt(bits.substr(i, 8), 2) - 256 : parseInt(bits.substr(i, 8), 2)); return out; }
+function totpAt_(secret, counter) {
+  var msg = []; for (var i = 7; i >= 0; i--) { var b = Math.floor(counter / Math.pow(256, i)) % 256; msg.push(b > 127 ? b - 256 : b); }
+  var h = Utilities.computeHmacSignature(Utilities.MacAlgorithm.HMAC_SHA_1, msg, b32dec_(secret)).map(function (x) { return x & 255; });
+  var o = h[19] & 15, n = ((h[o] & 127) << 24) | (h[o + 1] << 16) | (h[o + 2] << 8) | h[o + 3];
+  return ('000000' + (n % 1000000)).slice(-6);
+}
+function totpCheck_(u, code) {
+  code = String(code || '').replace(/\s/g, '');
+  if (!/^\d{6}$/.test(code) || !u.totp) return false;
+  var now = Math.floor(Date.now() / 30000);
+  for (var w = -1; w <= 1; w++) if (now + w > (u.totpLast || 0) && totpAt_(u.totp, now + w) === code) { u.totpLast = now + w; return true; }
+  return false;
+}
+
+/* ---- public actions ---- */
+function auth_(d) {
+  var c = CacheService.getScriptCache(), n = Number(c.get('auth_rate') || 0);
+  if (n > 120) return { ok: false, error: 'busy' }; c.put('auth_rate', String(n + 1), 60);
+  switch (d.action) {
+    case 'auth_config': return { ok: true, legacy: authLegacyOn_(), roles: AUTH_ROLES };
+    case 'auth_prelogin': return authPrelogin_(d);
+    case 'auth_login': return authLogin_(d);
+    case 'auth_mfa_enroll': return authMfaEnroll_(d);
+    case 'auth_me': var u = authSession_(d.token); return u ? { ok: true, user: authPublic_(u), legacy: authLegacyOn_() } : { ok: false, error: 'auth' };
+    case 'auth_logout': if (authHex_(d.token)) authProps_().deleteProperty('AUTH_S_' + sha256Hex_('s:' + d.token)); return { ok: true };
+    case 'auth_logout_all': var lu = authSession_(d.token); if (!lu) return { ok: false, error: 'auth' }; var us = authUsers_(); authEndSessions_(us[lu.email]); authSaveUsers_(us); authLog_(lu, 'signed out on all devices'); return { ok: true };
+    case 'auth_link_info': return authLinkInfo_(d);
+    case 'auth_set_password': return authSetPassword_(d);
+    case 'auth_reset_request': return authResetRequest_(d);
+    case 'auth_bootstrap': return authBootstrap_(d);
+  }
+  return { ok: false, error: 'unknown' };
+}
+function authPublic_(u) { return { email: u.email, name: u.name, role: u.role, roleName: AUTH_ROLES[u.role], mfa: !!u.totpOn }; }
+function authPrelogin_(d) {
+  var e = authEmail_(d.email), u = e && authUsers_()[e];
+  // Unknown emails get a stable fake salt so the answer does not reveal who has an account.
+  return { ok: true, salt: u && u.cSalt ? u.cSalt : sha256Hex_('fake:' + authKey_() + ':' + e).slice(0, 32) };
+}
+function authLogin_(d) {
+  var e = authEmail_(d.email), users = authUsers_(), u = users[e];
+  var c = CacheService.getScriptCache(), fk = 'auth_fail_' + sha256Hex_(e || 'x').slice(0, 16), fails = Number(c.get(fk) || 0);
+  if (fails >= 6) return { ok: false, error: 'locked' };
+  var good = u && u.status === 'active' && u.hash && authHex_(d.dk) && sameHex_(sha256Hex_(u.sSalt + d.dk), u.hash);
+  if (!good) { c.put(fk, String(fails + 1), 900); Utilities.sleep(500); if (u) authLog_(u, 'failed sign-in (password)'); return { ok: false, error: 'badlogin' }; }
+  if (u.role === 'owner') {
+    if (!u.totpOn) {
+      // First owner sign-in: set up the authenticator before any session is created.
+      if (!u.totpPending) { u.totpPending = b32enc_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, authRand_()).slice(0, 20)); authSaveUsers_(users); }
+      var pt = authRand_(); c.put('auth_pend_' + sha256Hex_(pt), e, 900);
+      return { ok: true, step: 'mfa_enroll', pending: pt, secret: u.totpPending, uri: 'otpauth://totp/' + encodeURIComponent('Riverbend Web Co.:' + u.email) + '?secret=' + u.totpPending + '&issuer=' + encodeURIComponent('Riverbend Web Co.') + '&algorithm=SHA1&digits=6&period=30' };
+    }
+    var mfaOk = false;
+    if (d.code) mfaOk = totpCheck_(u, d.code);
+    else if (d.recovery) {
+      var rc = String(d.recovery).toLowerCase().replace(/[^a-z0-9]/g, ''), hit = (u.recovery || []).indexOf(sha256Hex_(u.rSalt + 'rc:' + rc));
+      if (hit >= 0) { u.recovery.splice(hit, 1); mfaOk = true; authLog_(u, 'used a recovery code (' + u.recovery.length + ' left)'); }
+    } else return { ok: true, step: 'mfa' };
+    if (!mfaOk) { c.put(fk, String(fails + 1), 900); authSaveUsers_(users); authLog_(u, 'failed sign-in (code)'); return { ok: false, error: 'badcode' }; }
+  }
+  c.remove(fk);
+  u.lastLogin = new Date().toISOString(); authSaveUsers_(users);
+  authLog_(u, 'signed in' + (d.trust ? ' (trusted device, 30 days)' : ''));
+  return { ok: true, token: authNewSession_(u, !!d.trust), user: authPublic_(u), trusted: !!d.trust };
+}
+function authMfaEnroll_(d) {
+  var c = CacheService.getScriptCache(), pk = 'auth_pend_' + sha256Hex_(String(d.pending || '')), e = c.get(pk);
+  if (!e) return { ok: false, error: 'expired' };
+  var users = authUsers_(), u = users[e];
+  if (!u || !u.totpPending) return { ok: false, error: 'expired' };
+  u.totp = u.totpPending;
+  if (!totpCheck_(u, d.code)) { delete u.totp; return { ok: false, error: 'badcode' }; }
+  u.totpOn = true; delete u.totpPending; c.remove(pk);
+  var codes = [], hashes = []; u.rSalt = authRand_().slice(0, 32);
+  for (var i = 0; i < 8; i++) { var r = authRand_().slice(0, 10); codes.push(r.slice(0, 5) + '-' + r.slice(5)); hashes.push(sha256Hex_(u.rSalt + 'rc:' + r)); }
+  u.recovery = hashes; u.lastLogin = new Date().toISOString(); authSaveUsers_(users);
+  authLog_(u, 'set up two-step sign-in');
+  return { ok: true, token: authNewSession_(u, !!d.trust), user: authPublic_(u), recovery: codes };
+}
+function authFindLink_(kind, token) {
+  if (!authHex_(token)) return null;
+  var h = sha256Hex_(kind + ':' + token), users = authUsers_();
+  for (var e in users) { var u = users[e]; if (u[kind + 'Hash'] && sameHex_(u[kind + 'Hash'], h) && u[kind + 'Exp'] > Date.now() && u.status !== 'disabled') return { users: users, u: u }; }
+  return null;
+}
+function authLinkInfo_(d) {
+  var kind = d.kind === 'reset' ? 'reset' : 'setup', f = authFindLink_(kind, d.link);
+  if (!f) return { ok: false, error: 'expired' };
+  return { ok: true, email: f.u.email, name: f.u.name, role: AUTH_ROLES[f.u.role], salt: authRand_().slice(0, 32), owner: f.u.role === 'owner' };
+}
+function authSetPassword_(d) {
+  var kind = d.kind === 'reset' ? 'reset' : 'setup', f = authFindLink_(kind, d.link);
+  if (!f) return { ok: false, error: 'expired' };
+  if (!authHex_(d.dk) || !/^[a-f0-9]{32}$/.test(String(d.salt || ''))) return { ok: false, error: 'bad' };
+  var u = f.u;
+  u.cSalt = d.salt; u.sSalt = authRand_().slice(0, 32); u.hash = sha256Hex_(u.sSalt + d.dk);
+  delete u[kind + 'Hash']; delete u[kind + 'Exp'];
+  u.status = 'active'; authEndSessions_(u);
+  authSaveUsers_(f.users);
+  authLog_(u, kind === 'reset' ? 'reset password' : 'created password');
+  return { ok: true, email: u.email };
+}
+function authSendLink_(u, kind) {
+  var t = authRand_();
+  u[kind + 'Hash'] = sha256Hex_(kind + ':' + t); u[kind + 'Exp'] = Date.now() + (kind === 'reset' ? AUTH_RESET_MS : AUTH_SETUP_MS);
+  var url = 'https://' + SITE + '/login/#' + kind + '=' + t;
+  MailApp.sendEmail({ to: u.email, name: 'Riverbend Web Co.', subject: kind === 'reset' ? 'Reset your Riverbend password' : 'Set up your Riverbend account',
+    body: 'Hi ' + first_(u.name) + ',\n\n' + (kind === 'reset' ? 'Use this link to choose a new password. It works once and expires in 1 hour:' : 'You have a Riverbend Web Co. ' + AUTH_ROLES[u.role] + ' account. Use this link to choose your password. It works once and expires in 72 hours:') +
+      '\n\n' + url + '\n\n' + (kind === 'reset' ? 'If you did not ask for this, ignore this email. Your password stays the same.' : 'Riverbend will never email you a password.') + '\n\nRiverbend Web Co.' });
+}
+function authResetRequest_(d) {
+  var e = authEmail_(d.email), users = authUsers_(), u = users[e], c = CacheService.getScriptCache();
+  if (u && u.status === 'active' && !c.get('auth_rr_' + sha256Hex_(e))) {
+    c.put('auth_rr_' + sha256Hex_(e), '1', 300);
+    authSendLink_(u, 'reset'); authSaveUsers_(users); authLog_(u, 'password reset requested');
+  }
+  return { ok: true }; // same answer whether or not the email has an account
+}
+/* First-time setup: the caller supplies email addresses; only those whose SHA-256 is listed in
+   AUTH_SEED (with the name and role an owner approved) get a setup link, once each. The public
+   file never contains the addresses, and nobody can add an unlisted person or change a role. */
+function authBootstrap_(d) {
+  var users = authUsers_(), sent = 0, keys = authProps_().getProperty('AUTH_SEED_DONE') || '';
+  var given = [].concat(d.emails || []).map(authEmail_).filter(String);
+  AUTH_SEED.forEach(function (s) {
+    if (keys.indexOf(s.h) >= 0) return;
+    var e = given.filter(function (x) { return sha256Hex_(x) === s.h; })[0];
+    if (!e || users[e]) return;
+    users[e] = { email: e, name: s.n, role: s.r, status: 'invited', created: new Date().toISOString(), gen: 1 };
+    authSendLink_(users[e], 'setup'); sent++;
+    keys += s.h + ',';
+  });
+  authSaveUsers_(users); authProps_().setProperty('AUTH_SEED_DONE', keys);
+  return { ok: true, sent: sent };
+}
+
+/* ---- owner-only account management ---- */
+function team_(d, me) {
+  var users = authUsers_(), e = authEmail_(d.email), u = users[e];
+  switch (d.action) {
+    case 'team_list': return { ok: true, users: Object.keys(users).map(function (k) { var x = users[k]; return { email: x.email, name: x.name, role: x.role, roleName: AUTH_ROLES[x.role], status: x.status, mfa: !!x.totpOn, lastLogin: x.lastLogin || '', recoveryLeft: (x.recovery || []).length }; }), commission: authCommission_(), legacy: authLegacyOn_() };
+    case 'team_invite':
+      if (!e || !AUTH_ROLES[d.role] || !clip_(d.name, 80)) return { ok: false, error: 'bad' };
+      if (u) return { ok: false, error: 'exists' };
+      users[e] = { email: e, name: clip_(d.name, 80), role: d.role, status: 'invited', created: new Date().toISOString(), gen: 1, invitedBy: me.email };
+      authSendLink_(users[e], 'setup'); authSaveUsers_(users); authLog_(me, 'invited ' + e + ' as ' + AUTH_ROLES[d.role]);
+      return { ok: true };
+    case 'team_resend':
+      if (!u || u.status === 'disabled') return { ok: false, error: 'notfound' };
+      authSendLink_(u, u.status === 'invited' ? 'setup' : 'reset'); authSaveUsers_(users); authLog_(me, 'sent a ' + (u.status === 'invited' ? 'setup' : 'reset') + ' link to ' + e);
+      return { ok: true };
+    case 'team_disable':
+      if (!u || e === me.email) return { ok: false, error: 'self' };
+      u.status = d.on ? 'disabled' : (u.hash ? 'active' : 'invited'); authEndSessions_(u); authSaveUsers_(users); authLog_(me, (d.on ? 'disabled ' : 'enabled ') + e);
+      return { ok: true };
+    case 'team_mfa_reset':
+      if (!u || e === me.email) return { ok: false, error: 'self' };
+      u.totpOn = false; delete u.totp; delete u.totpPending; u.recovery = []; authEndSessions_(u); authSaveUsers_(users); authLog_(me, 'reset two-step sign-in for ' + e);
+      return { ok: true };
+    case 'team_role':
+      if (!u || e === me.email || !AUTH_ROLES[d.role]) return { ok: false, error: 'bad' };
+      u.role = d.role; authEndSessions_(u); authSaveUsers_(users); authLog_(me, 'changed role of ' + e + ' to ' + AUTH_ROLES[d.role]);
+      return { ok: true };
+    case 'team_commission':
+      var cm = { flat: Math.max(0, Math.round(Number(d.flat || 0) * 100)), setupPct: Math.max(0, Math.min(100, Number(d.setupPct || 0))), monthlyPct: Math.max(0, Math.min(100, Number(d.monthlyPct || 0))), months: Math.max(0, Math.min(120, Math.round(Number(d.months || 12)))) };
+      authProps_().setProperty('AUTH_COMMISSION', JSON.stringify(cm)); authLog_(me, 'changed commission settings: ' + JSON.stringify(cm));
+      return { ok: true, commission: cm };
+    case 'team_legacy_off':
+      var owners = Object.keys(users).map(function (k) { return users[k]; }).filter(function (x) { return x.role === 'owner' && x.status === 'active' && x.totpOn && x.lastLogin; });
+      if (owners.length < 2) return { ok: false, error: 'owners', detail: 'Both owner accounts must be set up (password and authenticator) and signed in once first.' };
+      authProps_().setProperty('AUTH_LEGACY_OFF', '1'); authLog_(me, 'turned off the old shared Studio and billing passwords');
+      return { ok: true };
+  }
+  return { ok: false, error: 'unknown' };
+}
+function authCommission_() { try { return JSON.parse(authProps_().getProperty('AUTH_COMMISSION') || ''); } catch (e) { return { flat: 0, setupPct: 0, monthlyPct: 0, months: 12 }; } }
+function authLog_(u, what) {
+  try {
+    var ss = ss_(), sh = ss.getSheetByName('Billing Activity');
+    if (!sh) { sh = ss.insertSheet('Billing Activity'); sh.appendRow(['Time', 'Action', 'Account', 'Details', 'Result']); sh.setFrozenRows(1); }
+    sh.appendRow([new Date(), 'account', '', (u && u.email ? u.email + ': ' : '') + what, 'ok']);
+  } catch (e) { console.error(e); }
+}
+
+/* ---- salesperson view: own customers, progress and commission (no company totals) ---- */
+function salesCustomers_(me) {
+  var cm = authCommission_();
+  var list = billAll_().filter(function (a) { return !(a.flags && (a.flags.selftest || a.flags.postest)) && (me.role === 'owner' || a.rep === me.email); });
+  var progress = function (a) {
+    if (a.status === 'ended') return 'Ended';
+    if (a.status === 'awaiting_card') return 'Signed: waiting for payment setup';
+    if (a.status === 'building') return 'Payment set up: website in progress';
+    return 'Website live';
+  };
+  var rows = list.map(function (a) {
+    var counted = function (c) { return c.status === 'paid' && !c.refunded && !c.disputed; };
+    var monthly = (a.charges || []).filter(function (c) { return (c.kind === 'full' || c.kind === 'prorated' || c.kind === 'final') && counted(c); });
+    var monthsPaid = monthly.filter(function (c) { return c.kind === 'full'; }).length;
+    var monthlySum = monthly.filter(function (c, i) { return c.kind !== 'full' || i < (cm.months || 0) + 1; }).reduce(function (s, c) { return s + c.amount; }, 0);
+    var com = (a.status !== 'awaiting_card' ? cm.flat : 0) + (a.setupPaid ? Math.round(a.setup * cm.setupPct / 100) : 0) + Math.round(monthlySum * cm.monthlyPct / 100);
+    return { id: a.id, business: a.business, contact: a.owner, phone: a.phone, email: a.email, packageName: BILL_TIERS[a.tier].n, optionName: a.pay === 'zero' ? '$0 Down' : 'Pay Upfront',
+      signed: (a.agreement && a.agreement.signed) || String(a.created || '').slice(0, 10), progress: progress(a), launch: a.launch || '', monthsPaid: monthsPaid, commission: com, rep: me.role === 'owner' ? (a.rep || '') : undefined, test: a.env !== 'production' };
+  });
+  return { ok: true, customers: rows, commission: cm, totalCommission: rows.reduce(function (s, r) { return s + r.commission; }, 0) };
+}
+
+/* Leads for a salesperson: unassigned leads plus their own; saving or updating a lead assigns it to them. */
+function leadsRepCol_(sh) { if (String(sh.getRange(1, 15).getValue()) !== 'Rep') sh.getRange(1, 15).setValue('Rep'); return 15; }
+function leadsForRep_(d, me) {
+  var sh = leadsSheet_(), col = leadsRepCol_(sh);
+  var repOf = function (id) { var r = leadsRow_(sh, id); return r ? String(sh.getRange(r, col).getValue() || '') : null; };
+  switch (d.action) {
+    case 'leads_saved':
+      var n = sh.getLastRow(), reps = {};
+      if (n >= 2) sh.getRange(2, 1, n - 1, col).getValues().forEach(function (r) { reps[String(r[1])] = String(r[col - 1] || ''); });
+      return { ok: true, leads: leadsSaved_().filter(function (l) { return !reps[l.id] || reps[l.id] === me.email; }) };
+    case 'leads_save':
+      var res = leadsSave_(d.lead || {}); var row = leadsRow_(sh, clip_((d.lead || {}).id, 200));
+      if (row && !String(sh.getRange(row, col).getValue() || '')) sh.getRange(row, col).setValue(me.email);
+      return res;
+    case 'leads_update':
+      var who = repOf(String(d.id || ''));
+      if (who === null) return { ok: false, error: 'notfound' };
+      if (who && who !== me.email) return { ok: false, error: 'auth' };
+      if (!d.remove) sh.getRange(leadsRow_(sh, String(d.id)), col).setValue(me.email);
+      return leadsUpdate_(String(d.id || ''), d);
+    case 'leads_status': return leadsStatus_();
+    case 'leads_find': return leadsFind_(d);
+    case 'leads_verify': return leadsVerify_(d);
+    case 'leads_demo': return leadsDemo_(d.lead || {});
+  }
+  return { ok: false, error: 'auth' };
 }
