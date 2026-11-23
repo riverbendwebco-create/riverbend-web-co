@@ -83,6 +83,19 @@ const sh=H.sheets['Prospects']; const r2=sh.rows.findIndex(x=>x[1]==='L2'); sh.r
 const ls=B.studio_({action:'leads_saved',token:owenTok});
 ok('Owen sees his leads and unassigned leads, not other people\'s',ls.ok&&ls.leads.map(l=>l.id).join()==='L1',ls.leads&&ls.leads.map(l=>l.id).join());
 ok('Owen cannot change another person\'s lead',B.studio_({action:'leads_update',token:owenTok,id:'L2',stage:'Won'}).error==='auth');
+// Demo "Current update" thread: Owen posts, owners reply, names come from the session
+{ const sv=S({action:'save',token:kruzTok,demo:{name:'Update Test Tap',style:'pub',city:'Dubuque, IA'}}); const slug=sv.slug||(sv.demo&&sv.demo.slug);
+  const p1=S({action:'updates_add',token:owenTok,slug,text:'Talked to the owner. Wants the $0 down Custom plan, call back Friday.',name:'Spoofed Name'});
+  const p2=S({action:'updates_add',token:kruzTok,slug,text:'Good. Bring the menu photos Friday and get the agreement signed.'});
+  const l=S({action:'updates_list',token:owenTok,slug});
+  ok('Owen posts an update and an owner replies; both see the thread in order',p1.ok&&p2.ok&&l.ok&&l.updates.length===2&&l.updates[0].name==='Owen Seffrood'&&l.updates[0].role==='Salesperson'&&l.updates[1].role==='Owner'&&/call back Friday/.test(l.updates[0].text),JSON.stringify(l));
+  const li=S({action:'list',token:owenTok}).demos.find(x=>x.slug===slug);
+  ok('Demo list shows the update count and latest poster',li&&li.updates&&li.updates.n===2&&li.updates.role==='Owner',JSON.stringify(li&&li.updates));
+  H.cache['tok_'+'d'.repeat(64)]=H.props.STUDIO_PW_GEN||'1';
+  const lg=S({action:'updates_add',token:'d'.repeat(64),slug,text:'x'});
+  ok('Old shared Studio password cannot post (no name to show), empty and unknown-demo posts refused',!lg.ok&&S({action:'updates_add',token:owenTok,slug,text:'   '}).error==='empty'&&S({action:'updates_add',token:owenTok,slug:'nope',text:'hi'}).error==='notfound',JSON.stringify(lg));
+  ok('A message starting with = is stored as text, not a sheet formula',S({action:'updates_add',token:owenTok,slug,text:'=HYPERLINK("x")'}).ok&&String(H.sheets['Demo Updates'].rows.slice(-1)[0][6]).startsWith("'="));
+}
 // password reset: link, not password; ends sessions; owner still needs the code
 { S({action:'team_invite',token:kruzTok,email:'newrep@x.com',name:'New Rep',role:'sales'}); H.mails.length=0; H.cache={};
   A({action:'auth_reset_request',email:'newrep@x.com'}); const m=H.mails.find(x=>x.to==='newrep@x.com');

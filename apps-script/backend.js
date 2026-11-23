@@ -403,7 +403,9 @@ function studio_(d) {
   else if (!(legacy && authed_(d.token)) && !botAuthed_(d.token, d.action)) return { ok: false, error: 'auth' };
   if (me && me.role === 'sales' && /^leads_/.test(d.action)) return leadsForRep_(d, me);
   switch (d.action) {
-    case 'list': return { ok: true, demos: listDemos_() };
+    case 'list': return { ok: true, demos: demoUpdateCounts_(listDemos_()) };
+    case 'updates_list': return demoUpdatesList_(String(d.slug || ''));
+    case 'updates_add': return demoUpdateAdd_(String(d.slug || ''), String(d.text || ''), me);
     case 'get': return getDemo_(String(d.slug || ''), true);
     case 'save': return saveDemo_(d);
     case 'delete': return deleteDemo_(String(d.slug || ''));
@@ -636,6 +638,50 @@ function saveDemo_(d) {
 }
 
 /* Quick status change from the Studio card buttons (Ready, Pitched, Won, Lost). Only the status changes. */
+/* ---------- Demo "Current update" threads ----------
+   Salespeople post status updates on a demo's business; owners reply with next steps.
+   One row per message in the "Demo Updates" sheet. Posting needs an individual account
+   (the name on each message comes from the signed-in session, never from the form). */
+function demoUpdatesSheet_() {
+  var ss = ss_(), sh = ss.getSheetByName('Demo Updates');
+  if (!sh) { sh = ss.insertSheet('Demo Updates'); sh.appendRow(['Time', 'Demo', 'Business', 'Name', 'Email', 'Role', 'Message']); sh.setFrozenRows(1); }
+  return sh;
+}
+function demoUpdatesAll_() {
+  var sh = demoUpdatesSheet_(), n = sh.getLastRow();
+  if (n < 2) return [];
+  return sh.getRange(2, 1, n - 1, 7).getValues().map(function (r) {
+    return { t: r[0] instanceof Date ? r[0].toISOString() : String(r[0]), slug: String(r[1]), name: String(r[3]), role: String(r[5]), text: String(r[6]) };
+  });
+}
+function demoUpdateCounts_(demos) {
+  try {
+    var by = {};
+    demoUpdatesAll_().forEach(function (u) { var b = by[u.slug] = by[u.slug] || { n: 0, last: null }; b.n++; b.last = u; });
+    (demos || []).forEach(function (d) { var b = by[d.slug]; if (b) d.updates = { n: b.n, t: b.last.t, name: b.last.name, role: b.last.role }; });
+  } catch (e) { console.error(e); }
+  return demos;
+}
+function demoUpdatesList_(slug) {
+  if (!slug) return { ok: false, error: 'slug' };
+  return { ok: true, updates: demoUpdatesAll_().filter(function (u) { return u.slug === slug; }).map(function (u) { return { t: u.t, name: u.name, role: u.role, text: u.text }; }) };
+}
+function demoUpdateAdd_(slug, text, me) {
+  if (!me) return { ok: false, error: 'account', detail: 'Sign in with your own Riverbend account to post updates.' };
+  text = text.replace(/\r\n?/g, '\n').trim();
+  if (!slug) return { ok: false, error: 'slug' };
+  if (!text) return { ok: false, error: 'empty' };
+  if (text.length > 2000) return { ok: false, error: 'long', detail: 'Keep updates under 2,000 characters.' };
+  var sh0 = demoSheet_(), row = findRow_(sh0, slug);
+  if (!row) return { ok: false, error: 'notfound' };
+  var biz = String(sh0.getRange(row, 2).getValue() || '');
+  var lock = LockService.getScriptLock(); lock.waitLock(15000);
+  try {
+    // A leading = + - @ would make Sheets treat the message as a formula: store it as plain text.
+    demoUpdatesSheet_().appendRow([new Date(), slug, biz, me.name, me.email, me.role === 'owner' ? 'Owner' : 'Salesperson', /^[=+\-@]/.test(text) ? "'" + text : text]);
+  } finally { lock.releaseLock(); }
+  return demoUpdatesList_(slug);
+}
 function setDemoStatus_(slug, status) {
   if (DEMO_STATUS.indexOf(status) < 0) return { ok: false, error: 'status' };
   var lock = LockService.getScriptLock();
@@ -1811,7 +1857,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23p';
+var BILL_VERSION = '2026-11-23q';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3154,7 +3200,7 @@ var AUTH_SEED = [
   { h: 'faa43f33df3c63840f5072e806cb39b91db17dc4984acf0cf7447b08c9ce04dd', n: 'Owen Seffrood', r: 'sales' }
 ];
 var AUTH_SALES_OK = { list: 1, get: 1, save: 1, delete: 1, status: 1, scan: 1, image: 1, logout: 1,
-  leads_status: 1, leads_find: 1, leads_verify: 1, leads_saved: 1, leads_save: 1, leads_update: 1, leads_demo: 1, sales_customers: 1 };
+  leads_status: 1, leads_find: 1, leads_verify: 1, leads_saved: 1, leads_save: 1, leads_update: 1, leads_demo: 1, sales_customers: 1, updates_list: 1, updates_add: 1 };
 
 function authProps_() { return PropertiesService.getScriptProperties(); }
 function authUsers_() { try { return JSON.parse(authProps_().getProperty('AUTH_USERS') || '{}'); } catch (e) { return {}; } }
