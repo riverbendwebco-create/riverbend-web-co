@@ -531,8 +531,9 @@ function listDemos_() {
   var sh = demoSheet_();
   var last = sh.getLastRow();
   if (last < 2) return [];
-  return sh.getRange(2, 1, last - 1, 6).getValues().map(function (r) {
-    return { slug: r[0], name: r[1], style: r[2], city: r[3], status: r[4], updated: r[5] ? new Date(r[5]).toISOString() : '' };
+  return sh.getRange(2, 1, last - 1, 7).getValues().map(function (r) {
+    var cat = ''; try { cat = String((JSON.parse(r[6] || '{}') || {}).category || '').slice(0, 60); } catch (e) {}
+    return { slug: r[0], name: r[1], style: r[2], city: r[3], status: r[4], updated: r[5] ? new Date(r[5]).toISOString() : '', category: cat };
   }).filter(function (r) { return r.slug; }).sort(function (a, b) { return a.updated < b.updated ? 1 : -1; });
 }
 

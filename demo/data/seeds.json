@@ -7428,5 +7428,25 @@
       "city": "Frederick, MD",
       "address": ""
     }
+  },
+  {
+    "key": "cleaning-mommas-1",
+    "matchName": "Cleaning Momma's",
+    "patch": true,
+    "data": {
+      "city": "Frederick, MD",
+      "address": "",
+      "category": "Cleaning Service",
+      "style": "trade",
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
   }
 ]

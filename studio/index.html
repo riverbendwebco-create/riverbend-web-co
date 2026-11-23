@@ -505,7 +505,7 @@ function renderCards(){
     return el('article',{class:'dc'},
       el('div',{class:'dc-top'},
         el('div',{class:'dc-mark '+(d.style||'pub'),text:(d.name||'?').trim().charAt(0).toUpperCase()}),
-        el('div',{style:'flex:1;min-width:0'},el('h3',{text:d.name||'Untitled'}),el('div',{class:'meta',text:[d.city,styleName,when&&('Updated '+when)].filter(Boolean).join(' · ')})),
+        el('div',{style:'flex:1;min-width:0'},el('h3',{text:d.name||'Untitled'}),el('div',{class:'meta',text:[d.city,d.category||styleName,when&&('Updated '+when)].filter(Boolean).join(' · ')})),
         el('span',{class:'tag '+(d.status||'Draft'),text:d.status||'Draft'})),
       el('div',{class:'dc-actions'},
         el('button',{class:'btn btn-primary btn-sm',type:'button',onclick:()=>openDemo(d.slug)},svgUse('i-ext'),document.createTextNode('Open demo')),
