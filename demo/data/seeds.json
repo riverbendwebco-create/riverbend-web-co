@@ -7280,5 +7280,117 @@
         "officeCity": "Asbury, IA 52002"
       }
     }
+  },
+  {
+    "key": "cleaning-momma-hours-1",
+    "matchName": "Cleaning Momma",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
+  },
+  {
+    "key": "cleaning-momma-hours-2",
+    "matchName": "The Cleaning Momma",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
+  },
+  {
+    "key": "cleaning-momma-hours-3",
+    "matchName": "Cleaning Momma LLC",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
+  },
+  {
+    "key": "cleaning-momma-hours-4",
+    "matchName": "The Cleaning Momma LLC",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
+  },
+  {
+    "key": "cleaning-momma-hours-5",
+    "matchName": "Cleaning Mama",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
+  },
+  {
+    "key": "cleaning-momma-hours-6",
+    "matchName": "The Cleaning Mama",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
+  },
+  {
+    "key": "cleaning-momma-hours-7",
+    "matchName": "Cleaning Momma Frederick",
+    "patch": true,
+    "data": {
+      "hours": [
+        "8am - 6pm",
+        "8am - 6pm",
+        "9am - 5pm",
+        "8am - 12pm",
+        "8am - 6pm",
+        "8am - 5pm",
+        "8am - 5pm"
+      ]
+    }
   }
 ]
