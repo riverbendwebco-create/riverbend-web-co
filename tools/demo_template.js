@@ -2266,102 +2266,130 @@ function stSharp(){ const d=document.createElement('div'); d.setAttribute('aria-
   d.innerHTML='<svg width="0" height="0"><filter id="st-sharp" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="0 -0.6 0 -0.6 3.4 -0.6 0 -0.6 0"/></filter></svg>'; return d; }
 function shadeTree(C){
   const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const isST=/^shade\s?tree\b/i.test(name);
+  if(isST){ C.addr='5710 Bartonsville Rd'; C.city='Frederick, MD 21704'; C.phone='3017481110'; C.tel='tel:+13017481110'; C.phoneTxt='(301) 748-1110'; C.email='charlie@shadetreelawnscaping.com';
+    C.hours=['7:30am - 7:30pm','7:30am - 7:30pm','7:30am - 7:30pm','7:30am - 7:30pm','7:30am - 7:30pm','7:30am - 7:30pm','Closed']; C.hasHours=true; C.today=C.hours[todayIx()]; C.daysOpen=6;
+    C.maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('Shade Tree Services, 5710 Bartonsville Rd, Frederick, MD 21704'); }
   const town=C.city?C.city.split(',')[0]:'your area';
+  const WP=f=>'https://shadetreelawnscaping.com/wp-content/uploads/2021/03/'+f+'?w=1200';
   const P={hero:ST_U('1765064519883-651c506ec70d',1400),saw:ST_U('1781642945922-b9452456d658'),prune:ST_U('1754321902809-5c21cbc67228'),ladder:ST_U('1754321871548-61bdbc6f1506'),cut:ST_U('1684332666088-f35b252b5aca'),climb:ST_U('1626828476637-5bd713ef9f22'),helmet:ST_U('1588878309774-4b3f42a19a8f'),trim:ST_U('1754321889123-0485c7fea5f1'),sit:ST_U('1669065054992-3151b15aab08'),branch:ST_U('1765064520296-1e56ebb82e17'),arb:ST_U('1754322449185-31f56117ed87')};
-  const heroPic=ok(x.heroPhoto)||C.own[0]||P.hero;
+  const heroPic=isST?WP('shadetree-trailer.jpg'):(ok(x.heroPhoto)||C.own[0]||P.hero);
   const defs=[{n:'Tree Removal',d:'Safe removal of dead, damaged or unwanted trees, near houses, fences and power lines.',img:P.saw},
     {n:'Trimming & Pruning',d:'Shape your trees, clear your roof and keep branches healthy and strong.',img:P.prune},
     {n:'Stump Grinding',d:'Grind old stumps down so you can mow, plant or build right over the spot.',img:P.cut},
     {n:'Storm Cleanup',d:'Downed limbs and leaning trees taken care of after the storm passes.',img:P.trim}];
-  const isST=/^shade\s?tree\b/i.test(name);
   const STS=isST?[
-    {n:'Tree Removal',t:'Tree Care',d:'Tree removal is hazardous work best left to the experts. Our crew is trained, experienced, and ready to get to work.',img:'https://riverbendwebco.com/demo/img/st-removal.jpg'},
-    {n:'Stump Removal',t:'Tree Care',d:'There is no need to wait years for those unsightly tree stumps to decompose, give us a call today.',img:'https://riverbendwebco.com/demo/img/st-stump.jpg'},
-    {n:'Lot Clearing',t:'Land',d:'Residential and commercial lot clearing doesn\u2019t need to cost a fortune. We offer the best prices in our service area.',img:'https://riverbendwebco.com/demo/img/st-lot.jpg'},
-    {n:'Lawn Care',t:'Lawn',d:'Mowing, trimming, mulching, aeration, seeding: we do it all. No job is too big or small.',img:'https://riverbendwebco.com/demo/img/st-lawn.jpg'},
-    {n:'Power Washing',t:'Exterior',d:'Got green? Our power washing services remove mold, mildew, algae, and moss growing on your sidewalk, deck, brick, or siding.',img:'https://riverbendwebco.com/demo/img/st-wash.jpg'},
-    {n:'Landscaping',t:'Landscape',d:'We offer a variety of landscaping and hardscaping services. Not sure where to start? We can help!',img:'https://riverbendwebco.com/demo/img/st-landscape.jpg'},
-    {n:'Snow Removal',t:'Commercial',d:'Keep your business on schedule with Shade Tree\u2019s commercial snow removal services.',img:ST_U('1768063938563-db941261d2f4')},
-    {n:'Grounds Management',t:'Commercial',d:'Let our crew handle the mowing, trimming, and seeding to keep your business looking sharp.',img:'https://riverbendwebco.com/demo/img/st-grounds.jpg'},
-    {n:'Firewood',t:'Firewood',d:'Our seasoned firewood is available for purchase in small amounts or by the cord (4\u2019H x 8\u2019W x 4\u2019D or 128 cubic ft.).',img:'https://riverbendwebco.com/demo/img/st-firewood.jpg'}]:null;
-  const svc=(STS?STS:Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,8).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n)
-    .map((v,i)=>Object.assign({},v,{img:ok(v.img)||(defs[i]||{}).img||[P.ladder,P.climb,P.branch,P.arb][i%4]}));
-  const go=id=>e=>{ e.preventDefault(); menu.hidden=true; scrollTo(id); };
+    {n:'Tree Removal',t:'Tree & Land',d:'Tree removal is hazardous work best left to the experts. Our crew is trained, experienced, and ready to get to work.',img:WP('bucket-1.jpg')},
+    {n:'Stump Removal',t:'Tree & Land',d:'There is no need to wait years for those unsightly tree stumps to decompose, give us a call today.',img:WP('pict0130-1.jpg')},
+    {n:'Lot Clearing',t:'Tree & Land',d:'Residential and commercial lot clearing doesn’t need to cost a fortune. We offer the best prices in our service area.',img:WP('lot-clearing-1.jpg')},
+    {n:'Lawn Care',t:'Lawn & Landscape',d:'Mowing, trimming, mulching, aeration, seeding: we do it all. No job is too big or small.',img:WP('estimate_1140x430.jpg')},
+    {n:'Landscaping',t:'Lawn & Landscape',d:'We offer a variety of landscaping and hardscaping services. Not sure where to start? We can help!',img:WP('pict0021-1.jpg')},
+    {n:'Power Washing',t:'Property',d:'Got green? Our power washing services remove mold, mildew, algae, and moss growing on your sidewalk, deck, brick, or siding.',img:WP('power-washing-edited.jpg')},
+    {n:'Snow Removal',t:'Commercial',d:'Keep your business on schedule with Shade Tree’s commercial snow removal services.',img:ST_U('1768063938563-db941261d2f4')},
+    {n:'Grounds Management',t:'Commercial',d:'Let our crew handle the mowing, trimming, and seeding to keep your business looking sharp.',img:WP('dscn0413_jpg-1.jpg')},
+    {n:'Firewood',t:'Firewood',d:'Our seasoned firewood is available for purchase in small amounts or by the cord (4’H x 8’W x 4’D or 128 cubic ft.).',img:WP('firewood.jpg')}]:null;
+  const svc=(STS?STS:Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,9).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n)
+    .map((v,i)=>Object.assign({},v,{t:v.t||'Service',img:ok(v.img)||(defs[i]||{}).img||[P.ladder,P.climb,P.branch,P.arb][i%4]}));
+  const go=id=>e=>{ if(e) e.preventDefault(); menu.hidden=true; scrollTo(id); };
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
-  const links=()=>[A('st-top','Home'),A('st-about','About'),A('st-services','Services'),C.reviews.length?A('st-reviews','Reviews'):null,A('st-contact','Contact')];
-  const btn=(t,href,cls)=>h('a',{class:'st-btn '+(cls||''),href:href||(C.tel||'#st-contact'),onclick:href||C.tel?null:go('st-contact')},h('span',null,t),h('i',null,stI('arrow')));
-  const logo=ok(x.logoUrl)||C.logo;
-  const brand=h('a',{class:'st-brand',href:'#',onclick:go('st-top')},logo?h('img',{src:logo,alt:name}):h('span',{class:'st-mark'},stI('tree')),h('span',null,name));
+  const links=()=>[A('st-top','Home'),A('st-services','Services'),A('st-about','About'),isST?A('st-area','Service Area'):null,C.reviews.length?A('st-reviews','Reviews'):null,A('st-contact','Contact')];
+  const btn=(t,href,cls,ic)=>h('a',{class:'st-btn '+(cls||''),href:href||(C.tel||'#st-contact'),onclick:href&&href[0]==='#'?go(href.slice(1)):(href||C.tel?null:go('st-contact'))},h('span',null,t),h('i',null,stI(ic||'arrow')));
+  const logo=isST?'https://shadetreelawnscaping.com/wp-content/uploads/2021/03/cropped-icons8-tms-tree-100.png':(ok(x.logoUrl)||C.logo);
+  const brand=()=>h('a',{class:'st-brand',href:'#',onclick:go('st-top')},logo?h('span',{class:'st-mark img'},h('img',{src:logo,alt:'',onerror:function(){this.replaceWith(stI('tree'));}})):h('span',{class:'st-mark'},stI('tree')),h('span',null,name));
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  /* estimate form, filled from service sheets */
+  const sel=h('select',{name:'s'},h('option',{value:''},'Choose a service'),svc.map(v=>h('option',null,v.n)));
+  const ask=n=>{ sheet.hidden=true; document.body.style.overflow=''; if(n) sel.value=n; scrollTo('st-contact'); setTimeout(()=>{ const i=form.querySelector('input'); if(i) i.focus({preventScroll:true}); },600); };
+  const sheet=h('div',{class:'st-sheet',hidden:true,role:'dialog','aria-modal':'true'});
+  const closeSheet=()=>{ sheet.hidden=true; document.body.style.overflow=''; };
+  sheet.addEventListener('click',e=>{ if(e.target===sheet) closeSheet(); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&!sheet.hidden) closeSheet(); });
+  const openSvc=v=>{ sheet.replaceChildren(h('div',{class:'st-sheet-card'},
+      h('button',{type:'button',class:'st-x','aria-label':'Close',onclick:closeSheet},'×'),
+      bg(h('div',{class:'st-sheet-img'}),v.img),
+      h('div',{class:'st-sheet-b'},h('span',{class:'st-tag'},v.t),h('h3',null,v.n),h('p',null,v.d),
+        isST&&v.t==='Commercial'?h('p',{class:'st-note'},'For businesses and commercial properties.'):null,
+        h('div',{class:'st-row'},h('button',{type:'button',class:'st-btn',onclick:()=>ask(v.n)},h('span',null,'Request an Estimate'),h('i',null,stI('arrow'))),
+          C.tel?h('a',{class:'st-ghost',href:C.tel},'Call '+C.phoneTxt):null)))); sheet.hidden=false; document.body.style.overflow='hidden'; };
   const strip=h('div',{class:'st-strip'},h('div',{class:'st-w st-strip-in'},
-    addrTxt?h('span',null,stI('pin'),addrTxt):null,C.email?h('a',{href:'mailto:'+C.email},stI('mail'),C.email):null,
-    C.today?h('span',{class:'st-hide-s'},stI('clock'),/closed/i.test(C.today)?'Closed today':'Open today '+C.today):null,
-    h('span',{class:'st-strip-r'},C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null,C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null)));
+    addrTxt?h('a',{href:C.maps||'#',target:'_blank',rel:'noopener'},stI('pin'),addrTxt):null,C.email?h('a',{class:'st-hide-s',href:'mailto:'+C.email},stI('mail'),C.email):null,
+    C.today?h('span',{class:'st-strip-r'},stI('clock'),/closed/i.test(C.today)?'Closed today':'Open today '+C.today.replace(' - ',' to ')):null));
   const menu=h('nav',{class:'st-menu',hidden:true},links(),C.tel?h('a',{class:'st-btn',href:C.tel},h('span',null,'Call '+C.phoneTxt),h('i',null,stI('phone'))):null);
-  const nav=h('header',{class:'st-nav'},strip,h('div',{class:'st-bar'},h('div',{class:'st-w st-bar-in'},brand,h('nav',{class:'st-links'},links()),
+  const nav=h('header',{class:'st-nav'},strip,h('div',{class:'st-bar'},h('div',{class:'st-w st-bar-in'},brand(),h('nav',{class:'st-links'},links()),
     C.tel?h('a',{class:'st-call',href:C.tel},h('span',{class:'st-call-i'},stI('phone')),h('span',null,h('small',null,'Call Now'),h('b',null,C.phoneTxt))):null,
     h('button',{type:'button',class:'st-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},stI('menu'))),menu));
   const kick=t=>h('p',{class:'st-kick'},h('i'),t,h('i'));
+  const trust=isST?['Serving since 1991','Licensed and bonded','Residential & commercial']:[];
   const hero=h('section',{class:'st-hero',id:'st-top'},h('div',{class:'st-w st-hero-in'},
-    h('div',{class:'st-hero-t'},kick((isST?'Tree, lawn and property care':'Tree care')+(C.city?' for '+town+' homes and businesses':' for homes and businesses')),
+    h('div',{class:'st-hero-t'},kick(isST?'Grounds management, tree removal & landscaping':'Tree care for '+town+' homes and businesses'),
       h('h1',null,x.headline?x.headline:['Smart Tree Care, ',h('span',null,'Stunning Results')]),
-      h('p',null,C.tag||(isST?name+' handles tree removal, stump removal, lot clearing, lawn care, landscaping and more, for homes and businesses.':name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
-      h('div',{class:'st-row'},btn(C.tel?'Get an Estimate':'Contact Us')),
-      h('div',{class:'st-mini'},
-        h('div',{class:'st-mini-card'},h('span',{class:'st-mark sm'},stI('leaf')),h('b',null,C.tel?'Call for an estimate':'Talk to our crew'),C.tel?h('a',{href:C.tel},C.phoneTxt):h('a',{href:'#st-contact',onclick:go('st-contact')},'Get in touch'),h('a',{class:'st-mini-go',href:C.tel||'#st-contact','aria-label':'Call'},stI('arrow'))),
-        bg(h('div',{class:'st-mini-pic'}),isST?'https://riverbendwebco.com/demo/img/st-stump.jpg':P.ladder))),
-    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero?'':' sharp')}),heroPic),h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,'Local crew'),h('small',null,'Serving '+town))))));
-  const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},'Tree services in '+town+' and nearby')),
+      h('p',null,C.tag||(isST?'Shade Tree Services has served Frederick, Washington and Carroll County homes and businesses since 1991, from tree and stump removal to lawn care, landscaping and snow removal.':name+' keeps your trees healthy, safe and looking their best, from careful trimming to complete removals and cleanup.')),
+      h('div',{class:'st-row'},btn('Get an Estimate','#st-contact'),C.tel?h('a',{class:'st-ghost lg',href:C.tel},stI('phone'),C.phoneTxt):null),
+      trust.length?h('ul',{class:'st-trust'},trust.map(t=>h('li',null,h('span',null,stI('check')),t))):null,
+      h('div',{class:'st-finder'},h('small',null,'What do you need help with?'),h('div',{class:'st-chips'},svc.map(v=>h('button',{type:'button',onclick:()=>openSvc(v)},v.n))))),
+    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero?'':' sharp')}),heroPic),
+      h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,isST?'Since 1991':'Local crew'),h('small',null,isST?'Licensed and bonded':'Serving '+town))))));
+  const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},isST?'Serving Frederick, Washington and Carroll County, MD':'Tree services in '+town+' and nearby')),
     h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));
-  const tiles=isST?['https://riverbendwebco.com/demo/img/st-removal.jpg',P.prune,'https://riverbendwebco.com/demo/img/st-lot.jpg','https://riverbendwebco.com/demo/img/st-landscape.jpg',P.climb,'https://riverbendwebco.com/demo/img/st-lawn.jpg']:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb];
+  /* services with filter tabs */
+  const cats=['All'].concat([...new Set(svc.map(v=>v.t))]);
+  const cards=svc.map(v=>{ const c=h('article',{class:'st-card',tabindex:'0',role:'button','aria-label':v.n,onclick:()=>openSvc(v),onkeydown:e=>{ if(e.key==='Enter') openSvc(v); }},bg(h('div',{class:'st-card-img'}),v.img),
+      h('div',{class:'st-card-b'},h('span',{class:'st-tag'},v.t),h('h3',null,v.n),v.d?h('p',null,short(v.d,160)):null,
+        h('div',{class:'st-row'},h('span',{class:'st-ghost'},'Learn More'),h('span',{class:'st-sq'},stI('arrow'))))); c.dataset.t=v.t; return c; });
+  const tabs=cats.length>2?h('div',{class:'st-tabs',role:'tablist'},cats.map((t,i)=>h('button',{type:'button',class:i?null:'on',onclick:e=>{ tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); cards.forEach(c=>{ c.hidden=!(t==='All'||c.dataset.t===t); }); }},t))):null;
+  const services=h('section',{class:'st-sec st-soft',id:'st-services'},h('div',{class:'st-w'},
+    h('div',{class:'st-head'},kick('Our Services'),h('h2',null,isST?'Tree, lawn and property care, all in one crew':'Complete tree care, from the roots up'),h('p',{class:'st-mut'},'Tap any service to learn more or request an estimate.')),
+    tabs,h('div',{class:'st-cards'+(svc.length>4?' c3':'')},cards),
+    isST?h('p',{class:'st-more'},'And more! ',h('a',{href:'#st-contact',onclick:go('st-contact')},'Ask us about your project')):null));
+  const tiles=isST?[WP('bucket-1.jpg'),WP('img_1818.jpg'),WP('lot-clearing-1.jpg'),WP('pict0021-1.jpg'),WP('pict0130-1.jpg'),WP('estimate_1140x430.jpg')]:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb];
   const about=h('section',{class:'st-sec st-about',id:'st-about'},
     h('div',{class:'st-about-tiles','aria-hidden':'true'},tiles.map((u,i)=>bg(h('div',{class:'st-tile t'+i}),u))),
     h('div',{class:'st-w st-about-in rv'},kick('About Our Company'),
-      h('h2',{class:'st-big'},'At '+name+', we believe every yard deserves ',h('span',null,'trees that are healthy, safe and beautiful. We bring careful, professional tree care to every job.')),
-      C.about?h('p',{class:'st-about-p'},short(C.about,360)):null,
+      isST?h('h2',{class:'st-big'},'Since 1991, Shade Tree Services has been ',h('span',null,'taking care of trees, lawns and grounds for homes and businesses across Frederick, Washington and Carroll County.')):
+        h('h2',{class:'st-big'},'At '+name+', we believe every yard deserves ',h('span',null,'trees that are healthy, safe and beautiful. We bring careful, professional tree care to every job.')),
+      isST?h('p',{class:'st-about-p'},'Licensed and bonded, with one crew for tree removal, lot clearing, lawn care, landscaping, power washing, commercial snow removal and grounds management.'):(C.about?h('p',{class:'st-about-p'},short(C.about,360)):null),
       btn('Talk to Our Crew','#st-contact','sm')));
-  about.querySelector('.st-about-in .st-btn').onclick=go('st-contact');
-  const services=h('section',{class:'st-sec st-soft',id:'st-services'},h('div',{class:'st-w'},
-    h('div',{class:'st-head rv'},kick('Our Services'),h('h2',null,isST?'Tree, lawn and property care, all in one crew':'Complete tree care, from the roots up')),
-    h('div',{class:'st-cards'+(svc.length%3===0&&svc.length>4?' c3':'')},svc.slice(0,9).map(v=>h('article',{class:'st-card rv'},bg(h('div',{class:'st-card-img'}),v.img),
-      h('div',{class:'st-card-b'},h('span',{class:'st-tag'},v.t||'Tree Service'),h('h3',null,v.n),v.d?h('p',null,v.d):null,
-        h('div',{class:'st-row'},h('a',{class:'st-ghost',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact')},'Get an Estimate'),h('a',{class:'st-sq',href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact'),'aria-label':'Get an estimate'},stI('arrow'))))))),isST?h('p',{class:'st-more rv'},'And more! ',h('a',{href:C.tel||'#st-contact',onclick:C.tel?null:go('st-contact')},'Ask us about your project')):null));
-  const facts=[C.hasHours&&C.daysOpen?[dayRange(C.hours),'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week')]:[svc.length+' services','From one local crew'],[town,'Local and nearby'],[C.tel?C.phoneTxt:'Call us','Call for an estimate']];
-  const band=bg(h('section',{class:'st-band'}),P.hero,'linear-gradient(90deg,rgba(6,58,28,.94),rgba(6,58,28,.86))');
+  const facts=isST?[['1991','Serving since'],['Licensed','and bonded'],['3 counties','Frederick, Washington & Carroll']]:[C.hasHours&&C.daysOpen?[dayRange(C.hours),'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week')]:[svc.length+' services','From one local crew'],[town,'Local and nearby'],[C.tel?C.phoneTxt:'Call us','Call for an estimate']];
+  const band=bg(h('section',{class:'st-band'}),isST?WP('bucket-1.jpg'):P.hero,'linear-gradient(90deg,rgba(6,58,28,.94),rgba(6,58,28,.86))');
   band.append(h('div',{class:'st-w st-band-in'},h('h2',null,isST?'Property care':'Tree care',h('br'),'you can count on'),h('div',{class:'st-facts'},facts.map(([a,b])=>h('div',null,h('b',null,a),h('span',null,b))))));
+  const area=isST?h('section',{class:'st-sec',id:'st-area'},h('div',{class:'st-w st-area'},
+    h('div',{class:'st-area-t'},kick('Service Area'),h('h2',null,'Proudly serving Frederick and nearby counties'),h('p',{class:'st-mut'},'Residential and commercial customers in Frederick County, Washington County, Carroll County and the surrounding area.'),
+      h('div',{class:'st-counties'},[['Frederick County','Home base on Bartonsville Rd'],['Washington County','Residential & commercial'],['Carroll County','Residential & commercial']].map(([a,b])=>h('div',null,h('span',{class:'st-li-i'},stI('pin')),h('div',null,h('b',null,a),h('small',null,b))))),
+      h('p',{class:'st-mut sm'},'Not sure if we come to you? Call ',h('a',{href:C.tel},C.phoneTxt),' and ask.')),
+    h('div',{class:'st-area-map'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent('5710 Bartonsville Rd, Frederick, MD 21704')+'&z=9&output=embed',title:'Shade Tree Services service area',loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})))):null;
   const note=h('p',{class:'st-form-note',hidden:true});
-  const form=h('form',{class:'st-form rv',onsubmit:e=>{ e.preventDefault(); const f=new FormData(e.target); const body=['Name: '+f.get('n'),'Phone: '+f.get('p'),'Email: '+f.get('e'),'Service: '+f.get('s'),'',f.get('m')].join('\n');
+  const form=h('form',{class:'st-form',onsubmit:e=>{ e.preventDefault(); const f=new FormData(e.target); const body=['Name: '+f.get('n'),'Phone: '+f.get('p'),'Email: '+f.get('e'),'Service: '+(f.get('s')||'Not sure'),'',f.get('m')].join('\n');
       if(C.email){ location.href='mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request from '+(f.get('n')||'the website'))+'&body='+encodeURIComponent(body); }
-      note.hidden=false; note.textContent=C.tel?'Thanks! This is a demo, so for now call '+C.phoneTxt+' and we will get you on the schedule.':'Thanks! This is a demo form.'; }},
+      note.hidden=false; note.textContent=C.email?'Thanks! Your email app will open with your request filled in. Prefer to talk? Call '+C.phoneTxt+'.':(C.tel?'Thanks! This is a demo, so for now call '+C.phoneTxt+'.':'Thanks! This is a demo form.'); }},
     h('h3',null,'Request an Estimate'),
-    h('div',{class:'st-f2'},h('label',null,'Your name',h('input',{name:'n',required:true,placeholder:'Full name'})),h('label',null,'Phone',h('input',{name:'p',type:'tel',placeholder:'(555) 555-5555'}))),
-    h('div',{class:'st-f2'},h('label',null,'Email',h('input',{name:'e',type:'email',placeholder:'you@email.com'})),h('label',null,'Service',h('select',{name:'s'},h('option',null,'Choose a service'),svc.map(v=>h('option',null,v.n))))),
-    h('label',null,'Tell us about your trees',h('textarea',{name:'m',rows:4,placeholder:'How many trees, what you need done, anything we should know'})),
+    h('div',{class:'st-f2'},h('label',null,'Your name',h('input',{name:'n',required:true,placeholder:'Full name',autocomplete:'name'})),h('label',null,'Phone',h('input',{name:'p',type:'tel',placeholder:'(301) 555-5555',autocomplete:'tel'}))),
+    h('div',{class:'st-f2'},h('label',null,'Email',h('input',{name:'e',type:'email',placeholder:'you@email.com',autocomplete:'email'})),h('label',null,'Service',sel)),
+    h('label',null,'Tell us about your project',h('textarea',{name:'m',rows:4,placeholder:'What you need done, where, and anything we should know'})),
     h('div',{class:'st-row'},h('button',{type:'submit',class:'st-submit'},'Send Request'),h('span',{class:'st-sq light'},stI('arrow'))),note);
-  const contact=h('section',{class:'st-sec',id:'st-contact'},h('div',{class:'st-w st-contact'},
-    h('div',{class:'st-contact-t rv'},kick('Get in Touch'),h('h2',null,'Talk to tree pros who care about your yard'),
-      h('p',{class:'st-mut'},'Tell us what you need and we will help you plan the right work for your trees and your budget.'),
+  const contact=h('section',{class:'st-sec st-soft',id:'st-contact'},h('div',{class:'st-w st-contact'},
+    h('div',{class:'st-contact-t'},kick('Get in Touch'),h('h2',null,isST?'Ready to get your project started?':'Talk to tree pros who care about your yard'),
+      h('p',{class:'st-mut'},'Tell us what you need and we will help you plan the right work for your property and your budget.'),
       addrTxt?h('a',{class:'st-li',href:C.maps,target:'_blank',rel:'noopener'},h('span',{class:'st-li-i'},stI('pin')),h('span',null,h('small',null,'Location'),addrTxt)):null,
-      C.email?h('a',{class:'st-li',href:'mailto:'+C.email},h('span',{class:'st-li-i'},stI('mail')),h('span',null,h('small',null,'Email'),C.email)):null,
       C.tel?h('a',{class:'st-li',href:C.tel},h('span',{class:'st-li-i'},stI('phone')),h('span',null,h('small',null,'Phone'),C.phoneTxt)):null,
-      C.hasHours?h('div',{class:'st-hours'},hoursRows(C)):null),
+      C.email?h('a',{class:'st-li',href:'mailto:'+C.email},h('span',{class:'st-li-i'},stI('mail')),h('span',null,h('small',null,'Email'),C.email)):null,
+      C.hasHours?h('div',{class:'st-hours'},hoursRows(C).map(r=>{ r.lastChild.textContent=r.lastChild.textContent.replace(' - ',' to '); return r; })):null),
     form));
   const rv=C.reviews;
-  const reviews=rv.length?h('section',{class:'st-sec st-soft',id:'st-reviews'},h('div',{class:'st-w'},h('div',{class:'st-head rv'},kick('Reviews'),h('h2',null,'What our customers say')),
-    h('div',{class:'st-revs'},rv.slice(0,3).map(r=>h('figure',{class:'st-rev rv'},h('div',{class:'st-stars'},[0,1,2,3,4].slice(0,r.stars||5).map(()=>stI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,r.name)))))):null;
-  const mos=isST?['https://riverbendwebco.com/demo/img/st-removal.jpg','https://riverbendwebco.com/demo/img/st-stump.jpg',P.climb,'https://riverbendwebco.com/demo/img/st-lot.jpg','https://riverbendwebco.com/demo/img/st-wash.jpg','https://riverbendwebco.com/demo/img/st-landscape.jpg','https://riverbendwebco.com/demo/img/st-grounds.jpg','https://riverbendwebco.com/demo/img/st-firewood.jpg']:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb,P.saw,P.ladder];
+  const reviews=rv.length?h('section',{class:'st-sec',id:'st-reviews'},h('div',{class:'st-w'},h('div',{class:'st-head'},kick('Reviews'),h('h2',null,'What our customers say')),
+    h('div',{class:'st-revs'},rv.slice(0,3).map(r=>h('figure',{class:'st-rev'},h('div',{class:'st-stars'},[0,1,2,3,4].slice(0,r.stars||5).map(()=>stI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,r.name)))))):null;
+  const mos=isST?[WP('bucket-1.jpg'),WP('pict0130-1.jpg'),WP('img_1818.jpg'),WP('lot-clearing-1.jpg'),WP('power-washing-edited.jpg'),WP('pict0021-1.jpg'),WP('dscn0413_jpg-1.jpg'),WP('firewood.jpg')]:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb,P.saw,P.ladder];
   const cta=h('section',{class:'st-sec st-cta'},h('div',{class:'st-w'},
     h('div',{class:'st-mosaic','aria-hidden':'true'},mos.map((u,i)=>bg(h('div',{class:'st-m m'+i}),u))),
-    h('div',{class:'st-cta-t rv'},h('h2',null,'Let’s make your trees the best on the block'),h('p',{class:'st-mut'},'Healthy, good-looking trees take the right care. Call '+name+' and we will take it from here.'),btn(C.tel?'Call '+C.phoneTxt:'Contact Us'))));
+    h('div',{class:'st-cta-t rv'},h('h2',null,isST?'Let’s make your property the best on the block':'Let’s make your trees the best on the block'),h('p',{class:'st-mut'},'Call '+name+' and we will take it from here.'),
+      h('div',{class:'st-row c'},btn('Get an Estimate','#st-contact'),C.tel?h('a',{class:'st-ghost lg',href:C.tel},stI('phone'),C.phoneTxt):null))));
   const foot=h('footer',{class:'st-foot'},h('div',{class:'st-w st-foot-in'},
-    h('div',{class:'st-foot-b'},brand.cloneNode(true),h('p',null,name+' is your local partner for tree care'+(C.city?' in '+C.city:'')+'.')),
+    h('div',{class:'st-foot-b'},brand(),h('p',null,isST?'Grounds management, tree removal and landscaping services in Frederick, Washington and Carroll County, MD. Licensed and bonded. Serving since 1991.':name+' is your local partner for tree care'+(C.city?' in '+C.city:'')+'.')),
     h('div',null,h('b',null,'Quick Links'),links()),
-    h('div',null,h('b',null,'Our Services'),svc.slice(0,5).map(v=>h('a',{href:'#st-services',onclick:go('st-services')},v.n))),
-    h('div',null,h('b',null,'Contact'),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null)),
+    h('div',null,h('b',null,'Our Services'),svc.slice(0,9).map(v=>h('a',{href:'#st-services',onclick:e=>{e.preventDefault();openSvc(v);}},v.n))),
+    h('div',null,h('b',null,'Contact'),addrTxt?h('a',{href:C.maps,target:'_blank',rel:'noopener'},addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null,isST?h('span',null,'Mon to Sat, 7:30am to 7:30pm'):null)),
     h('div',{class:'st-w st-foot-c'},'© '+new Date().getFullYear()+' '+name+'. All rights reserved.'));
-  return h('div',{class:'st'},nav,hero,roll,about,services,band,contact,reviews,cta,foot);
+  return h('div',{class:'st'},nav,hero,roll,services,about,band,area,contact,reviews,cta,foot,sheet);
 }
-
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
 const MW_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1200&q=72';
 const MW_DATA={
