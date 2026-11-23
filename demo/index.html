@@ -1285,7 +1285,7 @@ body.t-mt{background:#fff}
 .ab-w{width:min(1200px,100% - 40px);margin:0 auto}
 .ab-nav{position:sticky;top:0;z-index:60;background:rgba(18,18,21,.97);backdrop-filter:blur(8px);color:#fff}
 .ab-nav-top{display:flex;align-items:center;gap:28px;height:74px}
-.ab-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.ab-brand img{height:46px}
+.ab-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.ab-brand img{height:58px;width:auto;border-radius:6px}.ab-brand.has-logo .ab-brand-t{display:none}.ab-hero.shop{background-position:center 40%}.ab-svc.n10{grid-template-columns:repeat(5,1fr)}
 .ab-logo{display:flex;align-items:center;gap:2px;background:var(--red);border-radius:10px;padding:6px 10px;font-weight:800;font-size:1.3rem;letter-spacing:-.02em}.ab-logo i{font-style:normal;font-weight:500;opacity:.85;margin:0 2px}
 .ab-brand-t b{display:block;font-size:.95rem;text-transform:uppercase;letter-spacing:.02em}.ab-brand-t small{display:block;font-size:.76rem;color:rgba(255,255,255,.6)}
 .ab-nav-info{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:.86rem;margin-left:auto}.ab-nav-info svg{color:var(--red)}.ab-nav-info small{display:block;color:rgba(255,255,255,.55);font-size:.76rem}
@@ -1332,8 +1332,8 @@ body.t-mt{background:#fff}
 .ab-hours{margin-top:6px;min-width:260px}.ab-hours>div{display:flex;justify-content:space-between;gap:20px;font-weight:400;font-size:.92rem;padding:3px 0}.ab-hours .today{color:var(--red);font-weight:600}
 .ab-map{border-radius:18px;overflow:hidden;min-height:420px;background:var(--light)}.ab-map iframe{width:100%;height:100%;min-height:420px;border:0;display:block}
 .ab-foot{background:var(--char);color:#fff;padding:56px 0 30px}.ab-foot-in{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}.ab-foot-in>div{display:flex;flex-direction:column;gap:9px;font-size:.92rem}.ab-foot-in b{text-transform:uppercase;font-size:.85rem;margin-bottom:6px}.ab-foot-in a,.ab-foot-in span,.ab-foot-in small{color:rgba(255,255,255,.65);text-decoration:none}.ab-foot-in a:hover{color:#fff}.ab-foot .ab-brand{margin-bottom:10px}
-@media(max-width:980px){.ab-hide-s{display:none}.ab-nav-links{display:none}.ab-burger{display:block}.ab-nav-tel{margin-left:auto}.ab-svc{grid-template-columns:repeat(2,1fr)}.ab-why{grid-template-columns:1fr}.ab-why-pic{order:-1}}
-@media(max-width:760px){.ab-nav-top{height:64px;gap:12px}.ab-brand-t small{display:none}.ab-brand-t b{font-size:.8rem}.ab-nav-tel small{display:none}.ab-nav-tel b{font-size:.95rem}
+@media(max-width:980px){.ab-svc.n10{grid-template-columns:repeat(2,1fr)}.ab-hide-s{display:none}.ab-nav-links{display:none}.ab-burger{display:block}.ab-nav-tel{margin-left:auto}.ab-svc{grid-template-columns:repeat(2,1fr)}.ab-why{grid-template-columns:1fr}.ab-why-pic{order:-1}}
+@media(max-width:760px){.ab-nav-top{height:64px;gap:12px}.ab-brand img{height:46px}.ab-svc.n10{grid-template-columns:1fr}.ab-brand-t small{display:none}.ab-brand-t b{font-size:.8rem}.ab-nav-tel small{display:none}.ab-nav-tel b{font-size:.95rem}
 .ab-hero{padding-top:44px}.ab-hero:after{height:90px}.ab-bul{grid-template-columns:1fr}.ab-cards{grid-template-columns:1fr;gap:14px;margin-top:40px}.ab-card{min-height:240px}
 .ab-sec{padding:64px 0}.ab-feats{grid-template-columns:1fr 1fr}.ab-circle{width:min(300px,80vw)}.ab-ring{width:min(330px,88vw)}
 .ab-cta{grid-template-columns:1fr}.ab-cta-img{min-height:200px}.ab-cta-t{padding:30px 24px}
@@ -7027,8 +7027,9 @@ function abAuto(C){
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
   const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
-  const logo=ok(x.logoUrl)||C.logo;
-  const brand=h('a',{class:'ab-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
+  const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
+  const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
+  const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
     h('span',{class:'ab-brand-t'},h('b',null,'Automotive Center'),h('small',null,'Service & Sales')));
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const menu=h('nav',{class:'ab-menu',hidden:true},links(),C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null);
@@ -7042,7 +7043,7 @@ function abAuto(C){
     {id:'ab-service',t:'Tires & Brakes',d:'Keep your vehicle stopping and rolling safely, season after season.',img:P.tire},
     {id:'ab-sales',t:'Vehicle Sales',d:'Pre-owned cars, trucks and SUVs. Ask what is on the lot.',img:P.sales}];
   const bullets=['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
-  const hero=bg(h('section',{class:'ab-hero',id:'ab-top'}),ok(x.heroPhoto)||P.heroBg,'linear-gradient(90deg,rgba(14,14,16,.92) 0%,rgba(14,14,16,.7) 55%,rgba(120,10,16,.55) 100%)');
+  const hero=bg(h('section',{class:'ab-hero'+(isAB?' shop':''),id:'ab-top'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.heroPhoto)||P.heroBg),'linear-gradient(90deg,rgba(14,14,16,.9) 0%,rgba(14,14,16,.66) 50%,rgba(14,14,16,.3) 100%)');
   hero.append(h('div',{class:'ab-w ab-hero-in'},
     h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
     h('h1',null,x.headline||'Automotive Center',h('span',null,'& Sales')),
@@ -7057,11 +7058,11 @@ function abAuto(C){
   const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
       h('div',{class:'ab-feats'},feats.map(([i,t])=>h('div',null,h('span',null,abI(i)),h('b',null,t))))),
-    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),ok(x.aboutPhoto)||C.own[0]||P.shop),h('div',{class:'ab-ring'}))));
-  const svcList=items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
+    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.aboutPhoto)||C.own[0]||P.shop)),h('div',{class:'ab-ring'}))));
+  const svcList=isAB?['CV & drivetrain repair','Suspension','Tires','Batteries','Engine diagnostics','Electrical','A/C','Tune-ups','Brakes','Exhaust']:items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
   const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
     h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
-    h('div',{class:'ab-svc'},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
+    h('div',{class:'ab-svc'+(svcList.length===10?' n10':'')},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
   const ctaBand=(id,img,title,sub)=>h('section',{class:'ab-sec tight',id:id||null},h('div',{class:'ab-w'},h('div',{class:'ab-cta rv'},bg(h('div',{class:'ab-cta-img'}),img),
     h('div',{class:'ab-cta-t'},h('h2',null,title),h('p',null,sub),C.tel?h('a',{class:'ab-cta-tel',href:C.tel},C.phoneTxt):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Contact us')))));
   const cta1=ctaBand(null,P.grease,'Schedule your service','Save time. Call the shop and we will set up a time that works for you.');

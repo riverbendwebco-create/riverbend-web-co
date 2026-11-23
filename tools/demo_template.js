@@ -2413,8 +2413,9 @@ function abAuto(C){
   const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
   const items=C.items.slice(0,8);
   const links=()=>[A('ab-service','Service'),A('ab-sales','Vehicle Sales'),A('ab-about','About'),A('ab-how','How It Works'),C.reviews.length?A('ab-reviews','Reviews'):null,A('ab-contact','Contact')];
-  const logo=ok(x.logoUrl)||C.logo;
-  const brand=h('a',{class:'ab-brand',href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
+  const isAB=/^a\s*(&|and|n)\s*b\s+auto/i.test(name);
+  const logo=isAB?'https://riverbendwebco.com/demo/img/ab-logo.png':(ok(x.logoUrl)||C.logo);
+  const brand=h('a',{class:'ab-brand'+(logo?' has-logo':''),href:'#',onclick:e=>{e.preventDefault();scrollTo('ab-top');}},logo?h('img',{src:logo,alt:name}):h('span',{class:'ab-logo'},h('b',null,'A'),h('i',null,'&'),h('b',null,'B')),
     h('span',{class:'ab-brand-t'},h('b',null,'Automotive Center'),h('small',null,'Service & Sales')));
   const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const menu=h('nav',{class:'ab-menu',hidden:true},links(),C.tel?h('a',{class:'ab-btn',href:C.tel},abI('phone'),C.phoneTxt):null);
@@ -2428,7 +2429,7 @@ function abAuto(C){
     {id:'ab-service',t:'Tires & Brakes',d:'Keep your vehicle stopping and rolling safely, season after season.',img:P.tire},
     {id:'ab-sales',t:'Vehicle Sales',d:'Pre-owned cars, trucks and SUVs. Ask what is on the lot.',img:P.sales}];
   const bullets=['Repairs for cars, trucks and SUVs','Pre-owned vehicles for sale','Maintenance and tires','Local, family-friendly shop'];
-  const hero=bg(h('section',{class:'ab-hero',id:'ab-top'}),ok(x.heroPhoto)||P.heroBg,'linear-gradient(90deg,rgba(14,14,16,.92) 0%,rgba(14,14,16,.7) 55%,rgba(120,10,16,.55) 100%)');
+  const hero=bg(h('section',{class:'ab-hero'+(isAB?' shop':''),id:'ab-top'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.heroPhoto)||P.heroBg),'linear-gradient(90deg,rgba(14,14,16,.9) 0%,rgba(14,14,16,.66) 50%,rgba(14,14,16,.3) 100%)');
   hero.append(h('div',{class:'ab-w ab-hero-in'},
     h('p',{class:'ab-kick'},town?'Auto service & sales in '+town:'Auto service & vehicle sales'),
     h('h1',null,x.headline||'Automotive Center',h('span',null,'& Sales')),
@@ -2443,11 +2444,11 @@ function abAuto(C){
   const why=h('section',{class:'ab-sec'},h('div',{class:'ab-w ab-why'},
     h('div',{class:'ab-why-t rv'},h('h2',{class:'ab-h2'},'Why drivers choose ',h('br'),name),h('p',{class:'ab-mut'},'One stop for keeping your vehicle running and finding your next one, with people who treat you like a neighbor.'),
       h('div',{class:'ab-feats'},feats.map(([i,t])=>h('div',null,h('span',null,abI(i)),h('b',null,t))))),
-    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),ok(x.aboutPhoto)||C.own[0]||P.shop),h('div',{class:'ab-ring'}))));
-  const svcList=items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
+    h('div',{class:'ab-why-pic rv'},bg(h('div',{class:'ab-circle'}),isAB?'https://riverbendwebco.com/demo/img/ab-shop.jpg':(ok(x.aboutPhoto)||C.own[0]||P.shop)),h('div',{class:'ab-ring'}))));
+  const svcList=isAB?['CV & drivetrain repair','Suspension','Tires','Batteries','Engine diagnostics','Electrical','A/C','Tune-ups','Brakes','Exhaust']:items.length?items.map(i=>i.name):['Diagnostics & check engine','Brakes','Tires & alignment','Oil changes & maintenance','Suspension & steering','Heating & A/C','Batteries & electrical','Engine & transmission'];
   const service=h('section',{class:'ab-sec ab-light',id:'ab-service'},h('div',{class:'ab-w'},
     h('div',{class:'ab-head rv'},h('h2',{class:'ab-h2'},'Service & Repair'),h('p',{class:'ab-mut'},'Bring it in for anything from a check engine light to new tires. Call ahead and we will get you on the schedule.')),
-    h('div',{class:'ab-svc'},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
+    h('div',{class:'ab-svc'+(svcList.length===10?' n10':'')},svcList.map((t,i)=>h('div',{class:'ab-svc-i rv'},h('span',null,String(i+1).padStart(2,'0')),h('b',null,t),abI('arrow'))))));
   const ctaBand=(id,img,title,sub)=>h('section',{class:'ab-sec tight',id:id||null},h('div',{class:'ab-w'},h('div',{class:'ab-cta rv'},bg(h('div',{class:'ab-cta-img'}),img),
     h('div',{class:'ab-cta-t'},h('h2',null,title),h('p',null,sub),C.tel?h('a',{class:'ab-cta-tel',href:C.tel},C.phoneTxt):h('a',{class:'ab-btn',href:'#ab-contact',onclick:go('ab-contact')},'Contact us')))));
   const cta1=ctaBand(null,P.grease,'Schedule your service','Save time. Call the shop and we will set up a time that works for you.');
