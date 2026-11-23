@@ -247,7 +247,8 @@ function log_(kind, f, fileUrl) {
   var un = unesc_;
   var safe = function (s) { s = un(s); return /^[=+\-@]/.test(s) ? "'" + s : s; }; // block spreadsheet formula injection
   if (kind === 'agreement') {
-    ss.getSheetByName('Signed Agreements').appendRow([new Date(), safe(f['Plan']), safe(f['Business']), safe(f['Owner']), safe(f['Phone']), safe(f['Email']), safe(f['Signed']), fileUrl, safe(Object.keys(f).filter(function (k) { return /^Scope: /.test(k) && f[k]; }).map(function (k) { return k.replace(/^Scope: /, '') + ': ' + f[k]; }).join(' | ').slice(0, 5000))]);
+    var sa = ss.getSheetByName('Signed Agreements'); if (sa.getRange(1, 10).getValue() === '') sa.getRange(1, 9, 1, 2).setValues([['Scope', 'Agreement Version']]);
+    sa.appendRow([new Date(), safe(f['Plan']), safe(f['Business']), safe(f['Owner']), safe(f['Phone']), safe(f['Email']), safe(f['Signed']), fileUrl, safe(Object.keys(f).filter(function (k) { return /^Scope: /.test(k) && f[k]; }).map(function (k) { return k.replace(/^Scope: /, '') + ': ' + f[k]; }).join(' | ').slice(0, 5000)), safe(f['Agreement Version'] || '')]);
   } else {
     ss.getSheetByName('Preview Requests').appendRow([new Date(), safe(f['Business Name']), safe(f['Contact Name']), safe(f['Phone or Email']), safe(f['Business Type']), safe(f['Plan Interest']), fileUrl, 'New']);
   }
@@ -1810,12 +1811,12 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23k';
+var BILL_VERSION = '2026-11-23m';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
   billing_launch: 1, billing_retry: 1, billing_cancel: 1, billing_refund: 1, billing_flag: 1, billing_findcard: 1, billing_tick: 1 };
-var BILL_CONSENT_V = '2026-11-22';
+var BILL_CONSENT_V = 'Recurring Payment Authorization, Version 2.0';
 
 /* ---------- dates and money ---------- */
 function billToday_() { return Utilities.formatDate(new Date(), BILL_TZ, 'yyyy-MM-dd'); }
@@ -2090,10 +2091,10 @@ function payInfo_(a) {
   var v = billView_(a), T = BILL_TIERS[a.tier];
   var lines = [];
   if (a.pay === 'once') lines.push(a.setupPaid ? 'Setup fee of ' + usdC_(a.setup) + ': paid' : 'Today: ' + usdC_(a.setup) + ' one-time website setup fee');
-  else lines.push('Today: $0. Nothing is charged at signing.');
+  else lines.push('Today: $0. Nothing is charged at signing or checkout; your card is saved for future payments.');
   if (!a.launch) {
     lines.push('When your website launches: a prorated ' + usdC_(a.monthly) + ' monthly charge for the rest of that month (' + usdC_(a.monthly) + ' ÷ days in the month × days remaining, counting launch day). A launch on the 1st is charged the full ' + usdC_(a.monthly) + ' once.');
-    lines.push(a.pay === 'zero' ? 'Then ' + usdC_(a.monthly) + ' on the 1st of each month: 12 full monthly payments, then month-to-month until you cancel with 30 days’ written notice.'
+    lines.push(a.pay === 'zero' ? 'Then ' + usdC_(a.monthly) + ' on the 1st of each month: 12 full monthly payments (a launch on the 1st counts as the first), then month-to-month until you cancel with 30 days’ written notice.'
       : 'Then ' + usdC_(a.monthly) + ' on the 1st of each month, month-to-month. Cancel anytime with 30 days’ written notice.');
   } else {
     lines.push('Website launched ' + longDate_(a.launch) + '.');
@@ -2109,11 +2110,10 @@ function payInfo_(a) {
   };
 }
 function payConsent_(a) {
-  return 'I authorize Riverbend Web Co. to save this card securely with Square and charge it ' +
-    (a.pay === 'once' && !a.setupPaid ? 'the ' + usdC_(a.setup) + ' setup fee today, ' : '') +
-    'the prorated launch payment when my website goes live, and ' + usdC_(a.monthly) + ' on the 1st of each month as described in my signed service agreement' +
-    (a.pay === 'zero' ? ' (12 full monthly payments, then month-to-month)' : ' (month-to-month)') +
-    ', plus any past-due balance, until my service ends under the agreement’s cancellation terms. Payments renew automatically. I can cancel with 30 days’ written notice as the agreement describes.';
+  // Recurring Payment Authorization, Version 2.0 (approved). Keep in sync with the agreement, Section 7.
+  var mo = usdC_(a.monthly), retry = ' If the launch payment or the final prorated payment fails, Riverbend may retry the same amount up to two more times within 5 days of its due date, and stops once it is paid.';
+  if (a.pay === 'zero') return 'I authorize Riverbend Web Co. to save this card securely with Square and to charge it automatically for: the prorated launch payment when my website goes live (or ' + mo + ' if it launches on the 1st); ' + mo + ' on the 1st of each month through Square’s recurring billing, for 12 full monthly payments and then month-to-month; and, if I give notice to cancel after my 12 payments, the final prorated month.' + retry + ' Missed monthly payments, additional work and any early-cancellation balance are not charged automatically; Riverbend will send me an invoice. Automatic payments continue until my service ends under the agreement’s cancellation terms, and I can cancel with 30 days’ written notice as the agreement describes.';
+  return 'I authorize Riverbend Web Co. to save this card securely with Square and to charge it automatically for: ' + (a.setupPaid ? '' : 'the ' + usdC_(a.setup) + ' setup fee today; ') + 'the prorated launch payment when my website goes live (or ' + mo + ' if it launches on the 1st); ' + mo + ' on the 1st of each month through Square’s recurring billing, month-to-month; and, if I give notice to cancel, the final prorated month.' + retry + ' Missed monthly payments and additional work are not charged automatically; Riverbend will send me an invoice. Automatic payments continue until my service ends under the agreement’s cancellation terms, and I can cancel with 30 days’ written notice as the agreement describes.';
 }
 function payCard_(a, d) {
   if (a.status === 'ended') return { ok: false, error: 'ended' };
@@ -2190,7 +2190,7 @@ function billMailCustomer_(a, kind, ch) {
     subj = { failed: 'Your payment to Riverbend Web Co. did not go through', remind: 'Reminder: payment to Riverbend Web Co. is still due', pastdue: 'Your Riverbend Web Co. account is past due', final: 'Final notice before services are paused' }[kind];
     head = { failed: 'We could not process your payment', remind: 'Friendly reminder', pastdue: 'Your account is past due', final: 'Final notice' }[kind];
     body.push(billDesc_(a, ch).replace('Riverbend Web Co. ', '') + ' of <b>' + usdC_(ch.amount) + '</b> was due ' + due + '.' + (v.pastDue > ch.amount ? ' Total past due: <b>' + amt + '</b>.' : ''));
-    if (kind === 'failed') body.push((ch.invoiceUrl ? 'Please pay the open invoice using the secure Square link below' : 'Please update your card using the secure link below') + '. You have until ' + longDate_(addDays_(ch.due, 4)) + ' with no interruption.');
+    if (kind === 'failed') body.push((ch.invoiceUrl ? 'Please pay the open invoice using the secure Square link below.' : 'We will try your card again automatically up to two more times, on ' + longDate_(addDays_(ch.due, 2)) + ' and ' + longDate_(addDays_(ch.due, 4)) + ', and stop as soon as it is paid. You can also update your card now using the secure link below.') + ' You have until ' + longDate_(addDays_(ch.due, 4)) + ' with no interruption.');
     if (ch.invoiceUrl && a.payKey) body.push('To change the card used for future monthly payments: <a href="' + a.payKey + '" style="color:#0052CC">update your card</a>.');
     if (kind === 'remind') body.push('Your grace period ends ' + longDate_(addDays_(ch.due, 4)) + '. Updating your card takes a minute.');
     if (kind === 'pastdue') body.push('Your account is now past due. There is no late fee. If the balance stays unpaid, ongoing maintenance, routine updates and non-emergency support may be suspended. Your website stays online and your domain is always yours.');
@@ -3016,8 +3016,8 @@ function agreementPdf_(f, file) {
   if (pk) {
     var T = BILL_TIERS[pk.tier], mo = pk.pay === 'zero' ? T.zero : T.care;
     sched = pk.pay === 'zero'
-      ? '$0 at signing. At launch, a prorated charge of ' + usdC_(mo) + ' ÷ days in that month × days remaining (counting launch day); a launch on the 1st is charged ' + usdC_(mo) + ' once. Then 12 full monthly payments of ' + usdC_(mo) + ' on the 1st of each month beginning the 1st after launch, then month-to-month.'
-      : usdC_(T.once) + ' setup fee at signing. At launch, a prorated charge of ' + usdC_(mo) + ' ÷ days in that month × days remaining (counting launch day); a launch on the 1st is charged ' + usdC_(mo) + ' once. Then ' + usdC_(mo) + ' on the 1st of each month, month-to-month.';
+      ? '$0 at signing and checkout. At launch, a prorated charge of ' + usdC_(mo) + ' ÷ days in that month × days remaining (counting launch day); a launch on the 1st is charged ' + usdC_(mo) + ' once. Then 12 full monthly payments of ' + usdC_(mo) + ' on the 1st of each month beginning the 1st after launch (a launch on the 1st counts as the first), then month-to-month.'
+      : usdC_(T.once) + ' setup fee at checkout, right after signing. At launch, a prorated charge of ' + usdC_(mo) + ' ÷ days in that month × days remaining (counting launch day); a launch on the 1st is charged ' + usdC_(mo) + ' once. Then ' + usdC_(mo) + ' on the 1st of each month, month-to-month.';
   }
   var scope = Object.keys(f).filter(function (k) { return /^Scope: /.test(k) && f[k]; }).map(function (k) { return row(k.replace(/^Scope: /, ''), e(k)); }).join('');
   var sigImg = file && file.blob && /^image\/(png|jpeg)$/.test(file.blob.getContentType()) ? '<img src="data:' + file.blob.getContentType() + ';base64,' + Utilities.base64Encode(file.blob.getBytes()) + '" alt="Signature">' : '';
@@ -3027,8 +3027,8 @@ function agreementPdf_(f, file) {
     .replace('{{SCHEDULE}}', sched)
     .replace('{{SCOPE}}', scope ? '<table class="kv">' + scope + '</table>' : '<p>No scope details were entered at signing.</p>')
     .replace('{{CLIENT}}', '<table class="kv">' + row('Business', e('Business')) + row('Owner / manager', e('Owner')) + row('Phone', e('Phone')) + row('Email', e('Email')) + '</table>')
-    .replace('{{SIGNATURES}}', '<table class="kv sig">' + row('Client signature', (sigImg || '') + '<div>' + e('Signature') + '</div>') + row('Signed by', e('Owner') + ' for ' + e('Business')) + row('Signed electronically', e('Signed') + ' on ' + SITE) + row('Riverbend Web Co.', 'Kruz Kitelinger and Rayald Ally, Co-Owners') + '</table>');
-  var name = 'Riverbend-Service-Agreement-' + (unesc_(e('Business')).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'Client') + '.pdf';
+    .replace('{{SIGNATURES}}', '<table class="kv sig">' + row('Client signature', (sigImg || '') + '<div>' + e('Signature') + '</div>') + row('Signed by', e('Owner') + ' for ' + e('Business')) + row('Signed electronically', e('Signed') + ' on ' + SITE) + row('Agreement version', 'Client Service Agreement, Version ' + (e('Agreement Version') || '2.0')) + row('Riverbend Web Co.', 'Kruz Kitelinger and Rayald Ally, Co-Owners') + '</table>');
+  var name = 'Riverbend-Web-Co-Client-Service-Agreement-v2.0-' + (unesc_(e('Business')).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'Client') + '.pdf';
   var pdf = Utilities.newBlob(html, 'text/html', 'agreement.html').getAs('application/pdf').setName(name);
   try { folder_('Signed Agreements').createFile(pdf.copyBlob().setName(name)); } catch (e2) { console.error(e2); }
   return pdf;
@@ -3037,7 +3037,7 @@ function agreementToClient_(f, pdf) {
   var to = unesc_(String(f['Email'] || '')), biz = unesc_(String(f['Business'] || ''));
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(to)) return;
   var test = /^test\b/i.test(biz);
-  MailApp.sendEmail({ to: test ? OWNER_EMAIL : to, subject: (test ? '[TEST to ' + to + '] ' : '') + 'Your signed Riverbend Web Co. service agreement', name: 'Riverbend Web Co.', replyTo: OWNER_EMAIL,
+  MailApp.sendEmail({ to: test ? OWNER_EMAIL : to, subject: (test ? '[TEST to ' + to + '] ' : '') + 'Your signed Riverbend Web Co. Client Service Agreement (Version 2.0)', name: 'Riverbend Web Co.', replyTo: OWNER_EMAIL,
     body: 'Hi ' + first_(unesc_(String(f['Owner'] || ''))) + ',\n\nThank you for choosing Riverbend Web Co. Your signed service agreement is attached as a PDF for your records.\n\nPlan: ' + unesc_(String(f['Plan'] || '')) + '\nSigned: ' + unesc_(String(f['Signed'] || '')) + '\n\nQuestions? Call or text (608) 306-0135 or reply to this email.\n\nRiverbend Web Co.\nDubuque, Iowa',
     attachments: [pdf] });
 }

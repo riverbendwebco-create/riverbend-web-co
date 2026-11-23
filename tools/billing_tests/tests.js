@@ -196,11 +196,11 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
 { const {B,H}=load(); H.today='2026-11-10'; H.cache={};
   B.doPost({postData:{contents:JSON.stringify({kind:'agreement',fields:{'Plan Key':'custom-zero','Plan':'Custom ($0 Down + $179/mo on the 1st, 12 full payments)','Business':'Lock & Dam Tap','Owner':'Pat Owner','Phone':'(563) 555-0100','Email':'pat@example.com','Signed':'November 10, 2026 at 2:00 PM','Signature':'Typed: Pat Owner','Scope: Goals':'More bookings'},file:{type:'image/png',name:'s.png',data:'data:image/png;base64,iVBORw0KGgo='}})}});
   const toClient=H.mails.find(m=>m.to==='pat@example.com'), toOwner=H.mails.find(m=>m.to==='riverbendwebco@gmail.com'&&/Signed agreement/.test(m.subject));
-  ok('Signed agreement PDF emailed to the client',toClient&&toClient.attachments&&toClient.attachments.some(a=>a.pdf)&&/Riverbend-Service-Agreement-Lock-Dam-Tap\.pdf/.test(toClient.attachments[0].n));
+  ok('Signed agreement PDF emailed to the client',toClient&&toClient.attachments&&toClient.attachments.some(a=>a.pdf)&&/Riverbend-Web-Co-Client-Service-Agreement-v2\.0-Lock-Dam-Tap\.pdf/.test(toClient.attachments[0].n));
   ok('Signed agreement PDF emailed to Riverbend (with the signature image)',toOwner&&toOwner.attachments.some(a=>a.pdf));
   const html=H.lastPdfHtml||'';
-  ok('PDF has the full agreement text, plan, schedule, client info, scope and signature',/Failed payments and service suspension/.test(html)&&/Custom \(\$0 Down \+ \$179\/mo/.test(html)&&/12 full monthly payments of \$179\.00/.test(html)&&/More bookings/.test(html)&&/pat@example\.com/.test(html)&&/data:image\/png;base64/.test(html)&&!/\{\{/.test(html));
-  ok('PDF copy also saved to Google Drive',(H.driveFiles||[]).some(n=>/Riverbend-Service-Agreement/.test(n)));
+  ok('PDF has the full agreement text, plan, schedule, client info, scope and signature',/Launch and final charges: if the prorated launch charge/.test(html)&&/Version 2\.0/.test(html)&&!/DRAFT/.test(html)&&/Custom \(\$0 Down \+ \$179\/mo/.test(html)&&/12 full monthly payments of \$179\.00/.test(html)&&/More bookings/.test(html)&&/pat@example\.com/.test(html)&&/data:image\/png;base64/.test(html)&&!/\{\{/.test(html));
+  ok('PDF copy also saved to Google Drive',(H.driveFiles||[]).some(n=>/Riverbend-Web-Co-Client-Service-Agreement-v2\.0/.test(n)));
   ok('Studio password session cannot open billing',(()=>{ H.cache['tok_'+'d'.repeat(64)]='3'; return B.studio_({action:'billing_list',token:'d'.repeat(64)}).error==='auth'; })());
   ok('Billing login: no password yet tells the owner to request one',B.studio_({action:'billing_login',password:'x'}).error==='nopassword');
   const rs=B.studio_({action:'billing_reset'}); const pwMail=H.mails.find(m=>/Your Riverbend billing password/.test(m.subject));
