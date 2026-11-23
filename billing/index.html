@@ -167,7 +167,10 @@ function openAcct(id){
 }
 function dmsg(t,ok){ const m=$('#dmsg'); if(m){ m.className='msg '+(ok?'ok':'err'); m.textContent=t; } }
 async function act(body,okText){ closeModal(); const r=await api(body); if(!r.ok){ dmsg(errText(r)); return r; } await load(); dmsg(okText,true); return r; }
-function errText(r){ return r.detail||({network:'Cannot reach the server.',busy:'Busy, try again in a moment.',nocard:'The client has not set up payment yet.',confirm:'Type the confirmation exactly.',notfound:'Account not found.'}[r.error])||('Error: '+r.error); }
+function errText(r){ if(r.error==='square'&&/UNAUTHORIZED|AUTHENTICATION|ACCESS_TOKEN/i.test(r.detail||'')) return 'Square did not accept that access token. Check that Sandbox was selected in Square when you copied it, that it went in the matching box (test token under Test keys, live token under Live keys), and that the whole token was copied. Square said: '+r.detail;
+  if(r.error==='auth') return 'Your login ran out. Log in again and retry.';
+  if(r.error==='badtoken') return 'That does not look like a Square access token. Copy the whole token (it usually starts with EAAA).';
+  return r.detail||({network:'Cannot reach the server.',busy:'Busy, try again in a moment.',nocard:'The client has not set up payment yet.',confirm:'Type the confirmation exactly.',notfound:'Account not found.'}[r.error])||('Error: '+r.error); }
 function closeModal(){ $('#modal').classList.add('hidden'); }
 $('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
 function confirmBox(title,rows,btnText,fn,extra){ const b=$('#mbox'); b.replaceChildren(el('h2',{text:title}),el('dl',null,...rows.flatMap(([k,v])=>[el('dt',{text:k}),el('dd',{text:v})])),extra||'',el('div',{class:'row2',style:'justify-content:flex-end;margin-top:12px'},el('button',{class:'btn',type:'button',text:'Cancel',onclick:closeModal}),el('button',{class:'btn go',type:'button',text:btnText,id:'mgo',onclick:async e=>{ e.target.disabled=true; e.target.textContent='Working...'; await fn(); }})),el('div',{class:'msg',id:'mmsg'})); $('#modal').classList.remove('hidden'); }
