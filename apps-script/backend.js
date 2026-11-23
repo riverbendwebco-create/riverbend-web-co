@@ -2199,6 +2199,7 @@ function billing_(d) {
     case 'billing_tick': return billTick_(d.date && sqEnv_() === 'sandbox' ? String(d.date) : '');
     case 'billing_selftest': return billSelfTest_();
     case 'billing_catalog': return billCatalog_(d.apply === true);
+    case 'billing_findcard': return billFindCardAction_(String(d.id || ''));
     case 'billing_setup_inperson': return billSetupInPerson_(String(d.id || ''), String(d.note || ''));
   }
   return { ok: false, error: 'unknown' };
@@ -2365,6 +2366,7 @@ function billTick_(asOf, onlyId) {
 }
 function billTickOne_(a, today, sum) {
   var changed = false;
+  if (a.status === 'awaiting_card' && a.env === 'production') { try { if (billFindSquareCard_(a).changed) changed = true; } catch (e) { console.error(e); } }
   // A. Check charges whose result we did not get (network) or that Square is still processing.
   (a.charges || []).forEach(function (c) {
     if (c.status === 'unknown') { billCharge_(a, c, { sameAttempt: true }); billAfterCharge_(a, c); changed = true; }
@@ -2596,4 +2598,61 @@ function billSetupInPerson_(id, note) {
   if (a.status === 'awaiting_card' && a.sq.cardId) a.status = 'building';
   billSave_(a);
   return { ok: true, account: billView_(a) };
+}
+
+/* ---------- Cards saved in the Square app (in-person sales) ----------
+   If the salesman charges the setup fee in the Square app and taps "Save card on file"
+   to a customer with the same email (or phone) as the signed agreement, we find that
+   card and use it for the monthly billing, and mark the setup fee paid. Runs daily and
+   from the "Find card in Square" button. Live mode only (the Square app is live). */
+function billDigits_(p) { return String(p || '').replace(/\D/g, '').slice(-10); }
+function billFindSquareCard_(a) {
+  if (a.env !== 'production' || a.status === 'ended') return { ok: false, error: 'notlive', detail: 'Only for live accounts (the Square app uses your live Square account).' };
+  var found = null, cust = null;
+  var tryQuery = function (filter) {
+    var r = sq_('post', '/v2/customers/search', { limit: 20, query: { filter: filter } }, a.env);
+    return (r.customers || []);
+  };
+  var list = [];
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(a.email)) list = tryQuery({ email_address: { exact: a.email } });
+  if (!list.length && billDigits_(a.phone).length === 10) list = tryQuery({ phone_number: { exact: '+1' + billDigits_(a.phone) } });
+  if (a.sq.customerId && !list.some(function (c) { return c.id === a.sq.customerId; })) list.push({ id: a.sq.customerId });
+  list.forEach(function (c) {
+    var r = sq_('get', '/v2/cards?customer_id=' + encodeURIComponent(c.id) + '&sort_order=DESC', null, a.env);
+    (r.cards || []).filter(function (k) { return k.enabled !== false; }).forEach(function (k) {
+      if (!found || (k.created_at || '') > (found.created_at || '')) { found = k; cust = c.id; }
+    });
+  });
+  var changed = false;
+  if (found && found.id !== a.sq.cardId) {
+    a.sq.customerId = cust; a.sq.cardId = found.id; a.sq.brand = String(found.card_brand || '').replace(/_/g, ' '); a.sq.last4 = found.last_4 || ''; a.sq.exp = (found.exp_month || '') + '/' + (found.exp_year || '');
+    a.sq.source = 'square-app';
+    billLog_(a, 'Card saved in the Square app found: ' + a.sq.brand + ' ending ' + a.sq.last4 + '. It will be used for monthly billing.');
+    changed = true;
+  }
+  // Setup fee rung up in the Square app: a completed payment of the setup amount from this customer.
+  if (a.pay === 'once' && !a.setupPaid && a.sq.customerId) {
+    var since = new Date(new Date(a.created).getTime() - 2 * 864e5).toISOString();
+    var pr = sq_('get', '/v2/payments?begin_time=' + encodeURIComponent(since) + '&limit=100', null, a.env);
+    var hit = (pr.payments || []).filter(function (p) { return p.status === 'COMPLETED' && p.customer_id === a.sq.customerId && p.amount_money && p.amount_money.amount >= a.setup && !(p.refunded_money && p.refunded_money.amount); })[0];
+    if (hit) {
+      var ch = billFindCharge_(a, 'setup');
+      if (!ch) { ch = { key: 'setup', kind: 'setup', due: String(hit.created_at || '').slice(0, 10) || billToday_(), amount: a.setup, status: 'new', attempts: 0 }; a.charges.push(ch); }
+      ch.status = 'paid'; ch.paymentId = hit.id; ch.paidAt = hit.created_at || new Date().toISOString(); ch.error = ''; ch.inPerson = true;
+      a.setupPaid = true; billLedger_(a, ch, 'Setup fee paid in the Square app'); billLog_(a, 'Setup fee ' + usdC_(a.setup) + ' paid in the Square app.');
+      changed = true;
+    }
+  }
+  if (a.status === 'awaiting_card' && a.sq.cardId && (a.pay === 'zero' || a.setupPaid)) {
+    a.status = 'building'; changed = true;
+    billMailOwner_(a, 'Payment set up in the Square app: ' + a.business, (a.pay === 'once' ? 'Setup fee paid. ' : '') + 'Card on file: ' + a.sq.brand + ' ending ' + a.sq.last4 + '. Development can start. Click "Website Live - Activate Billing" in riverbendwebco.com/billing when the site launches.');
+  }
+  return { ok: true, changed: changed, found: !!found, setupPaid: !!a.setupPaid };
+}
+function billFindCardAction_(id) {
+  var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
+  var r = billFindSquareCard_(a);
+  if (!r.ok) return r;
+  if (r.changed) billSave_(a);
+  return { ok: true, found: r.found, setupPaid: r.setupPaid, account: billView_(a), detail: r.found ? 'Found the card saved in the Square app.' : 'No saved card found yet. In the Square app, add the customer with the same email or phone as the agreement and tap Save Card.' };
 }
