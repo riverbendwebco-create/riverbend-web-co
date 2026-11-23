@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -104,6 +104,7 @@ function build(d){
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
   if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
+  if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
@@ -2142,6 +2143,80 @@ function zephyr(C){
   return h('div',{class:'zp'},nav,hero,about,sol,prod,revs,visit,foot);
 }
 function zpNav(){ const n=document.querySelector('.zp-nav'); if(!n) return; const f=()=>n.classList.toggle('solid',scrollY>10); addEventListener('scroll',f,{passive:true}); f(); }
+
+/* ===================== HOMY (home cleaning, bright white cards + royal blue) ===================== */
+const HC_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1400&q=72';
+function hcI(n){ const P={
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',check:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+  home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>'};
+  const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
+function homy(C){
+  const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const town=C.city?C.city.split(',')[0]:'your area';
+  const heroPic=ok(x.heroPhoto)||HC_U('1758273705627-937374bfa978');
+  const aboutPic=ok(x.aboutPhoto)||HC_U('1758273238415-01ec03d9ef27');
+  const defs=[{n:'Home Cleaning',d:'Regular or one-time cleaning that keeps your home fresh and tidy, on your schedule.',img:HC_U('1646980241033-cd7abda2ee88')},
+    {n:'Deep Cleaning',d:'A top-to-bottom clean for the spots that get missed: baseboards, furniture, floors and more.',img:HC_U('1686178827149-6d55c72d81df')},
+    {n:'Move-In & Move-Out',d:'Start fresh in a new place or leave the old one spotless.',img:HC_U('1647381518264-97ff1835026f')}];
+  const extra=[HC_U('1740657254989-42fe9c3b8cce'),HC_U('1563453392212-326f5e854473'),HC_U('1581578731548-c64695cc6952')];
+  const svc=(Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,6).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n).slice(0,6)
+    .map((v,i)=>Object.assign({},v,{img:ok(v.img)||(defs[i]||{}).img||extra[i%extra.length]}));
+  const go=id=>e=>{ e.preventDefault(); menu.hidden=true; scrollTo(id); };
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const links=()=>[A('hc-top','Home'),A('hc-about','About'),A('hc-services','Services'),A('hc-how','How It Works'),C.reviews.length?A('hc-reviews','Reviews'):null,A('hc-contact','Hours')];
+  const book=(cls,t)=>C.tel?h('a',{class:'hc-btn '+(cls||''),href:C.tel},t||'Book Now'):h('a',{class:'hc-btn '+(cls||''),href:'#hc-contact',onclick:go('hc-contact')},t||'Book Now');
+  const logo=ok(x.logoUrl)||C.logo;
+  const menu=h('nav',{class:'hc-menu',hidden:true},links(),book('','Call to Book'));
+  const nav=h('header',{class:'hc-nav'},h('div',{class:'hc-w'},h('div',{class:'hc-bar'},
+    h('a',{class:'hc-brand',href:'#',onclick:go('hc-top')},logo?h('img',{src:logo,alt:name}):null,h('span',null,name)),
+    h('nav',{class:'hc-links'},links()),
+    C.tel?h('a',{class:'hc-btn sm hc-hide-s',href:C.tel},'Contact Us'):null,
+    h('button',{type:'button',class:'hc-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},hcI('menu'))),menu));
+  const chip=(t,ic)=>h('span',{class:'hc-chip'},hcI(ic||'spark'),t);
+  const rv=C.reviews;
+  const hero=h('section',{class:'hc-hero-s',id:'hc-top'},h('div',{class:'hc-w'},
+    bg(h('div',{class:'hc-hero'}),heroPic,'linear-gradient(90deg,rgba(8,14,30,.72) 0%,rgba(8,14,30,.35) 55%,rgba(8,14,30,.1) 100%)'),
+    h('div',{class:'hc-hero-in'},
+      h('div',{class:'hc-hero-t'},
+        h('h1',null,x.headline||'Home cleaning you can count on'),
+        h('p',null,C.tag||('Enjoy a spotless home with friendly, trusted cleaners in '+town+'. Flexible, careful and on time.')),
+        h('div',{class:'hc-hero-cta'},book('','Book Now'),h('a',{class:'hc-link light',href:'#hc-services',onclick:go('hc-services')},'See Our Services'))),
+      rv.length?h('div',{class:'hc-hero-rev'},h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('p',null,'“'+short(rv[0].text,90)+'”'),h('small',null,rv[0].name)):
+        (C.today?h('div',{class:'hc-hero-rev'},h('b',{class:'hc-open'},hcI('clock'),'Open today'),h('p',null,C.today),h('small',null,town)):null))));
+  const about=h('section',{class:'hc-sec',id:'hc-about'},h('div',{class:'hc-w hc-about'},
+    h('div',{class:'hc-card hc-about-t rv'},chip('About Us','home'),
+      h('h2',null,x.aboutTitle||'Bringing freshness, comfort and care to every home'),
+      h('p',{class:'hc-mut'},C.about?short(C.about,420):(name+' goes beyond a quick surface clean. We take care of your home the way we would our own, so you can come back to a space that feels fresh.')),
+      h('ul',{class:'hc-ticks'},svc.slice(0,4).map(v=>h('li',null,hcI('check'),v.n))),
+      book('sm','Get in Touch')),
+    bg(h('div',{class:'hc-about-pic rv'}),aboutPic)));
+  const stats=[[dayRange(C.hours)||'Every week',C.daysOpen?'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week'):'Open all week','Weekdays and weekends, so you can book a time that works for you.'],
+    [town,'Local to '+town,'A '+town+' cleaning team that knows the area and treats your home with care.'],
+    [C.today?C.today.replace(/\s*-\s*/,' to '):'Call us',C.today?'Open today':'Book a cleaning',C.tel?'Call '+C.phoneTxt+' to set up your cleaning.':'Reach out to set up your cleaning.']];
+  const statRow=h('section',{class:'hc-sec tight'},h('div',{class:'hc-w hc-stats'},stats.map(([a,b,c])=>h('div',{class:'hc-card hc-stat rv'},h('b',null,a),h('div',null,h('strong',null,b),h('p',{class:'hc-mut'},c))))));
+  const services=h('section',{class:'hc-sec',id:'hc-services'},h('div',{class:'hc-w'},
+    h('div',{class:'hc-card hc-head rv'},chip('Service'),h('h2',null,'Home and office cleaning you can trust'),h('p',{class:'hc-mut'},'From cozy apartments to busy offices, we clean every space with the same attention to detail.')),
+    h('div',{class:'hc-svcs n'+Math.min(svc.length,3)},svc.map(v=>bg(h('article',{class:'hc-svc rv'},h('div',{class:'hc-svc-t'},h('h3',null,v.n),v.d?h('p',null,v.d):null,book('sm','Book Now'))),v.img,'linear-gradient(180deg,rgba(8,14,30,0) 35%,rgba(8,14,30,.82) 100%)')))));
+  const steps=[['Reach out','Call or message us and tell us about your home and the kind of clean you need.'],['Confirm & prepare','We set a day and time that works for you and bring all the supplies.'],['We clean','Our team gets to work and makes your space shine, top to bottom.'],['Relax & enjoy','Sit back and enjoy the comfort of a freshly cleaned home.']];
+  const how=h('section',{class:'hc-sec',id:'hc-how'},h('div',{class:'hc-w'},h('div',{class:'hc-blue rv'},
+    h('div',{class:'hc-blue-h'},h('span',{class:'hc-chip on'},hcI('spark'),'How It Works'),h('h2',null,'Simple steps to a cleaner home'),h('p',null,'Quick, easy and reliable, from booking to enjoying your spotless home.')),
+    h('div',{class:'hc-steps'},steps.map(([t,d],i)=>h('div',{class:'hc-step'},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('b',null,t),h('p',null,d))))))));
+  const reviews=rv.length?h('section',{class:'hc-sec',id:'hc-reviews'},h('div',{class:'hc-w'},
+    h('div',{class:'hc-card hc-head rv'},chip('Reviews','star'),h('h2',null,'What our customers say'),h('p',{class:'hc-mut'},'Real words from people who trust '+name+' with their homes.')),
+    h('div',{class:'hc-revs'},rv.slice(0,3).map(r=>h('figure',{class:'hc-card hc-rev rv'},h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,h('span',{class:'hc-av'},r.name.trim()[0]),r.name)))))):null;
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
+  const contact=h('section',{class:'hc-sec',id:'hc-contact'},h('div',{class:'hc-w hc-contact'},
+    h('div',{class:'hc-card hc-ct rv'},chip('Hours & Contact','clock'),h('h2',null,'Ready for a cleaner home?'),
+      C.tel?h('a',{class:'hc-li',href:C.tel},hcI('phone'),C.phoneTxt):null,
+      addrTxt?h('a',{class:'hc-li',href:C.maps,target:'_blank',rel:'noopener'},hcI('pin'),addrTxt):null,
+      C.hasHours?h('div',{class:'hc-hours'},hoursRows(C)):null,
+      book('','Book Your Cleaning')),
+    addrTxt?h('div',{class:'hc-card hc-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):bg(h('div',{class:'hc-card hc-map rv'}),extra[0])));
+  const foot=h('footer',{class:'hc-foot'},h('div',{class:'hc-w hc-foot-in'},h('b',null,name),h('nav',null,links()),h('small',null,'© '+new Date().getFullYear()+' '+name+(C.city?' · '+C.city:''))));
+  return h('div',{class:'hc'},nav,hero,about,statRow,services,how,reviews,contact,foot);
+}
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
 const MW_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1200&q=72';

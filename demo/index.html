@@ -1280,6 +1280,58 @@ body.t-mt{background:#fff}
 .m2-btn.sm{padding:11px 18px;font-size:.92rem}
 .m2-btn .mt-i{transition:transform .2s}.m2-btn:hover .mt-i{transform:translateX(3px)}
 .m2-hero{position:relative;height:calc(100vh - 76px);min-height:620px;max-height:960px;color:#fff;overflow:hidden;background:#111}
+.hc{--blue:#1F6BEB;--blue-d:#1556C4;--ink:#0E1420;--mut:#6B7280;--bg:#F1F2F4;--card:#fff;--line:#E5E7EB;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding-bottom:90px}
+.hc *{box-sizing:border-box}.hc svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hc-w{width:min(1240px,100% - 32px);margin:0 auto}
+.hc-nav{position:sticky;top:0;z-index:50;padding:12px 0 0;background:linear-gradient(var(--bg) 70%,rgba(241,242,244,0))}
+.hc-bar{display:flex;align-items:center;gap:24px;background:#0B0F17;color:#fff;border-radius:18px;padding:10px 10px 10px 22px}
+.hc-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;letter-spacing:-.01em;font-size:1.05rem;text-transform:uppercase}.hc-brand img{height:34px;width:auto;border-radius:6px;background:#fff}
+.hc-links{display:flex;gap:26px;margin-left:auto}.hc-links a{color:rgba(255,255,255,.82);text-decoration:none;font-size:.92rem}.hc-links a:hover{color:#fff}
+.hc-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:13px 24px;border-radius:999px;border:0;cursor:pointer;transition:background .2s,transform .2s}.hc-btn:hover{background:var(--blue-d);transform:translateY(-1px)}.hc-btn.sm{padding:10px 20px;font-size:.88rem}
+.hc-burger{display:none;margin-left:auto;background:transparent;border:0;color:#fff;padding:8px;cursor:pointer}.hc-burger svg{width:24px;height:24px}
+.hc-menu{display:flex;flex-direction:column;gap:4px;background:#0B0F17;border-radius:18px;margin-top:8px;padding:12px}.hc-menu[hidden]{display:none}.hc-menu a{color:#fff;text-decoration:none;padding:12px 10px;font-size:1rem}.hc-menu .hc-btn{margin-top:6px;color:#fff}
+.hc-hero-s{padding-top:14px;position:relative}
+.hc-hero{height:min(640px,calc(100vh - 110px));min-height:500px;border-radius:24px;background-size:cover;background-position:center 30%}
+.hc-hero-in{position:absolute;inset:14px 16px 0;width:min(1240px,100% - 32px);margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:30px;padding:0 48px 48px;color:#fff;pointer-events:none}.hc-hero-in>*{pointer-events:auto}
+.hc-hero-t{max-width:560px}.hc-hero h1,.hc-hero-t h1{font-size:clamp(2.4rem,5.4vw,4.4rem);line-height:1.02;letter-spacing:-.035em;font-weight:500;margin:0 0 16px}
+.hc-hero-t p{font-size:1.05rem;line-height:1.6;color:rgba(255,255,255,.86);margin:0 0 26px;max-width:440px}
+.hc-hero-cta{display:flex;align-items:center;gap:22px;flex-wrap:wrap}.hc-link{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:4px;font-size:.95rem}.hc-link.light{color:#fff}
+.hc-hero-rev{max-width:270px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px;padding:16px 18px}.hc-hero-rev p{margin:8px 0 6px;font-size:.9rem;line-height:1.45}.hc-hero-rev small{color:rgba(255,255,255,.75)}
+.hc-open{display:flex;align-items:center;gap:8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.12em}.hc-hero-rev .hc-open+p{font-size:1.4rem;font-weight:600;margin:6px 0 2px}
+.hc-stars{display:flex;gap:2px;color:#FBBF24}.hc-stars svg{width:16px;height:16px;fill:#FBBF24;stroke:#FBBF24}
+.hc-sec{padding:14px 0 0}.hc-sec.tight{padding-top:14px}
+.hc-card{background:var(--card);border-radius:22px;padding:40px}
+.hc-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:.78rem;font-weight:500;margin-bottom:18px;background:#fff;color:var(--ink)}.hc-chip svg{width:14px;height:14px}.hc-chip.on{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff}
+.hc h2{font-size:clamp(1.8rem,3.2vw,2.6rem);line-height:1.12;letter-spacing:-.03em;font-weight:500;margin:0 0 14px}
+.hc-mut{color:var(--mut);line-height:1.65;margin:0}
+.hc-about{display:grid;grid-template-columns:1fr 1fr;gap:14px}.hc-about-t{display:flex;flex-direction:column;align-items:flex-start}
+.hc-ticks{list-style:none;padding:0;margin:22px 0 28px;display:grid;gap:12px}.hc-ticks li{display:flex;align-items:center;gap:10px;font-weight:500;font-size:.95rem}.hc-ticks svg{color:#fff;fill:var(--blue);stroke:#fff;width:20px;height:20px}
+.hc-about-pic{border-radius:22px;background-size:cover;background-position:center;min-height:460px}
+.hc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.hc-stat{display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:30px}.hc-stat>b{font-size:clamp(1.8rem,3vw,2.5rem);font-weight:500;letter-spacing:-.03em}.hc-stat strong{display:block;margin-bottom:8px;font-weight:600}.hc-stat p{font-size:.9rem}
+.hc-head{margin-bottom:14px}.hc-head h2{max-width:720px}.hc-head p{max-width:640px}
+.hc-svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.hc-svcs.n1{grid-template-columns:1fr}.hc-svcs.n2{grid-template-columns:1fr 1fr}
+.hc-svc{position:relative;min-height:400px;border-radius:22px;background-size:cover;background-position:center;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+.hc-svc-t{padding:26px}.hc-svc h3{font-size:1.4rem;font-weight:600;letter-spacing:-.02em;margin:0 0 8px}.hc-svc p{font-size:.92rem;line-height:1.55;color:rgba(255,255,255,.85);margin:0 0 18px}
+.hc-blue{background:var(--blue);color:#fff;border-radius:22px;padding:48px;display:grid;grid-template-columns:1fr 1.25fr;gap:48px;align-items:center}
+.hc-blue-h p{color:rgba(255,255,255,.82);line-height:1.6;margin:0}
+.hc-steps{display:grid;grid-template-columns:1fr 1fr;gap:34px 30px}.hc-step{display:flex;gap:16px}.hc-step>span{font-size:2.1rem;font-weight:300;letter-spacing:-.03em;line-height:1}.hc-step b{display:block;font-size:1.08rem;margin:2px 0 6px}.hc-step p{margin:0;color:rgba(255,255,255,.82);font-size:.92rem;line-height:1.55}
+.hc-revs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}.hc-rev{margin:0;padding:30px;display:flex;flex-direction:column;gap:14px}.hc-rev blockquote{margin:0;line-height:1.6;flex:1}.hc-rev figcaption{display:flex;align-items:center;gap:10px;font-weight:600}
+.hc-av{width:36px;height:36px;border-radius:50%;background:#E8F0FE;color:var(--blue);display:grid;place-items:center;font-weight:700}
+.hc-contact{display:grid;grid-template-columns:1fr 1.1fr;gap:14px}.hc-ct{display:flex;flex-direction:column;align-items:flex-start}
+.hc-li{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:500;margin-bottom:12px}.hc-li svg{color:var(--blue)}
+.hc-hours{width:100%;margin:12px 0 26px;border-top:1px solid var(--line)}.hc-hours>div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:.95rem}.hc-hours>div span:last-child{color:var(--mut)}.hc-hours .today{font-weight:600;color:var(--blue)}.hc-hours .today span:last-child{color:var(--blue)}
+.hc-map{padding:0;overflow:hidden;min-height:420px;background-size:cover;background-position:center}.hc-map iframe{width:100%;height:100%;min-height:420px;border:0;display:block}
+.hc-foot{margin-top:14px}.hc-foot-in{background:#0B0F17;color:#fff;border-radius:22px;padding:34px 40px;display:flex;flex-wrap:wrap;align-items:center;gap:20px 30px}.hc-foot-in b{font-size:1.1rem;text-transform:uppercase}.hc-foot nav{display:flex;flex-wrap:wrap;gap:20px;margin-left:auto}.hc-foot nav a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.9rem}.hc-foot small{flex-basis:100%;color:rgba(255,255,255,.5)}
+@media(max-width:980px){
+.hc-links,.hc-hide-s{display:none}.hc-burger{display:block}.hc-bar{padding:8px 8px 8px 18px}
+.hc-hero{height:auto;min-height:600px}.hc-hero-in{flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:0 22px 26px;inset:14px 16px 0}
+.hc-hero-rev{max-width:none;width:100%}
+.hc-card{padding:28px 22px}.hc-about,.hc-contact{grid-template-columns:1fr}.hc-about-pic{min-height:300px}
+.hc-stats,.hc-revs{grid-template-columns:1fr}.hc-stat{gap:18px;padding:24px 22px}
+.hc-svcs,.hc-svcs.n2{grid-template-columns:1fr}.hc-svc{min-height:340px}
+.hc-blue{grid-template-columns:1fr;padding:30px 22px;gap:28px}.hc-steps{grid-template-columns:1fr;gap:24px}
+.hc-map,.hc-map iframe{min-height:300px}.hc-foot-in{padding:28px 22px}.hc-foot nav{margin-left:0}
+}
 .m2-hrev-wrap{position:absolute;left:0;right:0;top:36px;z-index:2;pointer-events:none}.m2-hrev-wrap .m2-w{display:flex;justify-content:flex-end}
 .m2-hrev{pointer-events:auto;margin:0;width:min(380px,100%);min-height:200px;display:flex;flex-direction:column;padding:22px 24px 20px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .m2-hrev-k{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.75)}
@@ -4432,7 +4484,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -4492,6 +4544,7 @@ function build(d){
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
   if(/^mountain\s?top\b/i.test(C.name)){ document.body.className='t-mt'; const pg=mountaintop2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^mutual wheel\b/i.test(C.name)) C.variant='mutual';
+  if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
@@ -6530,6 +6583,80 @@ function zephyr(C){
   return h('div',{class:'zp'},nav,hero,about,sol,prod,revs,visit,foot);
 }
 function zpNav(){ const n=document.querySelector('.zp-nav'); if(!n) return; const f=()=>n.classList.toggle('solid',scrollY>10); addEventListener('scroll',f,{passive:true}); f(); }
+
+/* ===================== HOMY (home cleaning, bright white cards + royal blue) ===================== */
+const HC_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1400&q=72';
+function hcI(n){ const P={
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',check:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+  home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>'};
+  const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
+function homy(C){
+  const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  const town=C.city?C.city.split(',')[0]:'your area';
+  const heroPic=ok(x.heroPhoto)||HC_U('1758273705627-937374bfa978');
+  const aboutPic=ok(x.aboutPhoto)||HC_U('1758273238415-01ec03d9ef27');
+  const defs=[{n:'Home Cleaning',d:'Regular or one-time cleaning that keeps your home fresh and tidy, on your schedule.',img:HC_U('1646980241033-cd7abda2ee88')},
+    {n:'Deep Cleaning',d:'A top-to-bottom clean for the spots that get missed: baseboards, furniture, floors and more.',img:HC_U('1686178827149-6d55c72d81df')},
+    {n:'Move-In & Move-Out',d:'Start fresh in a new place or leave the old one spotless.',img:HC_U('1647381518264-97ff1835026f')}];
+  const extra=[HC_U('1740657254989-42fe9c3b8cce'),HC_U('1563453392212-326f5e854473'),HC_U('1581578731548-c64695cc6952')];
+  const svc=(Array.isArray(x.services)&&x.services.length?x.services:C.items.length?C.items.slice(0,6).map(i=>({n:i.name,d:i.desc||'',img:i.photo})):defs).filter(v=>v&&v.n).slice(0,6)
+    .map((v,i)=>Object.assign({},v,{img:ok(v.img)||(defs[i]||{}).img||extra[i%extra.length]}));
+  const go=id=>e=>{ e.preventDefault(); menu.hidden=true; scrollTo(id); };
+  const A=(id,t)=>h('a',{href:'#'+id,onclick:go(id)},t);
+  const links=()=>[A('hc-top','Home'),A('hc-about','About'),A('hc-services','Services'),A('hc-how','How It Works'),C.reviews.length?A('hc-reviews','Reviews'):null,A('hc-contact','Hours')];
+  const book=(cls,t)=>C.tel?h('a',{class:'hc-btn '+(cls||''),href:C.tel},t||'Book Now'):h('a',{class:'hc-btn '+(cls||''),href:'#hc-contact',onclick:go('hc-contact')},t||'Book Now');
+  const logo=ok(x.logoUrl)||C.logo;
+  const menu=h('nav',{class:'hc-menu',hidden:true},links(),book('','Call to Book'));
+  const nav=h('header',{class:'hc-nav'},h('div',{class:'hc-w'},h('div',{class:'hc-bar'},
+    h('a',{class:'hc-brand',href:'#',onclick:go('hc-top')},logo?h('img',{src:logo,alt:name}):null,h('span',null,name)),
+    h('nav',{class:'hc-links'},links()),
+    C.tel?h('a',{class:'hc-btn sm hc-hide-s',href:C.tel},'Contact Us'):null,
+    h('button',{type:'button',class:'hc-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},hcI('menu'))),menu));
+  const chip=(t,ic)=>h('span',{class:'hc-chip'},hcI(ic||'spark'),t);
+  const rv=C.reviews;
+  const hero=h('section',{class:'hc-hero-s',id:'hc-top'},h('div',{class:'hc-w'},
+    bg(h('div',{class:'hc-hero'}),heroPic,'linear-gradient(90deg,rgba(8,14,30,.72) 0%,rgba(8,14,30,.35) 55%,rgba(8,14,30,.1) 100%)'),
+    h('div',{class:'hc-hero-in'},
+      h('div',{class:'hc-hero-t'},
+        h('h1',null,x.headline||'Home cleaning you can count on'),
+        h('p',null,C.tag||('Enjoy a spotless home with friendly, trusted cleaners in '+town+'. Flexible, careful and on time.')),
+        h('div',{class:'hc-hero-cta'},book('','Book Now'),h('a',{class:'hc-link light',href:'#hc-services',onclick:go('hc-services')},'See Our Services'))),
+      rv.length?h('div',{class:'hc-hero-rev'},h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('p',null,'“'+short(rv[0].text,90)+'”'),h('small',null,rv[0].name)):
+        (C.today?h('div',{class:'hc-hero-rev'},h('b',{class:'hc-open'},hcI('clock'),'Open today'),h('p',null,C.today),h('small',null,town)):null))));
+  const about=h('section',{class:'hc-sec',id:'hc-about'},h('div',{class:'hc-w hc-about'},
+    h('div',{class:'hc-card hc-about-t rv'},chip('About Us','home'),
+      h('h2',null,x.aboutTitle||'Bringing freshness, comfort and care to every home'),
+      h('p',{class:'hc-mut'},C.about?short(C.about,420):(name+' goes beyond a quick surface clean. We take care of your home the way we would our own, so you can come back to a space that feels fresh.')),
+      h('ul',{class:'hc-ticks'},svc.slice(0,4).map(v=>h('li',null,hcI('check'),v.n))),
+      book('sm','Get in Touch')),
+    bg(h('div',{class:'hc-about-pic rv'}),aboutPic)));
+  const stats=[[dayRange(C.hours)||'Every week',C.daysOpen?'Open '+(C.daysOpen===7?'seven days a week':C.daysOpen+' days a week'):'Open all week','Weekdays and weekends, so you can book a time that works for you.'],
+    [town,'Local to '+town,'A '+town+' cleaning team that knows the area and treats your home with care.'],
+    [C.today?C.today.replace(/\s*-\s*/,' to '):'Call us',C.today?'Open today':'Book a cleaning',C.tel?'Call '+C.phoneTxt+' to set up your cleaning.':'Reach out to set up your cleaning.']];
+  const statRow=h('section',{class:'hc-sec tight'},h('div',{class:'hc-w hc-stats'},stats.map(([a,b,c])=>h('div',{class:'hc-card hc-stat rv'},h('b',null,a),h('div',null,h('strong',null,b),h('p',{class:'hc-mut'},c))))));
+  const services=h('section',{class:'hc-sec',id:'hc-services'},h('div',{class:'hc-w'},
+    h('div',{class:'hc-card hc-head rv'},chip('Service'),h('h2',null,'Home and office cleaning you can trust'),h('p',{class:'hc-mut'},'From cozy apartments to busy offices, we clean every space with the same attention to detail.')),
+    h('div',{class:'hc-svcs n'+Math.min(svc.length,3)},svc.map(v=>bg(h('article',{class:'hc-svc rv'},h('div',{class:'hc-svc-t'},h('h3',null,v.n),v.d?h('p',null,v.d):null,book('sm','Book Now'))),v.img,'linear-gradient(180deg,rgba(8,14,30,0) 35%,rgba(8,14,30,.82) 100%)')))));
+  const steps=[['Reach out','Call or message us and tell us about your home and the kind of clean you need.'],['Confirm & prepare','We set a day and time that works for you and bring all the supplies.'],['We clean','Our team gets to work and makes your space shine, top to bottom.'],['Relax & enjoy','Sit back and enjoy the comfort of a freshly cleaned home.']];
+  const how=h('section',{class:'hc-sec',id:'hc-how'},h('div',{class:'hc-w'},h('div',{class:'hc-blue rv'},
+    h('div',{class:'hc-blue-h'},h('span',{class:'hc-chip on'},hcI('spark'),'How It Works'),h('h2',null,'Simple steps to a cleaner home'),h('p',null,'Quick, easy and reliable, from booking to enjoying your spotless home.')),
+    h('div',{class:'hc-steps'},steps.map(([t,d],i)=>h('div',{class:'hc-step'},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('b',null,t),h('p',null,d))))))));
+  const reviews=rv.length?h('section',{class:'hc-sec',id:'hc-reviews'},h('div',{class:'hc-w'},
+    h('div',{class:'hc-card hc-head rv'},chip('Reviews','star'),h('h2',null,'What our customers say'),h('p',{class:'hc-mut'},'Real words from people who trust '+name+' with their homes.')),
+    h('div',{class:'hc-revs'},rv.slice(0,3).map(r=>h('figure',{class:'hc-card hc-rev rv'},h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('blockquote',null,short(r.text,260)),h('figcaption',null,h('span',{class:'hc-av'},r.name.trim()[0]),r.name)))))):null;
+  const addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const mapQ=encodeURIComponent([name,addrTxt].filter(Boolean).join(', '));
+  const contact=h('section',{class:'hc-sec',id:'hc-contact'},h('div',{class:'hc-w hc-contact'},
+    h('div',{class:'hc-card hc-ct rv'},chip('Hours & Contact','clock'),h('h2',null,'Ready for a cleaner home?'),
+      C.tel?h('a',{class:'hc-li',href:C.tel},hcI('phone'),C.phoneTxt):null,
+      addrTxt?h('a',{class:'hc-li',href:C.maps,target:'_blank',rel:'noopener'},hcI('pin'),addrTxt):null,
+      C.hasHours?h('div',{class:'hc-hours'},hoursRows(C)):null,
+      book('','Book Your Cleaning')),
+    addrTxt?h('div',{class:'hc-card hc-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+mapQ+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):bg(h('div',{class:'hc-card hc-map rv'}),extra[0])));
+  const foot=h('footer',{class:'hc-foot'},h('div',{class:'hc-w hc-foot-in'},h('b',null,name),h('nav',null,links()),h('small',null,'© '+new Date().getFullYear()+' '+name+(C.city?' · '+C.city:''))));
+  return h('div',{class:'hc'},nav,hero,about,statRow,services,how,reviews,contact,foot);
+}
 
 /* ===================== MUTUAL WHEEL (truck parts & service, red/blue on charcoal) ===================== */
 const MW_U=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1200&q=72';
