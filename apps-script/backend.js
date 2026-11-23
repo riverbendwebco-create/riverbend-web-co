@@ -1811,12 +1811,12 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23o';
+var BILL_VERSION = '2026-11-23p';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
   billing_launch: 1, billing_retry: 1, billing_cancel: 1, billing_refund: 1, billing_flag: 1, billing_findcard: 1, billing_tick: 1 };
-var BILL_CONSENT_V = 'Recurring Payment Authorization, Version 2.0';
+var BILL_CONSENT_V = 'Recurring Payment Authorization, Version 2.1';
 
 /* ---------- dates and money ---------- */
 function billToday_() { return Utilities.formatDate(new Date(), BILL_TZ, 'yyyy-MM-dd'); }
@@ -2110,10 +2110,10 @@ function payInfo_(a) {
   };
 }
 function payConsent_(a) {
-  // Recurring Payment Authorization, Version 2.0 (approved). Keep in sync with the agreement, Section 7.
+  // Recurring Payment Authorization, Version 2.1 (approved; 2.1 = LLC/DBA identification only). Keep in sync with the agreement, Section 7.
   var mo = usdC_(a.monthly), retry = ' If the launch payment or the final prorated payment fails, Riverbend may retry the same amount up to two more times within 5 days of its due date, and stops once it is paid.';
-  if (a.pay === 'zero') return 'I authorize Riverbend Web Co. to save this card securely with Square and to charge it automatically for: the prorated launch payment when my website goes live (or ' + mo + ' if it launches on the 1st); ' + mo + ' on the 1st of each month through Square’s recurring billing, for 12 full monthly payments and then month-to-month; and, if I give notice to cancel after my 12 payments, the final prorated month.' + retry + ' Missed monthly payments, additional work and any early-cancellation balance are not charged automatically; Riverbend will send me an invoice. Automatic payments continue until my service ends under the agreement’s cancellation terms, and I can cancel with 30 days’ written notice as the agreement describes.';
-  return 'I authorize Riverbend Web Co. to save this card securely with Square and to charge it automatically for: ' + (a.setupPaid ? '' : 'the ' + usdC_(a.setup) + ' setup fee today; ') + 'the prorated launch payment when my website goes live (or ' + mo + ' if it launches on the 1st); ' + mo + ' on the 1st of each month through Square’s recurring billing, month-to-month; and, if I give notice to cancel, the final prorated month.' + retry + ' Missed monthly payments and additional work are not charged automatically; Riverbend will send me an invoice. Automatic payments continue until my service ends under the agreement’s cancellation terms, and I can cancel with 30 days’ written notice as the agreement describes.';
+  if (a.pay === 'zero') return 'I authorize Outlaw Nightfall LLC, an Iowa limited liability company doing business as Riverbend Web Co. (“Riverbend”), to save this card securely with Square and to charge it automatically for: the prorated launch payment when my website goes live (or ' + mo + ' if it launches on the 1st); ' + mo + ' on the 1st of each month through Square’s recurring billing, for 12 full monthly payments and then month-to-month; and, if I give notice to cancel after my 12 payments, the final prorated month.' + retry + ' Missed monthly payments, additional work and any early-cancellation balance are not charged automatically; Riverbend will send me an invoice. Automatic payments continue until my service ends under the agreement’s cancellation terms, and I can cancel with 30 days’ written notice as the agreement describes.';
+  return 'I authorize Outlaw Nightfall LLC, an Iowa limited liability company doing business as Riverbend Web Co. (“Riverbend”), to save this card securely with Square and to charge it automatically for: ' + (a.setupPaid ? '' : 'the ' + usdC_(a.setup) + ' setup fee today; ') + 'the prorated launch payment when my website goes live (or ' + mo + ' if it launches on the 1st); ' + mo + ' on the 1st of each month through Square’s recurring billing, month-to-month; and, if I give notice to cancel, the final prorated month.' + retry + ' Missed monthly payments and additional work are not charged automatically; Riverbend will send me an invoice. Automatic payments continue until my service ends under the agreement’s cancellation terms, and I can cancel with 30 days’ written notice as the agreement describes.';
 }
 function payCard_(a, d) {
   if (a.status === 'ended') return { ok: false, error: 'ended' };
@@ -2205,7 +2205,7 @@ function billMailCustomer_(a, kind, ch) {
     '<tr><td style="padding:0 28px 6px;' + font + 'font-size:14px;color:#64748B">' + esc_(a.business) + ' &middot; ' + T.n + ' (' + v.optionName + ')</td></tr>' +
     body.map(function (p) { return '<tr><td style="padding:10px 28px 0;' + font + 'font-size:15px;line-height:1.55;color:#1E293B">' + p + '</td></tr>'; }).join('') +
     (link ? '<tr><td style="padding:18px 28px 0"><a href="' + link + '" style="' + font + 'display:inline-block;background:#0052CC;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 20px;border-radius:8px">' + (ch && ch.invoiceUrl ? 'Pay this invoice' : 'Update payment method') + '</a></td></tr>' : '') +
-    '<tr><td style="padding:22px 28px 26px;' + font + 'font-size:12px;color:#94A3B8">Riverbend Web Co. &middot; Dubuque, Iowa &middot; (608) 306-0135 &middot; riverbendwebco@gmail.com<br>Monthly payments are billed on the 1st as described in your service agreement.</td></tr>' +
+    '<tr><td style="padding:22px 28px 26px;' + font + 'font-size:12px;color:#94A3B8">Riverbend Web Co. is a DBA of Outlaw Nightfall LLC, an Iowa limited liability company. Dubuque, Iowa &middot; (608) 306-0135 &middot; riverbendwebco@gmail.com<br>Monthly payments are billed on the 1st as described in your service agreement.</td></tr>' +
     '</table></td></tr></table></body></html>';
   var text = head + '\n\n' + body.map(function (p) { return p.replace(/<[^>]+>/g, ''); }).join('\n') + (link ? '\n\nUpdate payment method: ' + link : '');
   var test = billTestMode_(a);
@@ -3027,8 +3027,8 @@ function agreementPdf_(f, file) {
     .replace('{{SCHEDULE}}', sched)
     .replace('{{SCOPE}}', scope ? '<table class="kv">' + scope + '</table>' : '<p>No scope details were entered at signing.</p>')
     .replace('{{CLIENT}}', '<table class="kv">' + row('Business', e('Business')) + row('Owner / manager', e('Owner')) + row('Phone', e('Phone')) + row('Email', e('Email')) + '</table>')
-    .replace('{{SIGNATURES}}', '<table class="kv sig">' + row('Client signature', (sigImg || '') + '<div>' + e('Signature') + '</div>') + row('Signed by', e('Owner') + ' for ' + e('Business')) + row('Signed electronically', e('Signed') + ' on ' + SITE) + row('Agreement version', 'Client Service Agreement, Version ' + (e('Agreement Version') || '2.0')) + row('Riverbend Web Co.', 'Kruz Kitelinger and Rayald Ally, Co-Owners') + '</table>');
-  var name = 'Riverbend-Web-Co-Client-Service-Agreement-v2.0-' + (unesc_(e('Business')).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'Client') + '.pdf';
+    .replace('{{SIGNATURES}}', '<table class="kv sig">' + row('Client signature', (sigImg || '') + '<div>' + e('Signature') + '</div>') + row('Signed by', e('Owner') + ' for ' + e('Business')) + row('Signed electronically', e('Signed') + ' on ' + SITE) + row('Agreement version', 'Client Service Agreement, Version ' + (e('Agreement Version') || '2.1')) + row('Riverbend Web Co.', 'Kruz Kitelinger and Rayald Ally, Co-Owners') + '</table>');
+  var name = 'Riverbend-Web-Co-Client-Service-Agreement-v2.1-' + (unesc_(e('Business')).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'Client') + '.pdf';
   var pdf = Utilities.newBlob(html, 'text/html', 'agreement.html').getAs('application/pdf').setName(name);
   try { folder_('Signed Agreements').createFile(pdf.copyBlob().setName(name)); } catch (e2) { console.error(e2); }
   return pdf;
@@ -3037,8 +3037,8 @@ function agreementToClient_(f, pdf) {
   var to = unesc_(String(f['Email'] || '')), biz = unesc_(String(f['Business'] || ''));
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(to)) return;
   var test = /^test\b/i.test(biz);
-  MailApp.sendEmail({ to: test ? OWNER_EMAIL : to, subject: (test ? '[TEST to ' + to + '] ' : '') + 'Your signed Riverbend Web Co. Client Service Agreement (Version 2.0)', name: 'Riverbend Web Co.', replyTo: OWNER_EMAIL,
-    body: 'Hi ' + first_(unesc_(String(f['Owner'] || ''))) + ',\n\nThank you for choosing Riverbend Web Co. Your signed service agreement is attached as a PDF for your records.\n\nPlan: ' + unesc_(String(f['Plan'] || '')) + '\nSigned: ' + unesc_(String(f['Signed'] || '')) + '\n\nQuestions? Call or text (608) 306-0135 or reply to this email.\n\nRiverbend Web Co.\nDubuque, Iowa',
+  MailApp.sendEmail({ to: test ? OWNER_EMAIL : to, subject: (test ? '[TEST to ' + to + '] ' : '') + 'Your signed Riverbend Web Co. Client Service Agreement (Version 2.1)', name: 'Riverbend Web Co.', replyTo: OWNER_EMAIL,
+    body: 'Hi ' + first_(unesc_(String(f['Owner'] || ''))) + ',\n\nThank you for choosing Riverbend Web Co. Your signed service agreement is attached as a PDF for your records.\n\nPlan: ' + unesc_(String(f['Plan'] || '')) + '\nSigned: ' + unesc_(String(f['Signed'] || '')) + '\n\nQuestions? Call or text (608) 306-0135 or reply to this email.\n\nRiverbend Web Co.\nRiverbend Web Co. is a DBA of Outlaw Nightfall LLC, an Iowa limited liability company.\nDubuque, Iowa',
     attachments: [pdf] });
 }
 

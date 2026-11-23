@@ -25,7 +25,7 @@
 <meta property="og:image:alt" content="Riverbend Web Co. - Websites for Dubuque bars and small businesses. Veteran-owned.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://riverbendwebco.com/icons/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Riverbend Web Co.","url":"https://riverbendwebco.com/","logo":"https://riverbendwebco.com/icons/icon-512.png","image":"https://riverbendwebco.com/icons/og-image.png","email":"riverbendwebco@gmail.com","description":"Veteran-owned web design agency building fast, secure, mobile-friendly websites for bars, restaurants and small businesses in Dubuque and the Tri-State area.","address":{"@type":"PostalAddress","addressLocality":"Dubuque","addressRegion":"IA","addressCountry":"US"},"areaServed":[{"@type":"City","name":"Dubuque, IA"},{"@type":"Place","name":"Tri-State area (Iowa, Illinois, Wisconsin)"}],"knowsAbout":["Web design","Website hosting","Google Business Profile","Restaurant websites","Website security"],"priceRange":"$$","telephone":"+1-608-306-0135","founder":[{"@type":"Person","name":"Kruz Kitelinger"},{"@type":"Person","name":"Rayald Ally"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Riverbend Web Co.","legalName":"Outlaw Nightfall LLC","url":"https://riverbendwebco.com/","logo":"https://riverbendwebco.com/icons/icon-512.png","image":"https://riverbendwebco.com/icons/og-image.png","email":"riverbendwebco@gmail.com","description":"Veteran-owned web design agency building fast, secure, mobile-friendly websites for bars, restaurants and small businesses in Dubuque and the Tri-State area.","address":{"@type":"PostalAddress","addressLocality":"Dubuque","addressRegion":"IA","addressCountry":"US"},"areaServed":[{"@type":"City","name":"Dubuque, IA"},{"@type":"Place","name":"Tri-State area (Iowa, Illinois, Wisconsin)"}],"knowsAbout":["Web design","Website hosting","Google Business Profile","Restaurant websites","Website security"],"priceRange":"$$","telephone":"+1-608-306-0135","founder":[{"@type":"Person","name":"Kruz Kitelinger"},{"@type":"Person","name":"Rayald Ally"}]}</script>
 <!-- Tailwind CSS (CDN). Preflight is off so it adds utilities without resetting the custom styles below. -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -2461,7 +2461,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         </ul>
       </div>
     </div>
-    <div class="foot-bottom"><span>© <span id="yr">2026</span> Riverbend Web Co. All rights reserved.</span><span>Proudly built on the Mississippi.</span></div>
+    <div class="foot-bottom"><span>© <span id="yr">2026</span> Outlaw Nightfall LLC, doing business as Riverbend Web Co. All rights reserved.</span><span>Proudly built on the Mississippi.</span></div>
   </div>
 </footer>
 
@@ -2511,8 +2511,8 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     </div>
 
     <div class="ag-body">
-      <div class="ag-title"><h2 id="agTitle">Client Service Agreement</h2><small class="ag-ver">Version 2.0</small></div>
-      <p class="ag-intro">This agreement is between <strong>Riverbend Web Co.</strong> (“Riverbend”) and the business named below (“Client”). Plain English, no fine-print surprises.</p>
+      <div class="ag-title"><h2 id="agTitle">Client Service Agreement</h2><small class="ag-ver">Version 2.1</small></div>
+      <p class="ag-intro">This agreement is between <strong>Outlaw Nightfall LLC, an Iowa limited liability company, doing business as Riverbend Web Co.</strong> (“Riverbend”), and the business named below (“Client”). Plain English, no fine-print surprises.</p>
 
       <div class="ag-h">1 · Choose Your Plan</div>
       <div class="plan-pick three" role="radiogroup" aria-label="Plan">
@@ -2640,7 +2640,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
         <button class="sig-clear" id="sigClear" type="button">Clear</button>
       </div>
       <div class="print-sigline print-only">Client Signature · <span id="printSigMeta">Date: ____________</span></div>
-      <label class="ag-check"><input type="checkbox" id="agAgree"><span>I’m authorized to sign for this business. I have read and agree to this agreement (Version 2.0), including the package, payment schedule and automatic monthly billing on the 1st, and I confirm the project details I entered (Riverbend will confirm the full project scope with me in writing before development begins). I agree to sign and receive this agreement electronically. On the next screen I will save a card with Square and authorize the automatic payments listed there; if I save a card in person instead, I authorize the same automatic payments described in Section 7.</span></label>
+      <label class="ag-check"><input type="checkbox" id="agAgree"><span>I’m authorized to sign for this business. I have read and agree to this agreement (Version 2.1), including the package, payment schedule and automatic monthly billing on the 1st, and I confirm the project details I entered (Riverbend will confirm the full project scope with me in writing before development begins). I agree to sign and receive this agreement electronically. On the next screen I will save a card with Square and authorize the automatic payments listed there; if I save a card in person instead, I authorize the same automatic payments described in Section 7.</span></label>
       <div class="ag-err" id="agErr" role="alert"></div>
       <div class="signed-stamp" id="signedStamp" role="status"></div>
     </div>
@@ -3468,7 +3468,7 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
     const note=document.createElement('span'); note.className='no-print'; note.style.display='block'; note.style.marginTop='6px';
     $('#signedStamp').appendChild(note); note.textContent='Sending a copy to Riverbend…';
     let payUrl='';
-    (RB_FORM_URL ? rbSend('agreement',{'Plan':plan,'Plan Key':curKey(),'Agreement Version':'2.0','Business':f.biz.value.trim(),'Owner':f.owner.value.trim(),'Phone':f.phone.value.trim(),'Email':f.email.value.trim(),'Signed':when,'Signature':sigMode==='draw'?'Drawn':'Typed: '+typed,...Object.fromEntries($$('#agScope [data-sc]').map(i=>['Scope: '+i.dataset.sc,i.value.trim()]).filter(x=>x[1]))},{type:'image/png',name:'signature.png',data:img}).then(j=>{ payUrl=(j&&typeof j.pay==='string'&&/^https:\/\/riverbendwebco\.com\/pay\/#[a-f0-9]{48}$/.test(j.pay))?j.pay:''; return {ok:true,json:()=>({success:'true'})}; }) :
+    (RB_FORM_URL ? rbSend('agreement',{'Plan':plan,'Plan Key':curKey(),'Agreement Version':'2.1','Business':f.biz.value.trim(),'Owner':f.owner.value.trim(),'Phone':f.phone.value.trim(),'Email':f.email.value.trim(),'Signed':when,'Signature':sigMode==='draw'?'Drawn':'Typed: '+typed,...Object.fromEntries($$('#agScope [data-sc]').map(i=>['Scope: '+i.dataset.sc,i.value.trim()]).filter(x=>x[1]))},{type:'image/png',name:'signature.png',data:img}).then(j=>{ payUrl=(j&&typeof j.pay==='string'&&/^https:\/\/riverbendwebco\.com\/pay\/#[a-f0-9]{48}$/.test(j.pay))?j.pay:''; return {ok:true,json:()=>({success:'true'})}; }) :
     (async()=>{ const fd=new FormData();
       fd.append('_subject','Signed agreement: '+f.biz.value.trim()+' ('+plan+')'); fd.append('_template','box'); fd.append('_captcha','false');
       if(/@/.test(f.email.value)) fd.append('_replyto',f.email.value.trim());
