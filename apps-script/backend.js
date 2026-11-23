@@ -1808,7 +1808,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23e';
+var BILL_VERSION = '2026-11-23f';
 var BILL_CONSENT_V = '2026-11-22';
 
 /* ---------- dates and money ---------- */
@@ -3043,7 +3043,11 @@ var AUTH_ROLES = { owner: 'Owner', sales: 'Salesperson' };
 var AUTH_SESSION_MS = 12 * 3600 * 1000, AUTH_TRUST_MS = 30 * 864e5, AUTH_SETUP_MS = 72 * 3600 * 1000, AUTH_RESET_MS = 3600 * 1000;
 /* Emails allowed to self-start setup (stored as SHA-256 so the public file has no addresses).
    auth_bootstrap emails each one a setup link if the account does not exist yet. */
-var AUTH_SEED = [];
+var AUTH_SEED = [
+  { h: 'abe61860f06efe26034fedaca85afba9e3341e07ca8d2d90980960ba4ba9d818', n: 'Kruz Kitelinger', r: 'owner' },
+  { h: 'd0b3e44b09b0f60236fe183a733e85fa4fbd3fa0c38333314cfdf1ac8fd94665', n: 'Rayald Ally', r: 'owner' },
+  { h: 'faa43f33df3c63840f5072e806cb39b91db17dc4984acf0cf7447b08c9ce04dd', n: 'Owen Seffrood', r: 'sales' }
+];
 var AUTH_SALES_OK = { list: 1, get: 1, save: 1, delete: 1, status: 1, scan: 1, image: 1, logout: 1,
   leads_status: 1, leads_find: 1, leads_verify: 1, leads_saved: 1, leads_save: 1, leads_update: 1, leads_demo: 1, sales_customers: 1 };
 
