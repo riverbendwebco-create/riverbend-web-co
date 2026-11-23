@@ -44,4 +44,5 @@ Key reminders:
 - Prices live in BILL_TIERS (cents). If prices change, update BILL_TIERS, TIERS in index.html, the agreement, the chat KB and WEBSITE_BUILD_RULES.md.
 - Test mode (Square sandbox) is the default; customer emails in test mode go only to riverbendwebco@gmail.com and clients are not shown the pay link. Going live requires the owner to type GO LIVE in /billing settings. Access tokens are entered by the owner in /billing settings (Script Properties), never in the repo.
 - Never automatically charge a remaining $0-down balance, take a site offline, or touch a domain. Suspension and ending billing need an owner click.
-- Tests: `node tools/billing_tests/tests.js` (mock Google services + fake Square, 82 checks). Run it before every billing change.
+- Tests: `node tools/billing_tests/tests.js` (82 checks) and `node tools/billing_tests/catalog_test.js` (Square item library). Run them before every billing change.
+- Square item library (for in-person sales in the Square app): /billing > Square settings > "Update Square items" (billing_catalog, live account, preview first). Old plans are hidden, never deleted. A setup fee taken in person is recorded with "Setup fee paid in person" so the pay link only saves the card.

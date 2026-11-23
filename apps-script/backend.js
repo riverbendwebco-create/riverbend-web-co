@@ -2196,6 +2196,8 @@ function billing_(d) {
     case 'billing_settings': return billSetSettings_(d);
     case 'billing_tick': return billTick_(d.date && sqEnv_() === 'sandbox' ? String(d.date) : '');
     case 'billing_selftest': return billSelfTest_();
+    case 'billing_catalog': return billCatalog_(d.apply === true);
+    case 'billing_setup_inperson': return billSetupInPerson_(String(d.id || ''), String(d.note || ''));
   }
   return { ok: false, error: 'unknown' };
 }
@@ -2510,4 +2512,86 @@ function billSelfTest_() {
   // clean up: end the test accounts
   [A.id, Z.id].forEach(function (id) { var x = billGet_(id); x.status = 'ended'; x.flags.selftest = true; billLog_(x, 'Sandbox self-test account (ended).'); billSave_(x); });
   return { ok: true, results: out };
+}
+
+/* ---------- Square item library (for in-person sales in the Square app) ----------
+   billing_catalog: preview (apply:false) or apply the item library changes on the LIVE
+   Square account: add the 9 current plan items, hide the old plans from every location
+   (past sales keep their history), and match add-on prices to the website. */
+var CAT_NEW = [
+  ['Starter Website ($0 Down) - Monthly', 10900, 'Starter, $0 down: monthly payment ($109). Normally billed automatically on the 1st; use only for a same-day or manual monthly payment.'],
+  ['Starter Website (Pay Upfront) - Setup Fee', 49900, 'Starter, pay upfront: one-time website setup fee ($499). Then $50/mo.'],
+  ['Starter Website (Pay Upfront) - Monthly', 5000, 'Starter, pay upfront: monthly service ($50). Normally billed automatically on the 1st.'],
+  ['Custom Website ($0 Down) - Monthly', 17900, 'Custom, $0 down: monthly payment ($179). Normally billed automatically on the 1st.'],
+  ['Custom Website (Pay Upfront) - Setup Fee', 99900, 'Custom, pay upfront: one-time website setup fee ($999). Then $75/mo.'],
+  ['Custom Website (Pay Upfront) - Monthly', 7500, 'Custom, pay upfront: monthly service ($75). Normally billed automatically on the 1st.'],
+  ['Premium Website ($0 Down) - Monthly', 34900, 'Premium, $0 down: monthly payment ($349). Normally billed automatically on the 1st.'],
+  ['Premium Website (Pay Upfront) - Setup Fee', 249900, 'Premium, pay upfront: one-time website setup fee ($2,499). Then $100/mo.'],
+  ['Premium Website (Pay Upfront) - Monthly', 10000, 'Premium, pay upfront: monthly service ($100). Normally billed automatically on the 1st.']
+];
+var CAT_OLD = /^(Essentials Plan|Essentials Website Setup|Growth Plan|Partner Plan)\b/i;
+var CAT_PRICE = [[/^Marketing: QR Menu and Table Tents/i, 7500], [/^Marketing: Email or Text Club/i, 4900], [/^Marketing: Google Business Profile/i, 9900], [/^Marketing: Online Ordering or Reservations Setup/i, 15000]];
+function billCatalog_(apply) {
+  var env = 'production';
+  if (!sqProp_('TOKEN', env)) return { ok: false, error: 'notoken', detail: 'Save the live access token under Live keys first. Saving it does not turn on live payments.' };
+  var items = [], cursor = '', guard = 0;
+  do {
+    var r = sq_('get', '/v2/catalog/list?types=ITEM' + (cursor ? '&cursor=' + encodeURIComponent(cursor) : ''), null, env);
+    if (!r.ok) return { ok: false, error: 'square', detail: sqErr_(r) };
+    items = items.concat(r.objects || []); cursor = r.cursor || '';
+  } while (cursor && ++guard < 20);
+  var names = {}; items.forEach(function (o) { names[(o.item_data && o.item_data.name || '').toLowerCase()] = o; });
+  var plan = { add: [], hide: [], price: [] }, upserts = [];
+  CAT_NEW.forEach(function (n, i) {
+    var have = names[n[0].toLowerCase()];
+    if (have && !have.item_data.is_archived && have.present_at_all_locations !== false) return;
+    plan.add.push(n[0] + ' ' + usdC_(n[1]));
+    if (have) { have.item_data.is_archived = false; have.present_at_all_locations = true; upserts.push(have); return; }
+    upserts.push({ type: 'ITEM', id: '#rbnew' + i, present_at_all_locations: true, item_data: { name: n[0], description: n[2], variations: [
+      { type: 'ITEM_VARIATION', id: '#rbnewv' + i, present_at_all_locations: true, item_variation_data: { name: 'Regular', pricing_type: 'FIXED_PRICING', price_money: { amount: n[1], currency: 'USD' } } }] } });
+  });
+  items.forEach(function (o) {
+    var d = o.item_data || {}, nm = d.name || '';
+    if (CAT_OLD.test(nm) && !(d.is_archived) && o.present_at_all_locations !== false) {
+      plan.hide.push(nm);
+      d.is_archived = true; o.present_at_all_locations = false; o.present_at_location_ids = [];
+      (d.variations || []).forEach(function (v) { v.present_at_all_locations = false; v.present_at_location_ids = []; });
+      upserts.push(o);
+    }
+    CAT_PRICE.forEach(function (cp) {
+      if (!cp[0].test(nm)) return;
+      var changed = false;
+      (d.variations || []).forEach(function (v) {
+        var vd = v.item_variation_data || {};
+        if (vd.price_money && vd.price_money.amount !== cp[1]) { plan.price.push(nm + ': ' + usdC_(vd.price_money.amount) + ' to ' + usdC_(cp[1])); vd.price_money = { amount: cp[1], currency: 'USD' }; changed = true; }
+      });
+      if (changed && upserts.indexOf(o) < 0) upserts.push(o);
+    });
+  });
+  if (!apply) return { ok: true, plan: plan };
+  if (!upserts.length) return { ok: true, plan: plan, done: true };
+  upserts.forEach(function (o) { delete o.updated_at; delete o.created_at; (o.item_data && o.item_data.variations || []).forEach(function (v) { delete v.updated_at; delete v.created_at; delete v.item_data; }); });
+  var res = sq_('post', '/v2/catalog/batch-upsert', { idempotency_key: Utilities.getUuid(), batches: [{ objects: upserts }] }, env);
+  if (!res.ok && /is_archived/i.test(sqErr_(res))) { // older API: hide from all locations without the archive flag
+    upserts.forEach(function (o) { if (o.item_data) delete o.item_data.is_archived; });
+    res = sq_('post', '/v2/catalog/batch-upsert', { idempotency_key: Utilities.getUuid(), batches: [{ objects: upserts }] }, env);
+  }
+  if (!res.ok) return { ok: false, error: 'square', detail: sqErr_(res), plan: plan };
+  return { ok: true, plan: plan, done: true };
+}
+/* A setup fee taken in person (Square app, cash, check). The client's /pay page then only
+   saves their card for the monthly billing and does not charge the setup fee again. */
+function billSetupInPerson_(id, note) {
+  var a = billGet_(id); if (!a) return { ok: false, error: 'notfound' };
+  if (a.pay !== 'once') return { ok: false, error: 'nosetup' };
+  if (a.setupPaid) return { ok: true, account: billView_(a), detail: 'Already paid.' };
+  var ch = billFindCharge_(a, 'setup');
+  if (!ch) { ch = { key: 'setup', kind: 'setup', due: billToday_(), amount: a.setup, status: 'new', attempts: 0 }; a.charges.push(ch); }
+  ch.status = 'paid'; ch.manual = true; ch.paidAt = new Date().toISOString(); ch.error = '';
+  a.setupPaid = true;
+  billLedger_(a, ch, 'Setup fee taken in person: ' + note.slice(0, 200));
+  billLog_(a, 'Setup fee ' + usdC_(a.setup) + ' recorded as paid in person (' + note.slice(0, 200) + '). The payment link now only saves the card.');
+  if (a.status === 'awaiting_card' && a.sq.cardId) a.status = 'building';
+  billSave_(a);
+  return { ok: true, account: billView_(a) };
 }

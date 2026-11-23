@@ -1,0 +1,26 @@
+const {load}=require('./harness');
+const {B,H}=load(); let pass=0, fail=0; const ok=(n,c,i='')=>{ c?pass++:fail++; console.log((c?'PASS ':'FAIL ')+n+(c?'':' '+i)); };
+const mk=(name,amt)=>({type:'ITEM',id:'I_'+name.replace(/\W/g,''),version:1,present_at_all_locations:true,item_data:{name,variations:[{type:'ITEM_VARIATION',id:'V_'+name.replace(/\W/g,''),present_at_all_locations:true,item_variation_data:{name:'Regular',pricing_type:'FIXED_PRICING',price_money:{amount:amt,currency:'USD'}}}]}});
+let CAT=[mk('Essentials Plan (Monthly)',7900),mk('Essentials Website Setup',49900),mk('Growth Plan (Monthly)',14900),mk('Partner Plan (Monthly)',29900),mk('Marketing: QR Menu and Table Tents',6000),mk('Marketing: Email or Text Club (Monthly)',2500),mk('Marketing: Google Business Profile (Monthly)',9900),mk('Marketing: Social Growth (Monthly)',19900)];
+let sent=null;
+B.setFake((m,path,body,env)=>{ if(path.startsWith('/v2/catalog/list')) return {ok:true,objects:JSON.parse(JSON.stringify(CAT))}; if(path==='/v2/catalog/batch-upsert'){ sent=body; body.batches[0].objects.forEach(o=>{ const i=CAT.findIndex(c=>c.id===o.id); if(i>=0) CAT[i]=o; else CAT.push(Object.assign({},o,{id:'NEW'+CAT.length})); }); return {ok:true}; } return {ok:false,errors:[{code:'X'}]}; });
+ok('Needs the live key first',B.billing_({action:'billing_catalog'}).error==='notoken');
+H.props.SQUARE_TOKEN_PRODUCTION='x';
+const pv=B.billing_({action:'billing_catalog',apply:false});
+ok('Preview: 9 new items',pv.plan.add.length===9,JSON.stringify(pv.plan));
+ok('Preview: hides the 4 old plans',pv.plan.hide.length===4&&pv.plan.hide.every(n=>/Essentials|Growth|Partner/.test(n)));
+ok('Preview: QR $60 to $75 and Email club $25 to $49',pv.plan.price.length===2);
+ok('Preview changes nothing',sent===null);
+const ap=B.billing_({action:'billing_catalog',apply:true});
+ok('Apply succeeds',ap.ok&&ap.done);
+const old=CAT.filter(o=>/^(Essentials|Growth Plan|Partner)/.test(o.item_data.name));
+ok('Old plans hidden from every location (not deleted)',old.length===4&&old.every(o=>o.present_at_all_locations===false&&o.item_data.is_archived),JSON.stringify(old.map(o=>[o.item_data.name,o.present_at_all_locations,o.item_data.is_archived])));
+ok('Prices updated',CAT.find(o=>/QR/.test(o.item_data.name)).item_data.variations[0].item_variation_data.price_money.amount===7500&&CAT.find(o=>/Email/.test(o.item_data.name)).item_data.variations[0].item_variation_data.price_money.amount===4900);
+ok('Social items untouched',CAT.find(o=>/Social/.test(o.item_data.name)).present_at_all_locations===true);
+const again=B.billing_({action:'billing_catalog',apply:false});
+ok('Running it again changes nothing',again.plan.add.length===0&&again.plan.hide.length===0&&again.plan.price.length===0,JSON.stringify(again.plan));
+// setup fee in person
+H.cache={}; const r=B.doPost({postData:{contents:JSON.stringify({kind:'agreement',fields:{'Plan Key':'custom-once','Plan':'x','Business':'InPerson Co','Owner':'A','Phone':'5635550100','Email':'a@b.co','Signed':'x'}})}});
+const a=B.billAll_().find(x=>x.business==='InPerson Co');
+ok('Setup fee recorded as paid in person',B.billing_({action:'billing_setup_inperson',id:a.id,note:'Square app'}).ok&&B.billGet_(a.id).setupPaid);
+console.log(pass+'/'+(pass+fail)+' passed');
