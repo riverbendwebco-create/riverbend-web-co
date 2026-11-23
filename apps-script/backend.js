@@ -1874,10 +1874,10 @@ var SQ_APP_IDS = { sandbox: 'sandbox-sq0idb-2tEEA0lrBti3HxT7KjIobg', production:
 function sqProp_(k, env) { env = env || sqEnv_(); return PropertiesService.getScriptProperties().getProperty('SQUARE_' + k + '_' + env.toUpperCase()) || (k === 'APP' ? SQ_APP_IDS[env] : '') || ''; }
 function sqBase_(env) { return (env || sqEnv_()) === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com'; }
 var SQ_FAKE = null; // tests only
-function sq_(method, path, body, env) {
+function sq_(method, path, body, env, tokOverride) {
   env = env || sqEnv_();
-  if (SQ_FAKE) return SQ_FAKE(method, path, body, env);
-  var tok = sqProp_('TOKEN', env);
+  if (SQ_FAKE) return SQ_FAKE(method, path, body, env, tokOverride);
+  var tok = tokOverride || sqProp_('TOKEN', env);
   if (!tok) return { ok: false, status: 0, errors: [{ code: 'NO_TOKEN', detail: 'Square is not connected yet.' }] };
   var opts = { method: method, muteHttpExceptions: true, contentType: 'application/json', headers: { Authorization: 'Bearer ' + tok, 'Square-Version': SQ_VERSION } };
   if (body) opts.payload = JSON.stringify(body);
@@ -2211,11 +2211,18 @@ function billSetSettings_(d) {
   if (typeof d.sqToken === 'string' && d.sqToken.trim()) {
     var t = d.sqToken.trim();
     if (!/^[A-Za-z0-9_\-]{20,200}$/.test(t)) return { ok: false, error: 'badtoken' };
-    var prev = p.getProperty('SQUARE_TOKEN_' + E);
+    var hint = t.slice(0, 4) + '... (' + t.length + ' characters)';
+    var r = sq_('get', '/v2/locations', null, env, t);
+    var other = env === 'sandbox' ? 'production' : 'sandbox';
+    if (!r.ok && r.status === 401) {
+      // Pasted in the wrong box? Check the key against the other Square environment.
+      var r2 = sq_('get', '/v2/locations', null, other, t);
+      if (r2.ok) { env = other; E = env.toUpperCase(); r = r2; }
+    }
+    if (!r.ok) return { ok: false, error: 'square', detail: sqErr_(r) + ' [key received: ' + hint + ']' };
     p.setProperty('SQUARE_TOKEN_' + E, t);
-    var r = sq_('get', '/v2/locations', null, env);
-    if (!r.ok) { if (prev) p.setProperty('SQUARE_TOKEN_' + E, prev); else p.deleteProperty('SQUARE_TOKEN_' + E); return { ok: false, error: 'square', detail: sqErr_(r) }; }
     p.deleteProperty('SQUARE_LOCATION_' + E); sqLocation_(env);
+    if (env !== (d.target === 'production' ? 'production' : 'sandbox')) return { ok: true, moved: env, settings: billSettings_() };
   }
   if (typeof d.appId === 'string' && d.appId.trim()) {
     var app = d.appId.trim();
