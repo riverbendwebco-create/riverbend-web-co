@@ -36,3 +36,12 @@ Key reminders:
 - It finds up to 50 new leads within about 30 miles of Dubuque (`leads_find` with `wide:true`), checks their websites, and saves them to the Prospects sheet with the note "Daily finder <date>". No-website and Facebook-only first, then weak sites. Only independent businesses with a phone number; skips any id, name or phone already saved.
 - No password or secret: the job logs in with GitHub's signed OIDC token (`bot_login` in backend.js), which only works for this workflow file on main and only allows leads_find, leads_verify, leads_saved and leads_save.
 - Each run prints a `SUMMARY:` line and uploads `daily-leads-summary.txt`; a Claude scheduled task reads it and sends Kruz a phone summary.
+
+## Billing (Square): /billing and /pay
+- Owner dashboard: riverbendwebco.com/billing (Studio password). Client page: riverbendwebco.com/pay/#<key> (private link per client). Backend: the `BILLING` section at the bottom of `apps-script/backend.js`; daily job `.github/workflows/daily-billing.yml` + `tools/daily_billing.py` (OIDC bot that may only run `billing_tick`).
+- Flow: agreement signed -> billing account (Billing tab of the Riverbend Leads sheet) -> client saves a card with Square's Web Payments SDK (setup fee charged then for Pay Upfront) -> owner clicks "Website Live - Activate Billing" -> prorated launch charge -> full charges on the 1st.
+- Uses Square Customers, Cards (card on file) and Payments APIs only. No Square subscriptions or payment links: they cannot delay billing until launch or follow the agreement's 12-payment and failed-payment rules. Never store card numbers; keep only Square IDs.
+- Prices live in BILL_TIERS (cents). If prices change, update BILL_TIERS, TIERS in index.html, the agreement, the chat KB and WEBSITE_BUILD_RULES.md.
+- Test mode (Square sandbox) is the default; customer emails in test mode go only to riverbendwebco@gmail.com and clients are not shown the pay link. Going live requires the owner to type GO LIVE in /billing settings. Access tokens are entered by the owner in /billing settings (Script Properties), never in the repo.
+- Never automatically charge a remaining $0-down balance, take a site offline, or touch a domain. Suspension and ending billing need an owner click.
+- Tests: `node tools/billing_tests/tests.js` (mock Google services + fake Square, 82 checks). Run it before every billing change.

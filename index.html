@@ -3459,7 +3459,8 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
     set('signed_at',when); set('signature_type',sigMode==='draw'?'drawn':'typed: '+typed); set('signature',img);
     const note=document.createElement('span'); note.className='no-print'; note.style.display='block'; note.style.marginTop='6px';
     $('#signedStamp').appendChild(note); note.textContent='Sending a copy to Riverbend…';
-    (RB_FORM_URL ? rbSend('agreement',{'Plan':plan,'Business':f.biz.value.trim(),'Owner':f.owner.value.trim(),'Phone':f.phone.value.trim(),'Email':f.email.value.trim(),'Signed':when,'Signature':sigMode==='draw'?'Drawn':'Typed: '+typed,...Object.fromEntries($$('#agScope [data-sc]').map(i=>['Scope: '+i.dataset.sc,i.value.trim()]).filter(x=>x[1]))},{type:'image/png',name:'signature.png',data:img}).then(()=>({ok:true,json:()=>({success:'true'})})) :
+    let payUrl='';
+    (RB_FORM_URL ? rbSend('agreement',{'Plan':plan,'Plan Key':curKey(),'Business':f.biz.value.trim(),'Owner':f.owner.value.trim(),'Phone':f.phone.value.trim(),'Email':f.email.value.trim(),'Signed':when,'Signature':sigMode==='draw'?'Drawn':'Typed: '+typed,...Object.fromEntries($$('#agScope [data-sc]').map(i=>['Scope: '+i.dataset.sc,i.value.trim()]).filter(x=>x[1]))},{type:'image/png',name:'signature.png',data:img}).then(j=>{ payUrl=(j&&typeof j.pay==='string'&&/^https:\/\/riverbendwebco\.com\/pay\/#[a-f0-9]{48}$/.test(j.pay))?j.pay:''; return {ok:true,json:()=>({success:'true'})}; }) :
     (async()=>{ const fd=new FormData();
       fd.append('_subject','Signed agreement: '+f.biz.value.trim()+' ('+plan+')'); fd.append('_template','box'); fd.append('_captcha','false');
       if(/@/.test(f.email.value)) fd.append('_replyto',f.email.value.trim());
@@ -3467,7 +3468,8 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
       fd.append('Signed',when); fd.append('Signature',sigMode==='draw'?'Drawn (attached)':'Typed: '+typed+' (attached)');
       try{ const blob=await (await fetch(img)).blob(); fd.append('Signature Image',blob,'signature.png'); }catch(_){}
       return fetch('https://formsubmit.co/ajax/riverbendwebco@gmail.com',{method:'POST',headers:{'Accept':'application/json'},body:fd}); })())
-      .then(r=>r.ok?r.json():Promise.reject()).then(j=>{ if(!j||String(j.success)!=='true') throw 0; note.innerHTML='<svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> A copy was sent to Riverbend Web Co.'; })
+      .then(r=>r.ok?r.json():Promise.reject()).then(j=>{ if(!j||String(j.success)!=='true') throw 0; note.innerHTML='<svg class="ico" width="14" height="14" aria-hidden="true"><use href="#check"/></svg> A copy was sent to Riverbend Web Co.';
+        if(payUrl){ const pb=document.createElement('a'); pb.href=payUrl; pb.target='_blank'; pb.rel='noopener'; pb.className='btn btn-amber btn-sm no-print'; pb.style.marginTop='10px'; pb.textContent='Set up secure payment with Square'; note.appendChild(document.createElement('br')); note.appendChild(pb); } })
       .catch(()=>{ note.textContent='Couldn’t send a copy automatically. Please save it as a PDF and email it to riverbendwebco@gmail.com.'; });
   });
 

@@ -1,0 +1,30 @@
+name: Daily billing
+
+# Every morning: charge monthly payments due on the 1st, retry failed payments on the
+# 3rd and 5th, send the service agreement's reminders and flag past-due accounts.
+# It logs in with GitHub's signed OIDC token (no password); the backend only lets this
+# workflow run the daily billing check (billing_tick). Test mode until an owner goes live.
+on:
+  schedule:
+    - cron: '20 12 * * *'   # 6:20 AM CST / 7:20 AM CDT
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: daily-billing
+  cancel-in-progress: false
+
+jobs:
+  bill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run the daily billing check
+        run: python3 tools/daily_billing.py

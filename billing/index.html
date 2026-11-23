@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'">
+<title>Billing | Riverbend Web Co.</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<meta name="theme-color" content="#04070D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04070D;--card:#0A101B;--card2:#0F1726;--line:#161F2E;--line2:#232E42;--ink:#E8EEF8;--txt:#CFD8E6;--mut:#8592A6;--dim:#5B6779;--blue:#2F7BFF;--blue2:#5B9BFF;--red:#FF5A63;--amber:#F2B23B;--green:#2BC48A;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;--disp:'Barlow Condensed','Arial Narrow',Inter,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}a{color:var(--blue2)}.hidden{display:none!important}
+svg.rw{width:40px;height:auto;aspect-ratio:1115/562;display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 13px;border-radius:7px;border:1px solid var(--line2);background:var(--card2);font-weight:600;font-size:.82rem;cursor:pointer;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:#3A4864}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.go{background:var(--green);border-color:var(--green);color:#04120B;font-weight:700}
+.btn.danger{color:var(--red);border-color:rgba(255,90,99,.45)}.btn[disabled]{opacity:.5;cursor:default}
+.field{display:block;width:100%;height:42px;border:1px solid var(--line2);border-radius:8px;padding:0 12px;outline:none;background:var(--bg);color:var(--ink)}
+.field:focus{border-color:var(--blue)}
+.msg{min-height:20px;margin-top:10px;font-size:.88rem;color:var(--mut)}.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login-card{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:30px 26px}
+.login-card small,.hd small,.k{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+.login-card h1,.hd h1{font-family:var(--disp);font-style:italic;font-weight:700;font-size:2.4rem;line-height:1;margin:4px 0 8px;text-transform:uppercase;color:#fff}
+.login-card p{margin:0 0 16px;color:var(--mut);font-size:.9rem}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 20px 60px}
+.brandbar{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.brandbar b{font-size:.9rem;color:#fff}.brandbar nav{margin-left:auto;display:flex;gap:8px}
+.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.mode{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;padding:6px 10px;border-radius:6px;border:1px solid}
+.mode.test{color:var(--amber);border-color:rgba(242,178,59,.5);background:rgba(242,178,59,.08)}.mode.live{color:var(--green);border-color:rgba(43,196,138,.5);background:rgba(43,196,138,.08)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:12px 14px}.stat b{display:block;font-size:1.35rem;margin-top:4px}
+.panel{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:16px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th{text-align:left;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line2)}
+td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--txt)}
+tr.row{cursor:pointer}tr.row:hover td{background:var(--card2)}
+td b{color:#fff;font-weight:600}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--txt);white-space:nowrap}
+.tag.ok{color:var(--green);border-color:rgba(43,196,138,.4)}.tag.warn{color:var(--amber);border-color:rgba(242,178,59,.4)}.tag.bad{color:var(--red);border-color:rgba(255,90,99,.4)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px}
+.grid div small{display:block;font-size:.68rem;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.grid div span{color:#fff;font-weight:600;font-size:.9rem}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.log{max-height:260px;overflow:auto;font-size:.8rem;color:var(--mut);font-family:var(--mono)}.log div{padding:4px 0;border-bottom:1px solid var(--line)}
+.modal{position:fixed;inset:0;background:rgba(2,4,8,.72);display:grid;place-items:center;padding:16px;z-index:20}
+.modal .box{width:100%;max-width:480px;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:22px}
+.modal h2{margin:0 0 12px;font-size:1.2rem}.modal dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:0 0 16px;font-size:.92rem}
+.modal dt{color:var(--mut)}.modal dd{margin:0;color:#fff;font-weight:600}
+.row2{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.set{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.set h3{margin:0 0 8px;font-size:.95rem}.set label{display:block;font-size:.78rem;color:var(--mut);margin:8px 0 4px}
+.res div{padding:5px 0;font-size:.85rem;border-bottom:1px solid var(--line)}
+@media(max-width:760px){.stats,.grid{grid-template-columns:1fr 1fr}.set{grid-template-columns:1fr}.hide-m{display:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="rw-light" viewBox="0 0 1115 562"><path fill="#1E293B" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#0052CC" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol>
+    <symbol id="rw-dark" viewBox="0 0 1115 562"><path fill="#FFFFFF" fill-rule="evenodd" d="M702.5 400.5 L663.0 418.0 L634.0 428.0 L612.0 434.0 L586.0 439.0 L571.5 440.0 L570.0 441.0 L557.5 441.0 L556.0 442.0 L529.5 442.0 L528.0 441.0 L516.5 441.0 L515.0 440.0 L500.5 439.0 L473.0 433.5 L514.0 548.0 L644.0 548.5ZM1105.0 77.0 L973.5 77.0 L907.0 251.5 L906.5 254.5 L907.5 255.5 L931.0 263.5 L945.0 270.5 L964.5 282.5 L982.5 296.5 L997.0 310.5 L1016.0 331.0 L1016.5 333.5 L988.0 324.0 L955.0 318.0 L909.5 317.0 L908.0 318.0 L891.5 319.0 L862.5 325.0 L831.5 335.0 L805.5 346.0 L755.0 372.5 L785.0 451.0 L822.0 544.0 L825.0 549.0 L944.0 548.5 L948.0 549.5 L949.5 548.0 L1000.5 395.0 L1015.5 346.5 L1082.5 148.0ZM467.0 78.5 L480.0 103.5 L487.0 122.5 L493.0 154.5 L493.0 179.0 L490.0 201.0 L486.0 217.0 L479.0 236.0 L471.0 252.0 L453.0 277.5 L439.5 291.0 L447.5 296.5 L463.5 304.5 L496.5 316.5 L530.5 323.5 L552.0 324.5 L553.5 325.5 L573.0 325.5 L574.5 324.5 L588.0 324.5 L589.5 323.5 L604.0 322.5 L635.0 315.5 L660.0 307.5 L697.0 292.5 L738.5 273.5 L782.5 257.5 L823.5 248.5 L845.0 247.5 L846.5 246.5 L859.5 247.0 L848.5 214.5 L796.0 77.0 L674.5 77.0 L671.0 83.5 L665.0 102.0 L618.0 225.5 L589.0 306.0 L587.0 307.5 L549.5 205.5 L500.5 77.5 L476.5 77.0Z"/><path fill="#3B82F6" fill-rule="evenodd" d="M11.0 387.5 L11.5 549.5 L145.0 549.5 L146.5 548.0 L147.0 360.0 L150.0 362.0 L294.5 549.5 L458.5 549.0 L327.0 385.0 L285.0 363.0 L256.0 351.0 L216.0 339.0 L182.0 333.0 L142.5 331.0 L141.0 332.0 L126.5 332.0 L111.5 334.0 L85.5 340.0 L55.5 352.0 L41.5 360.0 L29.0 369.0 L17.0 380.0ZM11.0 13.5 L11.0 352.5 L27.5 324.5 L45.5 299.0 L61.5 280.0 L78.0 263.5 L91.0 252.5 L112.5 237.5 L144.5 221.0 L144.5 118.5 L145.5 117.5 L280.0 117.5 L302.0 122.5 L317.5 131.5 L326.0 140.0 L331.0 148.5 L335.0 161.5 L335.0 178.0 L332.0 190.0 L326.0 201.5 L315.5 213.0 L308.0 218.0 L295.0 224.0 L277.0 228.0 L234.5 230.0 L206.5 234.0 L173.5 242.0 L141.5 254.0 L118.5 266.0 L97.0 280.0 L72.0 301.0 L55.0 321.0 L89.5 305.5 L112.5 298.5 L137.5 293.5 L152.0 292.5 L153.5 291.5 L197.0 291.5 L220.0 294.5 L264.0 305.5 L304.0 321.5 L338.0 339.5 L407.5 381.5 L426.5 391.5 L453.5 403.5 L484.5 413.5 L509.5 418.5 L527.0 419.5 L528.5 420.5 L566.0 420.5 L606.0 414.5 L629.0 408.5 L652.0 400.5 L683.0 387.5 L721.0 368.5 L763.5 344.5 L799.5 326.5 L831.5 313.5 L851.5 307.5 L881.5 301.5 L915.0 299.5 L916.5 300.5 L930.0 300.5 L952.0 303.5 L978.0 310.5 L971.5 305.0 L952.0 293.0 L935.0 285.0 L918.0 279.0 L884.0 272.0 L848.5 271.0 L819.5 275.0 L780.5 286.0 L750.5 298.0 L678.0 331.0 L653.0 340.0 L625.0 348.0 L581.0 355.0 L540.5 355.0 L539.0 354.0 L516.5 352.0 L485.5 345.0 L457.5 335.0 L430.5 322.0 L402.5 305.0 L394.5 298.5 L421.5 279.5 L438.5 262.5 L451.5 244.0 L458.5 231.0 L466.5 210.0 L470.5 193.0 L471.5 177.5 L472.5 176.0 L472.5 161.5 L471.5 160.0 L470.5 143.5 L466.5 126.5 L461.5 112.5 L453.5 96.5 L442.5 80.0 L429.5 65.0 L411.5 50.0 L391.0 37.0 L366.0 26.0 L341.0 19.0 L309.0 14.0 L298.5 14.0 L297.0 13.0Z"/></symbol>
+  </defs>
+</svg>
+<section class="login" id="login">
+  <form class="login-card" id="loginForm">
+    <svg class="rw" style="width:54px" aria-label="Riverbend Web Co."><use href="#rw-dark"/></svg>
+    <small style="margin-top:18px">RIVERBEND WEB CO.</small>
+    <h1>Billing</h1>
+    <p>Client payments, launches and past-due accounts. Same password as the Demo Studio.</p>
+    <input class="field" id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+    <button class="btn primary" type="submit" id="loginBtn" style="width:100%;height:44px;margin-top:12px">Log In</button>
+    <div class="msg" id="loginMsg" role="alert"></div>
+  </form>
+</section>
+<section class="hidden" id="app"><div class="wrap">
+  <div class="brandbar"><svg class="rw" aria-hidden="true"><use href="#rw-dark"/></svg><b>Riverbend Billing</b>
+    <nav><a class="btn" href="/studio/">Studio</a><a class="btn" href="/leads/">Leads</a><button class="btn" id="out" type="button">Log out</button></nav></div>
+  <div class="hd"><div><small>Square payments</small><h1>Billing</h1></div><div class="row2"><span class="mode test" id="mode">TEST MODE</span><button class="btn" id="refresh" type="button">Refresh</button><button class="btn" id="setBtn" type="button">Square settings</button></div></div>
+  <div class="stats" id="stats"></div>
+  <div class="panel hidden" id="settings"></div>
+  <div class="panel hidden" id="detail"></div>
+  <div class="panel" style="padding:6px 10px"><table><thead><tr><th>Business</th><th>Package</th><th class="hide-m">Monthly</th><th>Status</th><th class="hide-m">Payments</th><th>Next bill</th></tr></thead><tbody id="rows"></tbody></table><div class="msg" id="listMsg"></div></div>
+</div></section>
+<div class="modal hidden" id="modal"><div class="box" id="mbox"></div></div>
+<script>
+(function(){
+'use strict';
+const API='https://script.google.com/macros/s/AKfycbwkosfcFSHGXy8EUaAFZ7Q-SFDFllV_k4n8qBABRxoj2hv59RspTU9APLQabwP_ohaW/exec';
+const $=s=>document.querySelector(s);
+function el(tag,props,...kids){ const n=document.createElement(tag); if(props) for(const k in props){ const v=props[k]; if(v==null||v===false) continue; if(k==='class') n.className=v; else if(k==='text') n.textContent=v; else if(k.slice(0,2)==='on') n.addEventListener(k.slice(2),v); else n.setAttribute(k,v);} kids.flat(Infinity).forEach(c=>{ if(c==null||c===false) return; n.appendChild(typeof c==='string'?document.createTextNode(c):c); }); return n; }
+const usd=c=>'$'+((c||0)/100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const ld=s=>{ if(!s) return ''; const d=new Date(s+'T12:00:00'); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); };
+let token=''; try{ token=sessionStorage.getItem('rbStudio')||''; }catch(_){}
+let data={accounts:[],settings:{}}, openId='';
+async function api(body){ let r; try{ const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({token},body))}); r=await res.json(); }catch(_){ return {ok:false,error:'network'}; } if(r&&r.error==='auth') signOut(true); return r||{ok:false,error:'server'}; }
+$('#loginForm').addEventListener('submit',async e=>{ e.preventDefault(); const pw=$('#pw').value; if(!pw) return; const b=$('#loginBtn'); b.disabled=true; b.textContent='Checking...';
+  const r=await api({action:'login',password:pw}); b.disabled=false; b.textContent='Log In';
+  if(r.ok){ token=r.token; try{sessionStorage.setItem('rbStudio',token);}catch(_){} $('#pw').value=''; start(); return; }
+  $('#loginMsg').className='msg err'; $('#loginMsg').textContent={badpassword:'That password is not right.',locked:'Too many tries. Wait 15 minutes.',network:'Cannot reach the server.'}[r.error]||'Something went wrong.'; });
+function signOut(expired){ if(!expired&&token) api({action:'logout'}); token=''; try{sessionStorage.removeItem('rbStudio');}catch(_){} $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); if(expired){ $('#loginMsg').className='msg err'; $('#loginMsg').textContent='Your session ended. Log in again.'; } }
+$('#out').addEventListener('click',()=>signOut(false));
+$('#refresh').addEventListener('click',()=>load());
+$('#setBtn').addEventListener('click',()=>{ $('#settings').classList.toggle('hidden'); drawSettings(); });
+
+function tagFor(a){ const p=a.payStatus; const cls=p==='Current'?'ok':/grace|Waiting/.test(p)?'warn':'bad'; return el('span',{class:'tag '+cls,text:p}); }
+async function load(){
+  $('#listMsg').textContent='Loading...';
+  const r=await api({action:'billing_list'});
+  if(!r.ok){ $('#listMsg').textContent='Could not load billing ('+(r.detail||r.error)+').'; return; }
+  data=r; $('#listMsg').textContent=r.accounts.length?'':'No billing accounts yet. One is created each time a client signs the agreement.';
+  const live=r.settings.env==='production'; $('#mode').textContent=live?'LIVE: REAL CARDS':'TEST MODE (SANDBOX)'; $('#mode').className='mode '+(live?'live':'test');
+  const A=r.accounts.filter(a=>a.env===r.settings.env);
+  const mrr=A.filter(a=>a.status==='active'||a.status==='canceling').reduce((s,a)=>s+a.monthly,0);
+  const due=A.reduce((s,a)=>s+a.pastDue,0);
+  $('#stats').replaceChildren(
+    el('div',{class:'stat'},el('small',{class:'k',text:'Monthly billing'}),el('b',{text:usd(mrr)})),
+    el('div',{class:'stat'},el('small',{class:'k',text:'Active clients'}),el('b',{text:String(A.filter(a=>a.status==='active'||a.status==='canceling').length)})),
+    el('div',{class:'stat'},el('small',{class:'k',text:'Waiting to launch'}),el('b',{text:String(A.filter(a=>a.status==='building'||a.status==='awaiting_card').length)})),
+    el('div',{class:'stat'},el('small',{class:'k',text:'Past due'}),el('b',{text:usd(due),style:due?'color:var(--red)':''})));
+  $('#rows').replaceChildren(...r.accounts.map(a=>el('tr',{class:'row',onclick:()=>openAcct(a.id)},
+    el('td',null,el('b',{text:a.business}),el('div',{style:'font-size:.78rem;color:var(--mut)',text:a.owner+(a.env!==r.settings.env?' (test account)':'')})),
+    el('td',{text:a.packageName+', '+a.optionName}),el('td',{class:'hide-m',text:usd(a.monthly)}),
+    el('td',null,el('div',{text:a.statusText,style:'margin-bottom:4px'}),tagFor(a)),
+    el('td',{class:'hide-m',text:a.pay==='zero'?a.fullPaid+' of 12':String(a.fullPaid)}),
+    el('td',{text:a.nextDate?usd(a.nextAmount)+' on '+ld(a.nextDate):a.nextText}))));
+  const want=openId||(location.hash||'').slice(1); if(want&&r.accounts.some(a=>a.id===want)) openAcct(want);
+}
+function field(l,v){ return el('div',null,el('small',{text:l}),el('span',{text:v==null||v===''?'None':String(v)})); }
+function openAcct(id){
+  openId=id; const a=data.accounts.find(x=>x.id===id); if(!a) return; const d=$('#detail'); d.classList.remove('hidden');
+  const fc=a.firstCharge;
+  d.replaceChildren(
+    el('div',{class:'row2',style:'justify-content:space-between;margin-bottom:12px'},el('div',null,el('small',{class:'k',text:a.id}),el('h2',{style:'margin:4px 0 0',text:a.business})),el('button',{class:'btn',type:'button',text:'Close',onclick:()=>{d.classList.add('hidden');openId='';}})),
+    el('div',{class:'grid'},
+      field('Customer',a.owner), field('Email / phone',a.email+' · '+a.phone), field('Package',a.packageName), field('Payment option',a.optionName),
+      field('Setup fee',a.setup?usd(a.setup)+(a.setupPaid?' (paid)':' (not paid)'):'None'), field('Monthly rate',usd(a.monthly)), field('Launch date',a.launch?ld(a.launch):'Not live yet'),
+      field('First (prorated) charge',fc?usd(fc.amount)+' · '+fc.status+(fc.kind==='full'?' (launched on the 1st)':''):'At launch'),
+      field('Next billing date',a.nextDate?ld(a.nextDate):a.nextText), field('Next payment',a.nextDate?usd(a.nextAmount):'None'), field('Payment status',a.payStatus), field('Past-due balance',usd(a.pastDue)),
+      field('Full payments made',a.fullPaid), field('Required payments left',a.pay==='zero'?a.remaining:'None (month-to-month)'), field('Agreement',a.agreement), field('Ownership',a.ownership),
+      field('Subscription status',a.statusText), field('Card on file',a.card||'Not set up'), field('Mode',a.env==='production'?'Live':'Test (sandbox)'), field('Cancellation',a.cancel?(a.cancel.mode==='review'?'Request '+ld(a.cancel.notice)+': owner review':'Effective '+ld(a.cancel.effective)):'None')),
+    el('div',{class:'actions'},
+      a.status==='building'?el('button',{class:'btn go',type:'button',text:'Website Live - Activate Billing',onclick:()=>goLive(a)}):null,
+      a.pastDue?el('button',{class:'btn primary',type:'button',text:'Retry failed payment',onclick:()=>act({action:'billing_retry',id:a.id},'Retried.')}):null,
+      a.pastDue?el('button',{class:'btn',type:'button',text:'Record payment outside Square',onclick:()=>manual(a)}):null,
+      a.status!=='ended'?el('button',{class:'btn',type:'button',text:a.card?'New card-update link':'New payment link',onclick:()=>paylink(a)}):null,
+      a.flags.suspendEligible&&!a.flags.suspended?el('button',{class:'btn danger',type:'button',text:'Approve suspension of non-essential services',onclick:()=>confirmBox('Approve suspension?',[['Client',a.business],['Past due',usd(a.pastDue)],['What this means','Pause maintenance, routine updates and non-emergency support. The website stays online and the domain is untouched.']],'Approve',()=>act({action:'billing_flag',id:a.id,flag:'suspended',value:true},'Suspension recorded.'))}):null,
+      a.flags.suspended?el('button',{class:'btn',type:'button',text:'Restore services',onclick:()=>act({action:'billing_flag',id:a.id,flag:'suspended',value:false},'Restored.')}):null,
+      a.pastDue?el('button',{class:'btn',type:'button',text:a.flags.noReminders?'Resume reminders':'Pause reminders (payment arrangement)',onclick:()=>act({action:'billing_flag',id:a.id,flag:'noReminders',value:!a.flags.noReminders},'Saved.')}):null,
+      a.status==='active'||a.status==='canceling'?el('button',{class:'btn',type:'button',text:a.flags.paused?'Resume billing':'Pause billing',onclick:()=>act({action:'billing_flag',id:a.id,flag:'paused',value:!a.flags.paused},'Saved.')}):null,
+      a.status!=='ended'&&!a.cancel?el('button',{class:'btn',type:'button',text:'Record cancellation notice',onclick:()=>cancelFlow(a)}):null,
+      a.status!=='ended'?el('button',{class:'btn danger',type:'button',text:'End billing',onclick:()=>endFlow(a)}):null),
+    el('div',{class:'msg',id:'dmsg'}),
+    el('h3',{style:'font-size:.9rem;margin:16px 0 6px',text:'Payments'}),
+    a.charges.length?el('table',null,el('thead',null,el('tr',null,...['Type','Period','Due','Amount','Status','Tries'].map(t=>el('th',{text:t})))),el('tbody',null,...a.charges.slice().reverse().map(c=>el('tr',null,
+      el('td',{text:{setup:'Setup fee',prorated:'Prorated launch',full:'Full monthly',final:'Final (prorated)'}[c.kind]||c.kind}),el('td',{text:c.period||''}),el('td',{text:ld(c.due)}),el('td',{text:usd(c.amount)}),
+      el('td',null,el('span',{class:'tag '+(c.status==='paid'&&!c.refunded&&!c.disputed?'ok':c.status==='failed'?'bad':'warn'),text:c.refunded?'refunded':c.disputed?'disputed':c.manual?'paid (outside Square)':c.status}),c.error?el('div',{style:'font-size:.75rem;color:var(--mut);margin-top:3px',text:c.error}):null),
+      el('td',{text:String(c.attempts)}))))):el('div',{class:'msg',text:'No payments yet.'}),
+    el('h3',{style:'font-size:.9rem;margin:16px 0 6px',text:'History'}),
+    el('div',{class:'log'},...a.log.slice().reverse().map(l=>el('div',{text:new Date(l.t).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+'  '+l.m}))));
+  d.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function dmsg(t,ok){ const m=$('#dmsg'); if(m){ m.className='msg '+(ok?'ok':'err'); m.textContent=t; } }
+async function act(body,okText){ closeModal(); const r=await api(body); if(!r.ok){ dmsg(errText(r)); return r; } await load(); dmsg(okText,true); return r; }
+function errText(r){ return r.detail||({network:'Cannot reach the server.',busy:'Busy, try again in a moment.',nocard:'The client has not set up payment yet.',confirm:'Type the confirmation exactly.',notfound:'Account not found.'}[r.error])||('Error: '+r.error); }
+function closeModal(){ $('#modal').classList.add('hidden'); }
+$('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+function confirmBox(title,rows,btnText,fn,extra){ const b=$('#mbox'); b.replaceChildren(el('h2',{text:title}),el('dl',null,...rows.flatMap(([k,v])=>[el('dt',{text:k}),el('dd',{text:v})])),extra||'',el('div',{class:'row2',style:'justify-content:flex-end;margin-top:12px'},el('button',{class:'btn',type:'button',text:'Cancel',onclick:closeModal}),el('button',{class:'btn go',type:'button',text:btnText,id:'mgo',onclick:async e=>{ e.target.disabled=true; e.target.textContent='Working...'; await fn(); }})),el('div',{class:'msg',id:'mmsg'})); $('#modal').classList.remove('hidden'); }
+async function goLive(a){
+  const today=data.today; const box=$('#mbox');
+  const ask=async date=>{
+    const r=await api({action:'billing_launch',id:a.id,date,confirm:false});
+    if(!r.ok){ alertBox(errText(r)); return; }
+    const p=r.preview;
+    const inp=el('input',{class:'field',type:'date',value:date,max:today,min:today.slice(0,8)+'01',style:'margin-bottom:6px'});
+    inp.addEventListener('change',()=>ask(inp.value));
+    confirmBox('Website Live - Activate Billing',[['Customer',p.business+' ('+p.owner+')'],['Package',p.packageName+', '+p.optionName],['Launch date',ld(p.launch)],['Charged now',usd(p.amount)+' ('+p.math+')'],['Card',p.card],['First full monthly payment',ld(p.firstFull)],['Regular monthly rate',usd(p.monthly)+' on the 1st']],'Confirm and charge '+usd(p.amount),async()=>{
+      const r2=await api({action:'billing_launch',id:a.id,date:p.launch,confirm:true}); closeModal(); await load();
+      if(!r2.ok) dmsg(errText(r2)); else if(r2.already) dmsg(r2.detail,true); else dmsg(r2.charged.status==='paid'?'Billing is live. '+usd(r2.charged.amount)+' charged and the receipt was emailed.':r2.charged.status==='failed'?'Billing is live, but the launch payment failed ('+r2.charged.error+'). The client was emailed a link to update their card, and reminders follow from today.':'Billing is live. Square has not confirmed the payment yet; the daily check will finish it without charging twice.',r2.charged.status==='paid');
+    },el('div',null,el('small',{class:'k',text:'Launch date (change if the site went live earlier this month)'}),inp));
+  };
+  ask(today);
+}
+function alertBox(t){ $('#mbox').replaceChildren(el('p',{text:t}),el('div',{class:'row2',style:'justify-content:flex-end'},el('button',{class:'btn',type:'button',text:'OK',onclick:closeModal}))); $('#modal').classList.remove('hidden'); }
+function manual(a){ const inp=el('input',{class:'field',placeholder:'Example: cash, check #1042, Venmo'}); confirmBox('Record payment outside Square',[['Client',a.business],['Applies to','Oldest unpaid charge']],'Record as paid',()=>act({action:'billing_manual',id:a.id,note:inp.value.trim()},'Recorded.'),el('div',null,el('small',{class:'k',text:'How they paid'}),inp)); }
+async function paylink(a){ const r=await api({action:'billing_paylink',id:a.id}); if(!r.ok){ dmsg(errText(r)); return; } const inp=el('input',{class:'field',value:r.url,readonly:'readonly'}); $('#mbox').replaceChildren(el('h2',{text:'Secure payment link'}),el('p',{style:'color:var(--mut);font-size:.88rem',text:'Text or email this to '+a.owner+'. The previous link stopped working.'+(a.env!=='production'?' Test mode: Square sandbox, use test card 4111 1111 1111 1111.':'')}),inp,el('div',{class:'row2',style:'justify-content:flex-end;margin-top:12px'},el('button',{class:'btn',type:'button',text:'Close',onclick:closeModal}),el('button',{class:'btn primary',type:'button',text:'Copy',onclick:e=>{ inp.select(); try{navigator.clipboard.writeText(r.url);}catch(_){document.execCommand('copy');} e.target.textContent='Copied'; }}))); $('#modal').classList.remove('hidden'); }
+async function cancelFlow(a){
+  const ask=async date=>{ const r=await api({action:'billing_cancel',id:a.id,date,confirm:false}); if(!r.ok){ alertBox(errText(r)); return; } const p=r.preview;
+    const inp=el('input',{class:'field',type:'date',value:date}); inp.addEventListener('change',()=>ask(inp.value));
+    confirmBox('Record cancellation notice',[['Client',a.business],['Written notice received',ld(p.notice)],['What happens',p.text]],p.mode==='review'?'Record request for review':'Record notice',()=>act({action:'billing_cancel',id:a.id,date:p.notice,confirm:true},'Cancellation recorded.'),el('div',null,el('small',{class:'k',text:'Date the written notice was received'}),inp)); };
+  ask(data.today);
+}
+function endFlow(a){ const inp=el('input',{class:'field',placeholder:'Type END BILLING'}); confirmBox('End all billing for '+a.business+'?',[['Effect','No more automatic charges. Past payments and records stay.']],'End billing',()=>act({action:'billing_end',id:a.id,confirmText:inp.value.trim()},'Billing ended.'),inp); }
+
+function drawSettings(){
+  const s=data.settings||{}; const box=$('#settings');
+  const col=(env,label)=>{ const c=s[env]||{}; const tok=el('input',{class:'field',type:'password',placeholder:c.token?'Saved (enter a new one to replace)':'Paste access token',autocomplete:'off'}); const app=el('input',{class:'field',value:c.appId||'',placeholder:env==='sandbox'?'sandbox-sq0idp-...':'sq0idp-...'});
+    return el('div',null,el('h3',{text:label}),el('div',{style:'font-size:.8rem;color:var(--mut)',text:'Access token: '+(c.token?'saved':'not set')+' · Location: '+(c.location||'not set')}),
+      el('label',{text:'Access token (kept private on the server, never shown again)'}),tok,el('label',{text:'Application ID'}),app,
+      el('button',{class:'btn primary',type:'button',style:'margin-top:10px',text:'Save '+label.toLowerCase(),onclick:async()=>{ const r=await api({action:'billing_settings',target:env,token:tok.value,appId:app.value}); tok.value=''; sm(r.ok?'Saved and checked with Square.':errText(r)+(r.error==='badapp'?' (should start with '+(env==='sandbox'?'sandbox-sq0idp-':'sq0idp-')+')':''),r.ok); if(r.ok){ data.settings=r.settings; drawSettings(); } }})); };
+  const sm=(t,ok)=>{ const m=$('#smsg'); m.className='msg '+(ok?'ok':'err'); m.textContent=t; };
+  const res=el('div',{class:'res'});
+  box.replaceChildren(el('div',{class:'set'},col('sandbox','Test keys (sandbox)'),col('production','Live keys')),
+    el('div',{class:'actions'},
+      el('button',{class:'btn',type:'button',text:'Run sandbox self-test',onclick:async e=>{ e.target.disabled=true; e.target.textContent='Testing with Square sandbox...'; const r=await api({action:'billing_selftest'}); e.target.disabled=false; e.target.textContent='Run sandbox self-test'; if(!r.ok){ sm(errText(r)); return; } res.replaceChildren(...r.results.map(x=>el('div',null,el('span',{class:'tag '+(x.pass?'ok':'bad'),text:x.pass?'PASS':'FAIL'}),' '+x.test+(x.info&&!x.pass?' ('+x.info+')':'')))); load(); }}),
+      el('button',{class:'btn',type:'button',text:'Run daily billing check now',onclick:async()=>{ const r=await api({action:'billing_tick'}); sm(r.ok?'Done: '+JSON.stringify(r.summary):errText(r),r.ok); load(); }}),
+      s.env==='production'?el('button',{class:'btn',type:'button',text:'Switch back to test mode',onclick:async()=>{ const r=await api({action:'billing_settings',mode:'sandbox'}); if(r.ok){data.settings=r.settings;} load(); drawSettings(); }})
+      :el('button',{class:'btn danger',type:'button',text:'Go live with real cards',onclick:()=>{ const inp=el('input',{class:'field',placeholder:'Type GO LIVE'}); confirmBox('Switch to live payments?',[['Effect','New agreements get a real Square payment link and real cards are charged.'],['Test accounts','Stay in test mode and are never charged.']],'Go live',async()=>{ const r=await api({action:'billing_settings',mode:'production',confirmText:inp.value.trim()}); closeModal(); if(!r.ok){ sm(r.error==='notready'?'Save the live access token and application ID first.':errText(r)); return; } data.settings=r.settings; load(); drawSettings(); },inp); }})),
+    el('div',{class:'msg',id:'smsg'}),res,
+    el('div',{style:'font-size:.78rem;color:var(--mut);margin-top:8px',text:'Last daily check: '+(s.lastTick||'never')}));
+}
+async function start(){ $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); await load(); }
+if(token) start(); else $('#pw').focus();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://web.squarecdn.com https://sandbox.web.squarecdn.com https://*.squarecdn.com https://js.squareup.com https://js.squareupsandbox.com https://*.cardinalcommerce.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.squarecdn.com; font-src https://fonts.gstatic.com https://*.squarecdn.com data:; img-src 'self' data: https://*.squarecdn.com https://*.squareup.com https://*.squareupsandbox.com; connect-src https://script.google.com https://script.googleusercontent.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://*.squarecdn.com https://*.squareup.com https://*.squareupsandbox.com https://*.cardinalcommerce.com https://o160250.ingest.sentry.io; frame-src https://*.squarecdn.com https://*.squareup.com https://*.squareupsandbox.com https://*.cardinalcommerce.com; form-action 'none'; base-uri 'none'; object-src 'none'">
+<title>Set up payment | Riverbend Web Co.</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F172A;--txt:#334155;--mut:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--blue:#0052CC;--green:#16A34A;--red:#DC2626;--amber:#B45309}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.top{background:var(--ink);color:#fff;padding:16px 20px}
+.top .in{max-width:620px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top b{font-weight:800;letter-spacing:.01em}.top b span{color:#60A5FA}
+.top small{color:#94A3B8;font-size:.78rem;display:flex;align-items:center;gap:6px}
+.wrap{max-width:620px;margin:0 auto;padding:24px 16px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px 22px;margin-bottom:16px}
+h1{font-size:1.6rem;line-height:1.2;margin:0 0 6px}
+.sub{color:var(--mut);margin:0 0 4px}
+.k{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+ul.sched{list-style:none;padding:0;margin:14px 0 0}
+ul.sched li{padding:11px 0 11px 26px;border-top:1px solid #EEF2F6;position:relative;color:var(--txt);line-height:1.5;font-size:.95rem}
+ul.sched li:first-child{border-top:0}
+ul.sched li::before{content:"";position:absolute;left:4px;top:18px;width:8px;height:8px;border-radius:2px;background:var(--blue)}
+.due{display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:16px}
+.due b{font-size:1.5rem}
+#card-container{min-height:90px;margin:14px 0 6px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--txt);line-height:1.5;margin:14px 0}
+.consent input{margin-top:3px;width:18px;height:18px;flex:none}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;border:0;border-radius:9px;background:var(--blue);color:#fff;font:inherit;font-weight:700;font-size:1rem;cursor:pointer}
+.btn[disabled]{opacity:.55;cursor:default}
+.msg{min-height:22px;margin-top:12px;font-size:.92rem}
+.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.test{background:#FEF3C7;border:1px solid #F59E0B;color:#78350F;border-radius:10px;padding:10px 14px;font-size:.88rem;margin-bottom:16px}
+.done{text-align:center}.done svg{width:52px;height:52px;color:var(--green)}
+.fine{font-size:.82rem;color:var(--mut);line-height:1.5}
+.fine a{color:var(--blue)}
+.lock{width:14px;height:14px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><b>Riverbend <span>Web Co.</span></b><small><svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Secured by Square</small></div></div>
+<main class="wrap">
+  <div id="loading" class="card"><p class="sub">Loading your payment details...</p></div>
+  <div id="bad" class="card hidden"><h1>This link is not valid</h1><p class="sub">The link may be old or mistyped. Call or text (608) 306-0135 and we will send a new one.</p></div>
+  <div id="main" class="hidden">
+    <div id="testBar" class="test hidden"><b>Test mode.</b> This page uses Square's sandbox. No real card is charged.</div>
+    <div class="card">
+      <div class="k">Payment setup</div>
+      <h1 id="biz"></h1>
+      <p class="sub" id="plan"></p>
+      <ul class="sched" id="sched"></ul>
+      <div class="due" id="dueBox"><span id="dueLbl">Due today</span><b id="dueAmt"></b></div>
+    </div>
+    <div class="card" id="payCard">
+      <div class="k" id="cardTitle">Your card</div>
+      <p class="sub" id="cardNow"></p>
+      <div id="card-container"></div>
+      <label class="consent"><input type="checkbox" id="agree"><span id="consentText"></span></label>
+      <button class="btn" id="go" type="button" disabled>Authorize payment</button>
+      <div class="msg" id="msg" role="alert"></div>
+      <p class="fine">Your card is saved and processed by Square. Riverbend Web Co. never sees or stores your full card number. Questions? Call or text <a href="tel:+16083060135">(608) 306-0135</a>.</p>
+    </div>
+    <div class="card done hidden" id="done">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5"/></svg>
+      <h1>You're all set</h1>
+      <p class="sub" id="doneText"></p>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+'use strict';
+const API='https://script.google.com/macros/s/AKfycbwkosfcFSHGXy8EUaAFZ7Q-SFDFllV_k4n8qBABRxoj2hv59RspTU9APLQabwP_ohaW/exec';
+const $=s=>document.querySelector(s);
+const key=(location.hash||'').slice(1);
+const usd=c=>'$'+(c/100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+let info=null, card=null, payments=null;
+async function api(body){ try{ const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({key},body))}); return await r.json(); }catch(_){ return {ok:false,error:'network'}; } }
+function show(i){
+  info=i;
+  $('#biz').textContent=i.business; $('#plan').textContent=i.packageName+' package, '+i.optionName;
+  $('#sched').replaceChildren(...i.lines.map(t=>{ const li=document.createElement('li'); li.textContent=t; return li; }));
+  const due=i.setupDue+i.pastDue;
+  $('#dueLbl').textContent=i.pastDue?'Past-due balance charged today':'Charged today';
+  $('#dueAmt').textContent=usd(due);
+  $('#consentText').textContent=i.consent;
+  $('#testBar').classList.toggle('hidden',!i.test);
+  $('#cardNow').textContent=i.card?'On file: '+i.card+'. Enter a new card below to replace it.':'';
+  $('#cardTitle').textContent=i.card?'Update your card':'Your card';
+  $('#go').textContent=due?'Authorize and pay '+usd(due):'Authorize payment';
+}
+function loadSquare(test){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=test?'https://sandbox.web.squarecdn.com/v1/square.js':'https://web.squarecdn.com/v1/square.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+async function init(){
+  if(!/^[a-f0-9]{48}$/.test(key)){ $('#loading').classList.add('hidden'); $('#bad').classList.remove('hidden'); return; }
+  const r=await api({action:'pay_info'});
+  $('#loading').classList.add('hidden');
+  if(!r.ok){ $('#bad').classList.remove('hidden'); if(r.error==='network'||r.error==='busy'){ $('#bad h1').textContent='We could not load this page'; $('#bad p').textContent='Check your connection and refresh. If it keeps happening, call or text (608) 306-0135.'; } return; }
+  $('#main').classList.remove('hidden'); show(r.info);
+  if(r.info.status==='ended'){ $('#payCard').classList.add('hidden'); return; }
+  if(!r.info.appId||!r.info.locationId){ $('#msg').className='msg err'; $('#msg').textContent='Card setup is not turned on yet. We will text you when it is ready.'; return; }
+  try{
+    await loadSquare(r.info.test);
+    payments=window.Square.payments(r.info.appId,r.info.locationId);
+    card=await payments.card(); await card.attach('#card-container');
+  }catch(e){ $('#msg').className='msg err'; $('#msg').textContent='The secure card form did not load. Refresh the page, or call (608) 306-0135.'; return; }
+  const upd=()=>{ $('#go').disabled=!$('#agree').checked; }; $('#agree').addEventListener('change',upd); upd();
+}
+$('#go').addEventListener('click',async()=>{
+  if(!card||!$('#agree').checked) return;
+  const b=$('#go'), m=$('#msg'); b.disabled=true; const label=b.textContent; b.textContent='Working...'; m.className='msg'; m.textContent='';
+  try{
+    const details={amount:((info.setupDue+info.pastDue)/100||1).toFixed(2),currencyCode:'USD',intent:'STORE',customerInitiated:true,sellerKeyedIn:false,billingContact:{familyName:'',givenName:''}};
+    let t; try{ t=await card.tokenize(details); }catch(_){ t=await card.tokenize(); }
+    if(!t||t.status!=='OK'){ throw {msg:(t&&t.errors&&t.errors[0]&&t.errors[0].message)||'Please check your card details.'}; }
+    let ver='';
+    if(payments.verifyBuyer){ try{ const v=await payments.verifyBuyer(t.token,{intent:'STORE',billingContact:{}}); ver=(v&&v.token)||''; }catch(_){} }
+    const r=await api({action:'pay_card',source:t.token,verification:ver,consent:true});
+    if(r.ok){
+      $('#payCard').classList.add('hidden'); $('#done').classList.remove('hidden'); show(r.info);
+      const paid=(r.results||[]).filter(x=>x.status==='paid').reduce((s,x)=>s+x.amount,0);
+      $('#doneText').textContent=(paid?'We charged '+usd(paid)+' and emailed your receipt. ':'Your card is saved. Nothing was charged today. ')+'You can close this page.';
+      window.scrollTo({top:0,behavior:'smooth'}); return;
+    }
+    if(r.info) show(r.info);
+    throw {msg:{declined:'Your card was declined'+(r.detail?' ('+String(r.detail).replace(/^[A-Z_]+: /,'')+')':'')+'. Try another card.',consent:'Please check the authorization box.',busy:'We are busy for a moment. Try again in a minute.',network:'No connection. Check your internet and try again.',ended:'This account is closed.'}[r.error]||'Something went wrong. Nothing was charged. Call (608) 306-0135.'};
+  }catch(e){ m.className='msg err'; m.textContent=e.msg||'Something went wrong. Nothing was charged.'; }
+  b.textContent=label; b.disabled=!$('#agree').checked;
+});
+init();
+})();
+</script>
+</body>
+</html>
