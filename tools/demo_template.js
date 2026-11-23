@@ -2407,6 +2407,20 @@ function abI(n){ const P={
 const AB_SVC={"CV & drivetrain repair": "1769218403508-90c67335aab5", "Suspension": "1760836395763-25ea44ae8145", "Tires": "1764015805414-df7de89d405b", "Batteries": "1765211003026-f7666ea3a948", "Engine diagnostics": "1625047509248-ec889cbff17f", "Electrical": "1632733711679-529326f6db12", "A/C": "1773962375418-9f13f00553e7", "Tune-ups": "1782885044133-27c4df887d96", "Brakes": "1747330038945-fb39f6e4b73c", "Exhaust": "1764869427739-cc4bbc7f62fa", "Inspections": "1792010025571-58898f12dc49", "Oil & filter change": "1771340742493-52fbd5476ccb"};
 function abAuto(C){
   const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
+  if(/^a\s*(&|and|n)\s*b\s+auto/i.test(C.name)){
+    C.addr='10512 Key W Dr'; C.city='Dubuque, IA 52003'; C.phone='5635833575'; C.tel='tel:+15635833575'; C.phoneTxt='(563) 583-3575';
+    C.hours=['8am - 5pm','8am - 5pm','8am - 5pm','8am - 5pm','8am - 5pm','By appointment','By appointment']; C.hasHours=true; C.today=C.hours[todayIx()]; C.daysOpen=5;
+    C.maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('A & B Automotive Center & Sales, 10512 Key W Dr, Dubuque, IA 52003');
+    C.reviewsSource='Google';
+    C.reviews=[
+      {name:'Travis Busch',stars:5,text:'Adam and TJ are awesome. I have taken countless vehicles to them and they are fair and honest.'},
+      {name:'Ben Schueller',stars:5,text:'Diagnosed my truck same day I took it in then did not even charge me also gave me a ride home highly recommend'},
+      {name:'Matty',stars:5,text:'TJ and Adam at A&B Auto are the real deal. Great prices, great service, and always a straightforward diagnosis with quality work.'},
+      {name:'Ken Mills',stars:5,text:'Adam and TJ have always done a get job and I have never gotten sticker shock when getting a bill. They do awesome work at a reasonable price. I\u2019ve had these gentlemen in the last five years work on over 9 of my cars.'},
+      {name:'Rick Baumhover',stars:5,text:'Adam and TJ do AWESOME FAST WORK And are very pleasant and very affordable, will definitely have ALL my business from now on; can\u2019t go wrong with these guys. Totally 5 stars out of 5.'},
+      {name:'Tam Alan',stars:5,text:'The guys at A&B are friendly and professional. There seems to be nothing that is beyond their car knowledge. They have been my first call for some years now and, my adult children also continue to take their vehicles to A&B. We all feel that the job is done right the first time, and priced competitively.'},
+      {name:'Allen Langguth',stars:5,text:'We were on a family road trip to Dubuque when our check oil pressure light came on. A nice gentlemen stopped and told us to go to A & B Auto and ask for Adam. Adam was very nice and very helpful. He checked us over and gave us pointers and got us on the road. Thank you to the gentlemen who stopped and thank you to Adam!'}];
+  }
   const town=C.city?C.city.split(',')[0]:'';
   const P={heroBg:AB_U('1767681092416-bccf9410bda4',2200),repair:AB_U('1771340012378-3c86cb649193'),tire:AB_U('1645445522156-9ac06bc7a767'),sales:AB_U('1794208709613-1750c1a0483e'),
     shop:AB_U('1767681092416-bccf9410bda4',1000),grease:AB_U('1619642751034-765dfdf7c58e'),lot:AB_U('1794208635374-9574f0527c12'),engine:AB_U('1486262715619-67b85e0b08d3',2000),oil:AB_U('1771340742493-52fbd5476ccb')};
@@ -2487,10 +2501,10 @@ function abAuto(C){
   const rv=C.reviews; let reviews=null;
   if(rv.length){ let ri=0; const per=()=>innerWidth<760?1:3;
     const track=h('div',{class:'ab-revs'});
-    const draw=()=>{ const n=per(); track.replaceChildren(...Array.from({length:Math.min(n,rv.length)},(_,k)=>rv[(ri+k)%rv.length]).map(r=>h('figure',{class:'ab-rev'},h('div',{class:'ab-rev-h'},h('b',null,(r.stars||5)+' stars'),abI('quote')),h('blockquote',null,short(r.text,260)),h('figcaption',null,r.name)))); };
-    draw(); setInterval(()=>{ if(!track.isConnected) return; ri=(ri+1)%rv.length; draw(); },6000);
-    reviews=h('section',{class:'ab-sec ab-light',id:'ab-reviews'},h('div',{class:'ab-w'},h('h2',{class:'ab-h2'},'Customer reviews'),h('p',{class:'ab-mut'},'What drivers say about '+name+'.'),
-      h('div',{class:'ab-rev-wrap'},h('button',{type:'button',class:'ab-arr','aria-label':'Previous',onclick:()=>{ri=(ri-1+rv.length)%rv.length;draw();}},abI('arrow')),track,h('button',{type:'button',class:'ab-arr n','aria-label':'Next',onclick:()=>{ri=(ri+1)%rv.length;draw();}},abI('arrow'))))); }
+    const draw=()=>{ const n=per(); track.replaceChildren(...Array.from({length:Math.min(n,rv.length)},(_,k)=>rv[(ri+k)%rv.length]).map(r=>h('figure',{class:'ab-rev'},h('div',{class:'ab-rev-h'},h('span',{class:'ab-stars','aria-label':(r.stars||5)+' stars'},[0,1,2,3,4].slice(0,r.stars||5).map(()=>abI('star'))),abI('quote')),h('blockquote',null,short(r.text,260)),h('figcaption',null,h('span',{class:'ab-av'},r.name.trim()[0]),h('span',null,r.name,h('small',null,C.reviewsSource?C.reviewsSource+' review':'Customer review')))))); };
+    draw(); let rt=setInterval(()=>{ if(!track.isConnected) return; ri=(ri+1)%rv.length; draw(); },5000); const restart=()=>{ clearInterval(rt); rt=setInterval(()=>{ if(!track.isConnected) return; ri=(ri+1)%rv.length; draw(); },5000); };
+    reviews=h('section',{class:'ab-sec ab-light',id:'ab-reviews'},h('div',{class:'ab-w'},h('h2',{class:'ab-h2'},'Customer reviews'),h('p',{class:'ab-mut'},C.reviewsSource==='Google'?'5-star reviews from drivers on Google.':'What drivers say about '+name+'.'),
+      h('div',{class:'ab-rev-wrap'},h('button',{type:'button',class:'ab-arr','aria-label':'Previous',onclick:()=>{ri=(ri-1+rv.length)%rv.length;draw();restart();}},abI('arrow')),track,h('button',{type:'button',class:'ab-arr n','aria-label':'Next',onclick:()=>{ri=(ri+1)%rv.length;draw();restart();}},abI('arrow'))))); }
   const FAQ=isAB?[
     ['What automotive services do you offer?','At A & B Automotive Center Inc., we provide a full range of auto repair and maintenance services, including engine diagnostics, brake repair, oil changes, tire services, transmission work, and more. Our goal is to keep your vehicle running safely and efficiently, no matter the issue.'],
     ['Do you sell pre-owned vehicles?','Yes, we have a selection of high-quality pre-owned vehicles for sale. All our vehicles are inspected thoroughly to ensure they meet safety and performance standards.'],
@@ -2498,7 +2512,7 @@ function abAuto(C){
     ['What payment methods do you accept?','We accept various payment methods including cash, major credit cards, debit cards and personal checks.'],
     ['Will you work with my insurance company?','Absolutely! We have experience working with all major insurance companies and can assist you with the claims process to ensure a smooth experience.'],
     ['Do you work on all makes and models?','Yes, our experienced technicians are trained to work on a wide variety of makes and models, both domestic and foreign. No matter what you drive, we can provide reliable service tailored to your vehicle’s needs.'],
-    ['How can I view your current vehicle inventory?','To see what vehicles are currently available, simply click the Inventory tab on our website. There you’ll find up-to-date listings, photos, pricing, and details about each vehicle in stock.'],
+    ['How can I view your current vehicle inventory?','To see what vehicles are currently available, give us a call at (563) 583-3575 or stop by the lot at 10512 Key W Dr. We\u2019re happy to go over the details, photos and pricing on any vehicle in stock.'],
     ['Do you inspect the vehicles you sell?','Yes. As a full-service automotive repair shop, we carefully evaluate our vehicles and use our automotive expertise to help provide dependable transportation options for our customers.'],
     ['Can I schedule service appointments on weekends?','Yes. We offer Saturday and Sunday appointments to help accommodate busy schedules. Weekend appointments are available by appointment.']]:[];
   const faqSec=FAQ.length?h('section',{class:'ab-sec ab-light',id:'ab-faq'},h('div',{class:'ab-w ab-faq'},
