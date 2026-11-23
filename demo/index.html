@@ -1303,7 +1303,7 @@ body.t-mt{background:#fff}
 .st-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .st-mini{display:flex;gap:16px;margin-top:38px}.st-mini-card{position:relative;width:190px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;box-shadow:0 10px 30px rgba(12,60,30,.06)}.st-mini-card b{font-size:.98rem;margin-top:6px}.st-mini-card>a{color:var(--g);font-weight:600;text-decoration:none;font-size:.95rem}.st-mini-go{margin-top:6px;width:34px;height:34px;border-radius:50%;border:1px solid var(--ink);display:grid;place-items:center;color:var(--ink)!important}.st-mini-go svg{width:15px;height:15px}
 .st-mini-pic{width:150px;border-radius:18px;background-size:cover;background-position:center}
-.st-hero-pic{position:relative}.st-hero-img.sharp{filter:url(#st-sharp) contrast(1.06) saturate(1.08)}.st-hero-img{aspect-ratio:4/4.6;border-radius:220px 220px 28px 28px;background-size:cover;background-position:center;box-shadow:0 30px 60px rgba(6,58,28,.18)}
+.st-hero-pic{position:relative}.st-hero-img.trailer{aspect-ratio:1448/1086;border-radius:28px;background-position:center}.st-hero-img.sharp{filter:url(#st-sharp) contrast(1.06) saturate(1.08)}.st-hero-img{aspect-ratio:4/4.6;border-radius:220px 220px 28px 28px;background-size:cover;background-position:center;box-shadow:0 30px 60px rgba(6,58,28,.18)}
 .st-badge{position:absolute;left:-26px;bottom:44px;display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:14px 18px 14px 14px;box-shadow:0 16px 40px rgba(6,58,28,.16)}.st-badge b{display:block}.st-badge small{color:var(--mut)}
 .st-roll-s{padding:34px 0 30px;border-bottom:1px solid var(--line)}.st-roll-h{text-align:center;font-weight:600;font-size:1.05rem;margin:0 0 18px}
 .st-roll{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
@@ -1362,7 +1362,7 @@ body.t-mt{background:#fff}
 @media(max-width:1060px){.st-links{display:none}.st-burger{display:block}.st-call{margin-left:auto}.st-cards,.st-cards.c3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){
 .st-hide-s,.st-strip-r{display:none!important}.st-strip-in{min-height:34px;gap:14px;font-size:.76rem}.st-bar-in{height:66px;gap:12px}.st-brand{font-size:1.1rem}.st-call b,.st-call small{display:none}.st-call-i{width:42px;height:42px}.st-burger{margin-left:0}
-.st-hero-in{grid-template-columns:1fr;gap:34px;padding:36px 0 46px}.st-hero-pic{order:-1}.st-hero-img{aspect-ratio:4/3.6;border-radius:160px 160px 24px 24px}.st-badge{left:12px;bottom:14px;padding:10px 14px 10px 10px}.st-badge .st-mark{width:36px;height:36px}
+.st-hero-in{grid-template-columns:1fr;gap:34px;padding:36px 0 46px}.st-hero-pic{order:-1}.st-hero-img{aspect-ratio:4/3.6;border-radius:160px 160px 24px 24px}.st-badge{left:12px;bottom:14px;padding:10px 14px 10px 10px}.st-hero-img.trailer+.st-badge{bottom:-22px;left:auto;right:12px}.st-hero-in{row-gap:44px}.st-badge .st-mark{width:36px;height:36px}
 .st-mini{margin-top:28px}.st-mini-card{flex:1;width:auto}.st-mini-pic{width:42%}
 .st-sec{padding:70px 0}.st-about{padding:60px 0 70px}.st-about-tiles{position:static;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(1200px,100% - 40px);margin:0 auto 34px}.st-tile{position:static!important;width:auto!important;height:110px!important}.st-tile:nth-child(n+4){display:none}
 .st-cards,.st-cards.c3{grid-template-columns:1fr}.st-card-img{aspect-ratio:16/10}.st-hero .st-kick i{display:none}.st-band-in{flex-direction:column;align-items:flex-start}.st-facts{gap:26px}.st-contact{grid-template-columns:1fr;gap:36px}.st-form{padding:24px 20px}.st-f2{grid-template-columns:1fr}
@@ -6813,7 +6813,7 @@ function shadeTree(C){
   const town=C.city?C.city.split(',')[0]:'your area';
   const WP=f=>'https://shadetreelawnscaping.com/wp-content/uploads/2021/03/'+f+'?w=1200';
   const P={hero:ST_U('1765064519883-651c506ec70d',1400),saw:ST_U('1781642945922-b9452456d658'),prune:ST_U('1754321902809-5c21cbc67228'),ladder:ST_U('1754321871548-61bdbc6f1506'),cut:ST_U('1684332666088-f35b252b5aca'),climb:ST_U('1626828476637-5bd713ef9f22'),helmet:ST_U('1588878309774-4b3f42a19a8f'),trim:ST_U('1754321889123-0485c7fea5f1'),sit:ST_U('1669065054992-3151b15aab08'),branch:ST_U('1765064520296-1e56ebb82e17'),arb:ST_U('1754322449185-31f56117ed87')};
-  const heroPic=isST?WP('shadetree-trailer.jpg'):(ok(x.heroPhoto)||C.own[0]||P.hero);
+  const heroPic=isST?'https://riverbendwebco.com/demo/img/st-trailer.jpg':(ok(x.heroPhoto)||C.own[0]||P.hero);
   const defs=[{n:'Tree Removal',d:'Safe removal of dead, damaged or unwanted trees, near houses, fences and power lines.',img:P.saw},
     {n:'Trimming & Pruning',d:'Shape your trees, clear your roof and keep branches healthy and strong.',img:P.prune},
     {n:'Stump Grinding',d:'Grind old stumps down so you can mow, plant or build right over the spot.',img:P.cut},
@@ -6867,7 +6867,7 @@ function shadeTree(C){
       h('div',{class:'st-row'},btn('Get an Estimate','#st-contact'),C.tel?h('a',{class:'st-ghost lg',href:C.tel},stI('phone'),C.phoneTxt):null),
       trust.length?h('ul',{class:'st-trust'},trust.map(t=>h('li',null,h('span',null,stI('check')),t))):null,
       h('div',{class:'st-finder'},h('small',null,'What do you need help with?'),h('div',{class:'st-chips'},svc.map(v=>h('button',{type:'button',onclick:()=>openSvc(v)},v.n))))),
-    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero?'':' sharp')}),heroPic),
+    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero||isST?'':' sharp')+(isST?' trailer':'')}),heroPic),
       h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,isST?'Since 1991':'Local crew'),h('small',null,isST?'Licensed and bonded':'Serving '+town))))));
   const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},isST?'Serving Frederick, Washington and Carroll County, MD':'Tree services in '+town+' and nearby')),
     h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));

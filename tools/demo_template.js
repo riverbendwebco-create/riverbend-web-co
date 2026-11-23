@@ -2273,7 +2273,7 @@ function shadeTree(C){
   const town=C.city?C.city.split(',')[0]:'your area';
   const WP=f=>'https://shadetreelawnscaping.com/wp-content/uploads/2021/03/'+f+'?w=1200';
   const P={hero:ST_U('1765064519883-651c506ec70d',1400),saw:ST_U('1781642945922-b9452456d658'),prune:ST_U('1754321902809-5c21cbc67228'),ladder:ST_U('1754321871548-61bdbc6f1506'),cut:ST_U('1684332666088-f35b252b5aca'),climb:ST_U('1626828476637-5bd713ef9f22'),helmet:ST_U('1588878309774-4b3f42a19a8f'),trim:ST_U('1754321889123-0485c7fea5f1'),sit:ST_U('1669065054992-3151b15aab08'),branch:ST_U('1765064520296-1e56ebb82e17'),arb:ST_U('1754322449185-31f56117ed87')};
-  const heroPic=isST?WP('shadetree-trailer.jpg'):(ok(x.heroPhoto)||C.own[0]||P.hero);
+  const heroPic=isST?'https://riverbendwebco.com/demo/img/st-trailer.jpg':(ok(x.heroPhoto)||C.own[0]||P.hero);
   const defs=[{n:'Tree Removal',d:'Safe removal of dead, damaged or unwanted trees, near houses, fences and power lines.',img:P.saw},
     {n:'Trimming & Pruning',d:'Shape your trees, clear your roof and keep branches healthy and strong.',img:P.prune},
     {n:'Stump Grinding',d:'Grind old stumps down so you can mow, plant or build right over the spot.',img:P.cut},
@@ -2327,7 +2327,7 @@ function shadeTree(C){
       h('div',{class:'st-row'},btn('Get an Estimate','#st-contact'),C.tel?h('a',{class:'st-ghost lg',href:C.tel},stI('phone'),C.phoneTxt):null),
       trust.length?h('ul',{class:'st-trust'},trust.map(t=>h('li',null,h('span',null,stI('check')),t))):null,
       h('div',{class:'st-finder'},h('small',null,'What do you need help with?'),h('div',{class:'st-chips'},svc.map(v=>h('button',{type:'button',onclick:()=>openSvc(v)},v.n))))),
-    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero?'':' sharp')}),heroPic),
+    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero||isST?'':' sharp')+(isST?' trailer':'')}),heroPic),
       h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,isST?'Since 1991':'Local crew'),h('small',null,isST?'Licensed and bonded':'Serving '+town))))));
   const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},isST?'Serving Frederick, Washington and Carroll County, MD':'Tree services in '+town+' and nearby')),
     h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));
