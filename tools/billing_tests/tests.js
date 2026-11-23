@@ -212,7 +212,7 @@ function tickRange(B,H,from,to,id){ let d=from; const out=[]; while(d<=to){ H.to
   ok('Billing session cannot open the Studio',B.studio_({action:'list',token:lg.token}).error==='auth');
   B.studio_({action:'billing_settings',token:lg.token,target:'sandbox',sqToken:'EAAAsecretsecretsecretsecret'});
   const act=H.sheets['Billing Activity'].rows.map(r=>r.join(' | ')).join('\n');
-  ok('Activity log records logins and changes, never the password or the Square key',/billing_login/.test(act)&&/billing_settings/.test(act)&&/Square key saved \(not logged\)/.test(act)&&!act.includes('EAAAsecret')&&!act.includes(pw));
+  ok('Old shared billing password cannot change payment settings (needs an owner account); attempt logged without the key',/billing_settings/.test(act)&&/error: account/.test(act)&&!act.includes('EAAAsecret')&&!act.includes(pw)&&!H.props.SQUARE_TOKEN_SANDBOX.includes('EAAAsecret'));
   const a=B.billAll_()[0]; H.cache={}; B.pay_({action:'pay_card',key:a.payKey.split('#')[1],consent:true,source:'cnon:card-nonce-ok'});
   H.today='2026-11-16'; B.billLaunch_(a.id,'2026-11-16',true); H.today='2026-12-02'; B.billTick_();
   let v=B.billing_({action:'billing_verify'}).accounts[0];
