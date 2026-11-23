@@ -1877,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23w';
+var BILL_VERSION = '2026-11-23x';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3579,22 +3579,24 @@ function outDraft_(o, step, cfg) {
   var st = outSampleKey_(o), demo = outSampleUrl_(o), host = hostOf_(o.website || '');
   var custom = 'It’s a sample. Your site would be designed from scratch around ' + o.business + ': your name, photos, colors, ' +
     (st === 'trade' || st === 'auto' ? 'services' : st === 'salon' ? 'services and prices' : 'menu') + ', and whatever features you want.';
-  var sig = '\n\n' + cfg.from + '\nRiverbend Web Co.\n(608) 306-0135 · riverbendwebco.com';
-  var foot = '\n\n---\nRiverbend Web Co. is a DBA of Outlaw Nightfall LLC, ' + (cfg.address || '[MAILING ADDRESS NEEDED]') +
-    '. This is a business inquiry. To stop hearing from us, use this link: ' + outUnsubUrl_(o);
+  var sig = '\n\n' + cfg.from + '\nOwner, Riverbend Web Co.\n(608) 306-0135 · riverbendwebco.com';
+  var foot = '\n\n---\nBusiness inquiry from Riverbend Web Co. · ' + (cfg.address || '[MAILING ADDRESS NEEDED]') +
+    '\nNot interested? Unsubscribe: ' + outUnsubUrl_(o);
+  var poss = /s$/i.test(o.business) ? o.business + '\u2019' : o.business + '\u2019s';
   var subj, body;
   if (step === 1) {
-    subj = 'A better website for ' + o.business;
-    body = 'Hi ' + o.business + ' team,\n\nI’m ' + cfg.from.split(' ')[0] + ' with Riverbend Web Co., a small veteran-owned web design team in Dubuque, Iowa. ' +
+    subj = 'Question about ' + poss + ' website';
+    body = 'Hi ' + o.business + ' team,\n\nI’m ' + cfg.from.split(' ')[0] + ', owner of Riverbend Web Co., a veteran-owned web design team in Dubuque, Iowa. ' +
+      'We combine military cybersecurity experience with modern web development, so the sites we build are secure and professionally done.\n\n' +
       (o.issue ? 'I was looking at ' + (host || 'your website') + ' and noticed ' + o.issue + '.' : 'I was looking for ' + o.business + ' online and thought you could use a stronger website.') +
       '\n\nHere’s an example of a site we build for ' + OUT_SAMPLES[st] + ':\n' + demo + '\n\n' + custom +
       ' It works on phones, and we can have yours live in about a week, starting at $0 down.\n\nWant me to put together a free preview with your own name and info on it?';
   } else if (step === 2) {
-    subj = 'Re: A better website for ' + o.business;
+    subj = 'Re: Question about ' + poss + ' website';
     body = 'Hi again,\n\nJust making sure this reached you. Here’s the example site again:\n' + demo +
       '\n\nEvery site we build is fully custom, so yours would look and work the way you want. Happy to put together a free preview for ' + o.business + ', or walk you through it in five minutes by phone.';
   } else {
-    subj = 'Re: A better website for ' + o.business;
+    subj = 'Re: Question about ' + poss + ' website';
     body = 'Last note from me. If a new website isn’t a priority right now, no problem, and I won’t keep emailing. If that changes, just reply and I’ll put together a free preview for ' + o.business + '.\n\nExample site: ' + demo;
   }
   return { subject: subj, body: body + sig + foot };
