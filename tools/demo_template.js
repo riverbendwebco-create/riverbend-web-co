@@ -2168,6 +2168,7 @@ function homy(C){
   const town=C.city?C.city.split(',')[0]:'your area';
   const isCM=/cleaning\s+mom+a/i.test(name);
   if(isCM) C.reviews=CM_REVIEWS.map(([text,n])=>({text,name:n}));
+  if(isCM){ C.hours=['8am - 6pm','8am - 6pm','9am - 5pm','8am - 12pm','8am - 6pm','8am - 5pm','8am - 5pm']; C.hasHours=true; C.today=C.hours[todayIx()]; C.daysOpen=7; }
   const heroPic=ok(x.heroPhoto)||HC_U('1758273705627-937374bfa978');
   const aboutPic=ok(x.aboutPhoto)||HC_U('1758273238415-01ec03d9ef27');
   const defs=[{n:'Home Cleaning',d:'Regular or one-time cleaning that keeps your home fresh and tidy, on your schedule.',img:HC_U('1646980241033-cd7abda2ee88')},
