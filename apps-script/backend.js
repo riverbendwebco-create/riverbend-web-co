@@ -53,7 +53,9 @@ function doPost(e) {
     }
     MailApp.sendEmail(opts);
     // The client only gets the payment link on screen once Square is live (owner approved).
-    return json_({ ok: true, pay: bill && bill.account.env === 'production' ? billPayUrl_(bill.key) : '' });
+    // Practice runs: a business named "TEST ..." gets the payment button in test mode too.
+    var showPay = bill && (bill.account.env === 'production' || /^test\b/i.test(bill.account.business));
+    return json_({ ok: true, pay: showPay ? billPayUrl_(bill.key) : '' });
   } catch (err) {
     console.error(err);
     return json_({ ok: false, error: 'server' });
