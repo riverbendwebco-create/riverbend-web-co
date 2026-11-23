@@ -2189,6 +2189,10 @@ function homy(C){
     h('button',{type:'button',class:'hc-burger','aria-label':'Menu',onclick:()=>{menu.hidden=!menu.hidden;}},hcI('menu'))),menu));
   const chip=(t,ic)=>h('span',{class:'hc-chip'},hcI(ic||'spark'),t);
   const rv=C.reviews;
+  const heroRev=()=>{ let k=0; const p=h('p',{class:'in'}), sm=h('small',{class:'in'});
+    const put=()=>{ const r=rv[k%rv.length]; [p,sm].forEach(e=>{e.classList.remove('in'); void e.offsetWidth; e.classList.add('in');}); p.textContent='“'+short(r.text,115)+'”'; sm.textContent=r.name; };
+    put(); const t=setInterval(()=>{ if(!p.isConnected){clearInterval(t);return;} k++; put(); },3000);
+    return h('div',{class:'hc-hero-rev'},isCM?h('span',{class:'hc-fb light'},h('span',{class:'hc-fb-i'},'f'),'100% recommend · 15 reviews'):h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),p,sm); };
   const hero=h('section',{class:'hc-hero-s',id:'hc-top'},h('div',{class:'hc-w'},
     bg(h('div',{class:'hc-hero'}),heroPic,'linear-gradient(90deg,rgba(8,14,30,.72) 0%,rgba(8,14,30,.35) 55%,rgba(8,14,30,.1) 100%)'),
     h('div',{class:'hc-hero-in'},
@@ -2196,7 +2200,7 @@ function homy(C){
         h('h1',null,x.headline||'Home cleaning you can count on'),
         h('p',null,C.tag||('Enjoy a spotless home with friendly, trusted cleaners in '+town+'. Flexible, careful and on time.')),
         h('div',{class:'hc-hero-cta'},book('','Book Now'),h('a',{class:'hc-link light',href:'#hc-services',onclick:go('hc-services')},'See Our Services'))),
-      rv.length?h('div',{class:'hc-hero-rev'},isCM?h('span',{class:'hc-fb light'},h('span',{class:'hc-fb-i'},'f'),'100% recommend · 15 reviews'):h('div',{class:'hc-stars'},[0,1,2,3,4].map(()=>hcI('star'))),h('p',null,'“'+short(rv[isCM?2:0].text,110)+'”'),h('small',null,rv[isCM?2:0].name)):
+      rv.length?heroRev():
         (C.today?h('div',{class:'hc-hero-rev'},h('b',{class:'hc-open'},hcI('clock'),'Open today'),h('p',null,C.today),h('small',null,town)):null))));
   const about=h('section',{class:'hc-sec',id:'hc-about'},h('div',{class:'hc-w hc-about'},
     h('div',{class:'hc-card hc-about-t rv'},chip('About Us','home'),
@@ -2223,7 +2227,7 @@ function homy(C){
     const bar=h('i',{class:'hc-rbar'});
     const dots=rv.map((_,i)=>h('button',{type:'button','aria-label':'Review '+(i+1),onclick:()=>{show(i);restart();}}));
     const show=i=>{ ri=(i+N)%N; const r=rv[ri]; [q,who].forEach(e=>{e.classList.remove('in'); void e.offsetWidth; e.classList.add('in');}); q.textContent='“'+r.text+'”'; who.textContent=r.name; av.textContent=r.name.trim()[0]; dots.forEach((d,j)=>d.classList.toggle('on',j===ri)); bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; };
-    let t=null; const restart=()=>{ clearInterval(t); t=setInterval(()=>{ if(!q.isConnected){clearInterval(t);return;} show(ri+1); },7000); };
+    let t=null; const restart=()=>{ clearInterval(t); t=setInterval(()=>{ if(!q.isConnected){clearInterval(t);return;} show(ri+1); },3000); };
     const arrowBtn=(d,lab)=>h('button',{type:'button',class:'hc-rarr'+(d<0?' back':''),'aria-label':lab,onclick:()=>{show(ri+d);restart();}},hcI('arrow'));
     reviews=h('section',{class:'hc-sec',id:'hc-reviews'},h('div',{class:'hc-w hc-rgrid'},
       h('div',{class:'hc-card hc-rhead rv'},chip('Reviews','star'),h('h2',null,'What our customers say'),
