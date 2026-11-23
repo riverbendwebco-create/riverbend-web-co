@@ -2262,6 +2262,8 @@ function stI(n){ const P={
   tree:'<path d="M12 22v-6"/><path d="M12 16c-4.4 0-7-2.3-7-5.5 0-2 1.2-3.5 2.8-4.2C8.4 4 10 2.5 12 2.5s3.6 1.5 4.2 3.8c1.6.7 2.8 2.2 2.8 4.2 0 3.2-2.6 5.5-7 5.5z"/>',leaf:'<path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19 13 11"/>',check:'<path d="m5 12 4 4 10-10"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>'};
   const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.innerHTML=P[n]||''; return s; }
 function stRoll(pg){ const t=pg.querySelector('.st-roll-t'); if(!t) return; [...t.children].forEach(c=>t.appendChild(c.cloneNode(true))); }
+function stSharp(){ const d=document.createElement('div'); d.setAttribute('aria-hidden','true'); d.style.cssText='position:absolute;width:0;height:0;overflow:hidden';
+  d.innerHTML='<svg width="0" height="0"><filter id="st-sharp" color-interpolation-filters="sRGB"><feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="0 -0.6 0 -0.6 3.4 -0.6 0 -0.6 0"/></filter></svg>'; return d; }
 function shadeTree(C){
   const x=C.x||{}, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
   const town=C.city?C.city.split(',')[0]:'your area';
@@ -2308,7 +2310,7 @@ function shadeTree(C){
       h('div',{class:'st-mini'},
         h('div',{class:'st-mini-card'},h('span',{class:'st-mark sm'},stI('leaf')),h('b',null,C.tel?'Call for an estimate':'Talk to our crew'),C.tel?h('a',{href:C.tel},C.phoneTxt):h('a',{href:'#st-contact',onclick:go('st-contact')},'Get in touch'),h('a',{class:'st-mini-go',href:C.tel||'#st-contact','aria-label':'Call'},stI('arrow'))),
         bg(h('div',{class:'st-mini-pic'}),isST?'https://riverbendwebco.com/demo/img/st-stump.jpg':P.ladder))),
-    h('div',{class:'st-hero-pic'},bg(h('div',{class:'st-hero-img'}),heroPic),h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,'Local crew'),h('small',null,'Serving '+town))))));
+    h('div',{class:'st-hero-pic'},stSharp(),bg(h('div',{class:'st-hero-img'+(heroPic===P.hero?'':' sharp')}),heroPic),h('div',{class:'st-badge'},h('span',{class:'st-mark'},stI('tree')),h('div',null,h('b',null,'Local crew'),h('small',null,'Serving '+town))))));
   const roll=h('section',{class:'st-roll-s'},h('div',{class:'st-w'},h('p',{class:'st-roll-h'},'Tree services in '+town+' and nearby')),
     h('div',{class:'st-roll'},h('div',{class:'st-roll-t'},svc.concat(svc.length<6?svc:[]).map(v=>h('span',null,stI('leaf'),v.n)))));
   const tiles=isST?['https://riverbendwebco.com/demo/img/st-removal.jpg',P.prune,'https://riverbendwebco.com/demo/img/st-lot.jpg','https://riverbendwebco.com/demo/img/st-landscape.jpg',P.climb,'https://riverbendwebco.com/demo/img/st-lawn.jpg']:[P.climb,P.prune,P.helmet,P.sit,P.branch,P.arb];
