@@ -131,13 +131,13 @@ Every plan has two ways to pay. The pricing section has a "Pay once / $0 down" t
 
 | Plan | Pay once | $0 down | Updates |
 |---|---|---|---|
-| Starter | $499 build + $50/mo care | $99/mo | 2 small updates a month within 3 business days; extra changes $35 each, bigger work $65/hour quoted first |
-| Custom (most popular) | $999 build + $75/mo care | $149/mo | Unlimited updates and changes within 24 to 48 hours |
-| Premium | $2,499 build + $100/mo care | $299/mo | Unlimited changes within 2 hours, 24/7 direct line |
+| Starter | $499 build + $50/mo care | $109/mo | 2 small updates a month within 3 business days; extra changes $35 each, bigger work $65/hour quoted first |
+| Custom (most popular) | $999 build + $75/mo care | $179/mo | Unlimited updates and changes within 24 to 48 hours |
+| Premium | $2,499 build + $100/mo care | $349/mo | Unlimited changes within 2 hours, 24/7 direct line |
 
 - Pay once: build fee due at signing; care plan starts at launch, month-to-month, 14 days' notice. Client owns the site files once the build fee is paid.
 - $0 down: nothing at signing, first payment the day the site goes live, 12-month minimum then month-to-month. Site files transfer after 24 consecutive payments. Early exit before 12 months: $299 Starter, $499 Custom, $999 Premium.
-- $0 down is priced to break even with pay-once at about 10 to 13 months, then cost more.
+- $0 down is priced to break even with pay-once at about 8 to 10 months, then cost more.
 
 **Payment methods:** credit and debit cards through Square, ACH bank transfer, Venmo and PayPal. Listed in the pricing note, FAQ 08, agreement section 5 and the chat assistant `paymethod` answer.
 
