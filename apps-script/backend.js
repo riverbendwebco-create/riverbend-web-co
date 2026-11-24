@@ -1877,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23x';
+var BILL_VERSION = '2026-11-23y';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3572,7 +3572,7 @@ function outStyle_(type) {
   if (/restaurant|cafe|coffee|food|pizza|bbq|barbecue|diner|bakery|grill|juice|ice cream|deli|burger|taco|sandwich/.test(t)) return 'lounge';
   return 'trade';
 }
-function outSampleKey_(o) { return OUT_SAMPLES[o.demo] ? o.demo : outStyle_(o.type); }
+function outSampleKey_(o) { var st = outStyle_(o.type); return st !== 'trade' || !OUT_SAMPLES[o.demo] ? st : o.demo; }
 function outSampleUrl_(o) { var k = outSampleKey_(o); return k === 'auto' ? 'https://' + SITE + '/demo/?d=sample-auto' : 'https://' + SITE + '/?preview=' + k; }
 function outUnsubUrl_(o) { return 'https://' + SITE + '/unsubscribe/#' + o.token; }
 function outDraft_(o, step, cfg) {
