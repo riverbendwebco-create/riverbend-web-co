@@ -846,7 +846,7 @@ body.t-mw{background:#fff}
 body.t-sp{background:#100C0F}
 .sp{--bk:#100C0F;--bk2:#17111A;--bk3:#1E1720;--gold:#C9A04A;--gold2:#E6C984;--wh:#F5F1EE;--mut:#B6ACA9;--line:rgba(201,160,74,.24);--script:'Allura',cursive;--disp:'Cormorant Garamond',Georgia,serif;--sans:'Montserrat',Inter,sans-serif;background:var(--bk);color:var(--wh);font-family:var(--sans);font-weight:500;position:relative}
 .sp a{text-decoration:none;color:inherit}
-.sp button{font:inherit;background:none;border:0;color:inherit;cursor:pointer}
+.sp button{font:inherit;background-color:transparent;border:0;color:inherit;cursor:pointer}
 .sp-w{max-width:1200px;margin:0 auto;padding:0 32px}
 .sp-narrow{max-width:780px;text-align:center}
 .sp-script{display:block;font-family:var(--script);font-style:normal;font-size:clamp(2.1rem,3.6vw,2.9rem);color:var(--gold2);line-height:1;font-weight:400}
