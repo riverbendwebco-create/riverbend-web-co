@@ -2421,10 +2421,70 @@ function spSmoke(canvas){
   const Q=.5; const size=()=>{ canvas.width=Math.round(innerWidth*Q); canvas.height=Math.round(innerHeight*Q); gl.viewport(0,0,canvas.width,canvas.height); };
   size(); addEventListener('resize',size);
   const t0=performance.now(); let k=0;
-  const frame=t=>{ if(!document.hidden){ const y=scrollY, hero=innerHeight; const want=y<hero?.95-.55*(y/hero):.4; k+=(want-k)*.05;
-      gl.uniform2f(uR,canvas.width,canvas.height); gl.uniform1f(uT,(t-t0)/1000); gl.uniform1f(uS,y*Q); gl.uniform1f(uK,k); gl.drawArrays(gl.TRIANGLES,0,3); }
+  const frame=t=>{ if(!document.hidden){ const y=scrollY, hero=innerHeight; const want=y<hero?.6*(1-y/hero):0; k+=(want-k)*.06;
+      if(k<.005){ gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); requestAnimationFrame(frame); return; } gl.uniform2f(uR,canvas.width,canvas.height); gl.uniform1f(uT,(t-t0)/1000); gl.uniform1f(uS,y*Q); gl.uniform1f(uK,k); gl.drawArrays(gl.TRIANGLES,0,3); }
     requestAnimationFrame(frame); };
   requestAnimationFrame(frame);
+}
+/* An Old Fashioned that builds itself as you scroll: glass, ice, bourbon, bitters, orange peel, cherry and one curl of smoke */
+const SP_OF='<svg viewBox="-20 -70 240 350" xmlns="http://www.w3.org/2000/svg"><defs>'+
+ '<linearGradient id="of-bb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0A63A"/><stop offset=".55" stop-color="#C46A1C"/><stop offset="1" stop-color="#7A3A0E"/></linearGradient>'+
+ '<linearGradient id="of-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".25" stop-color="#fff" stop-opacity=".03"/><stop offset=".8" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient>'+
+ '<linearGradient id="of-shade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".25" stop-color="#fff" stop-opacity=".07"/><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient><linearGradient id="of-base" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient>'+
+ '<linearGradient id="of-pe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB347"/><stop offset="1" stop-color="#E0621A"/></linearGradient>'+
+ '<radialGradient id="of-ch" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#E0344A"/><stop offset=".6" stop-color="#8E0F1E"/><stop offset="1" stop-color="#4A0610"/></radialGradient>'+
+ '<clipPath id="of-clip"><path d="M34,64 L166,64 L161,234 L39,234 Z"/></clipPath>'+
+ '<filter id="of-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><filter id="of-fog" x="-80%" y="-80%" width="260%" height="260%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10"/><feGaussianBlur stdDeviation="8"/></filter>'+
+ '<filter id="of-soft"><feGaussianBlur stdDeviation="1.2"/></filter></defs>'+
+ '<ellipse cx="100" cy="268" rx="82" ry="7" fill="#000" opacity=".55" filter="url(#of-blur)"/>'+
+ '<g id="of-smoke" opacity="0" filter="url(#of-fog)" fill="none" stroke="#F3EFEA" stroke-linecap="round"><path d="M70,58 C60,34 92,18 80,-8 C72,-28 88,-46 84,-64" stroke-width="20" opacity=".28"/><path d="M118,58 C132,36 108,16 124,-10 C132,-26 118,-42 124,-60" stroke-width="16" opacity=".24"/><path d="M96,58 C88,38 114,22 100,-4 C92,-20 104,-34 100,-50" stroke-width="26" opacity=".3"/><ellipse cx="100" cy="50" rx="66" ry="10" fill="#F3EFEA" stroke="none" opacity=".22"/></g>'+
+ '<g clip-path="url(#of-clip)"><rect id="of-liq" x="20" y="234" width="160" height="0" fill="url(#of-bb)" opacity=".92"/>'+
+ '<radialGradient id="of-bl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#4A0710" stop-opacity=".85"/><stop offset="1" stop-color="#4A0710" stop-opacity="0"/></radialGradient><ellipse id="of-bloom" cx="100" cy="170" rx="0" ry="0" fill="url(#of-bl)"/><path id="of-swirl" d="M60,200 C84,182 118,214 140,190 S108,152 82,168" fill="none" stroke="#5B0A14" stroke-width="2.4" stroke-linecap="round" opacity="0" stroke-dasharray="300" stroke-dashoffset="300" filter="url(#of-blur)"/>'+
+ '<ellipse id="of-surf" cx="100" cy="234" rx="62" ry="4" fill="#FFD796" opacity="0"/><rect x="34" y="0" width="200" height="300" fill="url(#of-shade)"/></g>'+
+ '<rect id="of-pour" x="97" y="-70" width="6" height="0" rx="3" fill="url(#of-bb)" opacity="0"/>'+
+ '<g id="of-ice" transform="translate(0,-320)" opacity="0"><g transform="rotate(-7 100 200)"><rect x="68" y="168" width="64" height="62" rx="9" fill="#EAF4FA" fill-opacity=".28" stroke="#fff" stroke-opacity=".75" stroke-width="1.6"/><path d="M76,176 L124,176 M76,176 L82,224 M124,176 L120,222" stroke="#fff" stroke-opacity=".45" stroke-width="1"/><rect x="74" y="172" width="18" height="9" rx="3" fill="#fff" opacity=".55"/></g></g>'+
+ '<g id="of-splash" opacity="0" fill="#F0A63A"><circle cx="78" cy="60" r="3"/><circle cx="124" cy="54" r="2.4"/><circle cx="100" cy="46" r="2"/><circle cx="64" cy="70" r="1.8"/><circle cx="138" cy="66" r="2"/></g>'+
+ '<g id="of-drops" fill="#6B0D16"><path id="of-d0" d="M96,-60 q4,7 0,11 q-4,-4 0,-11z" opacity="0"/><path id="of-d1" d="M103,-60 q4,7 0,11 q-4,-4 0,-11z" opacity="0"/><path id="of-d2" d="M99,-60 q4,7 0,11 q-4,-4 0,-11z" opacity="0"/></g>'+
+ '<g id="of-cherry" transform="translate(0,-300)" opacity="0"><path d="M122,96 C126,80 136,70 146,62" stroke="#5A3A1A" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="121" cy="104" r="11" fill="url(#of-ch)"/><ellipse cx="117" cy="99" rx="3.4" ry="2.2" fill="#fff" opacity=".6"/></g>'+
+ '<path d="M25,58 L175,58 L168,240 Q166,262 145,262 L55,262 Q34,262 32,240 Z" fill="url(#of-gl)" stroke="#fff" stroke-opacity=".62" stroke-width="1.6"/>'+
+ '<path d="M32,236 L168,236 L166,248 Q164,262 145,262 L55,262 Q36,262 34,248 Z" fill="url(#of-base)"/>'+
+ '<ellipse cx="100" cy="58" rx="75" ry="5" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.2"/>'+
+ '<path d="M38,68 L46,68 L45,228 L40,228 Z" fill="#fff" opacity=".16"/><path d="M156,70 L159,70 L156,226 L154,226 Z" fill="#fff" opacity=".2"/>'+
+ '<g id="of-peel" opacity="0" transform="translate(150,-80) rotate(-70)"><path d="M0,2 C14,-9 30,-11 44,-4 C52,0 60,0 70,-6 L72,-1 C62,6 52,6 44,2 C30,-4 16,-2 3,7 Z" fill="url(#of-pe)" stroke="#A8420E" stroke-width=".8"/><path d="M44,-4 C52,0 60,0 70,-6 L72,-1 C62,6 52,6 44,2 Z" fill="#FFE6BF" opacity=".55"/><g fill="#B8500F" opacity=".45"><circle cx="12" cy="-1" r=".7"/><circle cx="20" cy="-4" r=".6"/><circle cx="28" cy="-5" r=".7"/><circle cx="35" cy="-3" r=".6"/><circle cx="17" cy="1" r=".5"/></g></g>'+
+ '<g id="of-mist" opacity="0" fill="#FFD27A"><circle cx="150" cy="40" r="1.6"/><circle cx="160" cy="30" r="1.2"/><circle cx="142" cy="28" r="1.4"/><circle cx="168" cy="44" r="1"/><circle cx="134" cy="38" r="1.1"/><circle cx="156" cy="20" r="1"/></g>'+
+ '</svg>';
+function spOldFashioned(steps){
+  const wrap=h('div',{class:'sp-of','aria-hidden':'true'}); wrap.innerHTML=SP_OF;
+  const cap=h('div',{class:'sp-of-cap'},'Cheers. See you tonight.'); wrap.append(cap);
+  const q=id=>wrap.querySelector('#of-'+id), cl=v=>v<0?0:v>1?1:v, lerp=(a,b,t)=>a+(b-a)*t, eo=t=>1-Math.pow(1-t,3), ei=t=>t*t;
+  const E={ice:q('ice'),splash:q('splash'),liq:q('liq'),surf:q('surf'),pour:q('pour'),swirl:q('swirl'),bloom:q('bloom'),d:[q('d0'),q('d1'),q('d2')],peel:q('peel'),mist:q('mist'),cherry:q('cherry'),smoke:q('smoke')};
+  const prog=el=>{ if(!el) return 0; const r=el.getBoundingClientRect(); return cl((innerHeight*.85-r.top)/(innerHeight*.6)); };
+  let ticking=false;
+  const draw=()=>{ ticking=false; const [p1,p2,p3,p4,p5]=steps.map(prog);
+    /* 1. ice drops in with a splash */
+    E.ice.setAttribute('transform','translate(0,'+lerp(-320,0,ei(cl(p1/.8)))+')'); E.ice.setAttribute('opacity',cl(p1*12));
+    E.splash.setAttribute('opacity',p1>.78&&p1<1?Math.sin((p1-.78)/.22*Math.PI):0);
+    E.splash.setAttribute('transform','translate(0,'+(-14*cl((p1-.78)/.22))+')');
+    /* 2. bourbon pours and the glass fills */
+    const lvl=eo(p2), top=lerp(234,110,lvl);
+    E.liq.setAttribute('y',top); E.liq.setAttribute('height',234-top+2);
+    const hw=62+5*(234-top)/170; E.surf.setAttribute('cy',top); E.surf.setAttribute('rx',hw); E.surf.setAttribute('opacity',p2>.02?.45:0);
+    const pouring=p2>.02&&p2<.97; E.pour.setAttribute('opacity',pouring?1:0); E.pour.setAttribute('height',pouring?top+70:0);
+    /* 3. three dashes of bitters, then a swirl */
+    E.d.forEach((d,k)=>{ const t=cl((p3-k*.18)/.3); d.setAttribute('opacity',t>0&&t<1?1:0); d.setAttribute('transform','translate(0,'+lerp(0,top+60,ei(t))+')'); });
+    const sw=p2>.9?cl((p3-.25)/.6):0; E.swirl.setAttribute('opacity',sw*.5); E.swirl.setAttribute('stroke-dashoffset',300*(1-sw)); E.bloom.setAttribute('rx',70*sw); E.bloom.setAttribute('ry',48*sw); E.bloom.setAttribute('opacity',sw*.6);
+    /* 4. orange peel twists over the top, a spray of oil catches the light */
+    const t4=eo(p4); E.peel.setAttribute('opacity',p4>0?1:0);
+    E.peel.setAttribute('transform','translate('+lerp(150,108,t4)+','+lerp(-80,40,t4)+') rotate('+lerp(-70,18,t4)+')');
+    E.mist.setAttribute('opacity',p4>.45&&p4<.85?Math.sin((p4-.45)/.4*Math.PI):0);
+    /* 5. cherry drops in, one curl of smoke rises from the rim */
+    E.cherry.setAttribute('transform','translate(0,'+lerp(-300,0,ei(cl(p5/.45)))+')'); E.cherry.setAttribute('opacity',cl(p5*12));
+    const s=cl((p5-.4)/.6); E.smoke.setAttribute('opacity',s<.55?s/.55:1-(s-.55)/.45*.55); E.smoke.setAttribute('transform','translate(0,'+(-26*s)+')');
+    cap.style.opacity=cl((p5-.7)/.3);
+  };
+  const ask=()=>{ if(!ticking){ ticking=true; requestAnimationFrame(draw); } };
+  addEventListener('scroll',ask,{passive:true}); addEventListener('resize',ask); setTimeout(draw,50);
+  return wrap;
 }
 function spirited(C){
   const name=C.name||'Spirited', IMG='https://riverbendwebco.com/demo/img/', logo=IMG+'spirited-logo.png';
@@ -2512,7 +2572,8 @@ function spirited(C){
   const smoke=h('canvas',{class:'sp-smoke','aria-hidden':'true'});
   const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!calm) setTimeout(()=>spSmoke(smoke),50); else smoke.remove();
-  return h('div',{class:'sp'},head,hero,intro,rule(),menu,gal,gift,visit,foot,smoke);
+  const of=spOldFashioned([intro,menu,gal,gift,visit]);
+  return h('div',{class:'sp'},head,hero,intro,rule(),menu,gal,gift,visit,foot,smoke,of);
 }
 
 /* ===================== A & B AUTOMOTIVE (red / charcoal / green, auto service + sales) ===================== */

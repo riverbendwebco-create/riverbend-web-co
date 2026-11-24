@@ -961,6 +961,14 @@ body.t-sp{background:#100C0F}
  .sp-visit{grid-template-columns:1fr;gap:34px}
  .sp-foot-in{grid-template-columns:1fr}.sp-foot-cols{grid-template-columns:1fr;gap:22px}}
 @media (prefers-reduced-motion:reduce){.sp-stage{animation:none}.sp-l.glass,.sp-l.blue{opacity:1;animation:none!important}.sp-l.all{opacity:.8;animation:none!important}.sp-hero-c{opacity:1;transform:none;transition:none}}
+/* Old Fashioned builder */
+.sp-of{position:fixed;z-index:30;pointer-events:none;right:max(18px,calc((100vw - 1200px) / 2 - 190px));top:50%;width:150px;transform:translateY(-46%);filter:drop-shadow(0 12px 26px rgba(0,0,0,.55))}
+.sp-of svg{width:100%;height:auto;display:block;overflow:visible}
+.sp-of-cap{margin-top:6px;text-align:center;font-family:'Allura',cursive;font-size:1.7rem;line-height:1.1;color:#E6C984;opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+@media (min-width:1101px){.sp .sp-w{max-width:min(1200px,calc(100vw - 400px))}}
+@media (max-width:1100px){.sp-of{right:10px;top:auto;bottom:82px;width:66px;transform:none}
+ .sp-of::before{content:"";position:absolute;left:50%;top:46%;width:150%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(16,12,15,.85) 0%,rgba(16,12,15,.6) 50%,rgba(16,12,15,0) 72%);z-index:-1}
+ .sp-of-cap{position:absolute;right:100%;bottom:22px;width:auto;white-space:nowrap;text-align:right;font-size:1.3rem;margin-right:4px;padding:6px 10px;border-radius:4px;background:rgba(16,12,15,.92);border:1px solid rgba(201,160,74,.3)}}
 /* ===== Mountaintop Stoneworks ===== */
 body.t-mt{background:#111}
 .mt{--y:#F2D513;--y2:#D9BE00;--ink:#F3F1EC;--bg:#111111;--bg2:#1A1A1A;--card:#202020;--line:rgba(255,255,255,.1);--mut:#A7A39A;--stone:#ECE9E3;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:var(--bg)}
