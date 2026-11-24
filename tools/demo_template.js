@@ -2487,93 +2487,159 @@ function spOldFashioned(steps){
   return wrap;
 }
 function spirited(C){
-  const name=C.name||'Spirited', IMG='https://riverbendwebco.com/demo/img/', logo=IMG+'spirited-logo.png';
+  const name=C.name||'Spirited', logo='https://riverbendwebco.com/demo/img/spirited-logo.png';
   const SQ='https://images.squarespace-cdn.com/content/v1/60257bd276d0063ec3a7ae51/';
-  const bar=SQ+'495f1370-6f8f-43be-b655-a8ae9212bce8/20260115_171715.jpg?format=2500w';
-  const SHOTS=['ef93a310-c6c0-408a-bf2e-5979b6591ccf/IMG_7514.jpg','6373e125-9d08-459d-9443-a52ba851ad88/IMG_7665.jpg','2b2b92c6-613a-4a4a-8f43-e0e3b82ae7d9/20260217_220738.jpg','de671884-38a4-4a62-b915-f4b75ac79664/IMG_7668.jpg','01da055a-00a8-455b-85a4-b3e7f5230278/IMG_7666.jpg','529fb986-abce-48c8-b784-a82267295213/20260221_185157.jpg','fcedf314-57c7-44e9-a473-fe7d345b6f83/IMG_7667.jpg','f97d7422-70da-4ce2-81ff-cf0724a5b929/20260210_182320.jpg','5887d2f2-fb7f-46f8-bbbc-a0e9cb16ebee/IMG_7648.jpg','ff902b2b-2fe9-485e-a406-d0b0394e6643/IMG_7686.jpg'];
-  const shot=(i,w)=>SQ+SHOTS[i]+'?format='+(w||1000)+'w';
+  const P={bar:'495f1370-6f8f-43be-b655-a8ae9212bce8/20260115_171715.jpg',lounge:'ef93a310-c6c0-408a-bf2e-5979b6591ccf/IMG_7514.jpg',purple:'6373e125-9d08-459d-9443-a52ba851ad88/IMG_7665.jpg',mirror:'2b2b92c6-613a-4a4a-8f43-e0e3b82ae7d9/20260217_220738.jpg',tarot:'de671884-38a4-4a62-b915-f4b75ac79664/IMG_7668.jpg',mint:'01da055a-00a8-455b-85a4-b3e7f5230278/IMG_7666.jpg',candles:'529fb986-abce-48c8-b784-a82267295213/20260221_185157.jpg',pink:'fcedf314-57c7-44e9-a473-fe7d345b6f83/IMG_7667.jpg',tiki:'f97d7422-70da-4ce2-81ff-cf0724a5b929/20260210_182320.jpg',pour:'5887d2f2-fb7f-46f8-bbbc-a0e9cb16ebee/IMG_7648.jpg',velvet:'ff902b2b-2fe9-485e-a406-d0b0394e6643/IMG_7686.jpg'};
+  const ph=(k,w)=>SQ+P[k]+'?format='+(w||1500)+'w';
   const sb=/south bend/i.test(C.city||'');
   const addr=(C.addr||'')+(sb&&/105 E Jefferson/i.test(C.addr||'')?', Suite 100':''), city=sb?'South Bend, IN 46601':(C.city||'');
   const town=sb?'South Bend':city.split(',')[0];
-  const full=[addr,city].filter(Boolean).join(', ');
   const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+[C.addr,city].filter(Boolean).join(', '));
   const dash=v=>String(v||'').replace(/\s*-\s*/,' – ');
   const J=(id,label,cls)=>jump(id,label,cls);
-  /* ----- menu ----- */
+  const pic=(k,cls,w)=>{ const d=h('div',{class:'sp-pic '+(cls||'')},h('div',{class:'sp-pic-i'})); d.firstChild.style.backgroundImage=cssUrl(ph(k,w)); return d; };
+  /* ----- menu data ----- */
   const secs=[]; let cur=null;
   C.items.forEach(i=>{ const n=String(i.name||'').trim(); if(!n) return;
     if(n===n.toUpperCase()&&/[A-Z]/.test(n)&&!/\|/.test(n)&&n.length<16){ cur={t:n.charAt(0)+n.slice(1).toLowerCase(),items:[]}; secs.push(cur); return; }
     if(!cur){ cur={t:'Cocktails',items:[]}; secs.push(cur); } cur.items.push(i); });
-  const TABS=[['Cocktails','Sip on',['Cocktails']],['Zero-Proof','Spirit-free',['Zero-proof']],['Wine & Bubbles','Raise a glass',['Sparkling','Pink','White','Red','Bottle']],['Beer & Seltzer','Keep it easy',['Craft']]]
-    .map(([t,lead,keys])=>[t,lead,secs.filter(x=>keys.includes(x.t))]).filter(([,,g])=>g.some(x=>x.items.length));
+  const pick=keys=>secs.filter(x=>keys.includes(x.t));
+  const TABS=[['Cocktails','Sip on',['Cocktails']],['Spirit-Free','Zero-proof',['Zero-proof']],['Wine & Bubbles','Raise a glass',['Sparkling','Pink','White','Red','Bottle']],['Beer & Seltzer','Keep it easy',['Craft']]]
+    .map(([t,lead,keys])=>[t,lead,pick(keys)]).filter(([,,g])=>g.some(x=>x.items.length));
   const label={Sparkling:'Sparkling',Pink:'Rosé',White:'White',Red:'Red',Bottle:'By the bottle',Craft:'Cans & draft'};
-  const drink=i=>{ const parts=String(i.name).split('|').map(x=>x.trim()).filter(Boolean);
-    return h('div',{class:'sp-it'},h('b',null,parts.map((p,k)=>[k?h('em',null,'·'):null,p])),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},i.price||'')); };
+  const nm=i=>String(i.name).split('|').map(x=>x.trim()).filter(Boolean);
+  const row=i=>h('div',{class:'sp-it'},h('b',null,nm(i).map((p,k)=>[k?h('em',null,'·'):null,p])),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},i.price||''));
+  const known=DAYS.map((d,i)=>[d,C.hours[i],i]).filter(([,v])=>v);
+  const groupH=[]; known.forEach(([d,v,i])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v){ last.to=d; last.ix.push(i); } else groupH.push({from:d,to:'',v,ix:[i]}); });
+
+  /* ===== header ===== */
+  const LINKS=[['sp-story','Story'],['sp-menu','Menu'],['sp-gal','Gallery'],['sp-events','Events'],['sp-visit','Visit']];
+  const head=h('header',{class:'sp-head'},h('div',{class:'sp-head-in'},
+    h('a',{class:'sp-head-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
+    h('nav',{class:'sp-head-nav'},LINKS.map(([id,t])=>J(id,t))),
+    h('div',{class:'sp-head-r'},C.tel?h('a',{class:'sp-head-tel',href:C.tel},C.phoneTxt):null,J('sp-reserve','Reserve','sp-btn gold sm'))),
+    h('nav',{class:'sp-head-m'},[['sp-menu','Menu'],['sp-gal','Gallery'],['sp-visit','Visit']].map(([id,t])=>J(id,t))));
+  addEventListener('scroll',()=>head.classList.toggle('solid',scrollY>30),{passive:true});
+
+  /* ===== 1. hero: the bar lights come on ===== */
+  const L=cls=>{ const d=h('div',{class:'sp-l '+cls}); d.style.backgroundImage=cssUrl(ph('bar',2500)); return d; };
+  const stage=h('div',{class:'sp-stage','data-par':'.18'},L('base'),L('glass'),L('blue'),L('all'));
+  const hero=h('section',{class:'sp-hero'},h('div',{class:'sp-load'}),stage,h('div',{class:'sp-hero-shade'}),
+    h('div',{class:'sp-hero-c'},h('img',{class:'sp-hero-logo',src:logo,alt:name}),
+      h('h1',null,'An evening, poured slowly.'),
+      h('p',{class:'sp-hero-sub'},'A candlelit cocktail lounge in downtown '+town+'.'),
+      h('div',{class:'sp-hero-btns'},J('sp-menu','View Menu','sp-btn gold'),J('sp-reserve','Reserve a Table','sp-btn line'))),
+    h('div',{class:'sp-cue','aria-hidden':'true'},h('span',null,'Scroll'),h('i')));
+  const pre=new Image(); pre.onload=()=>hero.classList.add('lit'); pre.src=ph('bar',2500); setTimeout(()=>hero.classList.add('lit'),3000);
+
+  /* ===== 2. story ===== */
+  const story=h('section',{class:'sp-story',id:'sp-story'},h('div',{class:'sp-w sp-story-g'},
+    h('div',{class:'sp-story-t'},h('span',{class:'sp-kick sp-rv'},'The Experience'),
+      h('h2',{class:'sp-rv'},'Low light. Velvet seats. ',h('em',null,'A drink made only for you.')),
+      h('p',{class:'sp-rv'},'Spirited is a cocktail lounge on Jefferson Boulevard, dressed in gold mirrors, stained glass and deep green velvet. The bar is the kitchen here: every drink is built by hand, from smoked bourbon to bright, spirit-free sours.'),
+      h('p',{class:'sp-rv'},'Come early for a quiet first round, or stay late into the weekend. Either way, the night takes its time.')),
+    h('div',{class:'sp-story-p'},pic('lounge','tall sp-mask','1500'),h('div',{class:'sp-story-p2','data-par':'-.12'},pic('mirror','sp-mask','1000')))));
+
+  /* ===== 3. signature pours (horizontal on desktop) ===== */
+  const SIG=[['purple','01','The Art of the Garnish','Dried citrus, fresh herbs and flowers, set by hand.'],['tarot','02','Read the Cards','Every glass arrives with a little mystery.'],['tiki','03','Tropical, Elevated','Rum, pineapple and island fruit, shaken bright.'],['mint','04','Silk & Foam','Velvet-textured sours, finished with fresh mint.'],['pink','05','Long & Sparkling','Tall, bright and built to linger.']];
+  const track=h('div',{class:'sp-track'},h('div',{class:'sp-sig-intro'},h('span',{class:'sp-kick'},'Signature Pours'),h('h2',null,'Crafted with ',h('em',null,'intention.')),h('p',null,'Small details, done properly. A few of the drinks that make an evening here.')),
+    SIG.map(([k,n,t,d])=>h('article',{class:'sp-card'},pic(k,'',1200),h('div',{class:'sp-card-t'},h('small',null,'No. '+n),h('h3',null,t),h('p',null,d)))));
+  const sig=h('section',{class:'sp-sig',id:'sp-sig'},h('div',{class:'sp-sig-pin'},track));
+  const smokeDrink=C.items.find(i=>/smoke/i.test(i.name||''));
+
+  /* ===== 4. atmosphere gallery ===== */
+  const GAL=['velvet','candles','pour','mirror','tarot','pink','lounge','purple','tiki','mint'];
+  const pics=GAL.map(k=>ph(k,1600));
+  const gtile=(k,cls,par)=>{ const b=h('button',{type:'button',class:'sp-gt '+cls,'aria-label':'Open photo','data-par':par||null},h('div',{class:'sp-pic-i'})); b.firstChild.style.backgroundImage=cssUrl(ph(k,1200)); b.addEventListener('click',()=>gallery(pics,name,GAL.indexOf(k))); return b; };
+  const gal=h('section',{class:'sp-gal',id:'sp-gal'},h('div',{class:'sp-w'},
+    h('div',{class:'sp-head2 sp-rv'},h('span',{class:'sp-kick'},'Atmosphere'),h('h2',null,'Step inside.')),
+    h('div',{class:'sp-stack'},gtile('velvet','a sp-mask'),gtile('candles','b sp-mask','-.1'),gtile('pour','c sp-mask','.08'),gtile('mirror','d sp-mask'),gtile('tarot','e sp-mask','-.08')),
+    h('div',{class:'sp-gal-more sp-rv'},h('button',{type:'button',class:'sp-ul',onclick:()=>gallery(pics,name,0)},'View all '+pics.length+' photos'))));
+
+  /* ===== 5. menu preview, with the full menu one tap away ===== */
+  const prev=(t,keys,n)=>{ const its=pick(keys).flatMap(x=>x.items).slice(0,n); return its.length?h('div',{class:'sp-mp sp-rv'},h('h3',null,t),h('div',null,its.map(row))):null; };
   const tabs=h('div',{class:'sp-tabs',role:'tablist'}), panel=h('div',{class:'sp-panel',role:'tabpanel'});
   const show=k=>{ [...tabs.children].forEach((t,j)=>{ t.classList.toggle('on',j===k); t.setAttribute('aria-selected',j===k?'true':'false'); });
     const [t,lead,g]=TABS[k]; panel.classList.remove('in');
     panel.replaceChildren(h('div',{class:'sp-panel-h'},h('i',null,lead),h('h3',null,t)),
-      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-label'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(drink)))));
+      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-kick'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(row)))));
     requestAnimationFrame(()=>panel.classList.add('in')); };
   TABS.forEach(([t],k)=>{ const b=h('button',{type:'button',role:'tab',class:'sp-tab'},t); b.addEventListener('click',()=>show(k)); tabs.append(b); });
   if(TABS.length) show(0);
-  const known=DAYS.map((d,i)=>[d,C.hours[i],i]).filter(([,v])=>v);
-  const groupH=[]; known.forEach(([d,v,i])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v){ last.to=d; last.ix.push(i); } else groupH.push({from:d,to:'',v,ix:[i]}); });
-  const smokeDrink=C.items.find(i=>/smoke/i.test(i.name||''));
+  const full=h('div',{class:'sp-full'},h('div',{class:'sp-full-in'},tabs,panel));
+  const openBtn=h('button',{type:'button',class:'sp-btn line'},'Explore the full menu');
+  openBtn.addEventListener('click',()=>{ const on=full.classList.toggle('open'); openBtn.textContent=on?'Close the full menu':'Explore the full menu'; if(on) setTimeout(()=>full.scrollIntoView({behavior:'smooth',block:'start'}),60); });
+  const menu=h('section',{class:'sp-menu',id:'sp-menu'},h('div',{class:'sp-w'},
+    h('div',{class:'sp-head2 center sp-rv'},h('span',{class:'sp-kick'},'The Menu'),h('h2',null,'Spirits, bubbles ',h('em',null,'& spirit-free.')),
+      smokeDrink?h('p',null,'Start with the house favorite: ',h('b',null,nm(smokeDrink).join(' · ')),' ',h('span',{class:'sp-pr'},smokeDrink.price||'')):null),
+    h('div',{class:'sp-mps'},prev('Cocktails',['Cocktails'],5),prev('Spirit-Free',['Zero-proof'],3),prev('Wine & Bubbles',['Sparkling','Pink','White','Red'],5)),
+    h('div',{class:'sp-center sp-rv'},openBtn),full));
 
-  /* ----- one clean header: logo, links, call ----- */
-  const LINKS=[['sp-menu','Menu'],['sp-gal','Gallery'],['sp-visit','Hours & Location'],['sp-gift','Gift Cards & Catering']];
-  const head=h('header',{class:'sp-head'},h('div',{class:'sp-head-in'},
-    h('a',{class:'sp-head-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
-    h('nav',{class:'sp-head-nav'},LINKS.map(([id,t])=>J(id,t))),
-    C.tel?h('a',{class:'sp-btn gold sm sp-head-call',href:C.tel},'Call '+C.phoneTxt):null),
-    h('nav',{class:'sp-head-m'},LINKS.slice(0,3).map(([id,t])=>J(id,t.replace('Hours & Location','Hours')))));
-  addEventListener('scroll',()=>head.classList.toggle('solid',scrollY>30),{passive:true});
+  /* ===== 6. reservation ===== */
+  const times=[]; for(let m=16*60;m<=22*60+30;m+=30){ const hh=Math.floor(m/60), mm=m%60; times.push(((hh+11)%12+1)+':'+(mm?'30':'00')+' PM'); }
+  const today=new Date(); const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const fl=(l,el,wide)=>h('label',{class:'sp-fl'+(wide?' wide':'')},h('span',null,l),el);
+  const ok=h('div',{class:'sp-ok'},h('i',{class:'sp-script'},'Thank you'),h('h3',null,'Your request is in.'),h('p',null,'We will confirm your table by text or call. (This is a preview: on your live site, requests go straight to your inbox.)'));
+  const form=h('form',{class:'sp-form'},
+    fl('Date',h('input',{type:'date',required:true,value:iso(today),min:iso(today)})),
+    fl('Time',h('select',{required:true},times.map(t=>h('option',t==='7:00 PM'?{selected:true}:null,t)))),
+    fl('Guests',h('select',null,['1','2','3','4','5','6','7','8'].map(n=>h('option',n==='2'?{selected:true}:null,n+(n==='1'?' guest':' guests'))),h('option',null,'9+ (we will call you)'))),
+    fl('Occasion',h('select',null,['None','Date night','Birthday','Anniversary','Celebration','Business'].map(o=>h('option',null,o)))),
+    fl('Name',h('input',{required:true,placeholder:'Full name',autocomplete:'name'})),
+    fl('Phone',h('input',{required:true,type:'tel',placeholder:'(574) 555-0100',autocomplete:'tel'})),
+    fl('Notes',h('input',{placeholder:'Anything we should know?'}),true),
+    h('button',{type:'submit',class:'sp-btn gold wide'},'Request My Table'));
+  form.addEventListener('submit',e=>{ e.preventDefault(); form.closest('.sp-res-card').classList.add('done'); });
+  const reserve=h('section',{class:'sp-res',id:'sp-reserve'},h('div',{class:'sp-w sp-res-g'},
+    h('div',{class:'sp-res-t'},h('span',{class:'sp-kick sp-rv'},'Reservations'),h('h2',{class:'sp-rv'},'Save your ',h('em',null,'seat.')),
+      h('p',{class:'sp-rv'},'Tell us when you are coming and we will have your table ready. For parties of nine or more, give us a call.'),
+      C.tel?h('a',{class:'sp-ul sp-rv',href:C.tel},'Or call '+C.phoneTxt):null),
+    h('div',{class:'sp-res-card sp-rv'},form,ok)));
 
-  /* ----- hero: the bar starts dark, the stained glass glows on, then the blue shelves ----- */
-  const L=(cls)=>{ const d=h('div',{class:'sp-l '+cls}); d.style.backgroundImage=cssUrl(bar); return d; };
-  const stage=h('div',{class:'sp-stage'},L('base'),L('glass'),L('blue'),L('all'));
-  const hero=h('section',{class:'sp-hero'},stage,h('div',{class:'sp-hero-shade'}),
-    h('div',{class:'sp-hero-c'},h('img',{class:'sp-hero-logo',src:logo,alt:name}),
-      h('p',{class:'sp-sub'},'Craft Cocktail Lounge · Downtown '+town),
-      C.today?h('p',{class:'sp-open'},'Open tonight '+dash(C.today)):null,
-      h('div',{class:'sp-hero-btns'},J('sp-menu','View the menu','sp-btn gold'),h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Get directions'))));
-  const pre=new Image(); pre.onload=()=>hero.classList.add('lit'); pre.src=bar; setTimeout(()=>hero.classList.add('lit'),2500);
+  /* ===== 7. private events & catering ===== */
+  const evbg=h('div',{class:'sp-ev-bg','data-par':'.14'}); evbg.style.backgroundImage=cssUrl(ph('candles',2000));
+  const events=h('section',{class:'sp-ev',id:'sp-events'},evbg,h('div',{class:'sp-ev-shade'}),h('div',{class:'sp-w sp-ev-in'},
+    h('span',{class:'sp-kick sp-rv'},'Private Events & Catering'),h('h2',{class:'sp-rv'},'Make the night ',h('em',null,'yours.')),
+    h('p',{class:'sp-rv'},'Birthdays, rehearsal dinners, company evenings. Talk with us about hosting your gathering at Spirited, or bring our bar to your event with catering. Gift cards are available for the cocktail lover in your life.'),
+    h('div',{class:'sp-ev-btns sp-rv'},C.email?h('a',{class:'sp-btn gold',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Private event inquiry')},'Plan an Event'):null,C.email?h('a',{class:'sp-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards')},'Gift Cards'):null)));
 
-  const intro=h('section',{class:'sp-intro',id:'sp-top'},h('div',{class:'sp-w sp-narrow rv'},
-    h('i',{class:'sp-script'},'Welcome to '+name),h('h2',null,'Craft cocktails, poured with a little theater.'),
-    h('p',{class:'sp-lead'},'Low light, velvet seats, gold mirrors and stained glass, a hand-built drink in every glass. Find us on Jefferson Boulevard in downtown '+town+', and let the night take its time.'),
-    smokeDrink?h('div',{class:'sp-feat'},h('i',{class:'sp-script'},'Served with smoke'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null,
-    J('sp-menu','Explore the menu','sp-ul')));
-  const rule=()=>h('div',{class:'sp-w'},h('hr',{class:'sp-rule'}));
-  const menu=TABS.length?h('section',{class:'sp-sec',id:'sp-menu'},
-    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Our Menu'),h('p',{class:'sp-big'},'Spirits, bubbles and zero-proof, from a smoked bourbon to a lavender lemonade.')),
-    h('div',{class:'sp-w sp-menu-box rv'},TABS.length>1?tabs:null,panel)):null;
-  const pics=SHOTS.map((_,i)=>shot(i,1500));
-  const gal=h('section',{class:'sp-sec sp-gal',id:'sp-gal'},
-    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Gallery'),h('p',{class:'sp-big'},'A look inside '+name+'.')),
-    h('div',{class:'sp-w sp-grid'},SHOTS.map((_,i)=>{ const b=h('button',{type:'button',class:'sp-g g'+i,'aria-label':'Open photo '+(i+1)}); b.style.backgroundImage=cssUrl(shot(i,750)); b.addEventListener('click',()=>gallery(pics,name,i)); return b; })));
-  const gbg=h('div',{class:'sp-gift-bg'}); gbg.style.backgroundImage=cssUrl(shot(0,1500));
-  const gift=C.email?h('section',{class:'sp-gift',id:'sp-gift'},gbg,h('div',{class:'sp-w sp-gift-in'},
-    h('div',{class:'rv'},h('i',{class:'sp-script'},'Celebrate'),h('h2',null,'Gift cards & catering'),h('p',null,'Give the cocktail lover in your life a night out, or bring the bar to your next event. Send us a note and we will take it from there.')),
-    h('div',{class:'sp-card rv'},h('img',{src:logo,alt:'',class:'sp-card-logo'}),h('a',{class:'sp-btn gold',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards & catering')},'Email us'),C.tel?h('a',{class:'sp-ul light',href:C.tel},'Or call '+C.phoneTxt):null))):null;
-  const visit=h('section',{class:'sp-sec',id:'sp-visit'},
-    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Hours & Location'),h('p',{class:'sp-big'},'Find us at '+full+'.')),
-    h('div',{class:'sp-w sp-visit'},
-      h('div',{class:'sp-info rv'},
-        groupH.length?h('div',null,h('small',{class:'sp-label'},'Hours'),h('div',{class:'sp-hrs'},groupH.map(g=>h('div',{class:g.ix.includes(todayIx())?'on':null},h('span',null,g.from+(g.to?' – '+g.to:'')),h('span',null,dash(g.v)))))):null,
-        C.tel?h('div',null,h('small',{class:'sp-label'},'Call'),h('a',{class:'sp-phone',href:C.tel},C.phoneTxt)):null,
-        h('a',{class:'sp-btn gold',href:maps,target:'_blank',rel:'noopener'},'Get directions')),
-      h('div',{class:'sp-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+[C.addr,city].join(', '))+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))));
-  const foot=h('footer',{class:'sp-foot'},h('div',{class:'sp-w sp-foot-in'},h('img',{src:logo,alt:name,class:'sp-foot-logo'}),
-    h('div',{class:'sp-foot-cols'},h('div',null,h('small',null,'Visit'),h('p',null,addr,h('br'),city)),C.tel?h('div',null,h('small',null,'Call'),h('p',null,h('a',{href:C.tel},C.phoneTxt),C.email?[h('br'),h('a',{href:'mailto:'+C.email},C.email)]:null)):null,
-      h('div',null,h('small',null,'Explore'),h('div',{class:'sp-foot-nav'},LINKS.map(([id,t])=>J(id,t)),C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null))),
-    h('small',{class:'sp-copy'},'© '+new Date().getFullYear()+' '+name+' · Please drink responsibly.')));
+  /* ===== 8. visit ===== */
+  const visit=h('section',{class:'sp-visit',id:'sp-visit'},h('div',{class:'sp-w sp-visit-g'},
+    h('div',{class:'sp-visit-t'},h('span',{class:'sp-kick sp-rv'},'Visit'),h('h2',{class:'sp-rv'},addr,h('br'),h('em',null,city)),
+      groupH.length?h('div',{class:'sp-hrs sp-rv'},groupH.map(g=>h('div',{class:g.ix.includes(todayIx())?'on':null},h('span',null,g.from+(g.to?' – '+g.to:'')),h('span',null,dash(g.v))))):null,
+      h('div',{class:'sp-contact sp-rv'},C.tel?h('a',{href:C.tel},C.phoneTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
+      h('div',{class:'sp-ev-btns sp-rv'},h('a',{class:'sp-btn gold',href:maps,target:'_blank',rel:'noopener'},'Get Directions'),J('sp-reserve','Reserve','sp-btn line'))),
+    h('div',{class:'sp-map sp-rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+[C.addr,city].join(', '))+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))));
+
+  /* ===== 9. footer ===== */
+  const foot=h('footer',{class:'sp-foot'},h('div',{class:'sp-w'},
+    h('img',{src:logo,alt:name,class:'sp-foot-logo'}),
+    h('nav',{class:'sp-foot-nav'},LINKS.map(([id,t])=>J(id,t)),J('sp-reserve','Reserve')),
+    h('div',{class:'sp-foot-soc'},C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null),
+    h('p',{class:'sp-copy'},addr+', '+city+' · © '+new Date().getFullYear()+' '+name+' · Please drink responsibly.')));
+
   const smoke=h('canvas',{class:'sp-smoke','aria-hidden':'true'});
   const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!calm) setTimeout(()=>spSmoke(smoke),50); else smoke.remove();
-  const of=spOldFashioned([intro,menu,gal,gift,visit]);
-  return h('div',{class:'sp'},head,hero,intro,rule(),menu,gal,gift,visit,foot,smoke,of);
+  const of=spOldFashioned([story,gal,menu,events,visit]);
+  const page=h('div',{class:'sp'},head,hero,story,sig,gal,menu,reserve,events,visit,foot,smoke,of);
+
+  /* ----- motion: reveals, parallax, the pinned horizontal pours ----- */
+  setTimeout(()=>{
+    const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } }),{threshold:.12,rootMargin:'0px 0px -6% 0px'}):null;
+    page.querySelectorAll('.sp-rv,.sp-mask,.sp-card').forEach(el=>io?io.observe(el):el.classList.add('on'));
+    const par=[...page.querySelectorAll('[data-par]')]; let tick=false;
+    const wide=()=>innerWidth>900;
+    const run=()=>{ tick=false; const vh=innerHeight;
+      if(!calm) par.forEach(el=>{ const r=el.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-vh/2); el.style.translate='0 '+(c*parseFloat(el.dataset.par)).toFixed(1)+'px'; });
+      if(wide()){ const r=sig.getBoundingClientRect(), max=track.scrollWidth-innerWidth; sig.style.height=(vh+Math.max(0,max))+'px';
+        const t=Math.min(1,Math.max(0,-r.top/Math.max(1,max))); track.style.transform='translate3d('+(-t*max).toFixed(1)+'px,0,0)'; }
+      else { sig.style.height=''; track.style.transform=''; }
+      const sr=sig.getBoundingClientRect(); of.classList.toggle('away',sr.top<vh*.6&&sr.bottom>vh*.4); };
+    const ask=()=>{ if(!tick){ tick=true; requestAnimationFrame(run); } };
+    addEventListener('scroll',ask,{passive:true}); addEventListener('resize',ask); run();
+  },30);
+  return page;
 }
 
 /* ===================== A & B AUTOMOTIVE (red / charcoal / green, auto service + sales) ===================== */
