@@ -4193,6 +4193,17 @@ function roadside(C){
     h('div',{class:'rd-stats'},stats.map((s,i)=>h('div',{class:'rd-stat rv'+(i?' d'+i:'')},h('b',null,s[0]),h('span',null,s[1]))))),
     h('div',{class:'rd-w rd-photos'},['jump','tire','fuel','batt'].filter(k=>pic(k)).map((k,i)=>h('div',{class:'rv'+(i?' d'+i:'')},h('img',{src:pic(k,700),alt:(svcs.find(s=>s[0]===k)||[,''])[1],loading:'lazy'})))));
 
+
+
+  const F=X.fleet&&typeof X.fleet==='object'?X.fleet:null;
+  const okLocal=v=>/^img\/[a-z0-9._-]+$/.test(v||'');
+  const fleetSec=F?h('section',{class:'rd-sec rd-fleet'},h('div',{class:'rd-w rd-fleet-in'},
+    h('div',{class:'rd-fleet-t rv'},kick(F.kick||''),h('h2',{class:'rd-h2'},F.title||''),h('p',null,F.text||''),
+      h('div',{class:'rd-duty'},(F.duty||[]).map(t=>h('span',null,rdI('tow',18),t))),
+      h('ul',{class:'rd-fleet-l'},(F.list||[]).map(t=>h('li',null,rdI('check',16),t))),
+      F.tag?h('p',{class:'rd-fleet-tag'},F.tag):null),
+    h('div',{class:'rd-tiles'},(F.tiles||[]).filter(t=>Array.isArray(t)&&okLocal(t[0])).map((t,i)=>h('figure',{class:'rv'+(i?' d'+i:'')},h('img',{src:t[0],alt:t[1]||'',loading:'lazy'})))))):null;
+
   let annual=false;
   const grid=h('div',{class:'rd-plans'});
   const renderPlans=()=>grid.replaceChildren(...plans.map(p=>h('article',{class:'rd-plan'+(p.rec?' rec':'')},
@@ -4203,7 +4214,7 @@ function roadside(C){
     ext(join,'Get started','rd-btn full',true))));
   const tg=(a,label)=>h('button',{type:'button',class:'rd-tg'+(a===annual?' on':''),'aria-pressed':String(a===annual),onclick:e=>{ annual=a; [...e.currentTarget.parentNode.children].forEach(b=>{ const on=b===e.currentTarget; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); renderPlans(); }},label);
   renderPlans();
-  const plansSec=h('section',{class:'rd-sec rd-pricing',id:'rd-plans'},h('div',{class:'rd-w'},
+  const plansSec=h('section',{class:'rd-sec rd-pricing'+(pic('plansBg')?' photo':''),id:'rd-plans',style:pic('plansBg')?'--rdbg:'+cssUrl(pic('plansBg')):null},h('div',{class:'rd-w'},
     h('div',{class:'rd-price-h'},h('div',{class:'rv'},kick('Membership pricing'),h('h2',{class:'rd-h2'},'Flexible plans for roadside help and towing'),h('p',null,'Every plan auto-renews and coverage starts immediately. Pay by card or PayPal, monthly or yearly.')),
       h('div',{class:'rd-toggle rv d1',role:'group','aria-label':'Billing period'},tg(false,'Monthly'),tg(true,'Annual · 1 month free'))),
     grid));
@@ -4244,7 +4255,7 @@ function roadside(C){
     h('div',{class:'rd-foot-b'},h('span',null,'© '+new Date().getFullYear()+' D&D Wrecker Roadside'),h('span',null,C.city||''))));
 
   const mbar=h('div',{class:'rd-mbar'},C.tel?h('a',{href:C.tel,class:'rd-btn'},rdI('phone',17),'Call'):null,ext(join,'Join now','rd-btn y'));
-  return h('div',{class:'rd'},nav,h('main',null,hero,strip,svc,featSec,band,about,plansSec,perkSec,refer,faqSec,req),foot,mbar);
+  return h('div',{class:'rd'},nav,h('main',null,hero,strip,svc,featSec,band,about,fleetSec,plansSec,perkSec,refer,faqSec,req),foot,mbar);
 }
 function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
 function rbBar(C){

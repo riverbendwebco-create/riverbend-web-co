@@ -217,7 +217,8 @@
    "fuel": "1727415411358-c10249be6b00",
    "winch": "1704906654369-091b259fc086",
    "warn": "1673187139211-1e7ec3dd60ec",
-   "batt": "1592318348310-f31b61a931c8"
+   "batt": "1592318348310-f31b61a931c8",
+   "plansBg": "img/dd-semi.jpg"
   },
   "faq": [
    [
@@ -259,6 +260,40 @@
     "Hazel Green, WI",
     "(608) 727-4665"
    ]
-  ]
+  ],
+  "fleet": {
+   "kick": "D&D Wrecker Service",
+   "title": "Heavy to small, we tow it all",
+   "text": "Behind every membership is a full towing company. From cars and pickups to semis and equipment, D&D handles big jobs and small ones across the Tristate area, day or night.",
+   "duty": [
+    "Heavy duty",
+    "Medium duty",
+    "Light duty",
+    "Any size, any time"
+   ],
+   "list": [
+    "24/7 towing and recovery",
+    "Semi truck towing",
+    "Accident recovery",
+    "Recovery and winching",
+    "Equipment hauling and transport",
+    "Long distance transport"
+   ],
+   "tiles": [
+    [
+     "img/dd-semi.jpg",
+     "D&D semi tractor with an American flag"
+    ],
+    [
+     "img/dd-flyer-tow-it-all.jpg",
+     "Heavy to small, we tow it all: D&D service flyer"
+    ],
+    [
+     "img/dd-flyer-heavy-duty.jpg",
+     "Heavy duty towing you can trust: D&D flyer"
+    ]
+   ],
+   "tag": "Big jobs. No problem."
+  }
  }
 }
