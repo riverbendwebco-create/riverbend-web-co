@@ -208,16 +208,9 @@
   ],
   "pics": {
    "hero": "img/dd-trucks.jpg",
-   "band": "1738101996181-f4503ebaec70",
-   "req": "1730514785075-b065c757b653",
-   "tow": "1730514784243-f0e7f09c9f50",
-   "jump": "1597766321604-9de3ff9e93e2",
-   "tire": "1601739722627-f00a99138ea1",
-   "key": "1761264889404-a194af20ae90",
-   "fuel": "1727415411358-c10249be6b00",
-   "winch": "1704906654369-091b259fc086",
-   "warn": "1673187139211-1e7ec3dd60ec",
-   "batt": "1592318348310-f31b61a931c8",
+   "band": "img/dd-yard.jpg",
+   "req": "img/dd-logo-sky.jpg",
+   "svc": "img/dd-logo-sky.jpg",
    "plansBg": "img/dd-semi.jpg"
   },
   "faq": [
