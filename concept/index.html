@@ -4,516 +4,304 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com https://s.wordpress.com https://*.wp.com https://images.squarespace-cdn.com; frame-src 'self'; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
-<title>Novaline Web Studio | Concept</title>
-<meta name="description" content="Design concept: a premium agency website for a veteran-owned web design studio in Dubuque, Iowa.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
+<title>Havenstone Realty | Design concept</title>
+<meta name="description" content="Design concept for a luxury real estate agency. Made-up business and listings.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#04060C;--navy:#081024;--navy2:#0C1733;--navy3:#122147;--blue:#2F7BFF;--blue2:#69A6FF;--cyan:#3FD0FF;--wh:#F4F7FF;--mut:#93A2C2;--mut2:#5E6E92;--line:rgba(120,160,255,.14);--line2:rgba(120,160,255,.26);--r:20px;--ease:cubic-bezier(.2,.7,.2,1)}
+:root{--bg:#F4F4F4;--bg2:#ECECEC;--card:#F1F1F1;--ink:#111111;--ink2:#2B2B2B;--mut:#6B6B6B;--mut2:#9A9A9A;--line:#E2E2E2;--peach:#E3AE98;--star:#F28A2E;--ease:cubic-bezier(.2,.7,.2,1)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
-body{background:var(--ink);color:var(--wh);font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6;overflow-x:clip;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+body{background:#fff;color:var(--ink);font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-decoration:none}button,input{font:inherit;color:inherit}button{background:none;border:0;cursor:pointer}
 img{display:block;max-width:100%}
-h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;font-weight:600;letter-spacing:-.025em;line-height:1.05}
-.w{max-width:1240px;margin:0 auto;padding:0 32px}
-.tag{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue2);background:rgba(47,123,255,.1);border:1px solid rgba(47,123,255,.28);padding:6px 11px;border-radius:7px}
-.tag i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
-.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 24px;border-radius:12px;font-weight:600;font-size:.95rem;white-space:nowrap;transition:transform .3s var(--ease),box-shadow .3s,background .3s,border-color .3s}
-.btn svg{width:17px;height:17px;transition:transform .3s var(--ease)}.btn:hover svg{transform:translateX(3px)}
-.btn.pri{background:linear-gradient(135deg,#3A86FF,#1F5FE0);color:#fff;box-shadow:0 10px 30px -10px rgba(47,123,255,.8),inset 0 1px 0 rgba(255,255,255,.25)}
-.btn.pri:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(47,123,255,.95),inset 0 1px 0 rgba(255,255,255,.25)}
-.btn.ghost{border:1px solid var(--line2);background:rgba(255,255,255,.03);backdrop-filter:blur(8px)}.btn.ghost:hover{border-color:var(--blue2);background:rgba(47,123,255,.08)}
-.btn.sm{height:42px;padding:0 18px;font-size:.88rem;border-radius:10px}
-.rv{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease),transform 1s var(--ease)}.rv.on{opacity:1;transform:none}
+h1,h2,h3{font-weight:500;letter-spacing:-.03em;line-height:1.08}
+.w{max-width:1200px;margin:0 auto;padding:0 32px}
+.tag{display:inline-block;font-size:.72rem;font-weight:500;color:#fff;background:var(--peach);padding:5px 12px;border-radius:8px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 20px;border-radius:10px;font-weight:500;font-size:.92rem;transition:transform .3s var(--ease),background .3s,box-shadow .3s}
+.btn svg{width:16px;height:16px;transition:transform .3s var(--ease)}.btn:hover svg{transform:translateX(3px)}
+.btn.dark{background:var(--ink);color:#fff}.btn.dark:hover{background:#000;box-shadow:0 10px 24px -10px rgba(0,0,0,.6);transform:translateY(-1px)}
+.btn.light{background:#fff;color:var(--ink)}.btn.light:hover{transform:translateY(-1px);box-shadow:0 10px 24px -12px rgba(0,0,0,.6)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}.rv.on{opacity:1;transform:none}
 .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
-.sec{padding:130px 0;position:relative}
-.sh{max-width:720px}.sh h2{font-size:clamp(2.2rem,4.6vw,3.6rem);margin:18px 0 16px}.sh p{color:var(--mut);font-size:1.08rem}
-.sh.c{margin:0 auto;text-align:center}
-.grad{background:linear-gradient(100deg,#fff 0%,#BFD7FF 45%,var(--blue2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ph{background-size:cover;background-position:center;background-color:#d9d9d9}
 /* ---------- nav ---------- */
-.nav{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .4s,box-shadow .4s,backdrop-filter .4s}
-.nav.solid{background:rgba(5,8,18,.78);backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 1px 0 var(--line)}
-.nav-in{max-width:1320px;margin:0 auto;padding:0 32px;height:78px;display:flex;align-items:center;gap:34px}
-.logo{display:flex;align-items:center;gap:10px;font-family:Sora,sans-serif;font-weight:700;font-size:1.12rem;letter-spacing:.02em}
-.logo b{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#3A86FF,#123C9C);box-shadow:0 0 24px -4px rgba(47,123,255,.9)}
-.logo b svg{width:18px;height:18px}
-.logo small{font-weight:500;color:var(--mut);font-size:.78rem;letter-spacing:.06em}
-.nav-l{display:flex;gap:30px;margin-left:auto}.nav-l a{font-size:.92rem;color:#C9D4EE;position:relative;padding:6px 0;transition:color .3s}
-.nav-l a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--blue2);transition:right .35s var(--ease)}.nav-l a:hover{color:#fff}.nav-l a:hover::after{right:0}
-.nav-r{display:flex;align-items:center;gap:18px}.nav-tel{font-size:.9rem;color:#C9D4EE}.nav-tel:hover{color:#fff}
-.burger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line2);place-items:center}
-.burger span{display:block;width:18px;height:1.6px;background:#fff;position:relative}.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:18px;height:1.6px;background:#fff;transition:transform .3s}.burger span::before{top:-6px}.burger span::after{top:6px}
-.mnav{position:fixed;inset:0;z-index:55;background:rgba(4,6,12,.96);backdrop-filter:blur(16px);display:flex;flex-direction:column;justify-content:center;padding:0 32px;gap:6px;opacity:0;pointer-events:none;transition:opacity .4s}
-.mnav.open{opacity:1;pointer-events:auto}.mnav a{font-family:Sora,sans-serif;font-size:2rem;font-weight:600;padding:8px 0;border-bottom:1px solid var(--line)}
-.mnav .btn{margin-top:24px}
-/* ---------- hero ---------- */
-.hero{position:relative;min-height:100vh;min-height:100svh;overflow:hidden;display:flex;align-items:flex-end;padding:120px 0 70px;background:var(--ink)}
-.hero-bg{position:absolute;inset:0;overflow:hidden}
-.hero-bg .glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.75;will-change:transform}
-.g1{width:760px;height:760px;right:-160px;top:-180px;background:radial-gradient(circle,#1F5FE0 0%,rgba(31,95,224,0) 68%);animation:drift1 18s ease-in-out infinite alternate}
-.g2{width:620px;height:620px;left:-220px;bottom:-260px;background:radial-gradient(circle,#0E3A8C 0%,rgba(14,58,140,0) 70%);animation:drift2 22s ease-in-out infinite alternate}
-.g3{width:380px;height:380px;right:28%;top:38%;background:radial-gradient(circle,rgba(63,208,255,.45) 0%,rgba(63,208,255,0) 70%);animation:drift1 14s ease-in-out infinite alternate-reverse}
-@keyframes drift1{to{transform:translate(-80px,60px) scale(1.12)}}@keyframes drift2{to{transform:translate(90px,-50px) scale(1.08)}}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(120,160,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(120,160,255,.07) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 60% 40%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 80% 70% at 60% 40%,#000 20%,transparent 75%)}
-.beam{position:absolute;top:-20%;left:55%;width:2px;height:140%;background:linear-gradient(transparent,rgba(105,166,255,.7),transparent);transform:rotate(24deg);filter:blur(1px);opacity:.45;animation:beam 9s ease-in-out infinite}
-@keyframes beam{0%,100%{transform:translateX(-200px) rotate(24deg);opacity:0}40%,60%{opacity:.5}50%{transform:translateX(260px) rotate(24deg)}}
-.hero-in{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:end}
-.hero-t .tag{margin-bottom:26px}
-.hero h1{font-size:clamp(2.6rem,4.3vw,4.4rem);font-weight:600;line-height:1.02;letter-spacing:-.035em}
-.hero h1 .ln{display:block;overflow:hidden}.hero h1 .ln span{display:inline-block;transform:translateY(105%);animation:up 1.1s var(--ease) forwards}
-.hero h1 .ln:nth-child(2) span{animation-delay:.1s}.hero h1 .ln:nth-child(3) span{animation-delay:.2s}
-@keyframes up{to{transform:none}}
-@media (min-width:1081px){.hero h1 .ln>span{white-space:nowrap}}
-.hero-sub{max-width:520px;color:#B4C2DF;font-size:1.12rem;margin:26px 0 34px;opacity:0;animation:fade 1s .45s forwards}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:fade 1s .6s forwards}
-.trust{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:40px;opacity:0;animation:fade 1s .8s forwards}
-.trust span{display:flex;align-items:center;gap:9px;font-size:.88rem;color:#B4C2DF}.trust svg{width:17px;height:17px;color:var(--blue2)}
-@keyframes fade{to{opacity:1}}
-/* device scene */
-.scene{position:relative;height:min(620px,70vh);opacity:0;animation:fade 1.2s .3s forwards;perspective:1600px}
-.scene-tilt{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s var(--ease)}
-.laptop{position:absolute;right:0;bottom:8%;width:min(100%,720px)}
-.lid{position:relative;background:#0A0F1E;border:1px solid rgba(160,190,255,.22);border-radius:18px 18px 6px 6px;padding:2.2% 2.2% 2.6%;box-shadow:0 50px 120px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.6) inset,0 0 80px -20px rgba(47,123,255,.55)}
-.lid::before{content:"";position:absolute;top:1%;left:50%;width:6px;height:6px;border-radius:50%;background:#1b2440;transform:translateX(-50%)}
-.base{height:16px;margin:0 -7%;background:linear-gradient(#1B2340,#0B1022);border-radius:0 0 18px 18px;box-shadow:0 30px 60px -20px rgba(0,0,0,.9);position:relative}
-.base::before{content:"";position:absolute;left:50%;top:0;width:18%;height:6px;transform:translateX(-50%);background:#0B1022;border-radius:0 0 8px 8px}
-.screen{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:#000}
-.phone{position:absolute;left:2%;bottom:0;width:min(28%,190px);aspect-ratio:9/19.3;background:#0A0F1E;border-radius:30px;padding:9px;border:1px solid rgba(160,190,255,.25);box-shadow:0 40px 90px -20px rgba(0,0,0,.95),0 0 60px -20px rgba(47,123,255,.6);transform:translateZ(60px)}
-.phone .screen{aspect-ratio:auto;height:100%;border-radius:22px}
-.phone::before{content:"";position:absolute;top:15px;left:50%;width:30%;height:16px;border-radius:10px;background:#000;transform:translateX(-50%);z-index:3}
-/* the transformation: outdated site wipes away to the new one */
-.frame{position:absolute;top:0;left:0;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
-.old{position:absolute;inset:0;z-index:2;background:#d4d0c8;font-family:"Times New Roman",Times,serif;color:#000;overflow:hidden;clip-path:inset(0 0 0 0)}
-.old .ob{position:absolute;inset:0;transform-origin:0 0}
-.old .o-top{background:#000080;color:#ff0;font:bold 30px "Comic Sans MS","Comic Sans",cursive;text-align:center;padding:14px}
-.old .o-mq{background:#fff;color:#c00;font:bold 18px Arial;padding:6px;white-space:nowrap;overflow:hidden;border-bottom:3px ridge #999}
-.old .o-mq span{display:inline-block;animation:mq 8s linear infinite;padding-left:100%}@keyframes mq{to{transform:translateX(-100%)}}
-.old .o-row{display:flex;gap:12px;padding:12px}
-.old .o-side{width:200px;background:#c0c0c0;border:3px outset #fff;padding:10px;font:15px Arial}.old .o-side a{display:block;color:#00e;text-decoration:underline;margin:6px 0}
-.old .o-main{flex:1;background:#fff;border:3px inset #999;padding:14px;font-size:17px}
-.old .o-main h3{font:bold 26px "Times New Roman";color:#800000;margin-bottom:8px;letter-spacing:0}
-.old .o-img{height:150px;margin:10px 0;background:repeating-linear-gradient(45deg,#ccc 0 10px,#bbb 10px 20px);display:grid;place-items:center;font:14px Arial;color:#555;border:2px dashed #888}
-.old .o-cnt{font:12px "Courier New";background:#000;color:#0f0;display:inline-block;padding:2px 6px;margin-top:10px}
-.old.m .o-top{font-size:16px;padding:8px}.old.m .o-row{display:block;padding:6px}.old.m .o-side{width:auto;margin-bottom:6px;font-size:12px}.old.m .o-main{font-size:12px;padding:8px}.old.m .o-main h3{font-size:16px}.old.m .o-img{height:70px}
-.scan{position:absolute;top:0;bottom:0;left:0;width:3px;z-index:4;background:var(--cyan);box-shadow:0 0 18px 4px rgba(63,208,255,.8),0 0 60px 10px rgba(47,123,255,.6);opacity:0}
-.badge{position:absolute;z-index:6;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(10,18,40,.75);border:1px solid var(--line2);backdrop-filter:blur(12px);font-size:.8rem;font-weight:600;box-shadow:0 20px 40px -20px rgba(0,0,0,.8);transform:translateZ(90px)}
-.badge i{width:8px;height:8px;border-radius:50%;background:#94A3B8;transition:background .4s,box-shadow .4s}
-.badge.after i{background:#22D3EE;box-shadow:0 0 12px #22D3EE}
-.b1{right:4%;top:6%}.b2{right:-2%;bottom:30%;font-weight:500;color:var(--mut)}.b2 b{color:#fff;font-family:Sora}
-.b2 svg{width:16px;height:16px;color:#22D3EE}
-/* ---------- marquee ---------- */
-.mq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--navy);overflow:hidden;padding:22px 0}
-.mq-t{display:flex;gap:56px;width:max-content;animation:roll 40s linear infinite}
-.mq-t span{display:flex;align-items:center;gap:56px;font-family:Sora,sans-serif;font-size:1.05rem;color:#7F90B6;white-space:nowrap}.mq-t span::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue)}
-@keyframes roll{to{transform:translateX(-50%)}}
-/* ---------- about ---------- */
-.about{background:linear-gradient(180deg,var(--ink),var(--navy) 60%,var(--ink))}
-.about-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-.about h2{font-size:clamp(2.4rem,5vw,4.2rem)}
-.about p.big{font-size:1.25rem;color:#C9D4EE;line-height:1.7}.about p.big b{color:#fff;font-weight:600}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:80px}
-.stat{padding:28px 24px;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,rgba(18,33,71,.55),rgba(8,16,36,.4));position:relative;overflow:hidden}
-.stat b{display:block;font-family:Sora,sans-serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:600;letter-spacing:-.03em;line-height:1}
-.stat>span{display:block;color:var(--mut);margin-top:12px;font-size:.92rem}
-.stat::after{content:"";position:absolute;inset:auto -30% -60% auto;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(47,123,255,.25),transparent 70%)}
-/* spotlight cards */
-.spot{position:relative;isolation:isolate}
-.spot::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(420px circle at var(--x,50%) var(--y,50%),rgba(63,140,255,.16),transparent 45%);opacity:0;transition:opacity .4s;z-index:-1;pointer-events:none}
-.spot:hover::before{opacity:1}
-/* ---------- work ---------- */
-.work-h{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:34px}
-.filters{display:flex;gap:6px;padding:5px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);margin-bottom:34px;width:max-content;max-width:100%;overflow-x:auto}
-.filters button{padding:9px 16px;border-radius:9px;font-size:.88rem;color:var(--mut);transition:color .3s,background .3s;white-space:nowrap}
-.filters button.on{background:var(--blue);color:#fff;box-shadow:0 8px 20px -8px rgba(47,123,255,.9)}
-.wk{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.card{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,rgba(18,33,71,.5),rgba(8,16,36,.55));padding:12px;transition:transform .5s var(--ease),border-color .4s,box-shadow .5s,opacity .4s}
-.card:hover{transform:translateY(-6px);border-color:rgba(105,166,255,.45);box-shadow:0 30px 60px -30px rgba(47,123,255,.6)}
-.card.hide{display:none}
-.shot{position:relative;border-radius:12px;overflow:hidden;background:#0B1226;border:1px solid rgba(255,255,255,.06)}
-.chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#0F1934;border-bottom:1px solid rgba(255,255,255,.05);font-size:.7rem;color:var(--mut2)}
-.chrome i{width:8px;height:8px;border-radius:50%;background:#26355E}.chrome i:nth-child(1){background:#FF5F57}.chrome i:nth-child(2){background:#FEBC2E}.chrome i:nth-child(3){background:#28C840}
-.chrome span{margin-left:8px;padding:3px 10px;border-radius:6px;background:rgba(255,255,255,.04);flex:1;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.view{position:relative;aspect-ratio:16/10;overflow:hidden}
-.view img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform 6s ease}
-.card:hover .view img{transform:translateY(-12%)}
-.view .frame{background:#0B1226}
-.card-t{padding:18px 8px 8px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-.card-t h3{font-size:1.2rem;letter-spacing:-.01em}.card-t p{color:var(--mut);font-size:.9rem;margin-top:6px;line-height:1.55}
-.card-t small{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);margin-bottom:6px}
-.arrow{flex:0 0 40px;width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);display:grid;place-items:center;transition:background .3s,border-color .3s,transform .3s}
-.arrow svg{width:16px;height:16px}.card:hover .arrow{background:var(--blue);border-color:var(--blue);transform:rotate(-45deg)}
-/* ---------- services (accordion + device) ---------- */
-.svc{background:linear-gradient(180deg,var(--ink),var(--navy))}
-.svc-g{display:grid;grid-template-columns:1.05fr 1fr;gap:70px;align-items:center;margin-top:60px}
-.svc-dev{position:relative}
-.svc-dev .lid{border-radius:16px 16px 6px 6px}
-.svc-cap{position:absolute;left:6%;bottom:-24px;z-index:3;padding:14px 18px;border-radius:14px;background:rgba(10,18,40,.85);border:1px solid var(--line2);backdrop-filter:blur(12px);font-size:.85rem;color:var(--mut);max-width:70%;box-shadow:0 20px 40px -20px #000}
-.svc-cap b{display:block;color:#fff;font-family:Sora;font-size:.95rem;margin-bottom:2px}
-.acc{border-top:1px solid var(--line)}
-.ai{border-bottom:1px solid var(--line)}
-.ai-h{width:100%;display:flex;align-items:center;gap:18px;padding:24px 4px;text-align:left}
-.ai-h .ic{flex:0 0 44px;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(47,123,255,.08);border:1px solid var(--line);transition:background .4s,border-color .4s,box-shadow .4s}
-.ai-h .ic svg{width:20px;height:20px;color:var(--blue2)}
-.ai-h h3{font-size:1.25rem;flex:1;transition:color .3s;letter-spacing:-.01em}
-.ai-h .pm{width:28px;height:28px;border-radius:8px;border:1px solid var(--line2);position:relative;transition:transform .4s var(--ease),background .3s}
-.ai-h .pm::before,.ai-h .pm::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:1.6px;background:#fff;transform:translate(-50%,-50%)}.ai-h .pm::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .4s var(--ease)}
-.ai.open .pm{background:var(--blue);border-color:var(--blue)}.ai.open .pm::after{transform:translate(-50%,-50%) rotate(0)}
-.ai.open .ic{background:var(--blue);border-color:var(--blue);box-shadow:0 0 24px -4px rgba(47,123,255,.9)}.ai.open .ic svg{color:#fff}
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .4s,box-shadow .4s,color .4s;color:#fff}
+.nav.solid{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--line);color:var(--ink)}
+.nav-in{max-width:1280px;margin:0 auto;padding:0 32px;height:76px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;font-weight:600;font-size:1.02rem;letter-spacing:.06em}
+.logo svg{width:22px;height:22px}
+.nav-l{display:flex;gap:34px;font-size:.93rem}.nav-l a{opacity:.92;position:relative}.nav-l a:hover{opacity:1}
+.nav-l a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:1px;background:currentColor;transition:right .35s var(--ease)}.nav-l a:hover::after{right:0}
+.burger{display:none;width:42px;height:42px;border-radius:10px;place-items:center;border:1px solid currentColor}
+.burger span{width:18px;height:1.5px;background:currentColor;position:relative;display:block}.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:18px;height:1.5px;background:currentColor}.burger span::before{top:-6px}.burger span::after{top:6px}
+.mnav{position:fixed;inset:0;z-index:45;background:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 28px;opacity:0;pointer-events:none;transition:opacity .35s}
+.mnav.open{opacity:1;pointer-events:auto}.mnav a{font-size:2rem;font-weight:500;letter-spacing:-.02em;padding:10px 0;border-bottom:1px solid var(--line)}
+/* ---------- hero: the house restores itself ---------- */
+.hero{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;color:#fff;background:#3a3a36}
+.hero .ph{position:absolute;inset:0}
+.h-new{animation:zoomOut 9s var(--ease) both}
+@keyframes zoomOut{from{transform:scale(1.08)}to{transform:scale(1)}}
+.h-old{filter:grayscale(.75) sepia(.55) contrast(1.15) brightness(.72) saturate(.8);-webkit-mask-image:radial-gradient(circle at 50% 70%,transparent var(--r,0%),#000 calc(var(--r,0%) + 18%));mask-image:radial-gradient(circle at 50% 70%,transparent var(--r,0%),#000 calc(var(--r,0%) + 18%));transition:opacity .8s}
+.h-old::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .12 0 0 0 1.4 -.55'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:multiply;opacity:.75}
+.h-old::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(90,80,70,.35),rgba(60,45,30,.25) 60%,rgba(40,30,20,.5));z-index:1}
+.h-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.15) 42%,rgba(0,0,0,0) 60%),linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0) 22%)}
+.hero-t{position:absolute;left:0;right:0;bottom:9vh;z-index:3}
+.hero h1{font-size:clamp(2.5rem,5.2vw,4.4rem);max-width:640px;opacity:0;transform:translateY(20px);animation:rise 1.2s .3s var(--ease) forwards}
+.hero p{max-width:400px;margin:18px 0 26px;color:rgba(255,255,255,.88);opacity:0;animation:rise 1.2s .45s var(--ease) forwards}
+.hero .btn{opacity:0;animation:rise 1.2s .6s var(--ease) forwards}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+/* ---------- what is ---------- */
+.what{position:relative;height:min(88vh,820px);min-height:560px;overflow:hidden;color:#fff;background:#111}
+.what .ph{position:absolute;inset:-6% 0;filter:brightness(.42) saturate(.6);transition:filter 2.6s var(--ease)}
+.what.lit .ph{filter:brightness(1) saturate(1.05)}
+.what .glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 35% at 50% 52%,rgba(255,170,80,.35),transparent 70%);mix-blend-mode:screen;opacity:0;transition:opacity 2.2s .9s}
+.what.lit .glow{opacity:1}
+.what .sh{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 46%)}
+.what-t{position:absolute;left:0;right:0;bottom:8vh;z-index:2}
+.what-g{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end}
+.what h2{font-size:clamp(2.2rem,4.4vw,3.6rem)}.what p{color:rgba(255,255,255,.86);max-width:470px;justify-self:end}
+/* ---------- listings ---------- */
+.list{padding:110px 0 100px}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:44px}
+.sec-h h2{font-size:clamp(2rem,3.6vw,3rem);margin-top:14px;max-width:560px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.home{background:var(--card);border-radius:18px;padding:10px;transition:transform .5s var(--ease),box-shadow .5s}
+.home:hover{transform:translateY(-6px);box-shadow:0 24px 50px -28px rgba(0,0,0,.35)}
+.home .im{border-radius:13px;overflow:hidden;aspect-ratio:1.12}.home .im .ph{width:100%;height:100%;transition:transform 1.2s var(--ease)}.home:hover .im .ph{transform:scale(1.06)}
+.home-t{padding:16px 8px 6px}.home-t span{font-size:.9rem;color:var(--mut)}.home-t b{display:block;font-weight:600;font-size:1.3rem;letter-spacing:-.02em;margin-top:2px}
+.facts{display:flex;gap:22px;padding:14px 8px 6px;margin-top:12px;border-top:1px solid var(--line);font-size:.84rem;color:var(--mut)}
+.facts span{display:flex;align-items:center;gap:7px}.facts svg{width:16px;height:16px}
+.facts span:last-child{margin-left:auto}
+/* ---------- services ---------- */
+.svc{background:var(--bg);padding:110px 0}
+.center{text-align:center;max-width:620px;margin:0 auto 54px}.center h2{font-size:clamp(2rem,3.6vw,3rem);margin:14px 0 12px}.center p{color:var(--mut)}
+.svc-g{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:stretch}
+.svc-pic{position:relative;border-radius:18px;overflow:hidden;min-height:440px}
+.svc-pic .ph{position:absolute;inset:0;opacity:0;transform:scale(1.06);transition:opacity .9s var(--ease),transform 1.6s var(--ease)}.svc-pic .ph.on{opacity:1;transform:none}
+.acc{display:flex;flex-direction:column;justify-content:center}
+.ai{border-bottom:1px solid #DCDCDC}
+.ai-h{width:100%;display:flex;align-items:center;gap:14px;padding:20px 4px;text-align:left;font-size:1.06rem;font-weight:500}
+.ai-h svg.ic{width:20px;height:20px;flex:0 0 20px;color:var(--ink2)}
+.ai-h .chev{margin-left:auto;width:18px;height:18px;transition:transform .45s var(--ease);color:var(--mut)}
+.ai.open .chev{transform:rotate(180deg)}
 .ai-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}.ai.open .ai-b{grid-template-rows:1fr}
-.ai-b>div{overflow:hidden}.ai-b p{color:var(--mut);padding:0 4px 8px 66px}
-.ai-b ul{list-style:none;padding:4px 4px 24px 66px;display:flex;flex-wrap:wrap;gap:8px}.ai-b li{font-size:.8rem;padding:5px 10px;border-radius:7px;border:1px solid var(--line);color:#C9D4EE}
-.ai-bar{height:2px;background:var(--line);margin:0 4px;overflow:hidden;opacity:0}.ai.open .ai-bar{opacity:1}.ai-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan))}
-.ai.open .ai-bar i{animation:bar 7s linear forwards}@keyframes bar{to{width:100%}}
-/* ---------- pricing ---------- */
-.price{background:var(--navy)}
-.toggle{display:inline-flex;position:relative;padding:5px;border:1px solid var(--line2);border-radius:14px;background:rgba(4,6,12,.6);margin-top:34px}
-.toggle button{position:relative;z-index:1;padding:11px 20px;border-radius:10px;font-weight:600;font-size:.92rem;color:var(--mut);transition:color .3s}.toggle button.on{color:#fff}
-.toggle .knob{position:absolute;top:5px;bottom:5px;left:5px;border-radius:10px;background:var(--blue);box-shadow:0 8px 24px -8px rgba(47,123,255,.9);transition:left .45s var(--ease),width .45s var(--ease)}
-.toggle-note{display:block;margin-top:12px;color:var(--mut);font-size:.88rem;min-height:1.5em}
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px;align-items:stretch}
-.plan{position:relative;padding:34px 30px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(18,33,71,.55),rgba(4,6,12,.6));display:flex;flex-direction:column}
-.plan.pop{border-color:transparent;background:linear-gradient(180deg,#0F1F48,#081129) padding-box,linear-gradient(160deg,#69A6FF,#2F7BFF 40%,rgba(47,123,255,.15)) border-box;border:1px solid transparent;box-shadow:0 40px 90px -40px rgba(47,123,255,.8);transform:translateY(-12px)}
-.plan .pop-t{position:absolute;top:-13px;left:30px;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--blue);padding:6px 12px;border-radius:7px;box-shadow:0 8px 20px -6px rgba(47,123,255,.9)}
-.plan h3{font-size:1.4rem}.plan .who{color:var(--mut);font-size:.92rem;margin-top:6px;min-height:3em}
-.amt{display:flex;align-items:baseline;gap:6px;margin:28px 0 4px;height:64px}
-.amt b{font-family:Sora,sans-serif;font-size:3.4rem;font-weight:600;letter-spacing:-.04em;line-height:1;display:inline-block;transition:opacity .25s,transform .35s var(--ease)}
-.amt b.flip{opacity:0;transform:translateY(-14px)}
-.amt span{color:var(--mut)}
-.sub2{color:#C9D4EE;font-size:.9rem;min-height:1.6em}.sub2 em{font-style:normal;color:#22D3EE}
-.plan ul{list-style:none;margin:28px 0 32px;display:flex;flex-direction:column;gap:12px;flex:1}
-.plan li{display:flex;gap:12px;font-size:.93rem;color:#C9D4EE;line-height:1.45}.plan li svg{flex:0 0 18px;width:18px;height:18px;color:var(--blue2);margin-top:1px}
-.plan .btn{width:100%}
-.fine{text-align:center;color:var(--mut2);font-size:.85rem;margin-top:40px}
-/* ---------- process ---------- */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:64px;position:relative}
-.steps::before{content:"";position:absolute;left:8%;right:8%;top:36px;height:1px;background:linear-gradient(90deg,transparent,var(--line2),transparent)}
-.step{padding:0 10px;text-align:center;position:relative}
-.step .n{width:72px;height:72px;margin:0 auto 26px;border-radius:20px;display:grid;place-items:center;font-family:Sora;font-weight:600;font-size:1.3rem;background:var(--navy2);border:1px solid var(--line2);position:relative;box-shadow:0 0 0 8px var(--ink)}
-.step.on .n{background:linear-gradient(135deg,#3A86FF,#1F5FE0);border-color:transparent;box-shadow:0 0 0 8px var(--ink),0 0 40px -6px rgba(47,123,255,.9)}
-.step h3{font-size:1.3rem;margin-bottom:10px}.step p{color:var(--mut);max-width:320px;margin:0 auto}
+.ai-b>div{overflow:hidden}.ai-b p{color:var(--mut);padding:0 4px 22px 38px;max-width:520px}
 /* ---------- testimonials ---------- */
-.tst{background:linear-gradient(180deg,var(--ink),var(--navy))}
-.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:60px}
-.tc{padding:32px;border-radius:var(--r);border:1px solid var(--line);background:linear-gradient(180deg,rgba(18,33,71,.5),rgba(8,16,36,.5));display:flex;flex-direction:column;gap:20px}
-.stars{display:flex;gap:3px;color:#5CA8FF}.stars svg{width:17px;height:17px}
-.tc h3{font-size:1.15rem}.tc blockquote{color:#C9D4EE;flex:1}
-.tc figcaption{display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--line);font-size:.88rem;color:var(--mut)}
-.tc figcaption i{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--navy3);font-style:normal;font-family:Sora;font-weight:600;color:var(--blue2)}
+.tst{background:var(--bg2);padding:110px 0}
+.tst .sec-h{align-items:center}.tst .sec-h h2{margin:0}.tst .sec-h span{color:var(--mut)}
+.tc{background:#fff;border-radius:18px;padding:24px;transition:transform .5s var(--ease),box-shadow .5s}
+.tc:hover{transform:translateY(-4px);box-shadow:0 20px 40px -26px rgba(0,0,0,.3)}
+.tc-h{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:600;color:#fff;flex:0 0 44px}
+.tc-h b{display:block;font-weight:600;font-size:.98rem}.tc-h small{color:var(--mut2);font-size:.84rem}
+.stars{margin-left:auto;display:flex;gap:2px;color:var(--star)}.stars svg{width:14px;height:14px}
+.tc p{color:var(--mut);font-size:.95rem}
+/* ---------- blog ---------- */
+.blog{padding:110px 0;background:var(--bg)}
+.blog .sec-h p{color:var(--mut);max-width:300px;text-align:right}
+.blog-g{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+.post-big{position:relative;border-radius:18px;overflow:hidden;min-height:520px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:30px}
+.post-big .ph{position:absolute;inset:0;transition:transform 1.4s var(--ease)}.post-big:hover .ph{transform:scale(1.05)}
+.post-big::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75),rgba(0,0,0,0) 55%)}
+.post-big>*:not(.ph){position:relative;z-index:1}
+.chip{position:absolute;top:16px;right:16px;z-index:2;background:#fff;color:var(--ink);font-size:.74rem;font-weight:500;padding:5px 10px;border-radius:8px;display:flex;align-items:center;gap:6px}
+.post-big>.chip{position:absolute}
+.chip svg{width:13px;height:13px}
+.post-big h3{font-size:clamp(1.6rem,2.6vw,2.2rem);max-width:440px}
+.by{display:flex;align-items:center;gap:10px;margin-top:20px;font-size:.88rem}
+.by .av{width:30px;height:30px;flex-basis:30px;font-size:.78rem}
+.by .rm{margin-left:auto;display:flex;align-items:center;gap:10px}.by .rm i{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;transition:transform .3s var(--ease)}.by .rm i svg{width:15px;height:15px}.post-big:hover .rm i{transform:rotate(-45deg)}
+.posts{display:grid;grid-template-rows:1fr 1fr;gap:20px}
+.post{display:flex;flex-direction:column;gap:12px}
+.post .im{position:relative;border-radius:18px;overflow:hidden;flex:1;min-height:180px}.post .im .ph{position:absolute;inset:0;transition:transform 1.4s var(--ease)}.post:hover .im .ph{transform:scale(1.05)}
+.post h3{font-size:1.15rem;letter-spacing:-.02em}
 /* ---------- faq ---------- */
-.faq-g{display:grid;grid-template-columns:.85fr 1.15fr;gap:80px;align-items:start}
-.faq-l{position:sticky;top:120px}.faq-l h2{font-size:clamp(2.3rem,4.4vw,3.6rem);margin:18px 0 16px}.faq-l p{color:var(--mut);margin-bottom:30px}
-.fq{border:1px solid var(--line);border-radius:16px;background:rgba(18,33,71,.35);margin-bottom:12px;transition:border-color .3s,background .3s}
-.fq.open{border-color:rgba(105,166,255,.4);background:rgba(18,33,71,.6)}
-.fq-h{width:100%;display:flex;align-items:center;gap:16px;justify-content:space-between;padding:22px 24px;text-align:left;font-weight:600;font-size:1.02rem}
-.fq-h .pm{flex:0 0 28px;width:28px;height:28px;border-radius:8px;border:1px solid var(--line2);position:relative;transition:background .3s}
-.fq-h .pm::before,.fq-h .pm::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:1.6px;background:#fff;transform:translate(-50%,-50%)}.fq-h .pm::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .4s var(--ease)}
-.fq.open .pm{background:var(--blue);border-color:var(--blue)}.fq.open .pm::after{transform:translate(-50%,-50%) rotate(0)}
-.fq-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}.fq.open .fq-b{grid-template-rows:1fr}.fq-b>div{overflow:hidden}.fq-b p{padding:0 24px 22px;color:var(--mut)}
-/* ---------- CTA ---------- */
-.cta{padding:40px 0 130px}
-.cta-box{position:relative;overflow:hidden;border-radius:32px;padding:90px 60px;text-align:center;background:radial-gradient(ellipse 80% 120% at 50% 0%,#1F5FE0 0%,#0C1F55 45%,#060B1C 100%);border:1px solid rgba(105,166,255,.35)}
-.cta-box .grid{-webkit-mask-image:radial-gradient(ellipse 70% 80% at 50% 30%,#000 10%,transparent 70%);mask-image:radial-gradient(ellipse 70% 80% at 50% 30%,#000 10%,transparent 70%)}
-.cta-box h2{position:relative;font-size:clamp(2.4rem,5vw,4.4rem);max-width:820px;margin:20px auto 18px}
-.cta-box p{position:relative;color:#C9D4EE;max-width:560px;margin:0 auto 36px;font-size:1.1rem}
-.cta-box .hero-cta{position:relative;justify-content:center;opacity:1;animation:none}
-.cta-box .btn.pri{background:#fff;color:#0A1A44;box-shadow:0 14px 40px -12px rgba(255,255,255,.5)}
+.faq{padding:110px 0}
+.faq-g{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:start}
+.faq-l h2{font-size:clamp(2rem,3.6vw,3rem);margin:14px 0 12px}.faq-l p{color:var(--mut);margin-bottom:24px;max-width:260px}
+.fq{background:var(--bg);border-radius:14px;margin-bottom:10px;transition:background .3s}
+.fq-h{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;text-align:left;font-weight:500}
+.fq-h i{flex:0 0 26px;width:26px;height:26px;border-radius:50%;background:#E3E3E3;display:grid;place-items:center;transition:transform .45s var(--ease),background .3s}
+.fq-h i svg{width:14px;height:14px}.fq.open .fq-h i{transform:rotate(180deg);background:#D6D6D6}
+.fq-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}.fq.open .fq-b{grid-template-rows:1fr}.fq-b>div{overflow:hidden}.fq-b p{padding:0 20px 18px;color:var(--mut);font-size:.95rem}
 /* ---------- footer ---------- */
-.foot{border-top:1px solid var(--line);padding:80px 0 40px;background:var(--ink)}
-.foot-g{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px}
-.foot p{color:var(--mut);font-size:.92rem;margin-top:16px;max-width:320px}
-.foot h4{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2);margin-bottom:18px;font-family:Inter;font-weight:600}
-.foot ul{list-style:none;display:flex;flex-direction:column;gap:10px}.foot li a,.foot li{color:#C9D4EE;font-size:.94rem}.foot li a:hover{color:#fff}
-.foot-b{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:64px;padding-top:26px;border-top:1px solid var(--line);color:var(--mut2);font-size:.84rem}
-.concept{position:fixed;left:16px;bottom:16px;z-index:70;padding:9px 13px;border-radius:10px;background:rgba(10,18,40,.85);border:1px solid var(--line2);backdrop-filter:blur(10px);font-size:.76rem;color:var(--mut)}
-.concept b{color:#fff}
+.foot{padding:80px 0 40px;border-top:1px solid var(--line)}
+.foot .logo{font-size:1.5rem;letter-spacing:.08em;margin-bottom:46px}.foot .logo svg{width:30px;height:30px}
+.foot-g{display:grid;grid-template-columns:1fr 1fr 1fr 1.6fr;gap:40px}
+.foot h4{font-size:.9rem;font-weight:600;margin-bottom:16px}
+.foot ul{list-style:none;display:flex;flex-direction:column;gap:10px}.foot li a{color:var(--mut);transition:color .3s}.foot li a:hover{color:var(--ink)}
+.news p{color:var(--mut);font-size:.92rem;margin-bottom:18px;max-width:340px}
+.news form{display:flex;gap:8px;max-width:400px}.news input{flex:1;min-width:0;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);padding:0 14px;font-size:16px;outline:0}.news input:focus{border-color:#BDBDBD}
+.news .ok{display:none;color:var(--ink);font-weight:500;margin-top:10px}
+.foot-b{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--mut2);font-size:.84rem}
+.concept{position:fixed;left:14px;bottom:14px;z-index:60;background:rgba(17,17,17,.86);color:#fff;font-size:.74rem;padding:8px 12px;border-radius:9px;backdrop-filter:blur(8px)}
 /* ---------- responsive ---------- */
-@media (max-width:1080px){.nav-l,.nav-tel{display:none}.burger{display:grid}.nav-r .btn{display:none}
- .hero{align-items:flex-start;padding-top:120px}.hero-in{grid-template-columns:1fr;gap:20px}.scene{height:auto;aspect-ratio:1.25;max-width:720px;margin:0 auto;width:100%}
- .about-g,.svc-g,.faq-g{grid-template-columns:1fr;gap:50px}.faq-l{position:static}.stats{grid-template-columns:repeat(2,1fr)}
- .wk,.tg{grid-template-columns:repeat(2,1fr)}.plans{grid-template-columns:1fr;max-width:520px;margin-left:auto;margin-right:auto}.plan.pop{transform:none}
- .foot-g{grid-template-columns:1fr 1fr}}
-@media (max-width:680px){.w,.nav-in{padding:0 20px}.nav-in{height:66px}.sec{padding:90px 0}
- .hero{padding-top:100px;padding-bottom:50px}.hero h1{font-size:2.55rem}.hero-sub{font-size:1rem}.hero-cta .btn{flex:1}
- .scene{aspect-ratio:1.05}.laptop{width:92%}.phone{width:31%;border-radius:22px;padding:6px}.phone .screen{border-radius:16px}.phone::before{top:10px;height:11px}
- .badge{font-size:.7rem;padding:8px 10px}.b2{display:none}
- .wk,.tg,.steps{grid-template-columns:1fr}.steps::before{display:none}.work-h{flex-direction:column;align-items:flex-start}
- .stats{grid-template-columns:1fr 1fr;gap:10px;margin-top:50px}.stat{padding:20px 16px}
- .ai-b p,.ai-b ul{padding-left:4px}.ai-h h3{font-size:1.08rem}
- .cta-box{padding:64px 22px;border-radius:24px}.foot-g{grid-template-columns:1fr}.concept{display:none}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.rv{opacity:1;transform:none}}
+@media (max-width:980px){.nav-l{display:none}.burger{display:grid}
+ .what-g,.svc-g,.faq-g,.blog-g{grid-template-columns:1fr;gap:28px}.what p{justify-self:start}
+ .grid3{grid-template-columns:repeat(2,1fr)}.svc-pic{min-height:340px}.foot-g{grid-template-columns:1fr 1fr}.news{grid-column:1/-1}
+ .post-big{min-height:420px}.posts{grid-template-rows:none;grid-template-columns:1fr 1fr}.post .im{min-height:200px;flex:none;aspect-ratio:1.3}}
+@media (max-width:640px){.w,.nav-in{padding:0 20px}.nav-in{height:66px}
+ .list,.svc,.tst,.blog,.faq{padding:80px 0}.sec-h{flex-direction:column;align-items:flex-start}.blog .sec-h p{text-align:left}
+ .grid3{grid-template-columns:1fr}.posts{grid-template-columns:1fr}.what{height:auto;min-height:620px}.svc-pic{min-height:260px}
+ .foot-g{grid-template-columns:1fr 1fr}.concept{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}.rv,.hero h1,.hero p,.hero .btn{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
  <symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
- <symbol id="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="logo" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-5.5h4V20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="bed" viewBox="0 0 24 24"><path d="M3 18v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7M3 15h18M6 9V6h5v3m2 0V6h5v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="bath" viewBox="0 0 24 24"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3ZM6 12V6a2 2 0 0 1 4 0M7 19l-1 2m11-2 1 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="area" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5m11-5v5h-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="i1" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 12h16M12 4v16" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+ <symbol id="i2" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+ <symbol id="i3" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+ <symbol id="i4" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4Zm10-13 3 3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="i5" viewBox="0 0 24 24"><path d="M12 22V12m0 0C12 7 8 4 4 4c0 5 3 8 8 8Zm0 0c0-4 3-7 8-7 0 4-3 7-8 7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
  <symbol id="star" viewBox="0 0 24 24"><path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.9 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z" fill="currentColor"/></symbol>
- <symbol id="shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
- <symbol id="flag" viewBox="0 0 24 24"><path d="M5 21V4m0 0h11l-2 4 2 4H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
- <symbol id="pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
- <symbol id="bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
- <symbol id="pen" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
- <symbol id="lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
- <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
- <symbol id="chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
- <symbol id="cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 3v4M8 3v4M3 10h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
- <symbol id="mark" viewBox="0 0 24 24"><path d="M4 18V6l8 9V6M14 6h6M14 12h5M14 18h6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 </svg>
 
-<header class="nav" id="nav">
- <div class="nav-in">
-  <a class="logo" href="#top" aria-label="Novaline Web Studio home"><b><svg><use href="#mark"/></svg></b><span>NOVALINE <small>WEB STUDIO</small></span></a>
-  <nav class="nav-l" aria-label="Main"><a href="#work">Work</a><a href="#services">Services</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a></nav>
-  <div class="nav-r"><a class="nav-tel" href="tel:+16083060135">(608) 306-0135</a><a class="btn pri sm" href="https://riverbendwebco.com/#contact">Free preview <svg><use href="#arr"/></svg></a>
-   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span></button></div>
- </div>
-</header>
-<nav class="mnav" id="mnav" aria-label="Mobile"><a href="#work">Work</a><a href="#services">Services</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a><a class="btn pri" href="https://riverbendwebco.com/#contact">Get a free preview <svg><use href="#arr"/></svg></a></nav>
+<header class="nav" id="nav"><div class="nav-in">
+ <a class="logo" href="#top"><svg><use href="#logo"/></svg>HAVENSTONE</a>
+ <nav class="nav-l" aria-label="Main"><a href="#listings">Listings</a><a href="#blog">Blog</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+ <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span></button>
+</div></header>
+<nav class="mnav" id="mnav" aria-label="Mobile"><a href="#listings">Listings</a><a href="#blog">Blog</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
 
 <main id="top">
-<section class="hero">
- <div class="hero-bg"><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div><div class="grid"></div><div class="beam"></div></div>
- <div class="w hero-in">
-  <div class="hero-t">
-   <span class="tag"><i></i>Veteran-owned · Dubuque, Iowa</span>
-   <h1><span class="ln"><span>Websites that make</span></span><span class="ln"><span>your business</span></span><span class="ln"><span>look <span class="grad">established.</span></span></span></h1>
-   <p class="hero-sub">Custom websites for Tri-State businesses, designed and secured by a veteran-owned team of cybersecurity professionals. Live in about a week, starting at $0 down.</p>
-   <div class="hero-cta"><a class="btn pri" href="https://riverbendwebco.com/#contact">Get a free preview <svg><use href="#arr"/></svg></a><a class="btn ghost" href="#work">See our work</a></div>
-   <div class="trust"><span><svg><use href="#flag"/></svg>Veteran-owned</span><span><svg><use href="#shield"/></svg>Built by cybersecurity experts</span><span><svg><use href="#bolt"/></svg>Launch target: 7 business days</span></div>
-  </div>
-  <div class="scene" id="scene">
-   <div class="scene-tilt" id="tilt">
-    <div class="laptop"><div class="lid"><div class="screen" id="lapScreen" data-src="/demo/?d=sample-restaurant" data-w="1440">
-     <div class="old" id="oldL"><div class="ob"><div class="o-top">~*~ Welcome To Our Website!! ~*~</div><div class="o-mq"><span>*** NOW OPEN *** Call us today!!! *** Best service in town *** Under construction ***</span></div>
-      <div class="o-row"><div class="o-side"><b>MENU</b><a>Home</a><a>About Us</a><a>Services</a><a>Guestbook</a><a>Contact Us</a></div>
-      <div class="o-main"><h3>Welcome!</h3>Thank you for visiting our home page. This site is best viewed in Internet Explorer at 800x600.<div class="o-img">[ image coming soon ]</div>Click here to email the webmaster.<br><span class="o-cnt">Visitors: 000417</span></div></div></div></div>
-     <div class="scan" id="scanL"></div></div></div><div class="base"></div></div>
-    <div class="phone"><div class="screen" id="phScreen" data-src="/demo/?d=sample-restaurant" data-w="390">
-     <div class="old m" id="oldP"><div class="ob"><div class="o-top">~ Welcome!! ~</div><div class="o-mq"><span>*** Call us today!!! *** Under construction ***</span></div>
-      <div class="o-row"><div class="o-side"><a>Home</a><a>About</a><a>Contact</a></div><div class="o-main"><h3>Welcome!</h3>Best viewed on a desktop computer.<div class="o-img">[ image ]</div></div></div></div></div>
-     <div class="scan" id="scanP"></div></div></div>
-    <div class="badge b1" id="beforeAfter"><i></i><span>Their old website</span></div>
-    <div class="badge b2"><svg><use href="#shield"/></svg><span><b>Secured</b> · SSL, hosting, updates</span></div>
-   </div>
-  </div>
- </div>
-</section>
-
-<div class="mq" aria-hidden="true"><div class="mq-t"><span>Bars &amp; Taverns</span><span>Restaurants</span><span>Salons &amp; Barbers</span><span>Auto Shops</span><span>Contractors</span><span>Real Estate</span><span>Painters</span><span>Boutiques</span><span>Cocktail Lounges</span><span>Bars &amp; Taverns</span><span>Restaurants</span><span>Salons &amp; Barbers</span><span>Auto Shops</span><span>Contractors</span><span>Real Estate</span><span>Painters</span><span>Boutiques</span><span>Cocktail Lounges</span></div></div>
-
-<section class="sec about" id="about">
- <div class="w">
-  <div class="about-g">
-   <div class="rv"><span class="tag"><i></i>Who we are</span><h2 style="margin-top:22px">What is <span class="grad">Novaline?</span></h2></div>
-   <div class="rv d1"><p class="big">We are a <b>veteran-owned web studio in Dubuque, Iowa</b>, and our sites are <b>built by cybersecurity professionals</b>. We design every website from scratch around your business, then handle the hosting, security, Google setup and updates, so you never have to touch the technical side.</p>
-    <p class="big" style="margin-top:22px;color:var(--mut)">One local team, one monthly price, and a site that makes the first impression for you.</p></div>
-  </div>
-  <div class="stats">
-   <div class="stat spot rv"><b data-count="7">7</b><span>Business-day launch target</span></div>
-   <div class="stat spot rv d1"><b>$<span data-count="0">0</span></b><span>Down to get started</span></div>
-   <div class="stat spot rv d2"><b><span data-count="100">100</span>%</b><span>Custom. No templates, no per-page pricing</span></div>
-   <div class="stat spot rv d3"><b data-count="1">1</b><span>Business day to hear back from us</span></div>
-  </div>
- </div>
-</section>
-
-<section class="sec" id="work">
- <div class="w">
-  <div class="work-h"><div class="sh rv"><span class="tag"><i></i>Selected work</span><h2>Built for real businesses.</h2><p>Live client sites, plus design concepts that show what we build for every kind of local business.</p></div>
-   <a class="btn ghost rv" href="https://riverbendwebco.com/#contact">Start your project <svg><use href="#arr"/></svg></a></div>
-  <div class="filters rv" role="tablist"><button class="on" data-f="all">All work</button><button data-f="live">Client sites</button><button data-f="concept">Design concepts</button></div>
-  <div class="wk" id="wk">
-   <a class="card spot rv" data-k="live" href="https://cypher-llc.com/" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>cypher-llc.com</span></div><div class="view"><img loading="lazy" alt="Cypher, LLC website" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcypher-llc.com%2F?w=1440&amp;h=900"></div></div>
-    <div class="card-t"><div><small>Defense &amp; engineering</small><h3>Cypher, LLC</h3><p>Enterprise-grade site for a Service-Disabled Veteran-Owned Small Business.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv d1" data-k="live" href="https://ghostplatform.ai/" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>ghostplatform.ai</span></div><div class="view"><img loading="lazy" alt="G.H.O.S.T. website" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fghostplatform.ai%2F?w=1440&amp;h=900"></div></div>
-    <div class="card-t"><div><small>AI product</small><h3>G.H.O.S.T.</h3><p>Product site with an interactive capability console and live status badges.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv d2" data-k="live" href="https://chefnerdai.com/" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>chefnerdai.com</span></div><div class="view"><img loading="lazy" alt="Chef Nerd AI website" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchefnerdai.com%2F?w=1440&amp;h=900"></div></div>
-    <div class="card-t"><div><small>Restaurant software</small><h3>Chef Nerd AI</h3><p>Back-office platform for restaurants, with device-framed product shots.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv" data-k="live" href="https://tinyappcode.com/" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>tinyappcode.com</span></div><div class="view"><img loading="lazy" alt="TinyAppCode website" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Ftinyappcode.com%2F?w=1440&amp;h=900"></div></div>
-    <div class="card-t"><div><small>Online course</small><h3>TinyAppCode</h3><p>A free course that teaches anyone to build real apps by talking to AI.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv d1" data-k="concept" href="/demo/?d=sample-restaurant" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>Vela Osteria · concept</span></div><div class="view live" data-src="/demo/?d=sample-restaurant" data-w="1440"></div></div>
-    <div class="card-t"><div><small>Restaurant concept</small><h3>Vela Osteria</h3><p>Elegant Italian dining with menu tabs and reservation requests.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv d2" data-k="concept" href="/demo/?d=sample-auto" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>Ironbridge Auto · concept</span></div><div class="view live" data-src="/demo/?d=sample-auto" data-w="1440"></div></div>
-    <div class="card-t"><div><small>Auto shop concept</small><h3>Ironbridge Auto Center</h3><p>Service menu, scheduling and vehicle sales in one bold layout.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv hide" data-k="concept" href="/demo/?d=sample-trade" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>Northline Painting · concept</span></div><div class="view live" data-src="/demo/?d=sample-trade" data-w="1440"></div></div>
-    <div class="card-t"><div><small>Contractor concept</small><h3>Northline Painting</h3><p>A fix-it finder that matches the job and texts the owner.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv hide" data-k="concept" href="/demo/?d=sample-realtor" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>Dana Whitaker · concept</span></div><div class="view live" data-src="/demo/?d=sample-realtor" data-w="1440"></div></div>
-    <div class="card-t"><div><small>Real estate concept</small><h3>Dana Whitaker, REALTOR</h3><p>Home search, area guides and home value requests.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-   <a class="card spot rv hide" data-k="concept" href="/demo/?d=sample-bar" target="_blank" rel="noopener"><div class="shot"><div class="chrome"><i></i><i></i><i></i><span>Timber Ridge Tavern · concept</span></div><div class="view live" data-src="/demo/?d=sample-bar" data-w="1440"></div></div>
-    <div class="card-t"><div><small>Bar &amp; grill concept</small><h3>The Timber Ridge Tavern</h3><p>Weekly specials board, house burger spotlight and full menu.</p></div><span class="arrow"><svg><use href="#arr"/></svg></span></div></a>
-  </div>
- </div>
-</section>
-
-<section class="sec svc" id="services">
- <div class="w">
-  <div class="sh c rv"><span class="tag"><i></i>What we do</span><h2>Everything your website needs, <span class="grad">handled.</span></h2><p>One team designs it, secures it, gets it found and keeps it current. You just text us what you need.</p></div>
-  <div class="svc-g">
-   <div class="svc-dev rv"><div class="laptop" style="position:relative;width:100%"><div class="lid"><div class="screen" id="svcScreen" data-w="1440"></div></div><div class="base"></div></div>
-    <div class="svc-cap" id="svcCap"><b>Vela Osteria</b>Design concept</div></div>
-   <div class="acc" id="acc">
-    <div class="ai open" data-src="/demo/?d=sample-restaurant" data-name="Vela Osteria"><button class="ai-h" aria-expanded="true"><span class="ic"><svg><use href="#pen"/></svg></span><h3>Custom web design</h3><span class="pm"></span></button>
-     <div class="ai-b"><div><p>Designed from scratch around your business: your name, photos, colors, menu or services. No templates and no per-page pricing.</p><ul><li>Mobile-first</li><li>Your branding</li><li>Copy written for you</li></ul></div></div><div class="ai-bar"><i></i></div></div>
-    <div class="ai" data-src="/demo/?d=sample-trade" data-name="Northline Painting"><button class="ai-h" aria-expanded="false"><span class="ic"><svg><use href="#lock"/></svg></span><h3>Security &amp; hosting</h3><span class="pm"></span></button>
-     <div class="ai-b"><div><p>Built by cybersecurity professionals. Fast cloud hosting, SSL and ongoing security maintenance are included, with no separate hosting bill.</p><ul><li>SSL included</li><li>Monitored hosting</li><li>Secure by default</li></ul></div></div><div class="ai-bar"><i></i></div></div>
-    <div class="ai" data-src="/demo/?d=sample-auto" data-name="Ironbridge Auto Center"><button class="ai-h" aria-expanded="false"><span class="ic"><svg><use href="#search"/></svg></span><h3>Google &amp; local SEO</h3><span class="pm"></span></button>
-     <div class="ai-b"><div><p>Every site includes SEO setup. Higher plans add Google Business Profile help, local search optimization and ongoing SEO, so nearby customers find you first.</p><ul><li>SEO foundation</li><li>Google Business Profile</li><li>Local search</li></ul></div></div><div class="ai-bar"><i></i></div></div>
-    <div class="ai" data-src="/demo/?d=sample-realtor" data-name="Dana Whitaker, REALTOR"><button class="ai-h" aria-expanded="false"><span class="ic"><svg><use href="#chat"/></svg></span><h3>Updates &amp; support</h3><span class="pm"></span></button>
-     <div class="ai-b"><div><p>Text or email what you want changed and we handle it, from new hours and prices to fresh photos. Done for you, every month.</p><ul><li>Done-for-you edits</li><li>Fast turnaround</li><li>Real local people</li></ul></div></div><div class="ai-bar"><i></i></div></div>
-    <div class="ai" data-src="/demo/?d=sample-bar" data-name="The Timber Ridge Tavern"><button class="ai-h" aria-expanded="false"><span class="ic"><svg><use href="#cal"/></svg></span><h3>Menus, booking &amp; forms</h3><span class="pm"></span></button>
-     <div class="ai-b"><div><p>Specials boards, menus, galleries, booking and request forms that turn visitors into calls, orders and visits.</p><ul><li>Menus &amp; specials</li><li>Booking requests</li><li>One-tap call &amp; directions</li></ul></div></div><div class="ai-bar"><i></i></div></div>
-   </div>
-  </div>
- </div>
-</section>
-
-<section class="sec price" id="pricing">
- <div class="w">
-  <div class="sh c rv"><span class="tag"><i></i>Pricing</span><h2>Simple plans. <span class="grad">Serious websites.</span></h2><p>Every website is 100% custom. Pick a package, then choose how you want to pay.</p>
-   <div class="toggle" id="tog"><span class="knob"></span><button class="on" data-m="down">$0 down</button><button data-m="up">Pay upfront</button></div>
-   <span class="toggle-note" id="togNote">Nothing due until your site is live. 12-month agreement.</span></div>
-  <div class="plans">
-   <div class="plan spot rv"><h3>Starter</h3><p class="who">A great custom site with the occasional change.</p>
-    <div class="amt"><b data-down="$109" data-up="$499">$109</b><span data-down="/month" data-up="upfront">/month</span></div><p class="sub2" data-down="$0 down, 12-month agreement" data-up="then $50/month, month-to-month · <em>save $209</em>">$0 down, 12-month agreement</p>
-    <ul><li><svg><use href="#chk"/></svg>Fully custom website</li><li><svg><use href="#chk"/></svg>1 update a month, within 3 business days</li><li><svg><use href="#chk"/></svg>SEO foundation</li><li><svg><use href="#chk"/></svg>Google Business Profile setup</li><li><svg><use href="#chk"/></svg>Hosting, SSL and security</li></ul>
-    <a class="btn ghost" href="https://riverbendwebco.com/#contact">Choose Starter</a></div>
-   <div class="plan pop spot rv d1"><span class="pop-t">Most popular</span><h3>Custom</h3><p class="who">More updates, local SEO and reporting to grow.</p>
-    <div class="amt"><b data-down="$179" data-up="$999">$179</b><span data-down="/month" data-up="upfront">/month</span></div><p class="sub2" data-down="$0 down, 12-month agreement" data-up="then $75/month, month-to-month · <em>save $249</em>">$0 down, 12-month agreement</p>
-    <ul><li><svg><use href="#chk"/></svg>Everything in Starter</li><li><svg><use href="#chk"/></svg>3 updates a month, within 2 business days</li><li><svg><use href="#chk"/></svg>Ongoing SEO and local search</li><li><svg><use href="#chk"/></svg>Analytics with a quarterly review</li><li><svg><use href="#chk"/></svg>Forms, galleries, booking, menus</li></ul>
-    <a class="btn pri" href="https://riverbendwebco.com/#contact">Choose Custom <svg><use href="#arr"/></svg></a></div>
-   <div class="plan spot rv d2"><h3>Premium</h3><p class="who">Unlimited updates and around-the-clock support.</p>
-    <div class="amt"><b data-down="$349" data-up="$2,499">$349</b><span data-down="/month" data-up="upfront">/month</span></div><p class="sub2" data-down="$0 down, 12-month agreement" data-up="then $100/month, month-to-month · <em>save $489</em>">$0 down, 12-month agreement</p>
-    <ul><li><svg><use href="#chk"/></svg>Everything in Custom</li><li><svg><use href="#chk"/></svg>Unlimited website updates</li><li><svg><use href="#chk"/></svg>24/7 support availability</li><li><svg><use href="#chk"/></svg>Redesigns and new features</li><li><svg><use href="#chk"/></svg>Monthly reports and strategy calls</li></ul>
-    <a class="btn ghost" href="https://riverbendwebco.com/#contact">Choose Premium</a></div>
-  </div>
-  <p class="fine">Savings shown are over the first 12 months. Your domain is yours from day one.</p>
- </div>
-</section>
-
-<section class="sec" id="process">
- <div class="w">
-  <div class="sh c rv"><span class="tag"><i></i>How it works</span><h2>From first call to live site in <span class="grad">about a week.</span></h2></div>
-  <div class="steps" id="steps">
-   <div class="step rv"><div class="n">01</div><h3>Get a free preview</h3><p>Tell us about your business in a 30-second form. We build a mockup with your real name on it, free and with no obligation.</p></div>
-   <div class="step rv d1"><div class="n">02</div><h3>We design and build</h3><p>Send your logo, hours and menu or services. You will see a live preview within three to five business days.</p></div>
-   <div class="step rv d2"><div class="n">03</div><h3>Go live and grow</h3><p>We connect your domain, set up Google and handle every update from then on. You just text us.</p></div>
-  </div>
- </div>
-</section>
-
-<section class="sec tst" id="reviews">
- <div class="w">
-  <div class="sh c rv"><span class="tag"><i></i>Testimonials</span><h2>What our clients are saying.</h2></div>
-  <div class="tg">
-   <figure class="tc spot rv"><div class="stars" role="img" aria-label="5 out of 5 stars"><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg></div><h3>Professional and easy to work with</h3><blockquote>“The whole process was straightforward and easy to understand. They listened to what we wanted and created a clean, professional website that represents our business really well. Great communication throughout.”</blockquote><figcaption><i>C</i>Client</figcaption></figure>
-   <figure class="tc spot rv d1"><div class="stars" role="img" aria-label="5 out of 5 stars"><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg></div><h3>Fast and responsive</h3><blockquote>“Super easy to work with. Communication was quick, questions were answered clearly, and the entire experience felt personal. You can tell they care about delivering quality work.”</blockquote><figcaption><i>C</i>Client</figcaption></figure>
-   <figure class="tc spot rv d2"><div class="stars" role="img" aria-label="5 out of 5 stars"><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg><svg><use href="#star"/></svg></div><h3>Clean website design</h3><blockquote>“Our website needed a more modern look, and they understood exactly what we were going for. The design is simple, professional, and easy to navigate. Very happy with how everything turned out.”</blockquote><figcaption><i>C</i>Client</figcaption></figure>
-  </div>
- </div>
-</section>
-
-<section class="sec" id="faq">
- <div class="w faq-g">
-  <div class="faq-l rv"><span class="tag"><i></i>FAQ</span><h2>Everything you need to know.</h2><p>Here are the questions we hear most. Anything else, just ask.</p><a class="btn pri" href="tel:+16083060135">Call or text us <svg><use href="#arr"/></svg></a></div>
-  <div class="rv d1" id="faqList">
-   <div class="fq open"><button class="fq-h" aria-expanded="true">How much does a website cost?<span class="pm"></span></button><div class="fq-b"><div><p>Starter is $109/month, Custom $179/month and Premium $349/month with $0 down on a 12-month agreement. Or pay upfront ($499, $999 or $2,499) for a lower month-to-month rate.</p></div></div></div>
-   <div class="fq"><button class="fq-h" aria-expanded="false">How long until my site is live?<span class="pm"></span></button><div class="fq-b"><div><p>Our target is seven business days. Once you send your logo, hours and menu or services, you will see a live preview within three to five business days, and we launch as soon as you approve it.</p></div></div></div>
-   <div class="fq"><button class="fq-h" aria-expanded="false">Do I own my website?<span class="pm"></span></button><div class="fq-b"><div><p>Your domain is yours from day one. You own the custom website once the setup fee is paid (upfront) or after the 12 required monthly payments ($0 down).</p></div></div></div>
-   <div class="fq"><button class="fq-h" aria-expanded="false">How do updates work?<span class="pm"></span></button><div class="fq-b"><div><p>Just text or email what you want changed. Starter includes 1 update a month, Custom 3 and Premium unlimited.</p></div></div></div>
-   <div class="fq"><button class="fq-h" aria-expanded="false">Is hosting and security included?<span class="pm"></span></button><div class="fq-b"><div><p>Yes. Hosting, SSL and ongoing security maintenance are included in every plan, with no separate hosting bill.</p></div></div></div>
-   <div class="fq"><button class="fq-h" aria-expanded="false">Do you only work in Dubuque?<span class="pm"></span></button><div class="fq-b"><div><p>We are based in Dubuque and serve the whole Tri-State area, and we are happy to work with businesses anywhere remotely.</p></div></div></div>
-  </div>
- </div>
-</section>
-
-<section class="cta">
- <div class="w"><div class="cta-box rv"><div class="grid"></div>
-  <span class="tag" style="position:relative;background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)"><i></i>Free, no obligation</span>
-  <h2>Your new website could be live next week.</h2>
-  <p>We will build a preview with your business name on it, free. If you love it, we launch it.</p>
-  <div class="hero-cta"><a class="btn pri" href="https://riverbendwebco.com/#contact">Get my free preview <svg><use href="#arr"/></svg></a><a class="btn ghost" href="tel:+16083060135">(608) 306-0135</a></div>
+<section class="hero" id="hero">
+ <div class="ph h-new" id="hNew"></div>
+ <div class="ph h-old" id="hOld"></div>
+ <div class="h-shade"></div>
+ <div class="hero-t"><div class="w">
+  <h1>Discover the perfect place to call home</h1>
+  <p>Your trusted real estate agency for luxury homes, offering exquisite properties.</p>
+  <a class="btn light" href="#listings">View listings <svg><use href="#arr"/></svg></a>
  </div></div>
 </section>
+
+<section class="what" id="about">
+ <div class="ph" data-par=".12" style="background-image:url('https://images.unsplash.com/photo-1416331108676-a22ccb276e35?auto=format&fit=crop&w=2200&q=78')"></div>
+ <div class="glow"></div><div class="sh"></div>
+ <div class="what-t"><div class="w what-g">
+  <h2 class="rv">What is HAVENSTONE?</h2>
+  <p class="rv d1">At Havenstone, we believe that finding your dream home should be an exciting and seamless experience. Our team is dedicated to guiding you through every step of the journey, from discovering your perfect property to closing the deal with confidence.</p>
+ </div></div>
+</section>
+
+<section class="list" id="listings"><div class="w">
+ <div class="sec-h"><div class="rv"><span class="tag">Listings</span><h2>Discover homes tailored to your lifestyle.</h2></div><a class="btn dark rv d1" href="#listings">View all <svg><use href="#arr"/></svg></a></div>
+ <div class="grid3" id="homes"></div>
+</div></section>
+
+<section class="svc" id="services"><div class="w">
+ <div class="center rv"><span class="tag">Services</span><h2>Helping you move with complete confidence</h2><p>We handle every detail with care and expertise from beginning to end.</p></div>
+ <div class="svc-g">
+  <div class="svc-pic rv" id="svcPic"></div>
+  <div class="acc rv d1" id="acc"></div>
+ </div>
+</div></section>
+
+<section class="tst"><div class="w">
+ <div class="sec-h rv"><h2>What our clients are saying!</h2><span>Testimonials</span></div>
+ <div class="grid3" id="tst"></div>
+</div></section>
+
+<section class="blog" id="blog"><div class="w">
+ <div class="sec-h"><div class="rv"><span class="tag">Blog</span><h2>Real estate guides and updates</h2></div><p class="rv d1">Helping you make smarter property decisions with expert insights.</p></div>
+ <div class="blog-g">
+  <a class="post-big rv" href="#blog"><div class="ph" style="background-image:url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1400&q=75')"></div><span class="chip"><svg><use href="#clock"/></svg>4 min read</span>
+   <h3>Designing the communities for the future generations</h3>
+   <div class="by"><span class="av" style="background:#8C6A52">NB</span>Nora Bell · Jun 21, 2026<span class="rm">Read more <i><svg><use href="#arr"/></svg></i></span></div></a>
+  <div class="posts">
+   <a class="post rv d1" href="#blog"><div class="im"><div class="ph" style="background-image:url('https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?auto=format&fit=crop&w=1000&q=75')"></div><span class="chip"><svg><use href="#clock"/></svg>3 min read</span></div><h3>Urban growth and sustainable development</h3></a>
+   <a class="post rv d2" href="#blog"><div class="im"><div class="ph" style="background-image:url('https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1000&q=75')"></div><span class="chip"><svg><use href="#clock"/></svg>5 min read</span></div><h3>Greener spaces and the rise of eco cities worldwide</h3></a>
+  </div>
+ </div>
+</div></section>
+
+<section class="faq" id="contact"><div class="w faq-g">
+ <div class="faq-l rv"><span class="tag">FAQs</span><h2>Everything you need to know</h2><p>Here are the most common questions.</p><a class="btn dark" href="mailto:hello@havenstone.example">Get in touch <svg><use href="#arr"/></svg></a></div>
+ <div class="rv d1" id="faq"></div>
+</div></section>
 </main>
 
-<footer class="foot">
- <div class="w">
-  <div class="foot-g">
-   <div><a class="logo" href="#top"><b><svg><use href="#mark"/></svg></b><span>NOVALINE <small>WEB STUDIO</small></span></a><p>Veteran-owned web design in Dubuque, Iowa. Custom websites built by cybersecurity professionals for businesses across the Tri-State.</p></div>
-   <div><h4>Explore</h4><ul><li><a href="#work">Work</a></li><li><a href="#services">Services</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul></div>
-   <div><h4>Services</h4><ul><li>Custom web design</li><li>Security &amp; hosting</li><li>Google &amp; local SEO</li><li>Updates &amp; support</li></ul></div>
-   <div><h4>Contact</h4><ul><li><a href="tel:+16083060135">(608) 306-0135</a></li><li><a href="mailto:riverbendwebco@gmail.com">riverbendwebco@gmail.com</a></li><li>Dubuque, Iowa</li></ul></div>
-  </div>
-  <div class="foot-b"><span>© 2026 Novaline Web Studio. Design concept.</span><span>Veteran-owned · Built by cybersecurity experts</span></div>
+<footer class="foot"><div class="w">
+ <a class="logo" href="#top"><svg><use href="#logo"/></svg>HAVENSTONE</a>
+ <div class="foot-g">
+  <div><h4>Navigation</h4><ul><li><a href="#top">Home</a></li><li><a href="#about">About us</a></li><li><a href="#blog">Blog</a></li><li><a href="#services">Services</a></li><li><a href="#listings">Properties</a></li></ul></div>
+  <div><h4>Follow us</h4><ul><li><a href="#top">Facebook</a></li><li><a href="#top">LinkedIn</a></li><li><a href="#top">Instagram</a></li><li><a href="#top">X</a></li><li><a href="#top">TikTok</a></li></ul></div>
+  <div><h4>Contact</h4><ul><li><a href="tel:+15550100190">(555) 010-0190</a></li><li><a href="mailto:hello@havenstone.example">hello@havenstone.example</a></li><li><a href="#top">120 Harbor Lane, Suite 4</a></li></ul></div>
+  <div class="news"><h4>Be the first to know!!</h4><p>Sign up for our newsletter to receive the latest property updates, expert tips, and insider insights delivered monthly.</p>
+   <form id="news"><input type="email" required placeholder="name@email.com" aria-label="Email address"><button class="btn dark" type="submit">Subscribe</button></form><p class="ok" id="newsOk">Thanks for subscribing. (Design concept: nothing was sent.)</p></div>
  </div>
-</footer>
-<div class="concept"><b>Design concept</b> · placeholder name</div>
+ <div class="foot-b"><span>© 2026 Havenstone Realty. All rights reserved.</span><span>Made-up business for a design concept.</span></div>
+</div></footer>
+<div class="concept">Design concept · made-up business</div>
 
 <script>
 (()=>{
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const U=(id,w)=>'url("https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||1200)+'&q=75")';
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* nav */
-const nav=$('#nav'); const onS=()=>nav.classList.toggle('solid',scrollY>20); addEventListener('scroll',onS,{passive:true}); onS();
-const mnav=$('#mnav'), bg=$('#burger'); bg.addEventListener('click',()=>{ const o=mnav.classList.toggle('open'); bg.setAttribute('aria-expanded',o); });
-$$('a',mnav).forEach(a=>a.addEventListener('click',()=>mnav.classList.remove('open')));
-/* reveals */
-const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } }),{threshold:.12,rootMargin:'0px 0px -8% 0px'});
-$$('.rv').forEach(el=>io.observe(el));
-/* live, scaled previews of real demo sites (same origin) */
-const fit=box=>{ const f=box.querySelector('iframe.frame'); if(!f) return; const W=+box.dataset.w||1440, s=box.clientWidth/W; f.style.width=W+'px'; f.style.height=(box.clientHeight/s)+'px'; f.style.transform='scale('+s+')'; };
-const mount=(box,src)=>{ let f=box.querySelector('iframe.frame'); if(!f){ f=document.createElement('iframe'); f.className='frame'; f.title='Website preview'; f.setAttribute('tabindex','-1'); f.setAttribute('aria-hidden','true'); f.setAttribute('loading','lazy'); f.setAttribute('scrolling','no'); box.prepend(f); }
-  if(f.dataset.src!==src){ f.dataset.src=src; f.src=src; } fit(box); };
-const lazy=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ mount(e.target,e.target.dataset.src); lazy.unobserve(e.target); } }),{rootMargin:'300px'});
-$$('.view.live').forEach(b=>lazy.observe(b));
-addEventListener('resize',()=>$$('.view.live,.screen').forEach(fit));
-/* hero: outdated site wipes away to the new one */
-const lap=$('#lapScreen'), ph=$('#phScreen'); mount(lap,lap.dataset.src); mount(ph,ph.dataset.src);
-const oldL=$('#oldL'), oldP=$('#oldP'), scL=$('#scanL'), scP=$('#scanP'), ba=$('#beforeAfter');
-const sizeOld=()=>{ [[oldL,lap,1200],[oldP,ph,390]].forEach(([o,box,W])=>{ const b=o.firstElementChild, s=box.clientWidth/W; b.style.width=W+'px'; b.style.height=(box.clientHeight/s)+'px'; b.style.transform='scale('+s+')'; }); }; sizeOld(); addEventListener('resize',sizeOld);
-let t0=null; const CYCLE=9000;
-const loop=ts=>{ if(t0===null) t0=ts; const t=(ts-t0)%CYCLE;
-  /* 0-2.2s old site, 2.2-3.8s scan wipe, 3.8-8.2s new site, 8.2-9s old fades back */
-  let p=0, fadeBack=0; if(t<2200) p=0; else if(t<3800) p=(t-2200)/1600; else if(t<8200) p=1; else { p=1; fadeBack=(t-8200)/800; }
-  const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2, pct=(e*100).toFixed(2);
-  [oldL,oldP].forEach(o=>{ o.style.clipPath='inset(0 0 0 '+pct+'%)'; o.style.opacity=fadeBack?fadeBack:1; if(fadeBack) o.style.clipPath='inset(0 0 0 0)'; });
-  [scL,scP].forEach(s=>{ s.style.left=pct+'%'; s.style.opacity=(p>0&&p<1)?1:0; });
-  const after=p>=.5&&!fadeBack; if(ba.classList.contains('after')!==after){ ba.classList.toggle('after',after); ba.lastElementChild.textContent=after?'Rebuilt by Novaline':'Their old website'; }
-  requestAnimationFrame(loop); };
-if(!calm) requestAnimationFrame(loop); else { oldL.style.display=oldP.style.display='none'; ba.classList.add('after'); ba.lastElementChild.textContent='Rebuilt by Novaline'; }
-/* hero tilt follows the pointer */
-const scene=$('#scene'), tilt=$('#tilt');
-if(!calm&&matchMedia('(pointer:fine)').matches) addEventListener('mousemove',e=>{ const x=e.clientX/innerWidth-.5, y=e.clientY/innerHeight-.5; tilt.style.transform='rotateY('+(x*-8)+'deg) rotateX('+(y*6)+'deg)'; });
-/* spotlight cards */
-$$('.spot').forEach(c=>c.addEventListener('pointermove',e=>{ const r=c.getBoundingClientRect(); c.style.setProperty('--x',(e.clientX-r.left)+'px'); c.style.setProperty('--y',(e.clientY-r.top)+'px'); }));
-/* counters */
-const cio=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; cio.unobserve(e.target); const el=e.target, to=+el.dataset.count; if(calm||!to) return; const st=performance.now(); const step=ts=>{ const k=Math.min(1,(ts-st)/1400); el.textContent=Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(step); }; requestAnimationFrame(step); }),{threshold:.6});
-$$('[data-count]').forEach(el=>cio.observe(el));
-/* work filters */
-$$('.filters button').forEach(b=>b.addEventListener('click',()=>{ $$('.filters button').forEach(x=>x.classList.toggle('on',x===b)); const f=b.dataset.f;
-  $$('#wk .card').forEach((c,i)=>{ const show=f==='all'?i<6:c.dataset.k===f; c.classList.toggle('hide',!show); if(show){ c.classList.add('on'); const v=c.querySelector('.view.live'); if(v) mount(v,v.dataset.src); } }); }));
-/* services accordion drives the device */
-const svc=$('#svcScreen'), cap=$('#svcCap'), items=$$('#acc .ai'); let cur=0, timer=null, svcOn=false;
-const open=k=>{ cur=k; items.forEach((it,j)=>{ const o=j===k; it.classList.toggle('open',o); it.querySelector('.ai-h').setAttribute('aria-expanded',o); const bar=it.querySelector('.ai-bar i'); bar.style.animation='none'; bar.offsetWidth; bar.style.animation=''; });
-  svc.style.opacity=.15; setTimeout(()=>{ mount(svc,items[k].dataset.src); svc.style.opacity=1; },250); cap.innerHTML='<b>'+items[k].dataset.name+'</b>Design concept';
-  clearTimeout(timer); if(svcOn&&!calm) timer=setTimeout(()=>open((cur+1)%items.length),7000); };
-svc.style.transition='opacity .35s';
-items.forEach((it,k)=>it.querySelector('.ai-h').addEventListener('click',()=>open(k)));
-new IntersectionObserver(es=>es.forEach(e=>{ const was=svcOn; svcOn=e.isIntersecting; if(svcOn&&!was) open(cur); if(!svcOn) clearTimeout(timer); }),{threshold:.3}).observe($('#acc'));
-/* pricing toggle */
-const tog=$('#tog'), knob=$('.knob',tog), note=$('#togNote');
-const setK=b=>{ knob.style.left=b.offsetLeft+'px'; knob.style.width=b.offsetWidth+'px'; };
-$$('button',tog).forEach(b=>b.addEventListener('click',()=>{ $$('button',tog).forEach(x=>x.classList.toggle('on',x===b)); setK(b); const m=b.dataset.m;
-  note.textContent=m==='down'?'Nothing due until your site is live. 12-month agreement.':'One-time setup fee, then a lower month-to-month rate with 30 days notice.';
-  $$('.amt b').forEach(el=>{ el.classList.add('flip'); setTimeout(()=>{ el.textContent=el.dataset[m]; el.classList.remove('flip'); },220); });
-  $$('.amt span, .sub2').forEach(el=>{ el.innerHTML=el.dataset[m]; }); }));
-requestAnimationFrame(()=>setK($('button.on',tog))); addEventListener('resize',()=>setK($('button.on',tog)));
-/* process steps light up in order */
-const sio=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ $$('.step').forEach((s,i)=>setTimeout(()=>s.classList.add('on'),400+i*450)); sio.disconnect(); } }),{threshold:.4}); sio.observe($('#steps'));
+const nav=$('#nav'), hero=$('#hero'); const onS=()=>nav.classList.toggle('solid',scrollY>hero.offsetHeight-80); addEventListener('scroll',onS,{passive:true}); onS();
+const mnav=$('#mnav'), bg=$('#burger'); bg.addEventListener('click',()=>{ const o=mnav.classList.toggle('open'); bg.setAttribute('aria-expanded',o); }); $$('a',mnav).forEach(a=>a.addEventListener('click',()=>mnav.classList.remove('open')));
+/* hero: the worn house restores itself from the center out */
+const H='1600585154340-be6161a56a0c'; $('#hNew').style.backgroundImage=U(H,2400); $('#hOld').style.backgroundImage=U(H,2400);
+const old=$('#hOld'); let started=false;
+const start=()=>{ if(started) return; started=true; const st=performance.now(), dur=calm?1:4200, delay=calm?0:700;
+  const grow=t=>{ const k=Math.min(1,Math.max(0,(t-st-delay)/dur)); const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2; old.style.setProperty('--r',(e*95)+'%'); if(k<1) requestAnimationFrame(grow); else old.style.opacity=0; };
+  requestAnimationFrame(grow); };
+const pre=new Image(); pre.onload=start; pre.src='https://images.unsplash.com/photo-'+H+'?auto=format&fit=crop&w=2400&q=75'; setTimeout(start,3000);
+/* listings */
+const HOMES=[['1600596542815-ffad4c1539a9','Crestview estate','$270,000',4,5,'2,650'],['1613490493576-7fde63acd811','Sunset bluff','$225,000',2,3,'1,850'],['1613977257363-707ba9348227','Silver birch','$312,000',4,3,'1,450'],
+ ['1512917774080-9991f1c4c750','Nova residence','$145,000',3,2,'1,350'],['1580587771525-78b9dba3b914','Misty meadows','$125,000',3,4,'2,150'],['1605276374104-dee2a0ed3cd6','Rosewood manor','$320,000',3,2,'1,850']];
+$('#homes').innerHTML=HOMES.map(([id,n,p,b,ba,a],i)=>'<a class="home rv'+(i%3?' d'+(i%3):'')+'" href="#listings"><div class="im"><div class="ph" style=\'background-image:'+U(id,900)+'\'></div></div><div class="home-t"><span>'+esc(n)+'</span><b>'+esc(p)+'</b></div><div class="facts"><span><svg><use href="#bed"/></svg>'+b+'</span><span><svg><use href="#bath"/></svg>'+ba+'</span><span><svg><use href="#area"/></svg>'+a+' sq.ft</span></div></a>').join('');
+/* services: accordion drives the photo */
+const SV=[['i1','Finishes','Premium flooring, cabinetry and trim, installed with precision so every room feels complete from the first walk-through.','1600607687939-ce8a6c25118c'],
+ ['i2','Electrical Works','Lighting design, smart switches and safe, up-to-code wiring handled by licensed electricians.','1616486338812-3dadae4b4ace'],
+ ['i3','Plumbing & Heating','From modern bathrooms to efficient heating systems, we make sure everything runs warm, quiet and leak-free.','1620626011761-996317b8d101'],
+ ['i4','Painting & Decorating','Our decorators bring precision and a keen eye for detail, delivering flawless finishes, rich colours, and clean lines that transform every room in your home.','1586023492125-27b2c045efd7'],
+ ['i5','Landscaping','Outdoor spaces designed to be lived in: lawns, pathways, planting and lighting that extend your home outside.','1564013799919-ab600027ffc6']];
+const pic=$('#svcPic'), acc=$('#acc');
+pic.innerHTML=SV.map((s,i)=>'<div class="ph'+(i?'':' on')+'" style=\'background-image:'+U(s[3],1400)+'\'></div>').join('');
+acc.innerHTML=SV.map((s,i)=>'<div class="ai'+(i?'':' open')+'"><button class="ai-h" aria-expanded="'+(!i)+'"><svg class="ic"><use href="#'+s[0]+'"/></svg>'+esc(s[1])+'<svg class="chev"><use href="#chev"/></svg></button><div class="ai-b"><div><p>'+esc(s[2])+'</p></div></div></div>').join('');
+let cur=0, timer=null, inView=false;
+const open=k=>{ cur=k; $$('.ai',acc).forEach((a,j)=>{ a.classList.toggle('open',j===k); $('.ai-h',a).setAttribute('aria-expanded',j===k); }); $$('.ph',pic).forEach((p,j)=>p.classList.toggle('on',j===k)); clearTimeout(timer); if(inView&&!calm) timer=setTimeout(()=>open((cur+1)%SV.length),4800); };
+$$('.ai-h',acc).forEach((b,k)=>b.addEventListener('click',()=>open(k)));
+new IntersectionObserver(es=>es.forEach(e=>{ const was=inView; inView=e.isIntersecting; if(inView&&!was) open(cur); if(!inView) clearTimeout(timer); }),{threshold:.35}).observe(acc);
+/* testimonials (made-up people) */
+const TS=[['Hanna Lee','@hannal','#9C7A63','Working with Havenstone made buying our first home simple. They answered every question and found us a place we love.'],
+ ['Marcus Reed','@marcusr','#5F7A8C','Professional, patient and honest from the first showing to closing day. We never felt rushed.'],
+ ['Elena Diaz','@elenad','#7D6C8F','They sold our house in under three weeks and handled every detail. Communication was excellent throughout.'],
+ ['Owen Park','@owenp','#6E8B6A','A space where elegance and comfort come together. Our new home is everything we hoped for.'],
+ ['Priya Shah','@priyas','#A3735E','A smooth, stress-free move. The team knew the market and negotiated a great price for us.'],
+ ['Liam Carter','@liamc','#55697F','From the first call to the keys in our hands, Havenstone made the whole experience feel effortless.']];
+$('#tst').innerHTML=TS.map(([n,h,c,t],i)=>'<figure class="tc rv'+(i%3?' d'+(i%3):'')+'"><div class="tc-h"><span class="av" style="background:'+c+'">'+n.split(' ').map(x=>x[0]).join('')+'</span><div><b>'+esc(n)+'</b><small>'+esc(h)+'</small></div><span class="stars">'+'<svg><use href="#star"/></svg>'.repeat(5)+'</span></div><p>'+esc(t)+'</p></figure>').join('');
 /* faq */
+const FQ=[['What services do we offer?','We help clients buy, sell and rent residential properties, and we offer home finishing, renovation and landscaping through our partner crews.'],
+ ['How do you determine the value of a property?','We compare recent nearby sales, the home’s condition and features, and current market demand to give you an accurate, honest price.'],
+ ['What are the fees for your services?','Our fees are transparent and competitive, typically structured as a small percentage of the final sale price with no hidden charges.'],
+ ['How long does it typically take to sell a property?','Most well-priced homes sell within 30 to 60 days, though this varies with location and season.'],
+ ['What areas do you specialize in?','We focus on coastal and suburban neighborhoods, with a dedicated agent for each area we serve.']];
+$('#faq').innerHTML=FQ.map(([q,a],i)=>'<div class="fq'+(i===2?' open':'')+'"><button class="fq-h" aria-expanded="'+(i===2)+'">'+esc(q)+'<i><svg><use href="#chev"/></svg></i></button><div class="fq-b"><div><p>'+esc(a)+'</p></div></div></div>').join('');
 $$('.fq').forEach(f=>$('.fq-h',f).addEventListener('click',()=>{ const o=!f.classList.contains('open'); $$('.fq').forEach(x=>{ x.classList.remove('open'); $('.fq-h',x).setAttribute('aria-expanded','false'); }); if(o){ f.classList.add('open'); $('.fq-h',f).setAttribute('aria-expanded','true'); } }));
+/* newsletter (concept only) */
+$('#news').addEventListener('submit',e=>{ e.preventDefault(); e.target.style.display='none'; $('#newsOk').style.display='block'; });
+/* reveals, lights on, parallax */
+const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } }),{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+$$('.rv').forEach(el=>io.observe(el));
+const what=$('#about'); new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) what.classList.add('lit'); }),{threshold:.45}).observe(what);
+const par=$$('[data-par]'); let tick=false;
+const run=()=>{ tick=false; if(calm) return; par.forEach(el=>{ const r=el.parentElement.getBoundingClientRect(); el.style.transform='translateY('+((r.top+r.height/2-innerHeight/2)*-parseFloat(el.dataset.par)).toFixed(1)+'px)'; }); };
+addEventListener('scroll',()=>{ if(!tick){ tick=true; requestAnimationFrame(run); } },{passive:true}); run();
 })();
 </script>
 </body>
