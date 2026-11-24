@@ -1877,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23y';
+var BILL_VERSION = '2026-11-23z';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3682,6 +3682,6 @@ function outUnsub_(t) {
   var sh = outSheet_(), all = outAll_(), o = all.filter(function (x) { return x.token === t; })[0];
   if (!o) return { ok: false, error: 'notfound' };
   var em = String(o.email || '').toLowerCase();
-  all.forEach(function (x) { if (x.row === o.row || (em && String(x.email).toLowerCase() === em)) { outSet_(sh, x.row, 'Status', 'Unsubscribed'); outSet_(sh, x.row, 'Next', ''); } });
+  all.forEach(function (x) { if (x.row === o.row || (em && String(x.email).toLowerCase() === em)) { outSet_(sh, x.row, 'Status', 'Unsubscribed'); outSet_(sh, x.row, 'Next', ''); outSet_(sh, x.row, 'Notes', clip_((String(x.notes || '') + ' unsubscribed ' + Utilities.formatDate(new Date(), 'America/Chicago', 'yyyy-MM-dd HH:mm')).trim(), 500)); } });
   return { ok: true, business: o.business };
 }

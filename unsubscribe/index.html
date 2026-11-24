@@ -39,11 +39,13 @@ h2{font-size:1rem;margin:0 0 10px}
 .msg{min-height:18px;margin-top:8px;font-size:.86rem;color:var(--mut)}.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
 @media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
 </style></head><body><div class="wrap" style="max-width:560px"><div class="bar"><b>Riverbend Web Co.</b></div>
-<h1 style="font-size:1.8rem">Unsubscribe</h1><div class="panel"><p id="m">One moment...</p></div>
+<h1 style="font-size:1.8rem">Unsubscribe</h1><div class="panel"><p id="m">Stop getting emails from Riverbend Web Co.?</p><button class="btn primary" id="go" type="button">Yes, unsubscribe me</button></div>
 <p class="msg">Riverbend Web Co. is a DBA of Outlaw Nightfall LLC, an Iowa limited liability company.</p></div>
 <script src="/login/auth.js"></script>
-<script>(async()=>{ const t=location.hash.slice(1), m=document.getElementById('m');
- if(!/^[a-f0-9]{24}$/.test(t)){ m.textContent='This unsubscribe link is not complete. Email riverbendwebco@gmail.com and we will remove you.'; return; }
- try{ const r=await fetch(window.RBAuth.API+'?action=unsub&t='+t).then(x=>x.json());
-  m.textContent=r.ok?'You are unsubscribed. Riverbend Web Co. will not email you again.':'We could not find that link. Email riverbendwebco@gmail.com and we will remove you right away.';
- }catch(e){ m.textContent='Could not reach our server. Email riverbendwebco@gmail.com and we will remove you right away.'; } })();</script></body></html>
+<script>(()=>{ const t=location.hash.slice(1), m=document.getElementById('m'), b=document.getElementById('go');
+ if(!/^[a-f0-9]{24}$/.test(t)){ b.remove(); m.textContent='This unsubscribe link is not complete. Email riverbendwebco@gmail.com and we will remove you.'; return; }
+ /* A person has to tap the button: email link scanners open pages automatically and must not unsubscribe anyone. */
+ b.addEventListener('click',async()=>{ b.disabled=true; b.textContent='One moment...';
+  try{ const r=await fetch(window.RBAuth.API+'?action=unsub&t='+t).then(x=>x.json()); b.remove();
+   m.textContent=r.ok?'You are unsubscribed. Riverbend Web Co. will not email you again.':'We could not find that link. Email riverbendwebco@gmail.com and we will remove you right away.';
+  }catch(e){ b.disabled=false; b.textContent='Yes, unsubscribe me'; m.textContent='Could not reach our server. Try again, or email riverbendwebco@gmail.com and we will remove you right away.'; } }); })();</script></body></html>
