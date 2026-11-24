@@ -2409,7 +2409,7 @@ function spSmoke(canvas){
     float f=fb(p+3.6*r);
     float d=smoothstep(.42,1.,f)*(.55+.45*smoothstep(.0,.9,length(q)));
     float edge=.55+.45*(1.-uv.y)+.35*pow(abs(uv.x-.5)*2.,2.);
-    float a=clamp(d*K*edge,0.,.75);
+    vec2 cc=(uv-vec2(.5,.42))*vec2(1.3,1.);float clear=1.-.7*exp(-dot(cc,cc)*9.);float a=clamp(d*K*edge*clear,0.,.32);
     vec3 c=mix(vec3(.80,.80,.84),vec3(1.,.97,.93),f);
     gl_FragColor=vec4(c*a,a);}`;
   const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); return o; };
@@ -2421,7 +2421,7 @@ function spSmoke(canvas){
   const Q=.5; const size=()=>{ canvas.width=Math.round(innerWidth*Q); canvas.height=Math.round(innerHeight*Q); gl.viewport(0,0,canvas.width,canvas.height); };
   size(); addEventListener('resize',size);
   const t0=performance.now(); let k=0;
-  const frame=t=>{ if(!document.hidden){ const y=scrollY, hero=innerHeight; const want=y<hero?.6*(1-y/hero):0; k+=(want-k)*.06;
+  const frame=t=>{ if(!document.hidden){ const y=scrollY, hero=innerHeight; const want=y<hero?.3*(1-y/hero):0; k+=(want-k)*.06;
       if(k<.005){ gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); requestAnimationFrame(frame); return; } gl.uniform2f(uR,canvas.width,canvas.height); gl.uniform1f(uT,(t-t0)/1000); gl.uniform1f(uS,y*Q); gl.uniform1f(uK,k); gl.drawArrays(gl.TRIANGLES,0,3); }
     requestAnimationFrame(frame); };
   requestAnimationFrame(frame);
