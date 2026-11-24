@@ -339,7 +339,7 @@ function demoSeeds_() {
   return list.filter(function (sd) {
     return sd && /^[a-z0-9-]{1,60}$/.test(String(sd.key)) && (/^[a-z0-9-]{3,80}$/.test(String(sd.slug)) || (!sd.slug && sd.patch && /^[\w &'.-]{3,80}$/.test(String(sd.matchName || '')))) &&
       sd.data && typeof sd.data === 'object' && !Array.isArray(sd.data);
-  }).slice(0, 60);
+  }).slice(-100); /* newest seeds; older ones have already run once */
 }
 function applySeeds_() {
   var props = PropertiesService.getScriptProperties();
@@ -1877,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23r';
+var BILL_VERSION = '2026-11-23s2';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
