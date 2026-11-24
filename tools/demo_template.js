@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -99,6 +99,7 @@ function build(d){
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
   if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='roadside'){ document.body.className='t-rd'; const pg=roadside(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); rdNav(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(/^zephyr\b/i.test(C.name)) C.variant='zephyr';
@@ -4108,6 +4109,120 @@ function trade(C){
   return h('div',{class:'demo trade on'},top,nav,heroEl,statsEl,area,svcs,offers,projects,foot);
 }
 
+/* ---------- Roadside membership (D&D Wrecker Roadside): public tour of the member app ---------- */
+const RD_I={
+ tow:['M3 6h11v9H3z','M14 9h4l3 3v3h-7','M7 18.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17 18.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z'],
+ jump:['M3 8h15v8H3z','M18 11h2v2h-2'],
+ tire:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z'],
+ key:['M15.5 3a5.5 5.5 0 1 1-4.9 8L3 18.6V21h3v-2h2v-2h2l1.4-1.4','M16.5 7.5h.01'],
+ fuel:['M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16','M3 21h12','M4 10h10','M14 13h2a2 2 0 0 1 2 2v2a1.5 1.5 0 0 0 3 0V9l-3-3'],
+ winch:['M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M12 8v13','M5 13H3a9 9 0 0 0 18 0h-2','M9 11h6'],
+ warn:['M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z','M12 9v4','M12 17h.01'],
+ batt:['M3 7h16v10H3z','M19 10h2v4h-2','M7 10v4M11 10v4M15 10v4'],
+ phone:['M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z'],
+ shield:['M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z','m9 12 2 2 4-4'],
+ check:['M20 6 9 17l-5-5'],
+ pin:['M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z','M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'],
+ wrench:['M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'],
+ bag:['M3 7h18v13H3z','M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2','M3 12h18'],
+ gift:['M3 8h18v4H3z','M5 12v9h14v-9','M12 8v13','M12 8c-2-3-6-3-6-.5S12 8 12 8zm0 0c2-3 6-3 6-.5S12 8 12 8z'],
+ tag:['M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z','M7.5 7.5h.01'],
+ card:['M2 5h20v14H2z','M2 10h20'],
+ home:['M3 11 12 3l9 8','M5 10v10h14V10'],
+ user:['M20 21a8 8 0 0 0-16 0','M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10z'],
+ star:['M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z'],
+ arrow:['M5 12h14','m13 6 6 6-6 6']};
+function rdI(k,size){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('width',size||22); s.setAttribute('height',size||22); s.setAttribute('aria-hidden','true'); s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor'); s.setAttribute('stroke-width','1.9'); s.setAttribute('stroke-linecap','round'); s.setAttribute('stroke-linejoin','round');
+  (RD_I[k]||[]).forEach(d=>{ const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',d); s.append(p); }); return s; }
+function roadside(C){
+  const X=C.x, join=okUrl(X.join)||'https://ddroadside.com/register', site=okUrl(X.site)||join;
+  const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
+  const tone={tow:'r',jump:'y',tire:'o',key:'v',fuel:'g',winch:'b',warn:'r',batt:'g'};
+  const ext=(href,txt,cls,icon)=>h('a',{class:cls,href,target:'_blank',rel:'noopener'},txt,icon?rdI('arrow',17):null);
+  const go=id=>scrollTo(id);
+  const svcs=(X.services||[]).filter(s=>Array.isArray(s)&&RD_I[s[0]]);
+  const plans=(X.plans||[]).filter(p=>p&&p.name);
+  const perks=(X.perks||[]).filter(p=>Array.isArray(p)&&p[0]);
+  const cats=[...new Set(perks.map(p=>p[1]).filter(Boolean))];
+  const telOf=t=>{ const d=String(t||'').replace(/\D/g,''); return d.length>=10?'tel:+1'+d.slice(-10):''; };
+
+  // nav
+  const nav=h('header',{class:'rd-nav'},h('div',{class:'rd-w rd-nav-in'},
+    h('a',{class:'rd-brand',href:'#top',onclick:e=>{e.preventDefault();scrollTo('top');}},logo?h('span',{class:'rd-logo'},h('img',{src:logo,alt:C.name+' logo'})):null,h('span',null,h('b',null,'D&D Roadside'),h('small',null,'Wrecker Service'))),
+    h('nav',{class:'rd-links','aria-label':'Sections'},[['rd-svc','Services'],['rd-plans','Plans'],['rd-perks','Perks'],['rd-refer','Refer']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t))),
+    h('div',{class:'rd-nav-cta'},ext(site,'Sign in','rd-ghost'),ext(join,'Join now','rd-btn'))));
+
+  // hero with the membership card
+  const hero=h('section',{class:'rd-hero',id:'top'},h('div',{class:'rd-w rd-hero-in'},
+    h('div',{class:'rd-hero-t rv'},
+      h('p',{class:'rd-kick'},rdI('shield',16),'Roadside membership · '+(C.city||'Dubuque, IA')),
+      h('h1',null,'Roadside help, one tap away.'),
+      h('p',{class:'rd-lead'},'Towing, jump starts, lockouts, flat tires and more from D&D Wrecker Service. Pick a plan and your coverage starts immediately.'),
+      h('div',{class:'rd-hero-b'},ext(join,'Become a member','rd-btn lg',true),h('button',{type:'button',class:'rd-ghost lg',onclick:()=>go('rd-plans')},'See plans and pricing')),
+      C.tel?h('a',{class:'rd-hl',href:C.tel},rdI('phone',18),h('span',null,'24/7 Roadside Hotline ',h('b',null,C.phoneTxt))):null),
+    h('div',{class:'rd-hero-v rv'},
+      h('div',{class:'rd-mcard'},
+        h('div',{class:'rd-mc-top'},h('div',null,h('small',null,'MEMBERSHIP'),h('b',null,'Plus')),rdI('shield',30)),
+        h('div',{class:'rd-mc-bot'},h('div',null,h('small',null,'MEMBER'),h('b',null,'You')),h('div',{class:'rd-mc-st'},h('small',null,'STATUS'),h('b',null,h('i'),'Active')))),
+      h('div',{class:'rd-mini'},svcs.slice(0,6).map(s=>h('div',{class:'rd-mini-t'},h('span',{class:'rd-ic '+(tone[s[0]]||'b')},rdI(s[0],20)),h('span',null,s[1])))))));
+
+  // services
+  const svc=h('section',{class:'rd-sec',id:'rd-svc'},h('div',{class:'rd-w'},
+    h('div',{class:'rd-head rv'},h('p',{class:'rd-kick dk'},'What we cover'),h('h2',null,'Request assistance for'),h('p',null,'Members request help in the app in three quick steps: pick the service, share your location, choose standard or urgent and ASAP or scheduled. Prefer to talk? Call the hotline any time.')),
+    h('div',{class:'rd-svcs'},svcs.map((s,i)=>h('div',{class:'rd-svc rv'+(i%4?' d'+(i%4):'')},h('span',{class:'rd-ic '+(tone[s[0]]||'b')},rdI(s[0],24)),h('b',null,s[1]),h('span',null,s[2])))),
+    h('div',{class:'rd-hot rv'},h('div',null,h('h3',null,rdI('phone',22),'24/7 Roadside Hotline'),h('p',null,'Prefer to talk? Our dispatchers are standing by.')),C.tel?h('a',{class:'rd-btn wh',href:C.tel},'Call '+C.phoneTxt):null)));
+
+  // plans
+  let annual=false;
+  const grid=h('div',{class:'rd-plans'});
+  const renderPlans=()=>{ grid.replaceChildren(...plans.map((p,i)=>h('article',{class:'rd-plan'+(p.rec?' rec':'')+(i===2?' pro':'')},
+    p.rec?h('span',{class:'rd-rec'},'Recommended'):null,
+    h('div',{class:'rd-plan-h'},h('div',null,h('h3',null,i===1?rdI('star',18):i===2?rdI('shield',18):null,p.name),h('small',null,p.sub||'')),
+      h('div',{class:'rd-price'},h('b',null,'$'+(annual?p.yrMo:p.mo)),h('span',null,annual?'/mo · billed yearly':'/mo'),annual&&p.yr?h('em',null,'$'+p.yr+'/yr'):null)),
+    h('p',{class:'rd-tax'},'Auto-renews · includes 5.5% sales tax'),
+    h('ul',null,(p.feat||[]).map(f=>h('li',null,rdI('check',17),h('span',null,f[0],f[1]?h('small',null,f[1]):null)))),
+    ext(join,'Join with '+p.name,'rd-btn full')))); };
+  const tg=(a,label,badge)=>h('button',{type:'button',class:'rd-tg'+(a===annual?' on':''),'aria-pressed':String(a===annual),onclick:e=>{ annual=a; [...e.currentTarget.parentNode.children].forEach(b=>{ const on=b===e.currentTarget; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); renderPlans(); }},label,badge?h('em',null,badge):null);
+  renderPlans();
+  const plansSec=h('section',{class:'rd-sec rd-alt',id:'rd-plans'},h('div',{class:'rd-w'},
+    h('div',{class:'rd-head rv'},h('p',{class:'rd-kick dk'},'Membership plans'),h('h2',null,'Pick the coverage that fits'),h('p',null,'Upgrade anytime. Coverage starts immediately.')),
+    h('div',{class:'rd-toggle rv',role:'group','aria-label':'Billing period'},tg(false,'Monthly'),tg(true,'Annual','1 month free')),
+    grid,
+    h('p',{class:'rd-note'},'Pay securely by card or PayPal when you sign up.')));
+
+  // perks
+  let cat='';
+  const list=h('div',{class:'rd-perks'});
+  const renderPerks=()=>list.replaceChildren(...perks.filter(p=>!cat||p[1]===cat).map(p=>{ const t=telOf(p[3]); const ic=p[1]==='Services'?'bag':'wrench';
+    return h('div',{class:'rd-perk'},h('span',{class:'rd-ic '+(p[1]==='Auto Parts'?'o':p[1]==='Repair Shops'?'b':'v')},rdI(ic,20)),
+      h('div',{class:'rd-perk-t'},h('b',null,p[0]),h('small',null,p[1]),p[2]?h('span',null,rdI('pin',14),p[2]):null,t?h('a',{href:t},rdI('phone',14),p[3]):null),
+      h('em',{class:'rd-off'},p[4])); }));
+  renderPerks();
+  const chips=h('div',{class:'rd-chips',role:'group','aria-label':'Filter partners'},['All'].concat(cats).map((c,i)=>h('button',{type:'button',class:i?null:'on',onclick:e=>{ cat=i?c:''; [...e.currentTarget.parentNode.children].forEach(b=>b.classList.toggle('on',b===e.currentTarget)); renderPerks(); }},c)));
+  const perkSec=h('section',{class:'rd-sec',id:'rd-perks'},h('div',{class:'rd-w'},
+    h('div',{class:'rd-head rv'},h('p',{class:'rd-kick dk'},'Member perks'),h('h2',null,'Save at '+perks.length+' local partners'),h('p',null,'Show your membership for exclusive discounts at shops and services around the Tri-State area.')),
+    chips,list));
+
+  // refer
+  const refer=h('section',{class:'rd-sec rd-alt',id:'rd-refer'},h('div',{class:'rd-w rd-ref'},
+    h('div',{class:'rd-ref-card rv'},h('span',{class:'rd-ref-i'},rdI('gift',26)),h('small',null,'Your referral code'),h('b',null,'Share it'),h('p',null,'Every member gets a personal code, link and QR code. Friends get covered, you earn rewards.')),
+    h('div',{class:'rd-ref-t rv'},h('p',{class:'rd-kick dk'},'Refer a friend'),h('h2',null,'Cover the whole family'),
+      h('p',null,'Refer a family member and they get ',h('b',null,'25% off every month'),' for as long as they stay subscribed.'),
+      ext(join,'Start your membership','rd-btn',true))));
+
+  // final CTA + footer
+  const cta=h('section',{class:'rd-cta'},h('div',{class:'rd-w rd-cta-in rv'},h('div',null,h('h2',null,'Get covered today.'),h('p',null,'Sign up in minutes. Coverage starts immediately.')),
+    h('div',{class:'rd-hero-b'},ext(join,'Join now','rd-btn wh lg',true),C.tel?h('a',{class:'rd-ghost wh lg',href:C.tel},'Call '+C.phoneTxt):null)));
+  const foot=h('footer',{class:'rd-foot'},h('div',{class:'rd-w rd-foot-in'},
+    h('div',{class:'rd-brand'},logo?h('span',{class:'rd-logo'},h('img',{src:logo,alt:''})):null,h('span',null,h('b',null,'D&D Wrecker Roadside'),h('small',null,C.city||''))),
+    h('div',{class:'rd-foot-l'},C.tel?h('a',{href:C.tel},C.phoneTxt):null,ext(site,'ddroadside.com'),ext(join,'Create an account'))));
+
+  // phone tab bar (like the app)
+  const tabs=h('nav',{class:'rd-tabs','aria-label':'Quick links'},[['top','home','Home'],['rd-svc','tow','Services'],['rd-plans','card','Plans'],['rd-perks','tag','Perks']].map(([id,ic,t])=>h('button',{type:'button',onclick:()=>scrollTo(id)},rdI(ic,20),h('span',null,t))),
+    h('a',{href:join,target:'_blank',rel:'noopener',class:'join'},rdI('user',20),h('span',null,'Join')));
+  return h('div',{class:'rd'},nav,h('main',null,hero,svc,plansSec,perkSec,refer,cta),foot,tabs);
+}
+function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
 function rbBar(C){
   if(C.x&&C.x.sample) return h('div',{class:'rb-bar'},h('div',{class:'rb-in'},
     h('div',{class:'t'},h('b',null,'Sample website'),h('em',{class:'rb-tag'},'Made-up business'),h('br'),h('span',null,'Every Riverbend site is custom-built around your business: your name, photos, colors, services and features.')),

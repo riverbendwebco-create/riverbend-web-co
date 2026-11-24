@@ -1,0 +1,20 @@
+{"name":"D&D Wrecker Roadside","variant":"roadside","style":"trade","category":"Roadside assistance membership","city":"Dubuque, IA","phone":"(563) 580-3447","website":"https://ddroadside.com/",
+ "x":{"logo":"img/dd-roadside-logo.png","join":"https://ddroadside.com/register","site":"https://ddroadside.com/",
+  "services":[["tow","Towing","Vehicle needs to be transported"],["jump","Jump Start","Dead or weak battery"],["tire","Flat Tire","Tire change or repair"],["key","Lockout","Locked out of vehicle"],["fuel","Fuel Delivery","Out of fuel"],["winch","Winch Out","Stuck in ditch, mud or snow"],["warn","Accident","Collision or crash"],["batt","New Battery","Battery replacement"]],
+  "plans":[
+   {"name":"Starter","sub":"Essential coverage","mo":"42.19","yrMo":"38.67","yr":"464.08","feat":[["One free tow every 6 months","Vehicle under 6k GVWR for free towing"],["Towing up to 5 miles"],["One free jump start & lockout per month"],["Fuel delivery (price of fuel not included)"]]},
+   {"name":"Plus","sub":"Most popular","rec":true,"mo":"63.29","yrMo":"58.02","yr":"696.18","feat":[["One free tow every 3 months","Vehicle under 6k GVWR for free towing"],["Towing up to 15 miles"],["All Starter services included"],["Flat tire change"]]},
+   {"name":"Pro","sub":"Total peace of mind","mo":"84.39","yrMo":"77.36","yr":"928.28","feat":[["Everything in Plus"],["Towing up to 30 miles"],["Roadside for any driver"],["Priority response"]]}],
+  "perks":[
+   ["Advance Auto Parts","Auto Parts","806 Wacker Dr, Dubuque, IA","563-557-9331","15% off"],
+   ["Car-Tech","Repair Shops","1760 Radford Rd, Dubuque, IA","563-513-8660","20% off all brake jobs"],
+   ["A&B Automotive Center","Repair Shops","10512 Keywest Dr, Dubuque, IA","563-583-3575","15% off labor"],
+   ["Underdog Auto & Tint","Auto Parts","10475 Timothy St, Dubuque, IA","563-542-5870","10% off"],
+   ["Vaughns Automotive","Auto Parts","3155 University Ave, Dubuque, IA","563-557-1836","10% off"],
+   ["Duck Duck Drive","Services","2990 Jackson St, Dubuque, IA","563-585-2000","10% off service"],
+   ["Fusion Professional Detailing","Services","1695 Rockdale Rd, Dubuque, IA","563-269-3259","15% off"],
+   ["D&D Sand and Gravel","Services","1074 Badger Rd, Hazel Green, WI","563-580-3447","10% off"],
+   ["1 Call Groundskeeping","Services","","563-513-8660","10% off stump grinding"],
+   ["Millman Lawn & Landscaping","Services","","563-231-0406","10% off"],
+   ["Frank's Tristate Storage","Services","1911 Wisconsin 80, Cuba City, WI","608-744-7777","10% off"],
+   ["Bailey's Welding & Fabrication LLC","Services","4434 West Lane, Cuba City, WI","608-732-4493","10% off"]]}}
