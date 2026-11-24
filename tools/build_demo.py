@@ -939,6 +939,8 @@ body.t-sp{background:#0E0C0D}
 /* 5. menu */
 .sp-menu{padding:140px 0;background:var(--ch);border-top:1px solid var(--line)}
 .sp-mps{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
+.sp-mps.four{grid-template-columns:repeat(2,1fr);gap:56px 80px;max-width:1040px;margin:0 auto}
+.sp-it.sp-sn{display:block}.sp-sn-top{display:flex;align-items:baseline;gap:12px}.sp-sn p{color:var(--mut);font-size:.86rem;line-height:1.6;margin-top:4px}
 .sp-mp h3{font-size:1.9rem;color:var(--gold2);padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:8px}
 .sp-it{display:flex;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid rgba(200,169,106,.1)}
 .sp-it b{font-family:var(--disp);font-weight:500;font-size:1.22rem;color:var(--iv)}.sp-it em{font-style:normal;color:var(--gold);margin:0 .34em}
@@ -1000,7 +1002,7 @@ body.t-sp{background:#0E0C0D}
  .sp-track{transform:none!important;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:24px;padding:0 24px 10px;gap:18px;scrollbar-width:none;align-items:flex-start}.sp-track::-webkit-scrollbar{display:none}
  .sp-sig-intro{flex:0 0 78vw;scroll-snap-align:start}.sp-card{flex:0 0 74vw;scroll-snap-align:start}.sp-card:nth-child(odd){margin-top:0}
  .sp-gal{padding:100px 0}.sp-stack{grid-template-columns:1fr 1fr;grid-auto-rows:auto;gap:10px}.sp-gt{aspect-ratio:3/4;translate:none!important}.sp-gt.a{grid-column:1/-1;grid-row:auto;aspect-ratio:4/3}.sp-gt.b,.sp-gt.c,.sp-gt.d,.sp-gt.e{grid-column:auto;grid-row:auto}.sp-gt.e{display:none}
- .sp-menu{padding:100px 0}.sp-mps{grid-template-columns:1fr;gap:44px}.sp-items{grid-template-columns:1fr}.sp-it b{font-size:1.12rem}
+ .sp-menu{padding:100px 0}.sp-mps,.sp-mps.four{grid-template-columns:1fr;gap:44px}.sp-items{grid-template-columns:1fr}.sp-it b{font-size:1.12rem}
  .sp-tabs{gap:2px 22px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.sp-tab{font-size:1.15rem;white-space:nowrap}
  .sp-res{padding:100px 0}.sp-res-g{grid-template-columns:1fr;gap:44px}.sp-res-card{padding:28px 22px}.sp-form{grid-template-columns:1fr 1fr;gap:20px 16px}
  .sp-ev{padding:120px 0}.sp-ev-shade{background:linear-gradient(0deg,rgba(14,12,13,.92),rgba(14,12,13,.6))}

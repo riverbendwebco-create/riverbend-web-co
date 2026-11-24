@@ -2449,6 +2449,9 @@ function spirited(C){
   const label={Sparkling:'Sparkling',Pink:'Rosé',White:'White',Red:'Red',Bottle:'By the bottle',Craft:'Cans & draft'};
   const nm=i=>String(i.name).split('|').map(x=>x.trim()).filter(Boolean);
   const row=i=>h('div',{class:'sp-it'},h('b',null,nm(i).map((p,k)=>[k?h('em',null,'·'):null,p])),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},i.price||''));
+  const SN=(Array.isArray(C.x.snacks)?C.x.snacks:[]).filter(x=>x&&x.n).slice(0,20);
+  const srow=x=>h('div',{class:'sp-it sp-sn'},h('div',{class:'sp-sn-top'},h('b',null,String(x.n)),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},String(x.p||'').replace(/\s*\|\s*/g,' / '))),x.d?h('p',null,String(x.d).split('|').map(t=>t.trim()).join(' \u00b7 ')):null);
+  if(SN.length) TABS.splice(1,0,['Snacks','Something to share',[{t:'Snacks',items:SN,snack:true}]]);
   const known=DAYS.map((d,i)=>[d,C.hours[i],i]).filter(([,v])=>v);
   const groupH=[]; known.forEach(([d,v,i])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v){ last.to=d; last.ix.push(i); } else groupH.push({from:d,to:'',v,ix:[i]}); });
 
@@ -2476,7 +2479,7 @@ function spirited(C){
   const story=h('section',{class:'sp-story',id:'sp-story'},h('div',{class:'sp-w sp-story-g'},
     h('div',{class:'sp-story-t'},h('span',{class:'sp-kick sp-rv'},'The Experience'),
       h('h2',{class:'sp-rv'},'Low light. Velvet seats. ',h('em',null,'A drink made only for you.')),
-      h('p',{class:'sp-rv'},'Spirited is a cocktail lounge on Jefferson Boulevard, dressed in gold mirrors, stained glass and deep green velvet. The bar is the kitchen here: every drink is built by hand, from smoked bourbon to bright, spirit-free sours.'),
+      h('p',{class:'sp-rv'},'Spirited is a cocktail lounge on Jefferson Boulevard, dressed in gold mirrors, stained glass and deep green velvet. Every drink is built by hand, from smoked bourbon to bright, spirit-free sours, with small plates made for sharing.'),
       h('p',{class:'sp-rv'},'Come early for a quiet first round, or stay late into the weekend. Either way, the night takes its time.')),
     h('div',{class:'sp-story-p'},pic('lounge','tall sp-mask','1500'),h('div',{class:'sp-story-p2','data-par':'-.12'},pic('mirror','sp-mask','1000')))));
 
@@ -2502,7 +2505,7 @@ function spirited(C){
   const show=k=>{ [...tabs.children].forEach((t,j)=>{ t.classList.toggle('on',j===k); t.setAttribute('aria-selected',j===k?'true':'false'); });
     const [t,lead,g]=TABS[k]; panel.classList.remove('in');
     panel.replaceChildren(h('div',{class:'sp-panel-h'},h('i',null,lead),h('h3',null,t)),
-      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-kick'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(row)))));
+      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-kick'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(x.snack?srow:row)))));
     requestAnimationFrame(()=>panel.classList.add('in')); };
   TABS.forEach(([t],k)=>{ const b=h('button',{type:'button',role:'tab',class:'sp-tab'},t); b.addEventListener('click',()=>show(k)); tabs.append(b); });
   if(TABS.length) show(0);
@@ -2510,9 +2513,9 @@ function spirited(C){
   const openBtn=h('button',{type:'button',class:'sp-btn line'},'Explore the full menu');
   openBtn.addEventListener('click',()=>{ const on=full.classList.toggle('open'); openBtn.textContent=on?'Close the full menu':'Explore the full menu'; if(on) setTimeout(()=>full.scrollIntoView({behavior:'smooth',block:'start'}),60); });
   const menu=h('section',{class:'sp-menu',id:'sp-menu'},h('div',{class:'sp-w'},
-    h('div',{class:'sp-head2 center sp-rv'},h('span',{class:'sp-kick'},'The Menu'),h('h2',null,'Spirits, bubbles ',h('em',null,'& spirit-free.')),
+    h('div',{class:'sp-head2 center sp-rv'},h('span',{class:'sp-kick'},'The Menu'),h('h2',null,SN.length?'Cocktails, bubbles ':'Spirits, bubbles ',h('em',null,SN.length?'& small bites.':'& spirit-free.')),
       smokeDrink?h('p',null,'Start with the house favorite: ',h('b',null,nm(smokeDrink).join(' · ')),' ',h('span',{class:'sp-pr'},smokeDrink.price||'')):null),
-    h('div',{class:'sp-mps'},prev('Cocktails',['Cocktails'],5),prev('Spirit-Free',['Zero-proof'],3),prev('Wine & Bubbles',['Sparkling','Pink','White','Red'],5)),
+    h('div',{class:'sp-mps'+(SN.length?' four':'')},prev('Cocktails',['Cocktails'],5),SN.length?h('div',{class:'sp-mp sp-rv'},h('h3',null,'Snacks'),h('div',null,SN.slice(0,4).map(srow))):null,prev('Spirit-Free',['Zero-proof'],3),prev('Wine & Bubbles',['Sparkling','Pink','White','Red'],5)),
     h('div',{class:'sp-center sp-rv'},openBtn),full));
 
   /* ===== 6. reservation ===== */

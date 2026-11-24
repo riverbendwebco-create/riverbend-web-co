@@ -1186,6 +1186,8 @@ body.t-sp{background:#0E0C0D}
 /* 5. menu */
 .sp-menu{padding:140px 0;background:var(--ch);border-top:1px solid var(--line)}
 .sp-mps{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
+.sp-mps.four{grid-template-columns:repeat(2,1fr);gap:56px 80px;max-width:1040px;margin:0 auto}
+.sp-it.sp-sn{display:block}.sp-sn-top{display:flex;align-items:baseline;gap:12px}.sp-sn p{color:var(--mut);font-size:.86rem;line-height:1.6;margin-top:4px}
 .sp-mp h3{font-size:1.9rem;color:var(--gold2);padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:8px}
 .sp-it{display:flex;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid rgba(200,169,106,.1)}
 .sp-it b{font-family:var(--disp);font-weight:500;font-size:1.22rem;color:var(--iv)}.sp-it em{font-style:normal;color:var(--gold);margin:0 .34em}
@@ -1247,7 +1249,7 @@ body.t-sp{background:#0E0C0D}
  .sp-track{transform:none!important;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:24px;padding:0 24px 10px;gap:18px;scrollbar-width:none;align-items:flex-start}.sp-track::-webkit-scrollbar{display:none}
  .sp-sig-intro{flex:0 0 78vw;scroll-snap-align:start}.sp-card{flex:0 0 74vw;scroll-snap-align:start}.sp-card:nth-child(odd){margin-top:0}
  .sp-gal{padding:100px 0}.sp-stack{grid-template-columns:1fr 1fr;grid-auto-rows:auto;gap:10px}.sp-gt{aspect-ratio:3/4;translate:none!important}.sp-gt.a{grid-column:1/-1;grid-row:auto;aspect-ratio:4/3}.sp-gt.b,.sp-gt.c,.sp-gt.d,.sp-gt.e{grid-column:auto;grid-row:auto}.sp-gt.e{display:none}
- .sp-menu{padding:100px 0}.sp-mps{grid-template-columns:1fr;gap:44px}.sp-items{grid-template-columns:1fr}.sp-it b{font-size:1.12rem}
+ .sp-menu{padding:100px 0}.sp-mps,.sp-mps.four{grid-template-columns:1fr;gap:44px}.sp-items{grid-template-columns:1fr}.sp-it b{font-size:1.12rem}
  .sp-tabs{gap:2px 22px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.sp-tab{font-size:1.15rem;white-space:nowrap}
  .sp-res{padding:100px 0}.sp-res-g{grid-template-columns:1fr;gap:44px}.sp-res-card{padding:28px 22px}.sp-form{grid-template-columns:1fr 1fr;gap:20px 16px}
  .sp-ev{padding:120px 0}.sp-ev-shade{background:linear-gradient(0deg,rgba(14,12,13,.92),rgba(14,12,13,.6))}
@@ -7252,6 +7254,9 @@ function spirited(C){
   const label={Sparkling:'Sparkling',Pink:'Rosé',White:'White',Red:'Red',Bottle:'By the bottle',Craft:'Cans & draft'};
   const nm=i=>String(i.name).split('|').map(x=>x.trim()).filter(Boolean);
   const row=i=>h('div',{class:'sp-it'},h('b',null,nm(i).map((p,k)=>[k?h('em',null,'·'):null,p])),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},i.price||''));
+  const SN=(Array.isArray(C.x.snacks)?C.x.snacks:[]).filter(x=>x&&x.n).slice(0,20);
+  const srow=x=>h('div',{class:'sp-it sp-sn'},h('div',{class:'sp-sn-top'},h('b',null,String(x.n)),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},String(x.p||'').replace(/\s*\|\s*/g,' / '))),x.d?h('p',null,String(x.d).split('|').map(t=>t.trim()).join(' \u00b7 ')):null);
+  if(SN.length) TABS.splice(1,0,['Snacks','Something to share',[{t:'Snacks',items:SN,snack:true}]]);
   const known=DAYS.map((d,i)=>[d,C.hours[i],i]).filter(([,v])=>v);
   const groupH=[]; known.forEach(([d,v,i])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v){ last.to=d; last.ix.push(i); } else groupH.push({from:d,to:'',v,ix:[i]}); });
 
@@ -7279,7 +7284,7 @@ function spirited(C){
   const story=h('section',{class:'sp-story',id:'sp-story'},h('div',{class:'sp-w sp-story-g'},
     h('div',{class:'sp-story-t'},h('span',{class:'sp-kick sp-rv'},'The Experience'),
       h('h2',{class:'sp-rv'},'Low light. Velvet seats. ',h('em',null,'A drink made only for you.')),
-      h('p',{class:'sp-rv'},'Spirited is a cocktail lounge on Jefferson Boulevard, dressed in gold mirrors, stained glass and deep green velvet. The bar is the kitchen here: every drink is built by hand, from smoked bourbon to bright, spirit-free sours.'),
+      h('p',{class:'sp-rv'},'Spirited is a cocktail lounge on Jefferson Boulevard, dressed in gold mirrors, stained glass and deep green velvet. Every drink is built by hand, from smoked bourbon to bright, spirit-free sours, with small plates made for sharing.'),
       h('p',{class:'sp-rv'},'Come early for a quiet first round, or stay late into the weekend. Either way, the night takes its time.')),
     h('div',{class:'sp-story-p'},pic('lounge','tall sp-mask','1500'),h('div',{class:'sp-story-p2','data-par':'-.12'},pic('mirror','sp-mask','1000')))));
 
@@ -7305,7 +7310,7 @@ function spirited(C){
   const show=k=>{ [...tabs.children].forEach((t,j)=>{ t.classList.toggle('on',j===k); t.setAttribute('aria-selected',j===k?'true':'false'); });
     const [t,lead,g]=TABS[k]; panel.classList.remove('in');
     panel.replaceChildren(h('div',{class:'sp-panel-h'},h('i',null,lead),h('h3',null,t)),
-      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-kick'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(row)))));
+      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-kick'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(x.snack?srow:row)))));
     requestAnimationFrame(()=>panel.classList.add('in')); };
   TABS.forEach(([t],k)=>{ const b=h('button',{type:'button',role:'tab',class:'sp-tab'},t); b.addEventListener('click',()=>show(k)); tabs.append(b); });
   if(TABS.length) show(0);
@@ -7313,9 +7318,9 @@ function spirited(C){
   const openBtn=h('button',{type:'button',class:'sp-btn line'},'Explore the full menu');
   openBtn.addEventListener('click',()=>{ const on=full.classList.toggle('open'); openBtn.textContent=on?'Close the full menu':'Explore the full menu'; if(on) setTimeout(()=>full.scrollIntoView({behavior:'smooth',block:'start'}),60); });
   const menu=h('section',{class:'sp-menu',id:'sp-menu'},h('div',{class:'sp-w'},
-    h('div',{class:'sp-head2 center sp-rv'},h('span',{class:'sp-kick'},'The Menu'),h('h2',null,'Spirits, bubbles ',h('em',null,'& spirit-free.')),
+    h('div',{class:'sp-head2 center sp-rv'},h('span',{class:'sp-kick'},'The Menu'),h('h2',null,SN.length?'Cocktails, bubbles ':'Spirits, bubbles ',h('em',null,SN.length?'& small bites.':'& spirit-free.')),
       smokeDrink?h('p',null,'Start with the house favorite: ',h('b',null,nm(smokeDrink).join(' · ')),' ',h('span',{class:'sp-pr'},smokeDrink.price||'')):null),
-    h('div',{class:'sp-mps'},prev('Cocktails',['Cocktails'],5),prev('Spirit-Free',['Zero-proof'],3),prev('Wine & Bubbles',['Sparkling','Pink','White','Red'],5)),
+    h('div',{class:'sp-mps'+(SN.length?' four':'')},prev('Cocktails',['Cocktails'],5),SN.length?h('div',{class:'sp-mp sp-rv'},h('h3',null,'Snacks'),h('div',null,SN.slice(0,4).map(srow))):null,prev('Spirit-Free',['Zero-proof'],3),prev('Wine & Bubbles',['Sparkling','Pink','White','Red'],5)),
     h('div',{class:'sp-center sp-rv'},openBtn),full));
 
   /* ===== 6. reservation ===== */
