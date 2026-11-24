@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-nav,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-bar.on,.sp-nav,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -2395,80 +2395,116 @@ function shadeTree(C){
   return h('div',{class:'st'},nav,hero,roll,services,about,band,area,contact,reviews,cta,foot,sheet);
 }
 /* ===================== SPIRITED (dark, gold, high-end cocktail lounge) ===================== */
+/* realistic dry-ice fog: soft noisy puffs born along the glass rim, rise a little, roll over the lip and sink */
+function spFog(canvas,photoBox,img){
+  const ctx=canvas.getContext('2d'); if(!ctx) return;
+  /* one puff sprite with uneven, cloudy texture */
+  const sp=document.createElement('canvas'); sp.width=sp.height=128; const g=sp.getContext('2d');
+  for(let k=0;k<16;k++){ const x=64+(Math.random()-.5)*64, y=64+(Math.random()-.5)*50, r=10+Math.random()*26;
+    const gr=g.createRadialGradient(x,y,0,x,y,r); gr.addColorStop(0,'rgba(255,255,255,.11)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=gr; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); }
+  const mask=g.createRadialGradient(64,64,10,64,64,64); mask.addColorStop(0,'rgba(0,0,0,1)'); mask.addColorStop(1,'rgba(0,0,0,0)');
+  g.globalCompositeOperation='destination-in'; g.fillStyle=mask; g.fillRect(0,0,128,128);
+  /* rim of the glass in the photo's own pixels (500 x 750) */
+  const RIM=[[70,430],[150,418],[250,408],[350,396],[440,388]], IW=500, IH=750;
+  let W=0,H=0,dpr=1,map=null; const P=[];
+  const size=()=>{ dpr=Math.min(2,window.devicePixelRatio||1); const r=canvas.getBoundingClientRect(); W=r.width; H=r.height; canvas.width=W*dpr; canvas.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const b=photoBox.getBoundingClientRect(), sc=Math.max(b.width/IW,b.height/IH), bp=getComputedStyle(photoBox).backgroundPosition.split(' ').map(v=>parseFloat(v)/100), fx=isNaN(bp[0])?.5:bp[0], fy=isNaN(bp[1])?.5:bp[1];
+    const ox=b.left-r.left+(b.width-IW*sc)*fx, oy=b.top-r.top+(b.height-IH*sc)*fy;
+    map=(x,y)=>[ox+x*sc,oy+y*sc]; map.sc=sc; };
+  size(); window.addEventListener('resize',size);
+  const born=()=>{ const t=Math.random(), i=Math.min(RIM.length-2,Math.floor(t*(RIM.length-1))), f=t*(RIM.length-1)-i;
+    const x=RIM[i][0]+(RIM[i+1][0]-RIM[i][0])*f, y=RIM[i][1]+(RIM[i+1][1]-RIM[i][1])*f-6;
+    const [sx,sy]=map(x,y), s=map.sc;
+    return {x:sx,y:sy,vx:(-.25-Math.random()*.5)*s,vy:(-.35-Math.random()*.45)*s,r:(18+Math.random()*26)*s,g:(.8+Math.random()*1.2)*s,a:0,max:.10+Math.random()*.16,life:0,span:260+Math.random()*260,rot:Math.random()*6.3,spin:(Math.random()-.5)*.006,ph:Math.random()*6.3}; };
+  let on=true, last=0;
+  if('IntersectionObserver' in window) new IntersectionObserver(e=>{ on=e[0].isIntersecting; if(on) requestAnimationFrame(tick); }).observe(canvas);
+  function tick(t){ if(!on) return; const dt=Math.min(2.5,(t-(last||t))/16.7)||1; last=t;
+    ctx.clearRect(0,0,W,H); if(P.length<120&&Math.random()<.7) P.push(born());
+    ctx.globalCompositeOperation='screen';
+    for(let i=P.length-1;i>=0;i--){ const q=P[i]; q.life+=dt; const u=q.life/q.span;
+      if(u>=1||q.y>H+80||q.x<-200){ P.splice(i,1); continue; }
+      /* rises briefly, then the cold fog gets heavy and rolls down and out over the lip */
+      q.vy+=0.010*map.sc*dt; q.vx*=0.995; q.vy*=0.992;
+      q.x+=(q.vx+Math.sin(q.ph+q.life*.03)*.25*map.sc)*dt; q.y+=q.vy*dt; q.r+=q.g*.09*dt; q.rot+=q.spin*dt;
+      q.a=q.max*(u<.12?u/.12:u>.6?(1-u)/.4:1);
+      ctx.globalAlpha=q.a; ctx.save(); ctx.translate(q.x,q.y); ctx.rotate(q.rot); ctx.drawImage(sp,-q.r,-q.r,q.r*2,q.r*2); ctx.restore(); }
+    ctx.globalAlpha=1; requestAnimationFrame(tick); }
+  const go=()=>requestAnimationFrame(tick);
+  if(img.complete) go(); else img.addEventListener('load',()=>{ size(); go(); });
+}
 function spirited(C){
-  const name=C.name||'Spirited', pic='https://riverbendwebco.com/demo/img/spirited-pour.jpg', logo='https://riverbendwebco.com/demo/img/spirited-logo.png';
-  const addr=C.addr||'', city=(C.city||'').replace(/\s+IN$/,', IN');
+  const name=C.name||'Spirited', IMG='https://riverbendwebco.com/demo/img/', pour=IMG+'spirited-pour.jpg', mart=IMG+'spirited-martini.jpg', logo=IMG+'spirited-logo.png';
+  const addr=C.addr||'', city=(C.city||'').replace(/\s+IN$/,', IN'), town=city.split(',')[0];
   const full=[addr,city].filter(Boolean).join(', ');
   const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+full);
-  const go=id=>e=>{ e.preventDefault(); scrollTo(id); };
   const dash=v=>String(v||'').replace(/\s*-\s*/,' – ');
-  /* smoke wisps, placed on the photo itself (stage keeps the photo's proportions so they line up with the glass) */
-  const wisps=n=>h('div',{class:'sp-wisps','aria-hidden':'true'},Array.from({length:n},()=>h('i')));
-  /* ----- menu: the scraped list mixes section headers (ALL CAPS) with drinks ----- */
+  const J=(id,label,cls)=>jump(id,label,cls);
+  /* ----- menu: section headers (ALL CAPS) are mixed in with the drinks ----- */
   const secs=[]; let cur=null;
   C.items.forEach(i=>{ const n=String(i.name||'').trim(); if(!n) return;
     if(n===n.toUpperCase()&&/[A-Z]/.test(n)&&!/\|/.test(n)&&n.length<16){ cur={t:n.charAt(0)+n.slice(1).toLowerCase(),items:[]}; secs.push(cur); return; }
     if(!cur){ cur={t:'Cocktails',items:[]}; secs.push(cur); } cur.items.push(i); });
-  const TABS=[['Cocktails',['Cocktails']],['Zero-Proof',['Zero-proof']],['Wine & Bubbles',['Sparkling','Pink','White','Red','Bottle']],['Beer & Seltzer',['Craft']]]
-    .map(([t,keys])=>[t,secs.filter(x=>keys.includes(x.t))]).filter(([,g])=>g.some(x=>x.items.length));
+  const TABS=[['Cocktails','Sip on',['Cocktails']],['Zero-Proof','Spirit-free',['Zero-proof']],['Wine & Bubbles','Raise a glass',['Sparkling','Pink','White','Red','Bottle']],['Beer & Seltzer','Keep it easy',['Craft']]]
+    .map(([t,lead,keys])=>[t,lead,secs.filter(x=>keys.includes(x.t))]).filter(([,,g])=>g.some(x=>x.items.length));
   const label={Sparkling:'Sparkling',Pink:'Rosé',White:'White',Red:'Red',Bottle:'By the bottle',Craft:'Cans & draft'};
   const drink=i=>{ const parts=String(i.name).split('|').map(x=>x.trim()).filter(Boolean);
-    return h('li',{class:'sp-d'},h('span',{class:'sp-d-n'},parts.map((p,k)=>[k?h('em',null,'·'):null,h('span',null,p)])),h('i',{class:'sp-d-dots'}),h('b',null,i.price||'')); };
-  const panes=TABS.map(([t,g],k)=>h('div',{class:'sp-pane'+(k?'':' on'),role:'tabpanel'},
-    g.map(x=>h('div',{class:'sp-grp'},g.length>1?h('h4',null,label[x.t]||x.t):null,h('ul',null,x.items.map(drink))))));
-  const pick=k=>{ tabs.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-selected',j===k?'true':'false')); panes.forEach((p,j)=>p.classList.toggle('on',j===k)); };
-  const tabs=h('div',{class:'sp-tabs',role:'tablist'},TABS.map(([t],k)=>h('button',{type:'button',role:'tab','aria-selected':k?'false':'true',onclick:()=>{ pick(k); const m=document.getElementById('sp-menu'); if(m&&m.getBoundingClientRect().top<0) scrollTo('sp-menu'); }},t)));
+    return h('div',{class:'sp-it'},h('b',null,parts.map((p,k)=>[k?h('em',null,'·'):null,p])),h('span',{class:'sp-dots','aria-hidden':'true'}),h('span',{class:'sp-pr'},i.price||'')); };
+  const tabs=h('div',{class:'sp-tabs',role:'tablist'}), panel=h('div',{class:'sp-panel',role:'tabpanel'});
+  const show=k=>{ [...tabs.children].forEach((t,j)=>{ t.classList.toggle('on',j===k); t.setAttribute('aria-selected',j===k?'true':'false'); });
+    const [t,lead,g]=TABS[k]; panel.classList.remove('in');
+    panel.replaceChildren(h('div',{class:'sp-panel-h'},h('i',null,lead),h('h3',null,t)),
+      ...g.filter(x=>x.items.length).map(x=>h('div',{class:'sp-grp'},g.length>1?h('small',{class:'sp-label'},label[x.t]||x.t):null,h('div',{class:'sp-items'},x.items.map(drink)))));
+    requestAnimationFrame(()=>panel.classList.add('in')); };
+  TABS.forEach(([t],k)=>{ const b=h('button',{type:'button',role:'tab',class:'sp-tab'},t); b.addEventListener('click',()=>show(k)); tabs.append(b); });
+  if(TABS.length) show(0);
+  /* ----- hours: only days we actually know ----- */
+  const known=DAYS.map((d,i)=>[d,C.hours[i],i]).filter(([,v])=>v);
+  const groupH=[]; known.forEach(([d,v,i])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v){ last.to=d; last.ix.push(i); } else groupH.push({from:d,to:'',v,ix:[i]}); });
   const smokeDrink=C.items.find(i=>/smoke/i.test(i.name||''));
-  /* ----- hours: only the days we actually know ----- */
-  const known=DAYS.map((d,i)=>[d,C.hours[i]]).filter(([,v])=>v);
-  const groupH=[]; known.forEach(([d,v])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v) last.to=d; else groupH.push({from:d,to:'',v}); });
-  const hoursL=groupH.map(g=>h('div',{class:'sp-h-r'},h('span',null,g.from.slice(0,3)+(g.to?' – '+g.to.slice(0,3):'')),h('b',null,dash(g.v))));
-  const status=C.today?'Open tonight '+dash(C.today):'';
 
-  /* ----- nav: logo, plain-word links, call and directions always one tap away ----- */
-  const L=[['sp-menu','Menu'],['sp-visit','Hours & Location'],['sp-gift','Gift Cards & Catering']];
-  const nav=h('header',{class:'sp-nav'},h('div',{class:'sp-w sp-nav-in'},
-    h('a',{class:'sp-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
-    h('nav',{class:'sp-links-d'},L.map(([id,t])=>h('a',{href:'#'+id,onclick:go(id)},t))),
-    h('div',{class:'sp-nav-r'},full?h('a',{class:'sp-btn line sm sp-hide-s',href:maps,target:'_blank',rel:'noopener'},'Directions'):null,C.tel?h('a',{class:'sp-btn gold sm',href:C.tel},'Call'):null)),
-    h('nav',{class:'sp-links-m'},L.map(([id,t])=>h('a',{href:'#'+id,onclick:go(id)},t.replace(' & Catering','')))));
-  window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
-
-  /* ----- hero: the photo itself comes alive (slow push-in, smoke rolling off the glass, candle flicker) ----- */
-  const stage=h('div',{class:'sp-stage'},h('div',{class:'sp-photo'}),wisps(9),h('div',{class:'sp-glow'}));
-  stage.querySelector('.sp-photo').style.backgroundImage=cssUrl(pic);
-  const hero=h('section',{class:'sp-hero'},stage,h('div',{class:'sp-hero-shade'}),
-    h('div',{class:'sp-w sp-hero-in'},h('div',{class:'sp-hero-box'},
-      h('img',{class:'sp-hero-logo',src:logo,alt:name}),
-      h('span',{class:'sp-kick'},'Craft cocktail lounge'+(city?' · Downtown '+city.split(',')[0]:'')),
-      h('p',{class:'sp-quote'},'“Oh darling, you’re only too wild to those who are too tame.”'),
-      h('div',{class:'sp-cta'},h('a',{class:'sp-btn gold',href:'#sp-menu',onclick:go('sp-menu')},'View the menu'),full?h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null),
-      (status||addr)?h('p',{class:'sp-meta'},status?h('b',null,status):null,status&&addr?h('i',null,'·'):null,addr?h('span',null,addr):null):null)));
-  requestAnimationFrame(()=>requestAnimationFrame(()=>hero.classList.add('is-alive')));
-
-  const story=h('section',{class:'sp-sec sp-story'},h('div',{class:'sp-w sp-story-g'},
-    h('div',{class:'sp-story-pic rv'},h('div',null),wisps(4)),
-    h('div',{class:'sp-story-t rv'},h('span',{class:'sp-kick'},'After dark'),h('h2',null,'Poured slow.',h('br'),'Served with smoke.'),
-      h('p',null,'Hand-built cocktails, low light and a little theater in every glass. Pull up a seat and let the night take its time.'),
-      smokeDrink?h('div',{class:'sp-feat'},h('small',null,'Try'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null,
-      h('a',{class:'sp-more',href:'#sp-menu',onclick:go('sp-menu')},'See all cocktails →'))));
-  story.querySelector('.sp-story-pic div').style.backgroundImage=cssUrl(pic);
-  const menu=TABS.length?h('section',{class:'sp-sec sp-menu',id:'sp-menu'},h('div',{class:'sp-w'},
-    h('div',{class:'sp-head rv'},h('span',{class:'sp-kick'},'The menu'),h('h2',null,'Spirits, bubbles & zero-proof'),h('p',null,'Tap a tab to switch.')),tabs,...panes)):null;
-  const visit=h('section',{class:'sp-sec sp-visit',id:'sp-visit'},h('div',{class:'sp-w sp-visit-g'},
-    h('div',{class:'rv'},h('span',{class:'sp-kick'},'Hours & location'),h('h2',null,'Find the door.'),
-      full?h('a',{class:'sp-addr',href:maps,target:'_blank',rel:'noopener'},addr,h('br'),city):null,
-      h('div',{class:'sp-links'},C.tel?h('a',{href:C.tel},C.phoneTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
-      h('div',{class:'sp-cta'},full?h('a',{class:'sp-btn gold',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null,C.tel?h('a',{class:'sp-btn line',href:C.tel},'Call us'):null)),
-    hoursL.length?h('div',{class:'sp-hours rv'},h('h3',null,'Hours'),hoursL):null));
-  const gift=C.email?h('section',{class:'sp-sec sp-gift',id:'sp-gift'},h('div',{class:'sp-w sp-gift-in rv'},
-    h('img',{src:logo,alt:'',class:'sp-gift-logo'}),
-    h('div',null,h('span',{class:'sp-kick'},'Gift cards & catering'),h('h2',null,'Bring the bar to your party.'),h('p',null,'Gift cards for the cocktail lover in your life, and catering for your next event. Send us a note and we will take it from there.')),
-    h('a',{class:'sp-btn gold',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards & catering')},'Email us'))):null;
+  const items=[['Sip','The Menu','sp-menu'],['Visit','Hours & Location','sp-visit'],['Celebrate','Gift Cards & Catering','sp-gift']];
+  /* ----- hero ----- */
+  const photo=h('div',{class:'sp-hero-p'}); photo.style.backgroundImage=cssUrl(mart);
+  const pre=new Image(); pre.src=mart;
+  const fog=h('canvas',{class:'sp-fog','aria-hidden':'true'});
+  const hero=h('section',{class:'sp-hero'},photo,h('div',{class:'sp-hero-shade'}),fog,
+    h('nav',{class:'sp-hnav'},items.map(([sc,sub,id])=>J(id,[h('i',null,sc),h('small',null,sub)])),C.tel?h('a',{href:C.tel},h('i',null,'Call'),h('small',null,C.phoneTxt)):null),
+    h('div',{class:'sp-hero-c'},h('img',{class:'sp-hero-logo',src:logo,alt:name}),
+      h('p',{class:'sp-sub'},'Craft Cocktail Lounge'+(town?' · '+town:'')),
+      C.today?h('p',{class:'sp-open'},'Open tonight '+dash(C.today)):null,
+      h('div',{class:'sp-hero-btns'},J('sp-menu','View the menu','sp-btn gold'),full?h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null)));
+  setTimeout(()=>spFog(fog,photo,pre),60);
+  const bar=h('header',{class:'sp-bar'},h('div',{class:'sp-bar-in'},h('a',{class:'sp-bar-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
+    h('nav',{class:'sp-bar-nav'},items.map(([,sub,id])=>J(id,sub))),C.tel?h('a',{class:'sp-btn gold sm',href:C.tel},'Call'):null));
+  if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>bar.classList.toggle('on',!e.isIntersecting)),{rootMargin:'-80px 0px 0px 0px'}).observe(hero);
+  /* ----- story ----- */
+  const intro=h('section',{class:'sp-intro',id:'sp-top'},h('div',{class:'sp-w sp-narrow rv'},
+    h('i',{class:'sp-script'},'Welcome to '+name),h('h2',null,'Craft cocktails, poured with a little theater.'),
+    h('p',{class:'sp-lead'},'Low light, hand-built drinks and a smoking glass or two. '+(addr?'Find us on '+addr.replace(/^\d+\s+/,'').replace(/\bE\b/,'East').replace(/\bBlvd\b/,'Boulevard')+(town?' in downtown '+town:'')+'. ':'')+'Pull up a seat and let the night take its time.'),
+    J('sp-menu','Explore the menu','sp-ul')));
+  const duo=h('div',{class:'sp-w sp-duo rv'},[pour,mart].map((u,i)=>{ const d=h('div',{class:'sp-ph p'+i}); d.style.backgroundImage=cssUrl(u); return d; }),
+    smokeDrink?h('div',{class:'sp-feat'},h('i',{class:'sp-script'},'Served with smoke'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null);
+  const rule=()=>h('div',{class:'sp-w'},h('hr',{class:'sp-rule'}));
+  const menu=TABS.length?h('section',{class:'sp-sec',id:'sp-menu'},
+    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Our Menu'),h('p',{class:'sp-big'},'Spirits, bubbles and zero-proof, from a smoked bourbon to a lavender lemonade.')),
+    h('div',{class:'sp-w sp-menu-box rv'},TABS.length>1?tabs:null,panel)):null;
+  const gbg=h('div',{class:'sp-gift-bg'}); gbg.style.backgroundImage=cssUrl(pour);
+  const gift=C.email?h('section',{class:'sp-gift',id:'sp-gift'},gbg,h('div',{class:'sp-w sp-gift-in'},
+    h('div',{class:'rv'},h('i',{class:'sp-script'},'Celebrate'),h('h2',null,'Gift cards & catering'),h('p',null,'Give the cocktail lover in your life a night out, or bring the bar to your next event. Send us a note and we will take it from there.')),
+    h('div',{class:'sp-card rv'},h('img',{src:logo,alt:'',class:'sp-card-logo'}),h('a',{class:'sp-btn gold',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards & catering')},'Email us'),C.tel?h('a',{class:'sp-ul light',href:C.tel},'Or call '+C.phoneTxt):null))):null;
+  const visit=h('section',{class:'sp-sec',id:'sp-visit'},
+    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Location'),h('p',{class:'sp-big'},full?'Find us at '+full+'.':'Come see us.')),
+    h('div',{class:'sp-w sp-visit'},
+      h('div',{class:'sp-info rv'},
+        groupH.length?h('div',null,h('small',{class:'sp-label'},'Hours'),h('div',{class:'sp-hrs'},groupH.map(g=>h('div',{class:g.ix.includes(todayIx())?'on':null},h('span',null,g.from+(g.to?' – '+g.to:'')),h('span',null,dash(g.v)))))):null,
+        C.tel?h('div',null,h('small',{class:'sp-label'},'Call'),h('a',{class:'sp-phone',href:C.tel},C.phoneTxt)):null,
+        full?h('a',{class:'sp-ul',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null),
+      full?h('div',{class:'sp-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
   const foot=h('footer',{class:'sp-foot'},h('div',{class:'sp-w sp-foot-in'},h('img',{src:logo,alt:name,class:'sp-foot-logo'}),
-    h('nav',{class:'sp-soc'},L.map(([id,t])=>h('a',{href:'#'+id,onclick:go(id)},t)),C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null),
-    h('small',null,'© '+new Date().getFullYear()+' '+name+(full?' · '+full:'')+' · Please drink responsibly.')));
-  return h('div',{class:'sp'},nav,hero,story,menu,visit,gift,foot);
+    h('div',{class:'sp-foot-cols'},full?h('div',null,h('small',null,'Visit'),h('p',null,full)):null,C.tel?h('div',null,h('small',null,'Call'),h('p',null,h('a',{href:C.tel},C.phoneTxt))):null,
+      h('div',null,h('small',null,'Explore'),h('div',{class:'sp-foot-nav'},items.map(([,sub,id])=>J(id,sub)),C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null))),
+    h('small',{class:'sp-copy'},'© '+new Date().getFullYear()+' '+name+' · Please drink responsibly.')));
+  return h('div',{class:'sp'},hero,bar,intro,duo,rule(),menu,gift,visit,foot);
 }
 
 /* ===================== A & B AUTOMOTIVE (red / charcoal / green, auto service + sales) ===================== */
