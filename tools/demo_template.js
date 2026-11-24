@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-bar.on,.sp-nav,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -2395,51 +2395,51 @@ function shadeTree(C){
   return h('div',{class:'st'},nav,hero,roll,services,about,band,area,contact,reviews,cta,foot,sheet);
 }
 /* ===================== SPIRITED (dark, gold, high-end cocktail lounge) ===================== */
-/* realistic dry-ice fog: soft noisy puffs born along the glass rim, rise a little, roll over the lip and sink */
-function spFog(canvas,photoBox,img){
-  const ctx=canvas.getContext('2d'); if(!ctx) return;
-  /* one puff sprite with uneven, cloudy texture */
-  const sp=document.createElement('canvas'); sp.width=sp.height=128; const g=sp.getContext('2d');
-  for(let k=0;k<16;k++){ const x=64+(Math.random()-.5)*64, y=64+(Math.random()-.5)*50, r=10+Math.random()*26;
-    const gr=g.createRadialGradient(x,y,0,x,y,r); gr.addColorStop(0,'rgba(255,255,255,.11)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=gr; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); }
-  const mask=g.createRadialGradient(64,64,10,64,64,64); mask.addColorStop(0,'rgba(0,0,0,1)'); mask.addColorStop(1,'rgba(0,0,0,0)');
-  g.globalCompositeOperation='destination-in'; g.fillStyle=mask; g.fillRect(0,0,128,128);
-  /* rim of the glass in the photo's own pixels (500 x 750) */
-  const RIM=[[70,430],[150,418],[250,408],[350,396],[440,388]], IW=500, IH=750;
-  let W=0,H=0,dpr=1,map=null; const P=[];
-  const size=()=>{ dpr=Math.min(2,window.devicePixelRatio||1); const r=canvas.getBoundingClientRect(); W=r.width; H=r.height; canvas.width=W*dpr; canvas.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-    const b=photoBox.getBoundingClientRect(), sc=Math.max(b.width/IW,b.height/IH), bp=getComputedStyle(photoBox).backgroundPosition.split(' ').map(v=>parseFloat(v)/100), fx=isNaN(bp[0])?.5:bp[0], fy=isNaN(bp[1])?.5:bp[1];
-    const ox=b.left-r.left+(b.width-IW*sc)*fx, oy=b.top-r.top+(b.height-IH*sc)*fy;
-    map=(x,y)=>[ox+x*sc,oy+y*sc]; map.sc=sc; };
-  size(); window.addEventListener('resize',size);
-  const born=()=>{ const t=Math.random(), i=Math.min(RIM.length-2,Math.floor(t*(RIM.length-1))), f=t*(RIM.length-1)-i;
-    const x=RIM[i][0]+(RIM[i+1][0]-RIM[i][0])*f, y=RIM[i][1]+(RIM[i+1][1]-RIM[i][1])*f-6;
-    const [sx,sy]=map(x,y), s=map.sc;
-    return {x:sx,y:sy,vx:(-.25-Math.random()*.5)*s,vy:(-.35-Math.random()*.45)*s,r:(18+Math.random()*26)*s,g:(.8+Math.random()*1.2)*s,a:0,max:.10+Math.random()*.16,life:0,span:260+Math.random()*260,rot:Math.random()*6.3,spin:(Math.random()-.5)*.006,ph:Math.random()*6.3}; };
-  let on=true, last=0;
-  if('IntersectionObserver' in window) new IntersectionObserver(e=>{ on=e[0].isIntersecting; if(on) requestAnimationFrame(tick); }).observe(canvas);
-  function tick(t){ if(!on) return; const dt=Math.min(2.5,(t-(last||t))/16.7)||1; last=t;
-    ctx.clearRect(0,0,W,H); if(P.length<120&&Math.random()<.7) P.push(born());
-    ctx.globalCompositeOperation='screen';
-    for(let i=P.length-1;i>=0;i--){ const q=P[i]; q.life+=dt; const u=q.life/q.span;
-      if(u>=1||q.y>H+80||q.x<-200){ P.splice(i,1); continue; }
-      /* rises briefly, then the cold fog gets heavy and rolls down and out over the lip */
-      q.vy+=0.010*map.sc*dt; q.vx*=0.995; q.vy*=0.992;
-      q.x+=(q.vx+Math.sin(q.ph+q.life*.03)*.25*map.sc)*dt; q.y+=q.vy*dt; q.r+=q.g*.09*dt; q.rot+=q.spin*dt;
-      q.a=q.max*(u<.12?u/.12:u>.6?(1-u)/.4:1);
-      ctx.globalAlpha=q.a; ctx.save(); ctx.translate(q.x,q.y); ctx.rotate(q.rot); ctx.drawImage(sp,-q.r,-q.r,q.r*2,q.r*2); ctx.restore(); }
-    ctx.globalAlpha=1; requestAnimationFrame(tick); }
-  const go=()=>requestAnimationFrame(tick);
-  if(img.complete) go(); else img.addEventListener('load',()=>{ size(); go(); });
+/* Page-wide smoke: a WebGL shader of domain-warped noise (the same technique used for film-style smoke), drifting up and moving with the scroll */
+function spSmoke(canvas){
+  const gl=canvas.getContext('webgl',{premultipliedAlpha:true,alpha:true,antialias:false}); if(!gl){ canvas.remove(); return; }
+  const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const fs=`precision mediump float;uniform vec2 R;uniform float T;uniform float S;uniform float K;
+  float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+  float fb(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<6;i++){v+=a*n(p);p=m*p;a*=.5;}return v;}
+  void main(){vec2 uv=gl_FragCoord.xy/R;vec2 p=vec2(uv.x*R.x/R.y,uv.y)*2.2;p.y-=S*.0009;
+    vec2 q=vec2(fb(p+vec2(0.,T*.035)),fb(p+vec2(5.2,1.3)-T*.025));
+    vec2 r=vec2(fb(p+3.2*q+vec2(1.7,9.2)+T*.02),fb(p+3.2*q+vec2(8.3,2.8)-vec2(0.,T*.06)));
+    float f=fb(p+3.6*r);
+    float d=smoothstep(.42,1.,f)*(.55+.45*smoothstep(.0,.9,length(q)));
+    float edge=.55+.45*(1.-uv.y)+.35*pow(abs(uv.x-.5)*2.,2.);
+    float a=clamp(d*K*edge,0.,.75);
+    vec3 c=mix(vec3(.80,.80,.84),vec3(1.,.97,.93),f);
+    gl_FragColor=vec4(c*a,a);}`;
+  const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); return o; };
+  const pr=gl.createProgram(); gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){ canvas.remove(); return; }
+  gl.useProgram(pr); const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const uR=gl.getUniformLocation(pr,'R'), uT=gl.getUniformLocation(pr,'T'), uS=gl.getUniformLocation(pr,'S'), uK=gl.getUniformLocation(pr,'K');
+  const Q=.5; const size=()=>{ canvas.width=Math.round(innerWidth*Q); canvas.height=Math.round(innerHeight*Q); gl.viewport(0,0,canvas.width,canvas.height); };
+  size(); addEventListener('resize',size);
+  const t0=performance.now(); let k=0;
+  const frame=t=>{ if(!document.hidden){ const y=scrollY, hero=innerHeight; const want=y<hero?.95-.55*(y/hero):.4; k+=(want-k)*.05;
+      gl.uniform2f(uR,canvas.width,canvas.height); gl.uniform1f(uT,(t-t0)/1000); gl.uniform1f(uS,y*Q); gl.uniform1f(uK,k); gl.drawArrays(gl.TRIANGLES,0,3); }
+    requestAnimationFrame(frame); };
+  requestAnimationFrame(frame);
 }
 function spirited(C){
-  const name=C.name||'Spirited', IMG='https://riverbendwebco.com/demo/img/', pour=IMG+'spirited-pour.jpg', mart=IMG+'spirited-martini.jpg', logo=IMG+'spirited-logo.png';
-  const addr=C.addr||'', city=(C.city||'').replace(/\s+IN$/,', IN'), town=city.split(',')[0];
+  const name=C.name||'Spirited', IMG='https://riverbendwebco.com/demo/img/', logo=IMG+'spirited-logo.png';
+  const SQ='https://images.squarespace-cdn.com/content/v1/60257bd276d0063ec3a7ae51/';
+  const bar=SQ+'495f1370-6f8f-43be-b655-a8ae9212bce8/20260115_171715.jpg?format=2500w';
+  const SHOTS=['ef93a310-c6c0-408a-bf2e-5979b6591ccf/IMG_7514.jpg','6373e125-9d08-459d-9443-a52ba851ad88/IMG_7665.jpg','2b2b92c6-613a-4a4a-8f43-e0e3b82ae7d9/20260217_220738.jpg','de671884-38a4-4a62-b915-f4b75ac79664/IMG_7668.jpg','01da055a-00a8-455b-85a4-b3e7f5230278/IMG_7666.jpg','529fb986-abce-48c8-b784-a82267295213/20260221_185157.jpg','fcedf314-57c7-44e9-a473-fe7d345b6f83/IMG_7667.jpg','f97d7422-70da-4ce2-81ff-cf0724a5b929/20260210_182320.jpg','5887d2f2-fb7f-46f8-bbbc-a0e9cb16ebee/IMG_7648.jpg','ff902b2b-2fe9-485e-a406-d0b0394e6643/IMG_7686.jpg'];
+  const shot=(i,w)=>SQ+SHOTS[i]+'?format='+(w||1000)+'w';
+  const sb=/south bend/i.test(C.city||'');
+  const addr=(C.addr||'')+(sb&&/105 E Jefferson/i.test(C.addr||'')?', Suite 100':''), city=sb?'South Bend, IN 46601':(C.city||'');
+  const town=sb?'South Bend':city.split(',')[0];
   const full=[addr,city].filter(Boolean).join(', ');
-  const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+full);
+  const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+[C.addr,city].filter(Boolean).join(', '));
   const dash=v=>String(v||'').replace(/\s*-\s*/,' – ');
   const J=(id,label,cls)=>jump(id,label,cls);
-  /* ----- menu: section headers (ALL CAPS) are mixed in with the drinks ----- */
+  /* ----- menu ----- */
   const secs=[]; let cur=null;
   C.items.forEach(i=>{ const n=String(i.name||'').trim(); if(!n) return;
     if(n===n.toUpperCase()&&/[A-Z]/.test(n)&&!/\|/.test(n)&&n.length<16){ cur={t:n.charAt(0)+n.slice(1).toLowerCase(),items:[]}; secs.push(cur); return; }
@@ -2457,54 +2457,62 @@ function spirited(C){
     requestAnimationFrame(()=>panel.classList.add('in')); };
   TABS.forEach(([t],k)=>{ const b=h('button',{type:'button',role:'tab',class:'sp-tab'},t); b.addEventListener('click',()=>show(k)); tabs.append(b); });
   if(TABS.length) show(0);
-  /* ----- hours: only days we actually know ----- */
   const known=DAYS.map((d,i)=>[d,C.hours[i],i]).filter(([,v])=>v);
   const groupH=[]; known.forEach(([d,v,i])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v){ last.to=d; last.ix.push(i); } else groupH.push({from:d,to:'',v,ix:[i]}); });
   const smokeDrink=C.items.find(i=>/smoke/i.test(i.name||''));
 
-  const items=[['Sip','The Menu','sp-menu'],['Visit','Hours & Location','sp-visit'],['Celebrate','Gift Cards & Catering','sp-gift']];
-  /* ----- hero ----- */
-  const photo=h('div',{class:'sp-hero-p'}); photo.style.backgroundImage=cssUrl(mart);
-  const pre=new Image(); pre.src=mart;
-  const fog=h('canvas',{class:'sp-fog','aria-hidden':'true'});
-  const hero=h('section',{class:'sp-hero'},photo,h('div',{class:'sp-hero-shade'}),fog,
-    h('nav',{class:'sp-hnav'},items.map(([sc,sub,id])=>J(id,[h('i',null,sc),h('small',null,sub)])),C.tel?h('a',{href:C.tel},h('i',null,'Call'),h('small',null,C.phoneTxt)):null),
+  /* ----- one clean header: logo, links, call ----- */
+  const LINKS=[['sp-menu','Menu'],['sp-gal','Gallery'],['sp-visit','Hours & Location'],['sp-gift','Gift Cards & Catering']];
+  const head=h('header',{class:'sp-head'},h('div',{class:'sp-head-in'},
+    h('a',{class:'sp-head-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
+    h('nav',{class:'sp-head-nav'},LINKS.map(([id,t])=>J(id,t))),
+    C.tel?h('a',{class:'sp-btn gold sm sp-head-call',href:C.tel},'Call '+C.phoneTxt):null),
+    h('nav',{class:'sp-head-m'},LINKS.slice(0,3).map(([id,t])=>J(id,t.replace('Hours & Location','Hours')))));
+  addEventListener('scroll',()=>head.classList.toggle('solid',scrollY>30),{passive:true});
+
+  /* ----- hero: the bar starts dark, the stained glass glows on, then the blue shelves ----- */
+  const L=(cls)=>{ const d=h('div',{class:'sp-l '+cls}); d.style.backgroundImage=cssUrl(bar); return d; };
+  const stage=h('div',{class:'sp-stage'},L('base'),L('glass'),L('blue'),L('all'));
+  const hero=h('section',{class:'sp-hero'},stage,h('div',{class:'sp-hero-shade'}),
     h('div',{class:'sp-hero-c'},h('img',{class:'sp-hero-logo',src:logo,alt:name}),
-      h('p',{class:'sp-sub'},'Craft Cocktail Lounge'+(town?' · '+town:'')),
+      h('p',{class:'sp-sub'},'Craft Cocktail Lounge · Downtown '+town),
       C.today?h('p',{class:'sp-open'},'Open tonight '+dash(C.today)):null,
-      h('div',{class:'sp-hero-btns'},J('sp-menu','View the menu','sp-btn gold'),full?h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null)));
-  setTimeout(()=>spFog(fog,photo,pre),60);
-  const bar=h('header',{class:'sp-bar'},h('div',{class:'sp-bar-in'},h('a',{class:'sp-bar-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
-    h('nav',{class:'sp-bar-nav'},items.map(([,sub,id])=>J(id,sub))),C.tel?h('a',{class:'sp-btn gold sm',href:C.tel},'Call'):null));
-  if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(e=>bar.classList.toggle('on',!e.isIntersecting)),{rootMargin:'-80px 0px 0px 0px'}).observe(hero);
-  /* ----- story ----- */
+      h('div',{class:'sp-hero-btns'},J('sp-menu','View the menu','sp-btn gold'),h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Get directions'))));
+  const pre=new Image(); pre.onload=()=>hero.classList.add('lit'); pre.src=bar; setTimeout(()=>hero.classList.add('lit'),2500);
+
   const intro=h('section',{class:'sp-intro',id:'sp-top'},h('div',{class:'sp-w sp-narrow rv'},
     h('i',{class:'sp-script'},'Welcome to '+name),h('h2',null,'Craft cocktails, poured with a little theater.'),
-    h('p',{class:'sp-lead'},'Low light, hand-built drinks and a smoking glass or two. '+(addr?'Find us on '+addr.replace(/^\d+\s+/,'').replace(/\bE\b/,'East').replace(/\bBlvd\b/,'Boulevard')+(town?' in downtown '+town:'')+'. ':'')+'Pull up a seat and let the night take its time.'),
+    h('p',{class:'sp-lead'},'Low light, velvet seats, gold mirrors and stained glass, a hand-built drink in every glass. Find us on Jefferson Boulevard in downtown '+town+', and let the night take its time.'),
+    smokeDrink?h('div',{class:'sp-feat'},h('i',{class:'sp-script'},'Served with smoke'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null,
     J('sp-menu','Explore the menu','sp-ul')));
-  const duo=h('div',{class:'sp-w sp-duo rv'},[pour,mart].map((u,i)=>{ const d=h('div',{class:'sp-ph p'+i}); d.style.backgroundImage=cssUrl(u); return d; }),
-    smokeDrink?h('div',{class:'sp-feat'},h('i',{class:'sp-script'},'Served with smoke'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null);
   const rule=()=>h('div',{class:'sp-w'},h('hr',{class:'sp-rule'}));
   const menu=TABS.length?h('section',{class:'sp-sec',id:'sp-menu'},
     h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Our Menu'),h('p',{class:'sp-big'},'Spirits, bubbles and zero-proof, from a smoked bourbon to a lavender lemonade.')),
     h('div',{class:'sp-w sp-menu-box rv'},TABS.length>1?tabs:null,panel)):null;
-  const gbg=h('div',{class:'sp-gift-bg'}); gbg.style.backgroundImage=cssUrl(pour);
+  const pics=SHOTS.map((_,i)=>shot(i,1500));
+  const gal=h('section',{class:'sp-sec sp-gal',id:'sp-gal'},
+    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Gallery'),h('p',{class:'sp-big'},'A look inside '+name+'.')),
+    h('div',{class:'sp-w sp-grid'},SHOTS.map((_,i)=>{ const b=h('button',{type:'button',class:'sp-g g'+i,'aria-label':'Open photo '+(i+1)}); b.style.backgroundImage=cssUrl(shot(i,750)); b.addEventListener('click',()=>gallery(pics,name,i)); return b; })));
+  const gbg=h('div',{class:'sp-gift-bg'}); gbg.style.backgroundImage=cssUrl(shot(0,1500));
   const gift=C.email?h('section',{class:'sp-gift',id:'sp-gift'},gbg,h('div',{class:'sp-w sp-gift-in'},
     h('div',{class:'rv'},h('i',{class:'sp-script'},'Celebrate'),h('h2',null,'Gift cards & catering'),h('p',null,'Give the cocktail lover in your life a night out, or bring the bar to your next event. Send us a note and we will take it from there.')),
     h('div',{class:'sp-card rv'},h('img',{src:logo,alt:'',class:'sp-card-logo'}),h('a',{class:'sp-btn gold',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards & catering')},'Email us'),C.tel?h('a',{class:'sp-ul light',href:C.tel},'Or call '+C.phoneTxt):null))):null;
   const visit=h('section',{class:'sp-sec',id:'sp-visit'},
-    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Location'),h('p',{class:'sp-big'},full?'Find us at '+full+'.':'Come see us.')),
+    h('div',{class:'sp-w sp-two rv'},h('small',{class:'sp-label'},'Hours & Location'),h('p',{class:'sp-big'},'Find us at '+full+'.')),
     h('div',{class:'sp-w sp-visit'},
       h('div',{class:'sp-info rv'},
         groupH.length?h('div',null,h('small',{class:'sp-label'},'Hours'),h('div',{class:'sp-hrs'},groupH.map(g=>h('div',{class:g.ix.includes(todayIx())?'on':null},h('span',null,g.from+(g.to?' – '+g.to:'')),h('span',null,dash(g.v)))))):null,
         C.tel?h('div',null,h('small',{class:'sp-label'},'Call'),h('a',{class:'sp-phone',href:C.tel},C.phoneTxt)):null,
-        full?h('a',{class:'sp-ul',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null),
-      full?h('div',{class:'sp-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+full)+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'})):null));
+        h('a',{class:'sp-btn gold',href:maps,target:'_blank',rel:'noopener'},'Get directions')),
+      h('div',{class:'sp-map rv'},h('iframe',{src:'https://www.google.com/maps?q='+encodeURIComponent(name+', '+[C.addr,city].join(', '))+'&output=embed',title:'Map to '+name,loading:'lazy',referrerpolicy:'no-referrer-when-downgrade'}))));
   const foot=h('footer',{class:'sp-foot'},h('div',{class:'sp-w sp-foot-in'},h('img',{src:logo,alt:name,class:'sp-foot-logo'}),
-    h('div',{class:'sp-foot-cols'},full?h('div',null,h('small',null,'Visit'),h('p',null,full)):null,C.tel?h('div',null,h('small',null,'Call'),h('p',null,h('a',{href:C.tel},C.phoneTxt))):null,
-      h('div',null,h('small',null,'Explore'),h('div',{class:'sp-foot-nav'},items.map(([,sub,id])=>J(id,sub)),C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null))),
+    h('div',{class:'sp-foot-cols'},h('div',null,h('small',null,'Visit'),h('p',null,addr,h('br'),city)),C.tel?h('div',null,h('small',null,'Call'),h('p',null,h('a',{href:C.tel},C.phoneTxt),C.email?[h('br'),h('a',{href:'mailto:'+C.email},C.email)]:null)):null,
+      h('div',null,h('small',null,'Explore'),h('div',{class:'sp-foot-nav'},LINKS.map(([id,t])=>J(id,t)),C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null))),
     h('small',{class:'sp-copy'},'© '+new Date().getFullYear()+' '+name+' · Please drink responsibly.')));
-  return h('div',{class:'sp'},hero,bar,intro,duo,rule(),menu,gift,visit,foot);
+  const smoke=h('canvas',{class:'sp-smoke','aria-hidden':'true'});
+  const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!calm) setTimeout(()=>spSmoke(smoke),50); else smoke.remove();
+  return h('div',{class:'sp'},head,hero,intro,rule(),menu,gal,gift,visit,foot,smoke);
 }
 
 /* ===================== A & B AUTOMOTIVE (red / charcoal / green, auto service + sales) ===================== */
