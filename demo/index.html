@@ -5213,7 +5213,7 @@ function trailhead(C){
   const head=(kick,title,sub)=>{ secN++; return h('div',{class:'hl-head'},h('span',{class:'hl-num'},String(secN).padStart(2,'0')),h('div',null,kick?h('small',null,kick):null,h('h2',null,title),sub?h('p',null,sub):null)); };
 
   const top=first?h('div',{class:'hl-ann'},h('span',null,first.title),first.when?h('b',null,first.when):null):null;
-  const links=[['w-top','Trailhead'],['w-events','Specials'],C.x.feature?['w-feature','Trail Boss']:null,C.items.length?['w-menu','Menu']:null,C.own.length>=3?['w-gal','Photos']:null,['w-camp','Our Story'],C.reviews.length?['w-reviews','Reviews']:null,['w-visit','Find Us']].filter(Boolean);
+  const links=[['w-top','Trailhead'],['w-events','Specials'],C.x.feature?['w-feature',(C.x.feature.nav||'Trail Boss')]:null,C.items.length?['w-menu','Menu']:null,C.own.length>=3?['w-gal','Photos']:null,['w-camp','Our Story'],C.reviews.length?['w-reviews','Reviews']:null,['w-visit','Find Us']].filter(Boolean);
   const stopBtns=[];
   const side=h('aside',{class:'hl-side'},
     h('a',{class:'hl-side-logo',href:'#',onclick:e=>{e.preventDefault();scrollTo('w-top');}},C.logo?h('img',{src:C.logo,alt:C.name}):h('b',null,C.name)),
@@ -5295,7 +5295,7 @@ function trailhead(C){
   }
 
   /* photo mosaic */
-  const gal=C.own.length>=3?sec('w-gal','hl-gal',head('Straight from the Holler','Photos'),
+  const gal=C.own.length>=3?sec('w-gal','hl-gal',head(C.x.galKick||'Straight from the Holler','Photos'),
     h('div',{class:'hl-mosaic'},C.own.slice(0,8).map((u,ix)=>bg(h('button',{type:'button',class:'ph','aria-label':'Open photo gallery',onclick:()=>gallery(C.own,'Photos from '+C.name,ix)}),u)),
       C.own.length>8?h('button',{type:'button',class:'hl-all',onclick:()=>gallery(C.own,'Photos from '+C.name,8)},'See all '+C.own.length+' photos'):null)):null;
 
@@ -6012,22 +6012,22 @@ function wbFinder(C,call,fbBtn){
     p2.classList.toggle('dim',!prob);
     const stage=!prob?0:!room?1:2;
     steps.forEach((li,i)=>{ li.classList.toggle('now',i===stage); li.classList.toggle('done',i<stage); });
-    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Send it to Tyler with one tap.';
+    hint.textContent=stage===0?'Start here: tap the problem that looks most like yours.':stage===1?'Good. Now tap the room it is in.':'Here is your match. Send it to '+(C.x.owner||'Tyler')+' with one tap.';
     if(stage<2){ result.hidden=true; result.replaceChildren(); return; }
     const svc=(room==='Store or office'&&prob.svc!=='Drywall')?prob.svc+' and Commercial':prob.svc;
     const summary='Hi, I found you on your website. Problem: '+prob.t+'. Room: '+room+'. Can I get an estimate? My name is ';
     const copied=h('span',{class:'wb-fcopied',role:'status'});
     const enc=encodeURIComponent(summary);
-    const textBtn=C.tel?h('a',{class:'wb-btn blue',href:C.tel.replace(/^tel:/,'sms:')+'?&body='+enc},ico('chat',16,''),'Text Tyler'):null;
-    const mailBtn=C.email?h('a',{class:'wb-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request: '+prob.t)+'&body='+enc},'Email Tyler'):null;
+    const textBtn=C.tel?h('a',{class:'wb-btn blue',href:C.tel.replace(/^tel:/,'sms:')+'?&body='+enc},ico('chat',16,''),'Text '+(C.x.owner||'Tyler')):null;
+    const mailBtn=C.email?h('a',{class:'wb-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request: '+prob.t)+'&body='+enc},'Email '+(C.x.owner||'Tyler')):null;
     const copy=h('button',{type:'button',class:'wb-fcopy',onclick:()=>{ const done=()=>{ copied.textContent='Copied. Paste it into your message.'; }; try{ navigator.clipboard.writeText(summary).then(done,()=>{ copied.textContent='Copy not available. Please type it in your message.'; }); }catch(e){ copied.textContent='Copy not available. Please type it in your message.'; } }},'Copy my request to paste');
     result.hidden=false;
     result.replaceChildren(
       h('div',{class:'wb-fres-l'},h('span',{class:'wb-tape light'},'Your match'),h('h3',null,svc),h('p',null,h('b',null,'You picked: '),prob.t+' in '+room.toLowerCase()+'.'),h('p',null,prob.why),(room==='Store or office')?h('p',null,'We also do commercial work, including storefronts and offices.'):null,h('p',{class:'wb-ftip'},'Tip: add a photo of the problem when you message. It helps.')),
-      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Send it to Tyler'),h('p',{class:'wb-fsub'},'Text is the fastest. Your picks are filled in for you.'),
+      h('div',{class:'wb-fres-r'},h('p',{class:'wb-fnext'},'Send it to '+(C.x.owner||'Tyler')),h('p',{class:'wb-fsub'},'Text is the fastest. Your picks are filled in for you.'),
         h('div',{class:'wb-cta'},textBtn,fbBtn('line','Message on Facebook'),mailBtn),
         h('div',{class:'wb-fmore'},copy,h('button',{type:'button',class:'wb-freset',onclick:()=>{ prob=null; room=null; render(); }},'Start over')),copied,
-        h('p',{class:'wb-fdemo'},'In the finished site, you can also attach photos here and send straight to Tyler.')));
+        h('p',{class:'wb-fdemo'},'In the finished site, you can also attach photos here and send straight to '+(C.x.owner||'Tyler')+'.')));
     if(stage===2&&!matchMedia('(prefers-reduced-motion: reduce)').matches) result.scrollIntoView({block:'nearest',behavior:'smooth'});
   }
   const sec=h('section',{class:'wb-sec wb-mist wb-finder',id:'w-finder'},h('div',{class:'wb-wrap'},
@@ -6133,7 +6133,7 @@ function welborn(C){
         h('div',{class:'wb-ctl'},cnt,h('button',{type:'button',class:'wb-arw','aria-label':'Previous photo',onclick:()=>{ prev(); user(); }},'‹'),h('button',{type:'button',class:'wb-arw','aria-label':'Next photo',onclick:()=>{ next(); user(); }},'›'),pbtn)),
       h('div',{class:'wb-wrap wb-wide'},view),
       h('div',{class:'wb-wrap'},dots),
-      C.fb?h('div',{class:'wb-wrap'},h('div',{class:'wb-follow'},h('b',null,'See more jobs on Facebook'),fbBtn('blue','Welborn on Facebook'))):null);
+      C.fb?h('div',{class:'wb-wrap'},h('div',{class:'wb-follow'},h('b',null,'See more jobs on Facebook'),fbBtn('blue',(C.x.short||'Welborn')+' on Facebook'))):null);
   }
 
   /* reviews */
