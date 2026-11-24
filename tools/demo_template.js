@@ -4164,7 +4164,7 @@ function roadside(C){
     X.area?h('p',{class:'rd-area rv'},X.area):null,
     h('p',{class:'rd-lead rv'},'Towing, jump starts, lockouts, flat tires, fuel delivery and more from D&D Wrecker Service in '+(C.city||'Dubuque, IA')+'. Coverage starts immediately.'),
     h('div',{class:'rd-hero-b rv'},ext(join,'Become a member','rd-btn',true),h('button',{type:'button',class:'rd-btn ghost',onclick:()=>scrollTo('rd-plans')},'See plans'))),
-    pic('hero')?h('div',{class:'rd-w'},h('div',{class:'rd-hero-pic rv'},h('img',{src:pic('hero',2000),alt:'Tow truck loading a vehicle',loading:'eager'}))):null);
+    pic('hero')?h('div',{class:'rd-w'},h('div',{class:'rd-hero-pic rv'+(/^img\//.test(P.hero||'')?' own':'')},h('img',{src:pic('hero',2000),alt:/^img\//.test(P.hero||'')?'D&D Wrecker Service logo and tow trucks at the shop':'Tow truck loading a vehicle',loading:'eager'}))):null);
 
   const strip=h('section',{class:'rd-strip'},h('div',{class:'rd-w rd-strip-in'},plans.map((p,i)=>h('button',{type:'button',class:'rd-tier rv'+(i?' d'+i:''),onclick:()=>scrollTo('rd-plans')},
     h('span',{class:'rd-tier-i'},rdI(i===0?'shield':i===1?'star':'crown',34)),h('b',null,p.name),h('span',null,'$'+p.mo+' / month'))),
@@ -4232,7 +4232,7 @@ function roadside(C){
     h('ol',{class:'rd-steps'},[['Pick the service','Towing, jump start, flat tire, lockout, fuel, winch out, accident or new battery.'],['Share your location','Type an address or landmark, or use your current location.'],['Choose priority and time','Standard or urgent, ASAP or scheduled for later.']].map((s,i)=>h('li',null,h('em',null,String(i+1)),h('span',null,h('b',null,s[0]),h('small',null,s[1]))))),
     h('div',{class:'rd-hero-b'},ext(join,'Become a member','rd-btn y full',true),C.tel?h('a',{class:'rd-btn full',href:C.tel},'Call '+C.phoneTxt):null),
     h('p',{class:'rd-small'},'Online requests are for members in the D&D app. Anyone can call the hotline.'))),
-    pic('req')?h('div',{class:'rd-req-p'},h('img',{src:pic('req',1400),alt:'D&D Wrecker Service trucks at the shop',loading:'lazy'})):null);
+    pic('req')?h('div',{class:'rd-req-p'},h('img',{src:pic('req',1400),alt:'Flatbed tow truck carrying a vehicle',loading:'lazy'})):null);
 
   const foot=h('footer',{class:'rd-foot'},h('div',{class:'rd-haz'}),h('div',{class:'rd-w'},
     h('div',{class:'rd-foot-top'},C.tel?h('a',{class:'rd-foot-ph',href:C.tel},h('i',null,rdI('phone',26)),C.phoneTxt):null,h('div',{class:'rd-foot-locs'},(Array.isArray(X.locs)&&X.locs.length?X.locs:[[C.city||'Dubuque, IA',C.phoneTxt]]).map(l=>h('div',{class:'rd-foot-ad'},h('small',null,rdI('pin',14),String(l[0]||'')),telOf(l[1])?h('a',{href:telOf(l[1])},String(l[1])):null)))),

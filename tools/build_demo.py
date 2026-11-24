@@ -4532,6 +4532,7 @@ body.t-rd{background:#fff;font-family:"DM Sans",Inter,system-ui,sans-serif;color
 .rd-hero-b{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}.rd-area{margin:18px 0 0;font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--y)}
 .rd-hero-pic{margin-top:46px;border-radius:14px 14px 0 0;overflow:hidden;aspect-ratio:2.4;box-shadow:0 40px 80px -50px rgba(0,0,0,.7)}
 .rd-hero-pic img{width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block;animation:rdZoom 14s ease-out both}
+.rd-hero-pic.own{aspect-ratio:auto;max-width:1060px;margin-left:auto;margin-right:auto}.rd-hero-pic.own img{height:auto;animation-duration:10s}
 @keyframes rdZoom{from{transform:scale(1.1)}to{transform:scale(1)}}
 .rd-strip{padding:56px 0 30px}.rd-strip-in{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .rd-tier{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 0 18px;border-bottom:3px solid var(--y);text-align:center}
