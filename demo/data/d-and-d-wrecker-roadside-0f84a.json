@@ -1,20 +1,253 @@
-{"name":"D&D Wrecker Roadside","variant":"roadside","style":"trade","category":"Roadside assistance membership","city":"Dubuque, IA","phone":"(563) 580-3447","website":"https://ddroadside.com/",
- "x":{"logo":"img/dd-roadside-logo.png","join":"https://ddroadside.com/register","site":"https://ddroadside.com/",
-  "services":[["tow","Towing","Vehicle needs to be transported"],["jump","Jump Start","Dead or weak battery"],["tire","Flat Tire","Tire change or repair"],["key","Lockout","Locked out of vehicle"],["fuel","Fuel Delivery","Out of fuel"],["winch","Winch Out","Stuck in ditch, mud or snow"],["warn","Accident","Collision or crash"],["batt","New Battery","Battery replacement"]],
-  "plans":[
-   {"name":"Starter","sub":"Essential coverage","mo":"42.19","yrMo":"38.67","yr":"464.08","feat":[["One free tow every 6 months","Vehicle under 6k GVWR for free towing"],["Towing up to 5 miles"],["One free jump start & lockout per month"],["Fuel delivery (price of fuel not included)"]]},
-   {"name":"Plus","sub":"Most popular","rec":true,"mo":"63.29","yrMo":"58.02","yr":"696.18","feat":[["One free tow every 3 months","Vehicle under 6k GVWR for free towing"],["Towing up to 15 miles"],["All Starter services included"],["Flat tire change"]]},
-   {"name":"Pro","sub":"Total peace of mind","mo":"84.39","yrMo":"77.36","yr":"928.28","feat":[["Everything in Plus"],["Towing up to 30 miles"],["Roadside for any driver"],["Priority response"]]}],
-  "perks":[
-   ["Advance Auto Parts","Auto Parts","806 Wacker Dr, Dubuque, IA","563-557-9331","15% off"],
-   ["Car-Tech","Repair Shops","1760 Radford Rd, Dubuque, IA","563-513-8660","20% off all brake jobs"],
-   ["A&B Automotive Center","Repair Shops","10512 Keywest Dr, Dubuque, IA","563-583-3575","15% off labor"],
-   ["Underdog Auto & Tint","Auto Parts","10475 Timothy St, Dubuque, IA","563-542-5870","10% off"],
-   ["Vaughns Automotive","Auto Parts","3155 University Ave, Dubuque, IA","563-557-1836","10% off"],
-   ["Duck Duck Drive","Services","2990 Jackson St, Dubuque, IA","563-585-2000","10% off service"],
-   ["Fusion Professional Detailing","Services","1695 Rockdale Rd, Dubuque, IA","563-269-3259","15% off"],
-   ["D&D Sand and Gravel","Services","1074 Badger Rd, Hazel Green, WI","563-580-3447","10% off"],
-   ["1 Call Groundskeeping","Services","","563-513-8660","10% off stump grinding"],
-   ["Millman Lawn & Landscaping","Services","","563-231-0406","10% off"],
-   ["Frank's Tristate Storage","Services","1911 Wisconsin 80, Cuba City, WI","608-744-7777","10% off"],
-   ["Bailey's Welding & Fabrication LLC","Services","4434 West Lane, Cuba City, WI","608-732-4493","10% off"]]}}
+{
+ "name": "D&D Wrecker Roadside",
+ "variant": "roadside",
+ "style": "trade",
+ "category": "Roadside assistance membership",
+ "city": "Dubuque, IA",
+ "phone": "(563) 580-3447",
+ "website": "https://ddroadside.com/",
+ "x": {
+  "logo": "img/dd-roadside-logo.png",
+  "join": "https://ddroadside.com/register",
+  "site": "https://ddroadside.com/",
+  "services": [
+   [
+    "tow",
+    "Towing",
+    "Vehicle needs to be transported"
+   ],
+   [
+    "jump",
+    "Jump Start",
+    "Dead or weak battery"
+   ],
+   [
+    "tire",
+    "Flat Tire",
+    "Tire change or repair"
+   ],
+   [
+    "key",
+    "Lockout",
+    "Locked out of vehicle"
+   ],
+   [
+    "fuel",
+    "Fuel Delivery",
+    "Out of fuel"
+   ],
+   [
+    "winch",
+    "Winch Out",
+    "Stuck in ditch, mud or snow"
+   ],
+   [
+    "warn",
+    "Accident",
+    "Collision or crash"
+   ],
+   [
+    "batt",
+    "New Battery",
+    "Battery replacement"
+   ]
+  ],
+  "plans": [
+   {
+    "name": "Starter",
+    "sub": "Essential coverage",
+    "mo": "42.19",
+    "yrMo": "38.67",
+    "yr": "464.08",
+    "feat": [
+     [
+      "One free tow every 6 months",
+      "Vehicle under 6k GVWR for free towing"
+     ],
+     [
+      "Towing up to 5 miles"
+     ],
+     [
+      "One free jump start & lockout per month"
+     ],
+     [
+      "Fuel delivery (price of fuel not included)"
+     ]
+    ]
+   },
+   {
+    "name": "Plus",
+    "sub": "Most popular",
+    "rec": true,
+    "mo": "63.29",
+    "yrMo": "58.02",
+    "yr": "696.18",
+    "feat": [
+     [
+      "One free tow every 3 months",
+      "Vehicle under 6k GVWR for free towing"
+     ],
+     [
+      "Towing up to 15 miles"
+     ],
+     [
+      "All Starter services included"
+     ],
+     [
+      "Flat tire change"
+     ]
+    ]
+   },
+   {
+    "name": "Pro",
+    "sub": "Total peace of mind",
+    "mo": "84.39",
+    "yrMo": "77.36",
+    "yr": "928.28",
+    "feat": [
+     [
+      "Everything in Plus"
+     ],
+     [
+      "Towing up to 30 miles"
+     ],
+     [
+      "Roadside for any driver"
+     ],
+     [
+      "Priority response"
+     ]
+    ]
+   }
+  ],
+  "perks": [
+   [
+    "Advance Auto Parts",
+    "Auto Parts",
+    "806 Wacker Dr, Dubuque, IA",
+    "563-557-9331",
+    "15% off"
+   ],
+   [
+    "Car-Tech",
+    "Repair Shops",
+    "1760 Radford Rd, Dubuque, IA",
+    "563-513-8660",
+    "20% off all brake jobs"
+   ],
+   [
+    "A&B Automotive Center",
+    "Repair Shops",
+    "10512 Keywest Dr, Dubuque, IA",
+    "563-583-3575",
+    "15% off labor"
+   ],
+   [
+    "Underdog Auto & Tint",
+    "Auto Parts",
+    "10475 Timothy St, Dubuque, IA",
+    "563-542-5870",
+    "10% off"
+   ],
+   [
+    "Vaughns Automotive",
+    "Auto Parts",
+    "3155 University Ave, Dubuque, IA",
+    "563-557-1836",
+    "10% off"
+   ],
+   [
+    "Duck Duck Drive",
+    "Services",
+    "2990 Jackson St, Dubuque, IA",
+    "563-585-2000",
+    "10% off service"
+   ],
+   [
+    "Fusion Professional Detailing",
+    "Services",
+    "1695 Rockdale Rd, Dubuque, IA",
+    "563-269-3259",
+    "15% off"
+   ],
+   [
+    "D&D Sand and Gravel",
+    "Services",
+    "1074 Badger Rd, Hazel Green, WI",
+    "563-580-3447",
+    "10% off"
+   ],
+   [
+    "1 Call Groundskeeping",
+    "Services",
+    "",
+    "563-513-8660",
+    "10% off stump grinding"
+   ],
+   [
+    "Millman Lawn & Landscaping",
+    "Services",
+    "",
+    "563-231-0406",
+    "10% off"
+   ],
+   [
+    "Frank's Tristate Storage",
+    "Services",
+    "1911 Wisconsin 80, Cuba City, WI",
+    "608-744-7777",
+    "10% off"
+   ],
+   [
+    "Bailey's Welding & Fabrication LLC",
+    "Services",
+    "4434 West Lane, Cuba City, WI",
+    "608-732-4493",
+    "10% off"
+   ]
+  ],
+  "pics": {
+   "hero": "1738101996177-13110d20a973",
+   "band": "1738101996181-f4503ebaec70",
+   "req": "1730514785075-b065c757b653",
+   "tow": "1730514784243-f0e7f09c9f50",
+   "jump": "1597766321604-9de3ff9e93e2",
+   "tire": "1601739722627-f00a99138ea1",
+   "key": "1761264889404-a194af20ae90",
+   "fuel": "1727415411358-c10249be6b00",
+   "winch": "1704906654369-091b259fc086",
+   "warn": "1673187139211-1e7ec3dd60ec",
+   "batt": "1592318348310-f31b61a931c8"
+  },
+  "faq": [
+   [
+    "What does each plan cover?",
+    "Starter includes one free tow every 6 months (up to 5 miles), one free jump start and lockout per month, and fuel delivery. Plus adds one free tow every 3 months, towing up to 15 miles and flat tire changes. Pro includes everything in Plus, towing up to 30 miles, roadside for any driver and priority response."
+   ],
+   [
+    "Which vehicles qualify for free towing?",
+    "Free towing covers vehicles under 6k GVWR."
+   ],
+   [
+    "How do I request help?",
+    "Members request help in the D&D app: pick the service, share your location, choose standard or urgent, and ASAP or a scheduled time. Prefer to talk? Call the 24/7 hotline at (563) 580-3447."
+   ],
+   [
+    "When does my coverage start?",
+    "Coverage starts immediately when you sign up, and you can upgrade anytime."
+   ],
+   [
+    "Is fuel included with fuel delivery?",
+    "Fuel delivery is included on every plan. The price of the fuel itself is not included."
+   ],
+   [
+    "Can I save by paying yearly?",
+    "Yes. Annual plans get one month free, and prices include 5.5% sales tax."
+   ],
+   [
+    "Can I add my family?",
+    "Refer a family member and they get 25% off every month for as long as they stay subscribed."
+   ]
+  ]
+ }
+}

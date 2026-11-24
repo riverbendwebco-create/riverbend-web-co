@@ -4748,99 +4748,120 @@ button.rt-area{font:inherit;text-align:left;cursor:pointer;width:100%}
 @media (max-width:1020px){.rt-tools,.rt-value,.rt-guide,.rt-why{grid-template-columns:1fr}.rt-sold{grid-template-columns:repeat(2,1fr)}.rt-revs{grid-template-columns:1fr}.rt-ag-in{grid-template-columns:1fr}}
 @media (max-width:860px){.rt-fab{display:inline-flex}.rt-guide{padding:30px}.rt-tool{padding:24px}.rt-why{margin-top:50px}}
 @media (max-width:560px){.rt-fg{grid-template-columns:1fr}.rt-sold{grid-template-columns:1fr}.rt-ag{padding:24px}.rt-ag h3{font-size:1.6rem}.rt-sp-top{flex-direction:column;gap:4px}}
-/* ===== ROADSIDE membership (D&D Wrecker Roadside) ===== */
-body.t-rd{background:#fff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#0F172A}
-.rd{--blue:#0075FF;--ink:#0F172A;--mut:#64748B;--line:#E2E8F0;--soft:#F1F6FF}
-.rd-w{max-width:1160px;margin:0 auto;padding:0 28px}
-.rd h1,.rd h2,.rd h3{letter-spacing:-.02em;line-height:1.1;margin:0}
-.rd button{font:inherit;cursor:pointer}
-.rd-btn,.rd-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:10px;font-weight:700;font-size:.94rem;text-decoration:none;border:0;transition:transform .2s,box-shadow .2s,background .2s}
-.rd-btn{background:#0F172A;color:#fff}.rd-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px -10px rgba(15,23,42,.6)}
-.rd-btn.wh{background:#fff;color:#0F172A}
-.rd-ghost{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4)}.rd-ghost:hover{background:rgba(255,255,255,.26)}
-.rd-btn.lg,.rd-ghost.lg{height:52px;padding:0 24px;font-size:1rem}.rd-btn.full{width:100%}
-.rd-btn svg{transition:transform .2s}.rd-btn:hover svg{transform:translateX(3px)}
-.rd-nav{position:sticky;top:0;z-index:40;background:var(--blue);color:#fff;transition:box-shadow .3s}
-.rd-nav.sc{box-shadow:0 8px 24px -14px rgba(0,30,80,.55)}
-.rd-nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px}
-.rd-brand{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none}
-.rd-brand b{display:block;font-size:1.02rem;line-height:1.15}.rd-brand small{display:block;font-size:.76rem;opacity:.8}
-.rd-logo{width:58px;height:42px;border-radius:10px;background:#fff;display:grid;place-items:center;padding:3px;flex:0 0 auto}
-.rd-logo img{max-width:100%;max-height:100%;display:block}
-.rd-links{display:flex;gap:4px}.rd-links button{background:none;border:0;color:#fff;font-weight:600;font-size:.94rem;padding:10px 14px;border-radius:9px;opacity:.92}.rd-links button:hover{background:rgba(255,255,255,.14);opacity:1}
-.rd-nav-cta{display:flex;gap:10px}.rd-nav-cta .rd-ghost,.rd-nav-cta .rd-btn{height:40px}
-.rd-hero{background:var(--blue);color:#fff;padding:56px 0 96px;overflow:hidden}
-.rd-hero-in{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-.rd-kick{display:inline-flex;align-items:center;gap:8px;font-size:.84rem;font-weight:700;letter-spacing:.02em;margin:0 0 18px;color:rgba(255,255,255,.9)}
-.rd-kick.dk{color:var(--blue);margin-bottom:10px}
-.rd-hero h1{font-size:clamp(2.5rem,5.2vw,4.1rem);font-weight:800}
-.rd-lead{font-size:1.12rem;line-height:1.6;color:rgba(255,255,255,.9);max-width:520px;margin:20px 0 30px}
-.rd-hero-b{display:flex;flex-wrap:wrap;gap:12px}
-.rd-hl{display:inline-flex;align-items:center;gap:10px;margin-top:28px;color:#fff;text-decoration:none;font-size:.96rem;opacity:.95}.rd-hl b{margin-left:4px}.rd-hl:hover{opacity:1;text-decoration:underline}
-.rd-hero-v{display:flex;flex-direction:column;gap:16px;max-width:440px;justify-self:end;width:100%}
-.rd-mcard{border-radius:22px;padding:26px 26px 24px;color:#fff;min-height:210px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(120% 100% at 0% 0%,#5B3FE0 0%,#3B3AA8 38%,#1E1B4B 75%,#111827 100%);box-shadow:0 30px 60px -24px rgba(5,10,40,.7);transform:rotate(-2deg);animation:rdFloat 6s ease-in-out infinite}
-@keyframes rdFloat{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-8px)}}
-.rd-mc-top,.rd-mc-bot{display:flex;justify-content:space-between;align-items:flex-start}
-.rd-mcard small{display:block;font-size:.7rem;letter-spacing:.14em;font-weight:700;opacity:.75;margin-bottom:6px}
-.rd-mcard b{font-size:1.6rem}.rd-mc-bot b{font-size:1.25rem}
-.rd-mc-st{text-align:right}.rd-mc-st b{display:inline-flex;align-items:center;gap:7px;font-size:1.05rem}.rd-mc-st i{width:9px;height:9px;border-radius:50%;background:#34D399;box-shadow:0 0 0 4px rgba(52,211,153,.2)}
-.rd-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.rd-mini-t{background:#fff;color:var(--ink);border-radius:16px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.8rem;font-weight:600;box-shadow:0 12px 26px -18px rgba(0,20,60,.6)}
-.rd-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto}
-.rd-ic.r{background:#FFF1F2;color:#E11D48}.rd-ic.y{background:#FEF9C3;color:#CA8A04}.rd-ic.o{background:#FFF7ED;color:#EA580C}.rd-ic.v{background:#F5F3FF;color:#7C3AED}.rd-ic.g{background:#ECFDF5;color:#059669}.rd-ic.b{background:#EFF6FF;color:#0284C7}
-.rd-mini .rd-ic{width:38px;height:38px}
-.rd-sec{padding:96px 0}.rd-alt{background:var(--soft)}
-.rd-head{max-width:640px;margin-bottom:40px}.rd-head h2{font-size:clamp(2rem,3.6vw,2.8rem);font-weight:800}.rd-head p:last-child{color:var(--mut);font-size:1.04rem;line-height:1.6;margin:14px 0 0}
-.rd-svcs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.rd-svc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:6px;transition:transform .3s,box-shadow .3s,border-color .3s}
-.rd-svc:hover{transform:translateY(-4px);box-shadow:0 20px 40px -26px rgba(0,40,120,.45);border-color:#C7DBFF}
-.rd-svc .rd-ic{margin-bottom:10px}.rd-svc b{font-size:1.04rem}.rd-svc>span:last-child{color:var(--mut);font-size:.9rem}
-.rd-hot{margin-top:24px;border-radius:20px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;color:#fff;background:linear-gradient(135deg,#0F172A,#334155)}
-.rd-hot h3{display:flex;align-items:center;gap:10px;font-size:1.3rem}.rd-hot p{margin:6px 0 0;color:rgba(255,255,255,.78)}
-.rd-toggle{display:inline-flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:28px}
-.rd-tg{border:0;background:none;color:var(--mut);font-weight:700;padding:10px 18px;border-radius:9px;display:inline-flex;align-items:center;gap:8px}
-.rd-tg.on{background:#0F172A;color:#fff}.rd-tg em{font-style:normal;font-size:.72rem;font-weight:700;background:#D1FAE5;color:#047857;padding:3px 7px;border-radius:6px}.rd-tg.on em{background:#10B981;color:#fff}
-.rd-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
-.rd-plan{position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;display:flex;flex-direction:column}
-.rd-plan.rec{border:2px solid #6366F1;box-shadow:0 26px 50px -30px rgba(79,70,229,.55)}.rd-plan.pro{border-color:#FACC15}
-.rd-rec{position:absolute;top:-13px;right:20px;background:#6366F1;color:#fff;font-size:.74rem;font-weight:700;padding:5px 11px;border-radius:8px}
-.rd-plan-h{display:flex;justify-content:space-between;gap:12px}
-.rd-plan h3{display:flex;align-items:center;gap:7px;font-size:1.3rem}.rd-plan.rec h3 svg{color:#6366F1}.rd-plan.pro h3 svg{color:#EAB308}
-.rd-plan-h small{color:var(--mut);font-size:.86rem}
-.rd-price{text-align:right}.rd-price b{display:block;font-size:1.9rem;letter-spacing:-.02em;line-height:1}.rd-price span{display:block;color:var(--mut);font-size:.8rem;margin-top:4px}.rd-price em{display:block;font-style:normal;color:#059669;font-weight:700;font-size:.82rem;margin-top:2px}
-.rd-tax{color:#94A3B8;font-size:.74rem;text-align:right;margin:6px 0 16px}
-.rd-plan ul{list-style:none;margin:0 0 24px;padding:16px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:12px;flex:1}
-.rd-plan li{display:flex;gap:10px;font-size:.95rem}.rd-plan li svg{color:#10B981;flex:0 0 auto;margin-top:2px}.rd-plan li small{display:block;color:#94A3B8;font-size:.8rem}
-.rd-note{color:var(--mut);font-size:.9rem;margin:22px 0 0;text-align:center}
-.rd-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
-.rd-chips button{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:.88rem;padding:9px 14px;border-radius:9px}.rd-chips button.on{background:#0F172A;border-color:#0F172A;color:#fff}
-.rd-perks{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.rd-perk{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;animation:rdIn .4s ease both}
+/* ===== ROADSIDE membership (D&D Wrecker Roadside): Towis-style towing layout ===== */
+body.t-rd{background:#fff;font-family:"DM Sans",Inter,system-ui,sans-serif;color:#171717}
+.rd{--y:#FFC21A;--ink:#171717;--mut:rgba(20,22,23,.72);--line:#E6E6E6;--soft:#F3F3F1;--cd:"Barlow Semi Condensed","Arial Narrow",Inter,sans-serif}
+.rd-w{max-width:1240px;margin:0 auto;padding:0 32px}
+.rd h1,.rd h2,.rd h3,.rd h4{font-family:var(--cd);font-weight:700;text-transform:uppercase;line-height:.95;letter-spacing:-.01em;margin:0}
+.rd button{font:inherit;cursor:pointer;color:inherit}
+.rd-haz{height:9px;background:repeating-linear-gradient(-45deg,var(--y) 0 14px,#171717 14px 28px)}
+.rd-btn{display:inline-flex;white-space:nowrap;align-items:center;justify-content:center;gap:9px;height:50px;padding:0 24px;border-radius:8px;background:#171717;color:#fff;border:0;text-decoration:none;font-family:var(--cd);font-weight:700;font-size:1rem;letter-spacing:.06em;text-transform:uppercase;transition:transform .2s,background .2s,box-shadow .2s}
+.rd-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(0,0,0,.55)}
+.rd-btn.y{background:var(--y);color:#171717}.rd-btn.ghost{background:transparent;color:#171717;border:2px solid #171717}.rd-btn.full{width:100%}
+.rd-btn svg{transition:transform .2s}.rd-btn:hover svg{transform:translate(2px,-2px)}
+.rd-kick{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;font-weight:700;color:#171717;margin:0 0 14px}
+.rd-h2{font-size:clamp(2.2rem,4.2vw,3.6rem)}
+.rd-nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,0);transition:background .3s,box-shadow .3s}
+.rd-nav.sc{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);box-shadow:0 6px 20px -14px rgba(0,0,0,.4)}
+.rd-nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}
+.rd-brand{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none}.rd-brand b{white-space:nowrap;font-family:var(--cd);font-size:1.45rem;text-transform:uppercase;letter-spacing:.02em}
+.rd-logo{width:60px;height:44px;border-radius:8px;background:#fff;display:grid;place-items:center;padding:3px;box-shadow:0 0 0 1px var(--line)}.rd-logo img{max-width:100%;max-height:100%;display:block}
+.rd-links{display:flex;gap:6px}.rd-links button{background:none;border:0;font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.95rem;padding:10px 12px;position:relative}
+.rd-links button::after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:2px;background:var(--y);transform:scaleX(0);transition:transform .25s}.rd-links button:hover::after{transform:none}
+.rd-nav-cta{display:flex;align-items:center;gap:18px}.rd-login{color:#171717;text-decoration:none;font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.05em}.rd-login span{display:inline-flex;align-items:center;gap:7px}.rd-login svg{color:#C79300}
+.rd-nav-cta .rd-btn{height:44px}
+.rd-hero{background:linear-gradient(180deg,#D9DEE3 0%,#ECEFF1 45%,#fff 100%);margin-top:-85px;padding:130px 0 0;text-align:center;overflow:hidden}
+.rd-hero-in{display:flex;flex-direction:column;align-items:center}
+.rd-phone{display:inline-flex;align-items:center;gap:10px;background:var(--y);color:#171717;text-decoration:none;font-family:var(--cd);font-weight:700;font-size:1.5rem;padding:6px 18px 6px 6px;border-radius:10px}
+.rd-phone i{width:34px;height:34px;border-radius:8px;background:#171717;color:var(--y);display:grid;place-items:center}
+.rd-hero h1{font-size:clamp(3.4rem,10vw,9.4rem);margin:22px 0 0;line-height:.86}
+.rd-lead{max-width:620px;font-size:1.1rem;line-height:1.6;color:var(--mut);margin:24px 0 28px}
+.rd-hero-b{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.rd-hero-pic{margin-top:46px;border-radius:14px 14px 0 0;overflow:hidden;aspect-ratio:2.4;box-shadow:0 40px 80px -50px rgba(0,0,0,.7)}
+.rd-hero-pic img{width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block;animation:rdZoom 14s ease-out both}
+@keyframes rdZoom{from{transform:scale(1.1)}to{transform:scale(1)}}
+.rd-strip{padding:56px 0 30px}.rd-strip-in{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.rd-tier{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 0 18px;border-bottom:3px solid var(--y);text-align:center}
+.rd-tier-i{width:74px;height:74px;border-radius:50%;background:var(--soft);display:grid;place-items:center;margin-bottom:10px;transition:background .3s,transform .3s}.rd-tier:hover .rd-tier-i{background:var(--y);transform:translateY(-4px)}
+.rd-tier b{font-family:var(--cd);font-size:1.4rem;text-transform:uppercase}.rd-tier>span:last-child{font-family:var(--cd);font-weight:600;color:var(--mut)}
+.rd-sec{padding:100px 0}
+.rd-big{font-size:clamp(2rem,4vw,3.5rem);text-align:center;max-width:980px;margin:0 auto 54px}
+.rd-svc-g{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:stretch}
+.rd-rows{display:flex;flex-direction:column;gap:10px}
+.rd-row{display:flex;align-items:center;gap:22px;background:var(--soft);border:1px solid transparent;border-radius:8px;padding:16px 20px;text-align:left;transition:background .3s,border-color .3s,box-shadow .3s}
+.rd-row em{font-style:normal;font-family:var(--cd);font-weight:700;color:#8A8A8A;min-width:22px}
+.rd-row span{flex:1;display:flex;flex-direction:column}.rd-row b{font-family:var(--cd);font-size:1.25rem;text-transform:uppercase}.rd-row small{color:var(--mut);font-size:.86rem;max-height:0;overflow:hidden;transition:max-height .35s}
+.rd-row i{width:30px;height:30px;border-radius:50%;background:var(--y);display:grid;place-items:center;transition:transform .3s}
+.rd-row.on{background:#fff;border-color:var(--line);box-shadow:0 16px 34px -24px rgba(0,0,0,.4)}.rd-row.on small{max-height:40px}.rd-row.on i{transform:rotate(45deg)}
+.rd-svc-pic{position:relative;height:100%;min-height:420px;border-radius:10px;overflow:hidden;background:#222}
+.rd-svc-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .7s,transform 1.4s}.rd-svc-pic img.on{opacity:1;transform:none}
+.rd-feats{padding:10px 0 100px}.rd-feats-in{display:grid;grid-template-columns:repeat(4,1fr);gap:34px;text-align:center}
+.rd-feat span{display:inline-grid;place-items:center;width:64px;height:64px;margin-bottom:12px}.rd-feat b{display:block;font-family:var(--cd);font-size:1.35rem;text-transform:uppercase;margin-bottom:8px}.rd-feat p{margin:0;color:var(--mut);font-size:.94rem;line-height:1.55}
+.rd-band{position:relative;min-height:560px;display:flex;align-items:center;color:#fff;overflow:hidden;background:#222}
+.rd-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rd-band::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.2) 70%)}
+.rd-band-in{position:relative;z-index:1;width:100%}.rd-band h2{font-size:clamp(2.8rem,6.5vw,6rem);margin-bottom:40px}
+.rd-play{display:inline-flex;align-items:center;gap:18px;color:#fff;text-decoration:none}.rd-play i{width:84px;height:84px;border-radius:50%;background:var(--y);color:#171717;display:grid;place-items:center;box-shadow:0 0 0 0 rgba(255,194,26,.6);animation:rdPulse 2.2s infinite}
+@keyframes rdPulse{70%{box-shadow:0 0 0 22px rgba(255,194,26,0)}100%{box-shadow:0 0 0 0 rgba(255,194,26,0)}}
+.rd-play span{font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:1.1rem;display:flex;flex-direction:column}.rd-play b{font-size:2rem;color:var(--y)}
+.rd-about{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.rd-about-t h2{font-size:clamp(2rem,3.6vw,3.1rem)}.rd-about-t h2 span{color:#B5B5B5}
+.rd-stats{display:grid;grid-template-columns:1fr 1fr;gap:40px 30px}.rd-stat b{display:block;font-family:var(--cd);font-size:clamp(3.4rem,6vw,5rem);line-height:.9}.rd-stat span{font-weight:700}
+.rd-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:70px}.rd-photos div{border-radius:8px;overflow:hidden;aspect-ratio:.9}.rd-photos img{width:100%;height:100%;object-fit:cover;transition:transform .8s}.rd-photos div:hover img{transform:scale(1.06)}
+.rd-pricing{background:#F1F1EF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cpath d='M0 240 240 0h-60L0 180zM0 120 120 0H60L0 60z' fill='%23E8E8E5'/%3E%3C/svg%3E")}
+.rd-price-h{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:40px}.rd-price-h p:last-child{color:var(--mut);max-width:520px;margin:16px 0 0;line-height:1.6}
+.rd-toggle{display:flex;gap:4px;background:#fff;border-radius:10px;padding:5px;flex:0 0 auto}
+.rd-tg{border:0;background:none;padding:12px 18px;border-radius:7px;font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.04em}.rd-tg.on{background:#171717;color:#fff}
+.rd-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:start}
+.rd-plan{background:#fff;border-radius:10px;padding:30px;display:flex;flex-direction:column;border:2px solid transparent;transition:transform .3s,box-shadow .3s}
+.rd-plan:hover{transform:translateY(-4px);box-shadow:0 26px 50px -34px rgba(0,0,0,.5)}.rd-plan.rec{border-color:var(--y)}
+.rd-plan-h{display:flex;justify-content:space-between;align-items:center;min-height:28px}.rd-plan-h small{font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.rd-plan-h em{font-style:normal;background:var(--y);font-size:.74rem;font-weight:700;padding:5px 10px;border-radius:6px}.rd-plan-h em.g{background:#E7F7EC;color:#147A3D}
+.rd-price{display:flex;align-items:baseline;gap:10px;margin:18px 0 4px}.rd-price b{font-family:var(--cd);font-size:4.2rem;line-height:.9}.rd-price span{font-weight:700;font-size:.9rem}
+.rd-tax{color:#8A8A8A;font-size:.8rem;margin:6px 0 18px}
+.rd-plan ul{list-style:none;margin:0 0 26px;padding:18px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:13px;flex:1}
+.rd-plan li{display:flex;gap:10px;font-size:.95rem}.rd-plan li svg{color:#1E9B4D;flex:0 0 auto;margin-top:3px}.rd-plan li small{display:block;color:#8A8A8A;font-size:.8rem}
+.rd-perk-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:34px;flex-wrap:wrap}
+.rd-chips{display:flex;flex-wrap:wrap;gap:8px}.rd-chips button{border:2px solid #171717;background:#fff;font-family:var(--cd);font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:8px 14px;border-radius:8px}.rd-chips button.on{background:#171717;color:#fff}
+.rd-perks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rd-perk{background:var(--soft);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:6px;border-top:4px solid var(--y);animation:rdIn .4s ease both}
 @keyframes rdIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.rd-perk-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.rd-perk-t b{font-size:1rem}.rd-perk-t small{color:var(--mut);font-size:.82rem;margin-bottom:3px}
-.rd-perk-t span,.rd-perk-t a{display:flex;align-items:center;gap:6px;color:var(--mut);font-size:.86rem;text-decoration:none}.rd-perk-t a:hover{color:var(--blue)}
-.rd-off{font-style:normal;background:#ECFDF5;color:#047857;font-weight:700;font-size:.8rem;padding:6px 10px;border-radius:8px;text-align:center;max-width:140px}
-.rd-ref{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
-.rd-ref-card{border-radius:22px;padding:38px;text-align:center;color:#fff;background:linear-gradient(140deg,#0F172A,#334155)}
-.rd-ref-i{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.12);display:inline-grid;place-items:center;margin-bottom:14px}
-.rd-ref-card small{display:block;opacity:.75;font-weight:600}.rd-ref-card b{display:block;font-size:2rem;letter-spacing:.06em;margin:6px 0 10px}.rd-ref-card p{margin:0;color:rgba(255,255,255,.75);font-size:.92rem}
-.rd-ref-t h2{font-size:clamp(2rem,3.6vw,2.8rem);font-weight:800}.rd-ref-t>p:not(.rd-kick){color:var(--mut);font-size:1.08rem;line-height:1.6;margin:14px 0 26px}.rd-ref-t p b{color:#E11D48}
-.rd-cta{background:var(--blue);color:#fff;padding:80px 0}
-.rd-cta-in{display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}.rd-cta h2{font-size:clamp(2rem,3.8vw,3rem);font-weight:800}.rd-cta p{margin:10px 0 0;color:rgba(255,255,255,.88);font-size:1.06rem}
-.rd-ghost.wh{border-color:rgba(255,255,255,.5)}
-.rd-foot{background:#0B1220;color:#CBD5E1;padding:36px 0 110px}
-.rd-foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.rd-foot .rd-brand{color:#fff}
-.rd-foot-l{display:flex;gap:22px;flex-wrap:wrap}.rd-foot-l a{color:#CBD5E1;text-decoration:none;font-size:.92rem}.rd-foot-l a:hover{color:#fff}
-.rd-tabs{display:none}
-@media (max-width:980px){.rd-links{display:none}.rd-hero-in,.rd-ref{grid-template-columns:1fr;gap:40px}.rd-hero-v{justify-self:start}.rd-svcs{grid-template-columns:repeat(2,1fr)}.rd-plans{grid-template-columns:1fr;max-width:520px}.rd-perks{grid-template-columns:1fr}}
-@media (max-width:640px){.rd-w{padding:0 18px}.rd-nav-in{height:64px}.rd-nav-cta .rd-ghost{display:none}.rd-brand small{display:none}.rd-logo{width:50px;height:36px}
- .rd-hero{padding:36px 0 64px}.rd-sec{padding:68px 0}.rd-svc{padding:16px}.rd-hot{flex-direction:column;align-items:flex-start;padding:24px}
- .rd-perk{align-items:flex-start;flex-wrap:wrap}.rd-perk-t{flex-basis:calc(100% - 64px)}.rd-off{margin-left:60px;max-width:none}
- .rd-tabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(239,246,255,.96);backdrop-filter:blur(10px);border-top:1px solid #DBEAFE;padding:6px 6px calc(6px + env(safe-area-inset-bottom));justify-content:space-around}
- .rd-tabs button,.rd-tabs a{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:#334155;text-decoration:none;padding:6px 0}
- .rd-tabs a.join{color:var(--blue)}
- body.t-rd .rb-bar{bottom:64px}}
-@media (prefers-reduced-motion:reduce){.rd-mcard{animation:none}.rd-perk{animation:none}}
+.rd-perk-h{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px}.rd-perk-h em{font-style:normal;font-family:var(--cd);font-weight:700;font-size:1.25rem;text-transform:uppercase}.rd-perk-h small{color:#8A8A8A;font-size:.8rem;text-align:right}
+.rd-perk b{font-size:1.04rem}.rd-perk span,.rd-perk a{display:flex;align-items:center;gap:7px;color:var(--mut);font-size:.9rem;text-decoration:none}.rd-perk a:hover{color:#171717}
+.rd-refer{background:var(--y);padding:54px 0}.rd-refer-in{display:flex;align-items:center;gap:30px}
+.rd-refer-i{width:90px;height:90px;border-radius:50%;background:#171717;color:var(--y);display:grid;place-items:center;flex:0 0 auto}
+.rd-refer-in>div{flex:1}.rd-refer h2{font-size:clamp(2rem,3.6vw,3rem)}.rd-refer p{margin:10px 0 0;max-width:640px;line-height:1.55}
+.rd-faq{max-width:1000px}.rd-center{text-align:center;margin-bottom:44px}
+.rd-q{border-bottom:1px solid var(--line)}.rd-q>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;background:none;border:0;text-align:left;padding:22px 4px;font-family:var(--cd);font-weight:700;font-size:1.25rem}
+.rd-q i{width:28px;height:28px;border-radius:50%;background:var(--y);display:grid;place-items:center;flex:0 0 auto;transition:transform .3s}.rd-q.open i{transform:rotate(45deg)}
+.rd-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}.rd-q.open .rd-a{grid-template-rows:1fr}.rd-a>div{overflow:hidden}.rd-a p{margin:0;padding:0 4px 22px;color:var(--mut);line-height:1.65;max-width:820px}
+.rd-req{display:grid;grid-template-columns:1fr 1fr;background:var(--soft)}
+.rd-req-l{display:flex;justify-content:flex-end;padding:90px 60px}.rd-req-in{max-width:520px;width:100%}
+.rd-steps{list-style:none;margin:30px 0;padding:0;display:flex;flex-direction:column;gap:18px}
+.rd-steps li{display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #D6D6D3}.rd-steps em{font-style:normal;width:36px;height:36px;border-radius:50%;background:#171717;color:var(--y);display:grid;place-items:center;font-family:var(--cd);font-weight:700;flex:0 0 auto}
+.rd-steps span{display:flex;flex-direction:column}.rd-steps b{font-family:var(--cd);font-size:1.2rem;text-transform:uppercase}.rd-steps small{color:var(--mut)}
+.rd-req .rd-hero-b{flex-direction:column}.rd-small{color:#8A8A8A;font-size:.84rem;margin:14px 0 0}
+.rd-req-p{min-height:560px}.rd-req-p img{width:100%;height:100%;object-fit:cover;display:block}
+.rd-foot{background:#141414;color:#BDBDBD;position:relative;padding-bottom:120px}
+.rd-foot-top{display:flex;justify-content:space-between;align-items:center;gap:30px;padding:60px 0 46px;border-bottom:1px solid #2A2A2A;flex-wrap:wrap}
+.rd-foot-ph{display:flex;align-items:center;gap:22px;color:#fff;text-decoration:none;font-family:var(--cd);font-weight:700;font-size:clamp(2.6rem,6vw,5rem);line-height:1}
+.rd-foot-ph i{width:76px;height:76px;border-radius:50%;border:2px solid var(--y);color:var(--y);display:grid;place-items:center;flex:0 0 auto}
+.rd-foot-ad small{display:flex;align-items:center;gap:6px;color:var(--y)}.rd-foot-ad b{font-family:var(--cd);font-size:1.4rem;text-transform:uppercase;color:#fff}
+.rd-foot-g{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px;padding:46px 0}.rd-foot .rd-brand{color:#fff}.rd-foot-g p{margin:16px 0 0;max-width:340px;line-height:1.6;font-size:.92rem}
+.rd-foot h4{color:var(--y);font-size:1.2rem;margin-bottom:16px}.rd-foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rd-foot li a,.rd-foot li button,.rd-foot li span{background:none;border:0;padding:0;color:#BDBDBD;text-decoration:none;font-size:.95rem;text-align:left}.rd-foot li a:hover,.rd-foot li button:hover{color:#fff}
+.rd-foot-b{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #2A2A2A;padding-top:22px;font-size:.84rem;flex-wrap:wrap}
+.rd-mbar{display:none}
+@media (max-width:1020px){.rd-links{display:none}.rd-svc-g,.rd-about,.rd-req{grid-template-columns:1fr}.rd-svc-pic{min-height:320px}.rd-feats-in,.rd-strip-in{grid-template-columns:repeat(2,1fr)}.rd-plans{grid-template-columns:1fr;max-width:560px}.rd-perks{grid-template-columns:repeat(2,1fr)}.rd-price-h{flex-direction:column;align-items:flex-start}.rd-req-l{justify-content:flex-start;padding:70px 32px}.rd-req-p{min-height:340px}.rd-foot-g{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.rd-w{padding:0 18px}.rd-nav-in{height:66px}.rd-login{display:none}.rd-brand b{font-size:1.2rem}.rd-logo{width:50px;height:36px}
+ .rd-hero{padding-top:110px}.rd-hero-pic{aspect-ratio:1.3;margin-top:34px}.rd-phone{font-size:1.25rem}
+ .rd-sec{padding:70px 0}.rd-strip-in{gap:16px}.rd-tier-i{width:60px;height:60px}.rd-feats-in{grid-template-columns:1fr 1fr;gap:26px}.rd-feat p{font-size:.86rem}
+ .rd-band{min-height:440px}.rd-play i{width:64px;height:64px}.rd-play b{font-size:1.5rem}
+ .rd-photos{grid-template-columns:1fr 1fr;margin-top:46px}.rd-perks{grid-template-columns:1fr}.rd-refer-in{flex-direction:column;align-items:flex-start}.rd-refer-i{width:70px;height:70px}
+ .rd-q>button{font-size:1.1rem}.rd-req-l{padding:60px 18px}.rd-foot-ph i{width:56px;height:56px}.rd-foot-g{grid-template-columns:1fr}
+ .rd-mbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(20,20,20,.96);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}.rd-mbar .rd-btn{flex:1;height:46px}
+ body.t-rd .rb-bar{bottom:66px}}
+@media (prefers-reduced-motion:reduce){.rd-hero-pic img,.rd-play i,.rd-perk{animation:none}}
 
 </style>
 </head>
@@ -9029,96 +9050,119 @@ const RD_I={
  home:['M3 11 12 3l9 8','M5 10v10h14V10'],
  user:['M20 21a8 8 0 0 0-16 0','M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10z'],
  star:['M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z'],
- arrow:['M5 12h14','m13 6 6 6-6 6']};
+ arrow:['M5 12h14','m13 6 6 6-6 6'],
+ ne:['M7 17 17 7','M8 7h9v9'],
+ plus:['M12 5v14','M5 12h14'],
+ bolt:['M13 2 4 14h7l-1 8 9-12h-7z'],
+ crown:['M3 7l4.5 4L12 5l4.5 6L21 7l-2 12H5z']};
 function rdI(k,size){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('width',size||22); s.setAttribute('height',size||22); s.setAttribute('aria-hidden','true'); s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor'); s.setAttribute('stroke-width','1.9'); s.setAttribute('stroke-linecap','round'); s.setAttribute('stroke-linejoin','round');
   (RD_I[k]||[]).forEach(d=>{ const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',d); s.append(p); }); return s; }
 function roadside(C){
   const X=C.x, join=okUrl(X.join)||'https://ddroadside.com/register', site=okUrl(X.site)||join;
   const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
-  const tone={tow:'r',jump:'y',tire:'o',key:'v',fuel:'g',winch:'b',warn:'r',batt:'g'};
-  const ext=(href,txt,cls,icon)=>h('a',{class:cls,href,target:'_blank',rel:'noopener'},txt,icon?rdI('arrow',17):null);
-  const go=id=>scrollTo(id);
+  const P=X.pics||{}, pic=(k,w)=>/^[0-9]{10,13}-[0-9a-f]{12}$/.test(P[k]||'')?'https://images.unsplash.com/photo-'+P[k]+'?auto=format&fit=crop&w='+(w||1400)+'&q=72':'';
+  if(!document.getElementById('rdFonts')){ document.head.append(h('link',{id:'rdFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap'})); }
+  const ext=(href,txt,cls,arrow)=>h('a',{class:cls,href,target:'_blank',rel:'noopener'},txt,arrow?rdI('ne',16):null);
   const svcs=(X.services||[]).filter(s=>Array.isArray(s)&&RD_I[s[0]]);
   const plans=(X.plans||[]).filter(p=>p&&p.name);
   const perks=(X.perks||[]).filter(p=>Array.isArray(p)&&p[0]);
   const cats=[...new Set(perks.map(p=>p[1]).filter(Boolean))];
+  const faq=(X.faq||[]).filter(f=>Array.isArray(f)&&f[0]&&f[1]);
   const telOf=t=>{ const d=String(t||'').replace(/\D/g,''); return d.length>=10?'tel:+1'+d.slice(-10):''; };
+  const kick=t=>h('p',{class:'rd-kick'},t);
+  const tow=Math.max(...plans.map(p=>{ const m=(p.feat||[]).map(f=>f[0]).join(' ').match(/up to (\d+) miles/i); return m?+m[1]:0; }),0);
 
-  // nav
-  const nav=h('header',{class:'rd-nav'},h('div',{class:'rd-w rd-nav-in'},
-    h('a',{class:'rd-brand',href:'#top',onclick:e=>{e.preventDefault();scrollTo('top');}},logo?h('span',{class:'rd-logo'},h('img',{src:logo,alt:C.name+' logo'})):null,h('span',null,h('b',null,'D&D Roadside'),h('small',null,'Wrecker Service'))),
-    h('nav',{class:'rd-links','aria-label':'Sections'},[['rd-svc','Services'],['rd-plans','Plans'],['rd-perks','Perks'],['rd-refer','Refer']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t))),
-    h('div',{class:'rd-nav-cta'},ext(site,'Sign in','rd-ghost'),ext(join,'Join now','rd-btn'))));
+  const nav=h('header',{class:'rd-nav'},h('div',{class:'rd-haz'}),h('div',{class:'rd-w rd-nav-in'},
+    h('a',{class:'rd-brand',href:'#top',onclick:e=>{e.preventDefault();scrollTo('top');}},logo?h('span',{class:'rd-logo'},h('img',{src:logo,alt:C.name+' logo'})):rdI('tow',26),h('b',null,'D&D Roadside')),
+    h('nav',{class:'rd-links','aria-label':'Sections'},[['rd-svc','Services'],['rd-plans','Plans'],['rd-perks','Perks'],['rd-faq','FAQ'],['rd-req','Contact']].map(([id,t])=>h('button',{type:'button',onclick:()=>scrollTo(id)},t))),
+    h('div',{class:'rd-nav-cta'},ext(site,h('span',null,rdI('user',17),'Sign in'),'rd-login'),ext(join,'Join now','rd-btn y'))));
 
-  // hero with the membership card
   const hero=h('section',{class:'rd-hero',id:'top'},h('div',{class:'rd-w rd-hero-in'},
-    h('div',{class:'rd-hero-t rv'},
-      h('p',{class:'rd-kick'},rdI('shield',16),'Roadside membership · '+(C.city||'Dubuque, IA')),
-      h('h1',null,'Roadside help, one tap away.'),
-      h('p',{class:'rd-lead'},'Towing, jump starts, lockouts, flat tires and more from D&D Wrecker Service. Pick a plan and your coverage starts immediately.'),
-      h('div',{class:'rd-hero-b'},ext(join,'Become a member','rd-btn lg',true),h('button',{type:'button',class:'rd-ghost lg',onclick:()=>go('rd-plans')},'See plans and pricing')),
-      C.tel?h('a',{class:'rd-hl',href:C.tel},rdI('phone',18),h('span',null,'24/7 Roadside Hotline ',h('b',null,C.phoneTxt))):null),
-    h('div',{class:'rd-hero-v rv'},
-      h('div',{class:'rd-mcard'},
-        h('div',{class:'rd-mc-top'},h('div',null,h('small',null,'MEMBERSHIP'),h('b',null,'Plus')),rdI('shield',30)),
-        h('div',{class:'rd-mc-bot'},h('div',null,h('small',null,'MEMBER'),h('b',null,'You')),h('div',{class:'rd-mc-st'},h('small',null,'STATUS'),h('b',null,h('i'),'Active')))),
-      h('div',{class:'rd-mini'},svcs.slice(0,6).map(s=>h('div',{class:'rd-mini-t'},h('span',{class:'rd-ic '+(tone[s[0]]||'b')},rdI(s[0],20)),h('span',null,s[1])))))));
+    C.tel?h('a',{class:'rd-phone rv',href:C.tel},h('i',null,rdI('phone',16)),C.phoneTxt):null,
+    h('h1',{class:'rv'},'Roadside help',h('br'),'24/7 membership'),
+    h('p',{class:'rd-lead rv'},'Towing, jump starts, lockouts, flat tires, fuel delivery and more from D&D Wrecker Service in '+(C.city||'Dubuque, IA')+'. Coverage starts immediately.'),
+    h('div',{class:'rd-hero-b rv'},ext(join,'Become a member','rd-btn',true),h('button',{type:'button',class:'rd-btn ghost',onclick:()=>scrollTo('rd-plans')},'See plans'))),
+    pic('hero')?h('div',{class:'rd-w'},h('div',{class:'rd-hero-pic rv'},h('img',{src:pic('hero',2000),alt:'Tow truck loading a vehicle',loading:'eager'}))):null);
 
-  // services
+  const strip=h('section',{class:'rd-strip'},h('div',{class:'rd-w rd-strip-in'},plans.map((p,i)=>h('button',{type:'button',class:'rd-tier rv'+(i?' d'+i:''),onclick:()=>scrollTo('rd-plans')},
+    h('span',{class:'rd-tier-i'},rdI(i===0?'shield':i===1?'star':'crown',34)),h('b',null,p.name),h('span',null,'$'+p.mo+' / month'))),
+    h('div',{class:'rd-tier note rv d3'},h('span',{class:'rd-tier-i'},rdI('gift',34)),h('b',null,'Annual'),h('span',null,'1 month free'))));
+
+  let cur=0, timer=null;
+  const shot=h('div',{class:'rd-svc-pic'},svcs.map((s,i)=>pic(s[0])?h('img',{src:pic(s[0],1200),alt:s[1],class:i?null:'on',loading:'lazy'}):h('span')));
+  const rows=svcs.map((s,i)=>h('button',{type:'button',class:'rd-row'+(i?'':' on'),onmouseenter:()=>sel(i),onfocus:()=>sel(i),onclick:()=>sel(i)},
+    h('em',null,String(i+1).padStart(2,'0')),h('span',null,h('b',null,s[1]),h('small',null,s[2])),h('i',null,rdI('ne',15))));
+  function sel(i){ cur=i; rows.forEach((r,j)=>r.classList.toggle('on',j===i)); [...shot.children].forEach((m,j)=>m.classList.toggle('on',j===i)); }
   const svc=h('section',{class:'rd-sec',id:'rd-svc'},h('div',{class:'rd-w'},
-    h('div',{class:'rd-head rv'},h('p',{class:'rd-kick dk'},'What we cover'),h('h2',null,'Request assistance for'),h('p',null,'Members request help in the app in three quick steps: pick the service, share your location, choose standard or urgent and ASAP or scheduled. Prefer to talk? Call the hotline any time.')),
-    h('div',{class:'rd-svcs'},svcs.map((s,i)=>h('div',{class:'rd-svc rv'+(i%4?' d'+(i%4):'')},h('span',{class:'rd-ic '+(tone[s[0]]||'b')},rdI(s[0],24)),h('b',null,s[1]),h('span',null,s[2])))),
-    h('div',{class:'rd-hot rv'},h('div',null,h('h3',null,rdI('phone',22),'24/7 Roadside Hotline'),h('p',null,'Prefer to talk? Our dispatchers are standing by.')),C.tel?h('a',{class:'rd-btn wh',href:C.tel},'Call '+C.phoneTxt):null)));
+    h('h2',{class:'rd-big rv'},'Roadside services with towing, jump starts, lockouts and fuel delivery'),
+    h('div',{class:'rd-svc-g'},h('div',{class:'rd-rows rv'},rows),h('div',{class:'rv d1'},shot))));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ clearInterval(timer); if(e.isIntersecting&&!matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(()=>sel((cur+1)%svcs.length),3800); }),{threshold:.3}); io.observe(svc);
 
-  // plans
+  const feats=[['phone','24/7 hotline','Prefer to talk? Dispatchers are standing by day and night.'],['bolt','Coverage starts now','Sign up and you are covered immediately. Upgrade anytime.'],['tow','Free tows included','A free tow every 3 or 6 months, depending on your plan.'],['tag','Local member perks','Discounts at '+perks.length+' partner businesses around the Tri-State.']];
+  const featSec=h('section',{class:'rd-feats'},h('div',{class:'rd-w rd-feats-in'},feats.map((f,i)=>h('div',{class:'rd-feat rv'+(i?' d'+i:'')},h('span',null,rdI(f[0],40)),h('b',null,f[1]),h('p',null,f[2])))));
+
+  const band=h('section',{class:'rd-band'},pic('band')?h('img',{src:pic('band',2200),alt:'',loading:'lazy'}):null,h('div',{class:'rd-w rd-band-in'},
+    h('h2',{class:'rv'},'Roadside help',h('br'),'when you need it'),
+    C.tel?h('a',{class:'rd-play rv',href:C.tel},h('i',null,rdI('phone',26)),h('span',null,'Call the 24/7 Roadside Hotline',h('b',null,C.phoneTxt))):null));
+
+  const stats=[['24/7','Hotline availability'],[String(svcs.length),'Roadside services'],[tow?tow+' mi':'','Towing on Pro'],[String(perks.length),'Partner discounts']].filter(s=>s[0]);
+  const about=h('section',{class:'rd-sec'},h('div',{class:'rd-w rd-about'},
+    h('div',{class:'rd-about-t rv'},h('h2',null,'One membership covers the road ',h('span',null,'towing, jump starts, lockouts, flat tires, winch outs and fuel delivery'))),
+    h('div',{class:'rd-stats'},stats.map((s,i)=>h('div',{class:'rd-stat rv'+(i?' d'+i:'')},h('b',null,s[0]),h('span',null,s[1]))))),
+    h('div',{class:'rd-w rd-photos'},['jump','tire','fuel','batt'].filter(k=>pic(k)).map((k,i)=>h('div',{class:'rv'+(i?' d'+i:'')},h('img',{src:pic(k,700),alt:(svcs.find(s=>s[0]===k)||[,''])[1],loading:'lazy'})))));
+
   let annual=false;
   const grid=h('div',{class:'rd-plans'});
-  const renderPlans=()=>{ grid.replaceChildren(...plans.map((p,i)=>h('article',{class:'rd-plan'+(p.rec?' rec':'')+(i===2?' pro':'')},
-    p.rec?h('span',{class:'rd-rec'},'Recommended'):null,
-    h('div',{class:'rd-plan-h'},h('div',null,h('h3',null,i===1?rdI('star',18):i===2?rdI('shield',18):null,p.name),h('small',null,p.sub||'')),
-      h('div',{class:'rd-price'},h('b',null,'$'+(annual?p.yrMo:p.mo)),h('span',null,annual?'/mo · billed yearly':'/mo'),annual&&p.yr?h('em',null,'$'+p.yr+'/yr'):null)),
-    h('p',{class:'rd-tax'},'Auto-renews · includes 5.5% sales tax'),
-    h('ul',null,(p.feat||[]).map(f=>h('li',null,rdI('check',17),h('span',null,f[0],f[1]?h('small',null,f[1]):null)))),
-    ext(join,'Join with '+p.name,'rd-btn full')))); };
-  const tg=(a,label,badge)=>h('button',{type:'button',class:'rd-tg'+(a===annual?' on':''),'aria-pressed':String(a===annual),onclick:e=>{ annual=a; [...e.currentTarget.parentNode.children].forEach(b=>{ const on=b===e.currentTarget; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); renderPlans(); }},label,badge?h('em',null,badge):null);
+  const renderPlans=()=>grid.replaceChildren(...plans.map(p=>h('article',{class:'rd-plan'+(p.rec?' rec':'')},
+    h('div',{class:'rd-plan-h'},h('small',null,p.name+' plan'),p.rec?h('em',null,'Recommended'):annual?h('em',{class:'g'},'1 month free'):null),
+    h('div',{class:'rd-price'},h('b',null,'$'+(annual?p.yrMo:p.mo)),h('span',null,annual?'/ mo, billed yearly':'/ month')),
+    h('p',{class:'rd-tax'},annual&&p.yr?'$'+p.yr+' per year · ':'',p.sub||'',' · includes 5.5% sales tax'),
+    h('ul',null,(p.feat||[]).map(f=>h('li',null,rdI('check',16),h('span',null,f[0],f[1]?h('small',null,f[1]):null)))),
+    ext(join,'Get started','rd-btn full',true))));
+  const tg=(a,label)=>h('button',{type:'button',class:'rd-tg'+(a===annual?' on':''),'aria-pressed':String(a===annual),onclick:e=>{ annual=a; [...e.currentTarget.parentNode.children].forEach(b=>{ const on=b===e.currentTarget; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); renderPlans(); }},label);
   renderPlans();
-  const plansSec=h('section',{class:'rd-sec rd-alt',id:'rd-plans'},h('div',{class:'rd-w'},
-    h('div',{class:'rd-head rv'},h('p',{class:'rd-kick dk'},'Membership plans'),h('h2',null,'Pick the coverage that fits'),h('p',null,'Upgrade anytime. Coverage starts immediately.')),
-    h('div',{class:'rd-toggle rv',role:'group','aria-label':'Billing period'},tg(false,'Monthly'),tg(true,'Annual','1 month free')),
-    grid,
-    h('p',{class:'rd-note'},'Pay securely by card or PayPal when you sign up.')));
+  const plansSec=h('section',{class:'rd-sec rd-pricing',id:'rd-plans'},h('div',{class:'rd-w'},
+    h('div',{class:'rd-price-h'},h('div',{class:'rv'},kick('Membership pricing'),h('h2',{class:'rd-h2'},'Flexible plans for roadside help and towing'),h('p',null,'Every plan auto-renews and coverage starts immediately. Pay by card or PayPal, monthly or yearly.')),
+      h('div',{class:'rd-toggle rv d1',role:'group','aria-label':'Billing period'},tg(false,'Monthly'),tg(true,'Annual · 1 month free'))),
+    grid));
 
-  // perks
   let cat='';
   const list=h('div',{class:'rd-perks'});
-  const renderPerks=()=>list.replaceChildren(...perks.filter(p=>!cat||p[1]===cat).map(p=>{ const t=telOf(p[3]); const ic=p[1]==='Services'?'bag':'wrench';
-    return h('div',{class:'rd-perk'},h('span',{class:'rd-ic '+(p[1]==='Auto Parts'?'o':p[1]==='Repair Shops'?'b':'v')},rdI(ic,20)),
-      h('div',{class:'rd-perk-t'},h('b',null,p[0]),h('small',null,p[1]),p[2]?h('span',null,rdI('pin',14),p[2]):null,t?h('a',{href:t},rdI('phone',14),p[3]):null),
-      h('em',{class:'rd-off'},p[4])); }));
+  const renderPerks=()=>list.replaceChildren(...perks.filter(p=>!cat||p[1]===cat).map(p=>{ const t=telOf(p[3]);
+    return h('div',{class:'rd-perk'},h('div',{class:'rd-perk-h'},h('em',null,p[4]),h('small',null,p[1])),h('b',null,p[0]),
+      p[2]?h('span',null,rdI('pin',15),p[2]):null,t?h('a',{href:t},rdI('phone',15),p[3]):null); }));
   renderPerks();
-  const chips=h('div',{class:'rd-chips',role:'group','aria-label':'Filter partners'},['All'].concat(cats).map((c,i)=>h('button',{type:'button',class:i?null:'on',onclick:e=>{ cat=i?c:''; [...e.currentTarget.parentNode.children].forEach(b=>b.classList.toggle('on',b===e.currentTarget)); renderPerks(); }},c)));
-  const perkSec=h('section',{class:'rd-sec',id:'rd-perks'},h('div',{class:'rd-w'},
-    h('div',{class:'rd-head rv'},h('p',{class:'rd-kick dk'},'Member perks'),h('h2',null,'Save at '+perks.length+' local partners'),h('p',null,'Show your membership for exclusive discounts at shops and services around the Tri-State area.')),
-    chips,list));
+  const perkSec=h('section',{class:'rd-sec rd-perksec',id:'rd-perks'},h('div',{class:'rd-w'},
+    h('div',{class:'rd-perk-top'},h('div',{class:'rv'},kick('Member perks'),h('h2',{class:'rd-h2'},'Save at '+perks.length+' local partners')),
+      h('div',{class:'rd-chips rv d1',role:'group','aria-label':'Filter partners'},['All'].concat(cats).map((c,i)=>h('button',{type:'button',class:i?null:'on',onclick:e=>{ cat=i?c:''; [...e.currentTarget.parentNode.children].forEach(b=>b.classList.toggle('on',b===e.currentTarget)); renderPerks(); }},c)))),
+    list));
 
-  // refer
-  const refer=h('section',{class:'rd-sec rd-alt',id:'rd-refer'},h('div',{class:'rd-w rd-ref'},
-    h('div',{class:'rd-ref-card rv'},h('span',{class:'rd-ref-i'},rdI('gift',26)),h('small',null,'Your referral code'),h('b',null,'Share it'),h('p',null,'Every member gets a personal code, link and QR code. Friends get covered, you earn rewards.')),
-    h('div',{class:'rd-ref-t rv'},h('p',{class:'rd-kick dk'},'Refer a friend'),h('h2',null,'Cover the whole family'),
-      h('p',null,'Refer a family member and they get ',h('b',null,'25% off every month'),' for as long as they stay subscribed.'),
-      ext(join,'Start your membership','rd-btn',true))));
+  const refer=h('section',{class:'rd-refer'},h('div',{class:'rd-w rd-refer-in rv'},h('span',{class:'rd-refer-i'},rdI('gift',40)),
+    h('div',null,h('h2',null,'Cover the whole family'),h('p',null,'Refer a family member and they get 25% off every month for as long as they stay subscribed. Every member gets a referral code, link and QR code to share.')),
+    ext(join,'Join and share','rd-btn',true)));
 
-  // final CTA + footer
-  const cta=h('section',{class:'rd-cta'},h('div',{class:'rd-w rd-cta-in rv'},h('div',null,h('h2',null,'Get covered today.'),h('p',null,'Sign up in minutes. Coverage starts immediately.')),
-    h('div',{class:'rd-hero-b'},ext(join,'Join now','rd-btn wh lg',true),C.tel?h('a',{class:'rd-ghost wh lg',href:C.tel},'Call '+C.phoneTxt):null)));
-  const foot=h('footer',{class:'rd-foot'},h('div',{class:'rd-w rd-foot-in'},
-    h('div',{class:'rd-brand'},logo?h('span',{class:'rd-logo'},h('img',{src:logo,alt:''})):null,h('span',null,h('b',null,'D&D Wrecker Roadside'),h('small',null,C.city||''))),
-    h('div',{class:'rd-foot-l'},C.tel?h('a',{href:C.tel},C.phoneTxt):null,ext(site,'ddroadside.com'),ext(join,'Create an account'))));
+  const faqSec=faq.length?h('section',{class:'rd-sec',id:'rd-faq'},h('div',{class:'rd-w rd-faq'},
+    h('div',{class:'rd-center rv'},kick('Useful information'),h('h2',{class:'rd-h2'},'Frequently asked questions')),
+    h('div',{class:'rd-qs rv'},faq.map((f,i)=>{ const it=h('div',{class:'rd-q'+(i?'':' open')},h('button',{type:'button','aria-expanded':String(!i),onclick:()=>{ const o=!it.classList.contains('open'); it.classList.toggle('open',o); it.firstChild.setAttribute('aria-expanded',String(o)); }},h('span',null,f[0]),h('i',null,rdI('plus',14))),h('div',{class:'rd-a'},h('div',null,h('p',null,f[1])))); return it; })))):null;
 
-  // phone tab bar (like the app)
-  const tabs=h('nav',{class:'rd-tabs','aria-label':'Quick links'},[['top','home','Home'],['rd-svc','tow','Services'],['rd-plans','card','Plans'],['rd-perks','tag','Perks']].map(([id,ic,t])=>h('button',{type:'button',onclick:()=>scrollTo(id)},rdI(ic,20),h('span',null,t))),
-    h('a',{href:join,target:'_blank',rel:'noopener',class:'join'},rdI('user',20),h('span',null,'Join')));
-  return h('div',{class:'rd'},nav,h('main',null,hero,svc,plansSec,perkSec,refer,cta),foot,tabs);
+  const req=h('section',{class:'rd-req',id:'rd-req'},h('div',{class:'rd-req-l'},h('div',{class:'rd-req-in rv'},
+    h('h2',{class:'rd-h2'},'Request roadside help online'),
+    h('ol',{class:'rd-steps'},[['Pick the service','Towing, jump start, flat tire, lockout, fuel, winch out, accident or new battery.'],['Share your location','Type an address or landmark, or use your current location.'],['Choose priority and time','Standard or urgent, ASAP or scheduled for later.']].map((s,i)=>h('li',null,h('em',null,String(i+1)),h('span',null,h('b',null,s[0]),h('small',null,s[1]))))),
+    h('div',{class:'rd-hero-b'},ext(join,'Become a member','rd-btn y full',true),C.tel?h('a',{class:'rd-btn full',href:C.tel},'Call '+C.phoneTxt):null),
+    h('p',{class:'rd-small'},'Online requests are for members in the D&D app. Anyone can call the hotline.'))),
+    pic('req')?h('div',{class:'rd-req-p'},h('img',{src:pic('req',1400),alt:'Flatbed tow truck carrying a vehicle',loading:'lazy'})):null);
+
+  const foot=h('footer',{class:'rd-foot'},h('div',{class:'rd-haz'}),h('div',{class:'rd-w'},
+    h('div',{class:'rd-foot-top'},C.tel?h('a',{class:'rd-foot-ph',href:C.tel},h('i',null,rdI('phone',26)),C.phoneTxt):null,h('div',{class:'rd-foot-ad'},h('small',null,rdI('pin',14),'Based in'),h('b',null,C.city||'Dubuque, IA'))),
+    h('div',{class:'rd-foot-g'},
+      h('div',null,h('a',{class:'rd-brand',href:'#top'},logo?h('span',{class:'rd-logo'},h('img',{src:logo,alt:''})):null,h('b',null,'D&D Roadside')),h('p',null,'Roadside membership from D&D Wrecker Service. Help is one call or one tap away.')),
+      h('div',null,h('h4',null,'Explore'),h('ul',null,[['rd-svc','Services'],['rd-plans','Plans'],['rd-perks','Perks'],['rd-faq','FAQ']].map(([id,t])=>h('li',null,h('button',{type:'button',onclick:()=>scrollTo(id)},t))))),
+      h('div',null,h('h4',null,'Members'),h('ul',null,h('li',null,ext(join,'Create an account')),h('li',null,ext(site,'Sign in')),h('li',null,ext(site,'ddroadside.com')))),
+      h('div',null,h('h4',null,'Contact'),h('ul',null,C.tel?h('li',null,h('a',{href:C.tel},C.phoneTxt)):null,h('li',null,h('span',null,'24/7 Roadside Hotline'))))),
+    h('div',{class:'rd-foot-b'},h('span',null,'© '+new Date().getFullYear()+' D&D Wrecker Roadside'),h('span',null,C.city||''))));
+
+  const mbar=h('div',{class:'rd-mbar'},C.tel?h('a',{href:C.tel,class:'rd-btn'},rdI('phone',17),'Call'):null,ext(join,'Join now','rd-btn y'));
+  return h('div',{class:'rd'},nav,h('main',null,hero,strip,svc,featSec,band,about,plansSec,perkSec,refer,faqSec,req),foot,mbar);
 }
 function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
 function rbBar(C){
