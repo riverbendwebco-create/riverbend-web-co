@@ -4622,7 +4622,7 @@ body.t-rd{background:#fff;font-family:"DM Sans",Inter,system-ui,sans-serif;color
 .rd-mbar{display:none}
 .rd-svc-brand{background:radial-gradient(120% 90% at 85% 0%,#0A4BD1 0%,#0033A0 40%,#0B1220 100%);color:#fff}
 .rd-svc-brand::after{content:"";position:absolute;inset:auto 0 0 0;height:9px;background:repeating-linear-gradient(-45deg,#5B9BFF 0 14px,#0B1220 14px 28px)}
-.rd-svc-logo{position:absolute;z-index:2;opacity:1!important;transform:none!important;top:26px;right:26px;width:120px;height:auto;background:#fff;border-radius:10px;padding:6px}
+.rd-svc-pic img.rd-svc-logo{position:absolute;z-index:2;inset:26px 26px auto auto;width:120px;height:auto;object-fit:contain;opacity:1;transform:none;background:#fff;border-radius:10px;padding:6px}
 .rd-svc-card{position:absolute;inset:0;padding:46px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s}
 .rd-svc-card.on{opacity:1;transform:none}
 .rd-svc-ic{width:110px;height:110px;border-radius:18px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:#fff;margin-bottom:10px}
