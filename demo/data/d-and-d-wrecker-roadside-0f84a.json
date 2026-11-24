@@ -209,7 +209,7 @@
   "pics": {
    "hero": "1738101996177-13110d20a973",
    "band": "1738101996181-f4503ebaec70",
-   "req": "1730514785075-b065c757b653",
+   "req": "img/dd-trucks.jpg",
    "tow": "1730514784243-f0e7f09c9f50",
    "jump": "1597766321604-9de3ff9e93e2",
    "tire": "1601739722627-f00a99138ea1",
@@ -247,6 +247,17 @@
    [
     "Can I add my family?",
     "Refer a family member and they get 25% off every month for as long as they stay subscribed."
+   ]
+  ],
+  "area": "Serving the Tristate Area: IA, IL, WI",
+  "locs": [
+   [
+    "Dubuque, IA",
+    "(563) 580-3447"
+   ],
+   [
+    "Hazel Green, WI",
+    "(608) 727-4665"
    ]
   ]
  }
