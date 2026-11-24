@@ -262,7 +262,7 @@ const start=()=>{ if(started) return; started=true; const st=performance.now(), 
 const pre=new Image(); pre.onload=start; pre.src='https://images.unsplash.com/photo-'+H+'?auto=format&fit=crop&w=2400&q=75'; setTimeout(start,3000);
 /* listings */
 const HOMES=[['1600596542815-ffad4c1539a9','Crestview estate','$270,000',4,5,'2,650'],['1613490493576-7fde63acd811','Sunset bluff','$225,000',2,3,'1,850'],['1613977257363-707ba9348227','Silver birch','$312,000',4,3,'1,450'],
- ['1512917774080-9991f1c4c750','Nova residence','$145,000',3,2,'1,350'],['1580587771525-78b9dba3b914','Misty meadows','$125,000',3,4,'2,150'],['1605276374104-dee2a0ed3cd6','Rosewood manor','$320,000',3,2,'1,850']];
+ ['1512917774080-9991f1c4c750','Nova residence','$145,000',3,2,'1,350'],['1580587771525-78b9dba3b914','Misty meadows','$125,000',3,4,'2,150'],['1600047509807-ba8f99d2cdde','Rosewood manor','$320,000',3,2,'1,850']];
 $('#homes').innerHTML=HOMES.map(([id,n,p,b,ba,a],i)=>'<a class="home rv'+(i%3?' d'+(i%3):'')+'" href="#listings"><div class="im"><div class="ph" style=\'background-image:'+U(id,900)+'\'></div></div><div class="home-t"><span>'+esc(n)+'</span><b>'+esc(p)+'</b></div><div class="facts"><span><svg><use href="#bed"/></svg>'+b+'</span><span><svg><use href="#bath"/></svg>'+ba+'</span><span><svg><use href="#area"/></svg>'+a+' sq.ft</span></div></a>').join('');
 /* services: accordion drives the photo */
 const SV=[['i1','Finishes','Premium flooring, cabinetry and trim, installed with precision so every room feels complete from the first walk-through.','1600607687939-ce8a6c25118c'],
