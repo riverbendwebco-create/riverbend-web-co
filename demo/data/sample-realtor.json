@@ -1,0 +1,11 @@
+{"name":"Dana Whitaker","variant":"realty","style":"trade","category":"REALTOR®",
+ "tagline":"Buying or selling a home in the Dubuque area? Call or text Dana and get straight answers.",
+ "about":"Dana Whitaker is a REALTOR® with Bluffside Realty Group in Dubuque. She helps first-time buyers find the right home and helps sellers price, prepare and market theirs so it sells with less stress.",
+ "city":"Dubuque, IA","phone":"(563) 555-0163",
+ "x":{"sample":true,"brokerage":"Bluffside Realty Group","legalName":"Dana Whitaker","officeCity":"Dubuque, IA",
+  "photo":"https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&h=1100&q=75",
+  "license":"Licensed in the State of Iowa",
+  "idxDisclaimer":"Sample website. Homes, prices and listing data shown here are examples only.",
+  "areas":["Dubuque","Asbury","Peosta","Dyersville"],
+  "facts":[{"v":"Dubuque","k":"Local REALTOR®"},{"v":"Buy & sell","k":"First homes to move-up homes"},{"v":"Text","k":"Fast answers, 7 days a week"},{"v":"Free","k":"Home value estimates"}],
+  "follow":{},"hideLogo":true}}

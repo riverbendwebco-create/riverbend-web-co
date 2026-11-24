@@ -107,7 +107,7 @@ const el=(t,p,...k)=>{const n=document.createElement(t);if(p)for(const x in p){i
 if(!A.token()) return A.requireLogin('/outreach/');
 async function api(b){ const r=await A.call(b); if(r&&r.error==='auth'){ A.requireLogin('/outreach/'); } return r; }
 let data=null, found=[];
-const SAMPLE={pub:'Bar sample',lounge:'Restaurant sample',trade:'Service sample',salon:'Salon sample',auto:'Auto shop sample'};
+const SAMPLE={pub:'Bar sample',lounge:'Restaurant sample',trade:'Service sample',salon:'Salon sample',auto:'Auto shop sample',realtor:'Realtor sample'};
 async function copy(t,btn){ try{ await navigator.clipboard.writeText(t); const o=btn.textContent; btn.textContent='Copied'; setTimeout(()=>btn.textContent=o,1200);}catch(_){ prompt('Copy:',t);} }
 function tab(n){ document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===n)); ['today','find','all','settings'].forEach(x=>$('#tab-'+x).classList.toggle('hidden',x!==n)); }
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));

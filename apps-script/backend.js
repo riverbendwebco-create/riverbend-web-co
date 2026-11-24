@@ -1877,7 +1877,7 @@ var BILL_TIERS = {
 var BILL_TZ = 'America/Chicago';
 var BILL_HEADERS = ['ID', 'Business', 'Owner', 'Email', 'Phone', 'Package', 'Payment option', 'Setup fee', 'Monthly', 'Status', 'Launch date', 'Next bill', 'Full payments', 'Mode', 'Updated', 'Pay key', 'Data (do not edit)'];
 var SQ_VERSION = '2025-01-23';
-var BILL_VERSION = '2026-11-23z';
+var BILL_VERSION = '2026-11-23r';
 // Everything that charges, changes money or payment settings needs an individual owner account.
 // The old shared billing password can only view billing until owners turn it off.
 var BILL_OWNER_ONLY = { billing_settings: 1, billing_catalog: 1, billing_plans: 1, billing_postest: 1, billing_selftest: 1, billing_paylink: 1, billing_manual: 1, billing_end: 1, billing_setup_inperson: 1,
@@ -3563,22 +3563,23 @@ function outIssue_(l) {
   return '';
 }
 // Which of the 4 sample sites on riverbendwebco.com fits this business (no per-business demo).
-var OUT_SAMPLES = { pub: 'a neighborhood bar', lounge: 'a restaurant', trade: 'a local service business', salon: 'a salon and boutique', auto: 'an auto shop' };
+var OUT_SAMPLES = { pub: 'a neighborhood bar', lounge: 'a restaurant', trade: 'a local service business', salon: 'a salon and boutique', auto: 'an auto shop', realtor: 'a real estate agent' };
 function outStyle_(type) {
   var t = String(type || '').toLowerCase();
   if (/hair|salon|barber|beauty|nail|spa|cosmetic|boutique|cloth|apparel|fashion|jewel|gift|florist|bridal/.test(t)) return 'salon';
+  if (/realtor|real estate|realty|broker/.test(t)) return 'realtor';
   if (/\bauto|\bcar (repair|wash|dealer|care)|\bcars?\b|mechanic|collision|body shop|garage|\btires?\b|muffler|transmission|lube|oil change|towing|tow service|dealership|motor/.test(t)) return 'auto';
   if (/bar|pub|tavern|saloon|brew|winer|distill|nightclub|lounge/.test(t)) return 'pub';
   if (/restaurant|cafe|coffee|food|pizza|bbq|barbecue|diner|bakery|grill|juice|ice cream|deli|burger|taco|sandwich/.test(t)) return 'lounge';
   return 'trade';
 }
 function outSampleKey_(o) { var st = outStyle_(o.type); return st !== 'trade' || !OUT_SAMPLES[o.demo] ? st : o.demo; }
-function outSampleUrl_(o) { var k = outSampleKey_(o); return k === 'auto' ? 'https://' + SITE + '/demo/?d=sample-auto' : 'https://' + SITE + '/?preview=' + k; }
+function outSampleUrl_(o) { var k = outSampleKey_(o); return k === 'auto' || k === 'realtor' ? 'https://' + SITE + '/demo/?d=sample-' + k : 'https://' + SITE + '/?preview=' + k; }
 function outUnsubUrl_(o) { return 'https://' + SITE + '/unsubscribe/#' + o.token; }
 function outDraft_(o, step, cfg) {
   var st = outSampleKey_(o), demo = outSampleUrl_(o), host = hostOf_(o.website || '');
   var custom = 'It’s a sample. Your site would be designed from scratch around ' + o.business + ': your name, photos, colors, ' +
-    (st === 'trade' || st === 'auto' ? 'services' : st === 'salon' ? 'services and prices' : 'menu') + ', and whatever features you want.';
+    (st === 'realtor' ? 'listings, areas you serve' : st === 'trade' || st === 'auto' ? 'services' : st === 'salon' ? 'services and prices' : 'menu') + ', and whatever features you want.';
   var sig = '\n\n' + cfg.from + '\nOwner, Riverbend Web Co.\n(608) 306-0135 · riverbendwebco.com';
   var foot = '\n\n---\nBusiness inquiry from Riverbend Web Co. · ' + (cfg.address || '[MAILING ADDRESS NEEDED]') +
     '\nNot interested? Unsubscribe: ' + outUnsubUrl_(o);
