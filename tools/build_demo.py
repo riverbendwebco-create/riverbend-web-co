@@ -4629,7 +4629,7 @@ body.t-rd{background:#fff;font-family:"DM Sans",Inter,system-ui,sans-serif;color
 .rd-svc-card b{font-family:var(--cd);font-size:clamp(2.4rem,4vw,3.6rem);text-transform:uppercase;line-height:.95}
 .rd-svc-card p{margin:0 0 12px;color:rgba(255,255,255,.82);font-size:1.1rem}.rd-svc-card .rd-btn{align-self:flex-start;background:#fff;color:#0B1220}
 .rd-band img{object-position:center 60%}
-.rd-req-p img{object-position:center 40%}
+.rd-req-p{position:relative;overflow:hidden;display:grid;place-items:center;padding:40px}.rd-req-p::before{content:"";position:absolute;inset:-40px;background:var(--rdbg) center/cover no-repeat;filter:blur(18px) brightness(.85);transform:scale(1.1)}.rd-req-p img{position:relative;z-index:1;width:100%;height:auto!important;max-height:100%;object-fit:contain!important;border-radius:12px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
 .rd-tiles{grid-template-columns:repeat(3,1fr)!important;max-width:660px;justify-self:center;width:100%}
 .rd-tiles figure:first-child{grid-row:auto!important}.rd-tiles img{aspect-ratio:1!important;object-position:center!important}
 @media (max-width:1020px){.rd-links{display:none}.rd-svc-g,.rd-about,.rd-req,.rd-fleet-in{grid-template-columns:1fr}.rd-svc-pic{min-height:320px}.rd-feats-in,.rd-strip-in{grid-template-columns:repeat(2,1fr)}.rd-plans{grid-template-columns:1fr;max-width:560px}.rd-perks{grid-template-columns:repeat(2,1fr)}.rd-price-h{flex-direction:column;align-items:flex-start}.rd-req-l{justify-content:flex-start;padding:70px 32px}.rd-req-p{min-height:0}.rd-req-p img{aspect-ratio:4/3;height:auto}.rd-foot-g{grid-template-columns:1fr 1fr}}

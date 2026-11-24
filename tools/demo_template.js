@@ -4243,7 +4243,7 @@ function roadside(C){
     h('ol',{class:'rd-steps'},[['Pick the service','Towing, jump start, flat tire, lockout, fuel, winch out, accident or new battery.'],['Share your location','Type an address or landmark, or use your current location.'],['Choose priority and time','Standard or urgent, ASAP or scheduled for later.']].map((s,i)=>h('li',null,h('em',null,String(i+1)),h('span',null,h('b',null,s[0]),h('small',null,s[1]))))),
     h('div',{class:'rd-hero-b'},ext(join,'Become a member','rd-btn y full',true),C.tel?h('a',{class:'rd-btn full',href:C.tel},'Call '+C.phoneTxt):null),
     h('p',{class:'rd-small'},'Online requests are for members in the D&D app. Anyone can call the hotline.'))),
-    pic('req')?h('div',{class:'rd-req-p'},h('img',{src:pic('req',1400),alt:'D&D Wrecker Service logo',loading:'lazy'})):null);
+    pic('req')?h('div',{class:'rd-req-p',style:'--rdbg:'+cssUrl(pic('req',1400))},h('img',{src:pic('req',1400),alt:'D&D Wrecker Service logo',loading:'lazy'})):null);
 
   const foot=h('footer',{class:'rd-foot'},h('div',{class:'rd-haz'}),h('div',{class:'rd-w'},
     h('div',{class:'rd-foot-top'},C.tel?h('a',{class:'rd-foot-ph',href:C.tel},h('i',null,rdI('phone',26)),C.phoneTxt):null,h('div',{class:'rd-foot-locs'},(Array.isArray(X.locs)&&X.locs.length?X.locs:[[C.city||'Dubuque, IA',C.phoneTxt]]).map(l=>h('div',{class:'rd-foot-ad'},h('small',null,rdI('pin',14),String(l[0]||'')),telOf(l[1])?h('a',{href:telOf(l[1])},String(l[1])):null)))),
