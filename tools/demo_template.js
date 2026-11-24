@@ -2396,13 +2396,14 @@ function shadeTree(C){
 }
 /* ===================== SPIRITED (dark, gold, high-end cocktail lounge) ===================== */
 function spirited(C){
-  const name=C.name||'Spirited', pic='https://riverbendwebco.com/demo/img/spirited-pour.jpg';
+  const name=C.name||'Spirited', pic='https://riverbendwebco.com/demo/img/spirited-pour.jpg', logo='https://riverbendwebco.com/demo/img/spirited-logo.png';
   const addr=C.addr||'', city=(C.city||'').replace(/\s+IN$/,', IN');
   const full=[addr,city].filter(Boolean).join(', ');
   const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+full);
   const go=id=>e=>{ e.preventDefault(); scrollTo(id); };
-  /* smoke: soft drifting layers over the photo */
-  const smoke=cls=>h('div',{class:'sp-smoke '+(cls||''),'aria-hidden':'true'},h('i'),h('i'),h('i'),h('i'),h('i'));
+  const dash=v=>String(v||'').replace(/\s*-\s*/,' – ');
+  /* smoke wisps, placed on the photo itself (stage keeps the photo's proportions so they line up with the glass) */
+  const wisps=n=>h('div',{class:'sp-wisps','aria-hidden':'true'},Array.from({length:n},()=>h('i')));
   /* ----- menu: the scraped list mixes section headers (ALL CAPS) with drinks ----- */
   const secs=[]; let cur=null;
   C.items.forEach(i=>{ const n=String(i.name||'').trim(); if(!n) return;
@@ -2410,64 +2411,64 @@ function spirited(C){
     if(!cur){ cur={t:'Cocktails',items:[]}; secs.push(cur); } cur.items.push(i); });
   const TABS=[['Cocktails',['Cocktails']],['Zero-Proof',['Zero-proof']],['Wine & Bubbles',['Sparkling','Pink','White','Red','Bottle']],['Beer & Seltzer',['Craft']]]
     .map(([t,keys])=>[t,secs.filter(x=>keys.includes(x.t))]).filter(([,g])=>g.some(x=>x.items.length));
-  const label={Sparkling:'Sparkling',Pink:'Rosé',White:'White',Red:'Red',Bottle:'By the bottle',Craft:'Cans & draft','Zero-proof':'Zero-proof',Cocktails:'Cocktails'};
+  const label={Sparkling:'Sparkling',Pink:'Rosé',White:'White',Red:'Red',Bottle:'By the bottle',Craft:'Cans & draft'};
   const drink=i=>{ const parts=String(i.name).split('|').map(x=>x.trim()).filter(Boolean);
-    return h('li',{class:'sp-d rv'},h('span',{class:'sp-d-n'},parts.map((p,k)=>[k?h('em',null,'·'):null,h('span',null,p)])),h('i',{class:'sp-d-dots'}),h('b',null,i.price||'')); };
+    return h('li',{class:'sp-d'},h('span',{class:'sp-d-n'},parts.map((p,k)=>[k?h('em',null,'·'):null,h('span',null,p)])),h('i',{class:'sp-d-dots'}),h('b',null,i.price||'')); };
   const panes=TABS.map(([t,g],k)=>h('div',{class:'sp-pane'+(k?'':' on'),role:'tabpanel'},
     g.map(x=>h('div',{class:'sp-grp'},g.length>1?h('h4',null,label[x.t]||x.t):null,h('ul',null,x.items.map(drink))))));
-  const tabs=h('div',{class:'sp-tabs',role:'tablist'},TABS.map(([t],k)=>h('button',{type:'button',role:'tab','aria-selected':k?'false':'true',onclick:e=>{
-    tabs.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-selected',j===k?'true':'false')); panes.forEach((p,j)=>p.classList.toggle('on',j===k)); }},t)));
+  const pick=k=>{ tabs.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-selected',j===k?'true':'false')); panes.forEach((p,j)=>p.classList.toggle('on',j===k)); };
+  const tabs=h('div',{class:'sp-tabs',role:'tablist'},TABS.map(([t],k)=>h('button',{type:'button',role:'tab','aria-selected':k?'false':'true',onclick:()=>{ pick(k); const m=document.getElementById('sp-menu'); if(m&&m.getBoundingClientRect().top<0) scrollTo('sp-menu'); }},t)));
   const smokeDrink=C.items.find(i=>/smoke/i.test(i.name||''));
   /* ----- hours: only the days we actually know ----- */
   const known=DAYS.map((d,i)=>[d,C.hours[i]]).filter(([,v])=>v);
   const groupH=[]; known.forEach(([d,v])=>{ const last=groupH[groupH.length-1]; if(last&&last.v===v) last.to=d; else groupH.push({from:d,to:'',v}); });
-  const hoursL=groupH.map(g=>h('div',{class:'sp-h-r'},h('span',null,g.from.slice(0,3)+(g.to?' – '+g.to.slice(0,3):'')),h('b',null,g.v.replace(/\s*-\s*/,' – '))));
+  const hoursL=groupH.map(g=>h('div',{class:'sp-h-r'},h('span',null,g.from.slice(0,3)+(g.to?' – '+g.to.slice(0,3):'')),h('b',null,dash(g.v))));
+  const status=C.today?'Open tonight '+dash(C.today):'';
 
+  /* ----- nav: logo, plain-word links, call and directions always one tap away ----- */
+  const L=[['sp-menu','Menu'],['sp-visit','Hours & Location'],['sp-gift','Gift Cards & Catering']];
   const nav=h('header',{class:'sp-nav'},h('div',{class:'sp-w sp-nav-in'},
-    h('a',{class:'sp-mark',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},name.toUpperCase()),
-    h('nav',null,h('a',{href:'#sp-menu',onclick:go('sp-menu')},'Menu'),h('a',{href:'#sp-visit',onclick:go('sp-visit')},'Hours'),h('a',{href:'#sp-visit',onclick:go('sp-visit')},'Visit')),
-    C.tel?h('a',{class:'sp-btn line sm',href:C.tel},'Call'):null));
-  const hero=h('section',{class:'sp-hero'},h('div',{class:'sp-hero-pic'}),smoke('hero'),h('div',{class:'sp-hero-shade'}),
-    h('div',{class:'sp-w sp-hero-in'},
-      h('span',{class:'sp-kick'},'Craft cocktail lounge'+(city?' · '+city.split(',')[0]:'')),
-      h('h1',null,name),
+    h('a',{class:'sp-logo',href:'#',onclick:e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}},h('img',{src:logo,alt:name})),
+    h('nav',{class:'sp-links-d'},L.map(([id,t])=>h('a',{href:'#'+id,onclick:go(id)},t))),
+    h('div',{class:'sp-nav-r'},full?h('a',{class:'sp-btn line sm sp-hide-s',href:maps,target:'_blank',rel:'noopener'},'Directions'):null,C.tel?h('a',{class:'sp-btn gold sm',href:C.tel},'Call'):null)),
+    h('nav',{class:'sp-links-m'},L.map(([id,t])=>h('a',{href:'#'+id,onclick:go(id)},t.replace(' & Catering','')))));
+  window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+
+  /* ----- hero: the photo itself comes alive (slow push-in, smoke rolling off the glass, candle flicker) ----- */
+  const stage=h('div',{class:'sp-stage'},h('div',{class:'sp-photo'}),wisps(9),h('div',{class:'sp-glow'}));
+  stage.querySelector('.sp-photo').style.backgroundImage=cssUrl(pic);
+  const hero=h('section',{class:'sp-hero'},stage,h('div',{class:'sp-hero-shade'}),
+    h('div',{class:'sp-w sp-hero-in'},h('div',{class:'sp-hero-box'},
+      h('img',{class:'sp-hero-logo',src:logo,alt:name}),
+      h('span',{class:'sp-kick'},'Craft cocktail lounge'+(city?' · Downtown '+city.split(',')[0]:'')),
       h('p',{class:'sp-quote'},'“Oh darling, you’re only too wild to those who are too tame.”'),
-      h('div',{class:'sp-cta'},h('a',{class:'sp-btn gold',href:'#sp-menu',onclick:go('sp-menu')},'See the menu'),maps&&full?h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Find us'):null),
-      C.today?h('p',{class:'sp-tonight'},'Open tonight '+C.today.replace(/\s*-\s*/,' – ')):null),
-    h('div',{class:'sp-scroll','aria-hidden':'true'},h('i')));
-  hero.querySelector('.sp-hero-pic').style.backgroundImage=cssUrl(pic);
+      h('div',{class:'sp-cta'},h('a',{class:'sp-btn gold',href:'#sp-menu',onclick:go('sp-menu')},'View the menu'),full?h('a',{class:'sp-btn line',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null),
+      (status||addr)?h('p',{class:'sp-meta'},status?h('b',null,status):null,status&&addr?h('i',null,'·'):null,addr?h('span',null,addr):null):null)));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>hero.classList.add('is-alive')));
+
   const story=h('section',{class:'sp-sec sp-story'},h('div',{class:'sp-w sp-story-g'},
-    h('div',{class:'sp-story-pic rv'},h('div',null),smoke('small')),
+    h('div',{class:'sp-story-pic rv'},h('div',null),wisps(4)),
     h('div',{class:'sp-story-t rv'},h('span',{class:'sp-kick'},'After dark'),h('h2',null,'Poured slow.',h('br'),'Served with smoke.'),
       h('p',null,'Hand-built cocktails, low light and a little theater in every glass. Pull up a seat and let the night take its time.'),
-      smokeDrink?h('div',{class:'sp-feat'},h('small',null,'Try'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null)));
+      smokeDrink?h('div',{class:'sp-feat'},h('small',null,'Try'),h('b',null,String(smokeDrink.name).split('|').map(x=>x.trim()).join(' · ')),h('span',null,smokeDrink.price||'')):null,
+      h('a',{class:'sp-more',href:'#sp-menu',onclick:go('sp-menu')},'See all cocktails →'))));
   story.querySelector('.sp-story-pic div').style.backgroundImage=cssUrl(pic);
   const menu=TABS.length?h('section',{class:'sp-sec sp-menu',id:'sp-menu'},h('div',{class:'sp-w'},
-    h('div',{class:'sp-head rv'},h('span',{class:'sp-kick'},'The menu'),h('h2',null,'Spirits, bubbles & zero-proof')),tabs,...panes)):null;
+    h('div',{class:'sp-head rv'},h('span',{class:'sp-kick'},'The menu'),h('h2',null,'Spirits, bubbles & zero-proof'),h('p',null,'Tap a tab to switch.')),tabs,...panes)):null;
   const visit=h('section',{class:'sp-sec sp-visit',id:'sp-visit'},h('div',{class:'sp-w sp-visit-g'},
-    h('div',{class:'rv'},h('span',{class:'sp-kick'},'Visit'),h('h2',null,'Find the door.'),
+    h('div',{class:'rv'},h('span',{class:'sp-kick'},'Hours & location'),h('h2',null,'Find the door.'),
       full?h('a',{class:'sp-addr',href:maps,target:'_blank',rel:'noopener'},addr,h('br'),city):null,
       h('div',{class:'sp-links'},C.tel?h('a',{href:C.tel},C.phoneTxt):null,C.email?h('a',{href:'mailto:'+C.email},C.email):null),
-      h('div',{class:'sp-cta'},maps&&full?h('a',{class:'sp-btn gold',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null,C.email?h('a',{class:'sp-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards & catering')},'Gift cards & catering'):null)),
+      h('div',{class:'sp-cta'},full?h('a',{class:'sp-btn gold',href:maps,target:'_blank',rel:'noopener'},'Get directions'):null,C.tel?h('a',{class:'sp-btn line',href:C.tel},'Call us'):null)),
     hoursL.length?h('div',{class:'sp-hours rv'},h('h3',null,'Hours'),hoursL):null));
-  const foot=h('footer',{class:'sp-foot'},h('div',{class:'sp-w sp-foot-in'},h('span',{class:'sp-mark'},name.toUpperCase()),
-    h('div',{class:'sp-soc'},C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null),
-    h('small',null,'© '+new Date().getFullYear()+' '+name+(city?' · '+city:'')+' · Please drink responsibly.')));
-  const page=h('div',{class:'sp'},nav,hero,story,menu,visit,foot);
-
-  /* ----- intro: the pour. Photo fades up from black, smoke rolls off the glass, the name appears ----- */
-  const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let seen=false; try{ seen=sessionStorage.getItem('spIntro')==='1'; }catch(e){}
-  if(!calm&&!seen){
-    const ipic=h('div',{class:'sp-in-pic'}); ipic.style.backgroundImage=cssUrl(pic);
-    const intro=h('div',{class:'sp-intro',role:'presentation'},ipic,smoke('intro'),h('div',{class:'sp-in-shade'}),
-      h('div',{class:'sp-in-t'},h('b',null,name.toUpperCase()),h('span',null,'Craft cocktails · After dark')),h('button',{type:'button',class:'sp-skip'},'Enter'));
-    const end=()=>{ if(intro.classList.contains('out')) return; intro.classList.add('out'); document.documentElement.classList.remove('sp-lock'); try{ sessionStorage.setItem('spIntro','1'); }catch(e){} setTimeout(()=>intro.remove(),1200); };
-    intro.addEventListener('click',end); document.addEventListener('keydown',function k(){ end(); document.removeEventListener('keydown',k); });
-    document.documentElement.classList.add('sp-lock'); page.prepend(intro);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>intro.classList.add('go'))); setTimeout(end,5200);
-  }
-  return page;
+  const gift=C.email?h('section',{class:'sp-sec sp-gift',id:'sp-gift'},h('div',{class:'sp-w sp-gift-in rv'},
+    h('img',{src:logo,alt:'',class:'sp-gift-logo'}),
+    h('div',null,h('span',{class:'sp-kick'},'Gift cards & catering'),h('h2',null,'Bring the bar to your party.'),h('p',null,'Gift cards for the cocktail lover in your life, and catering for your next event. Send us a note and we will take it from there.')),
+    h('a',{class:'sp-btn gold',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Gift cards & catering')},'Email us'))):null;
+  const foot=h('footer',{class:'sp-foot'},h('div',{class:'sp-w sp-foot-in'},h('img',{src:logo,alt:name,class:'sp-foot-logo'}),
+    h('nav',{class:'sp-soc'},L.map(([id,t])=>h('a',{href:'#'+id,onclick:go(id)},t)),C.ig?h('a',{href:C.ig,target:'_blank',rel:'noopener'},'Instagram'):null,C.fb?h('a',{href:C.fb,target:'_blank',rel:'noopener'},'Facebook'):null),
+    h('small',null,'© '+new Date().getFullYear()+' '+name+(full?' · '+full:'')+' · Please drink responsibly.')));
+  return h('div',{class:'sp'},nav,hero,story,menu,visit,gift,foot);
 }
 
 /* ===================== A & B AUTOMOTIVE (red / charcoal / green, auto service + sales) ===================== */
