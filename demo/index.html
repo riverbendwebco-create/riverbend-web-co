@@ -5042,6 +5042,35 @@ body.t-pt{margin:0;background:#060B16;color:#E8EEF9;font-family:"DM Sans",Inter,
 .pt-tog{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px;cursor:pointer;position:relative}.pt-tog+.pt-tog{border-top:1px solid var(--ln)}
 .pt-tog input{position:absolute;opacity:0;pointer-events:none}.pt-tog i{width:46px;height:26px;border-radius:14px;background:rgba(148,178,255,.2);position:relative;transition:background .2s;flex:0 0 auto}.pt-tog i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
 .pt-tog input:checked+i{background:var(--b)}.pt-tog input:checked+i::after{transform:translateX(20px)}
+.pt-auth{display:grid;grid-template-columns:1.05fr 1fr;min-height:calc(100vh - 34px)}
+.pt-auth-art{position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:48px;background:#071533}
+.pt-auth-art::before{content:"";position:absolute;inset:0;background:var(--rdbg) center 30%/cover no-repeat;transform:scale(1.03)}
+.pt-auth-art::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,11,22,.96) 0%,rgba(6,11,22,.55) 45%,rgba(10,75,209,.15) 100%)}
+.pt-auth-art-in{position:relative;z-index:1;max-width:520px}.pt-auth-art img{width:110px;background:#fff;border-radius:12px;padding:5px;margin-bottom:22px}
+.pt-auth-art h2{font-size:clamp(2.4rem,4.4vw,3.8rem);line-height:.92;margin-bottom:22px}
+.pt-auth-art ul{list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:10px}.pt-auth-art li{display:flex;gap:10px;align-items:center;color:#DCE6FA}.pt-auth-art li svg{color:var(--b2)}
+.pt-auth-call{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:10px;background:rgba(10,75,209,.6);border:1px solid rgba(148,178,255,.3)}
+.pt-auth-r{display:grid;place-items:center;padding:40px 24px}
+.pt-auth-card{width:100%;max-width:460px;padding:32px;border-radius:22px;background:linear-gradient(180deg,rgba(19,30,53,.95),rgba(13,21,38,.95));border:1px solid var(--ln);box-shadow:0 40px 80px -40px rgba(0,30,120,.8);animation:ptIn .5s both}
+.pt-auth-card h1{font-size:2.4rem;line-height:1}.pt-sub{color:var(--mut);margin:8px 0 20px}
+.pt-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:12px;background:var(--n);border:1px solid var(--ln);margin-bottom:18px}
+.pt-seg button{border:0;background:none;padding:11px;border-radius:9px;font-weight:700;color:var(--mut)}.pt-seg button.on{background:linear-gradient(135deg,#2F6BFF,#0A4BD1);color:#fff}
+.pt-seg.sm{margin:0;padding:3px;grid-template-columns:auto auto}.pt-seg.sm button{padding:6px 12px;font-size:.8rem}
+.pt-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;height:50px;border-radius:12px;border:1px solid var(--ln);background:#fff;color:#0B1220!important;font-weight:700}
+.pt-google b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#EA4335 0 25%,#FBBC05 0 50%,#34A853 0 75%,#4285F4 0);color:#fff;font-size:.8rem}
+.pt-or{display:flex;align-items:center;gap:12px;margin:16px 0 2px;color:var(--mut);font-size:.8rem}.pt-or::before,.pt-or::after{content:"";flex:1;height:1px;background:var(--ln)}
+.pt-aform .pt-lbl{margin:12px 0 0}.pt-aform .pt-cta{width:100%;margin-top:20px}
+.pt-ppick{margin-top:18px;padding:14px;border-radius:14px;background:var(--n);border:1px solid var(--ln)}
+.pt-ppick-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.pt-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pt-popt{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 6px 12px;border-radius:12px;border:1px solid var(--ln);background:var(--n2);transition:all .2s}
+.pt-popt b{font-family:var(--cd);font-size:1.15rem;text-transform:uppercase}.pt-popt span{font-family:var(--cd);font-weight:700;font-size:1.4rem}.pt-popt small{color:var(--mut);font-size:.68rem}
+.pt-popt em{position:absolute;top:-9px;font-style:normal;font-size:.62rem;font-weight:700;background:var(--b);padding:2px 7px;border-radius:6px}
+.pt-popt.on{border-color:var(--b2);background:linear-gradient(180deg,rgba(10,75,209,.4),var(--n2));box-shadow:0 0 0 3px rgba(91,155,255,.18)}
+.pt-small{color:var(--mut);font-size:.78rem;margin:10px 0 0;text-align:center}
+.pt-switch{text-align:center;color:var(--mut);margin:14px 0 0;font-size:.9rem}.pt-switch button{background:none;border:0;padding:0;color:var(--b2);font-weight:700}
+.pt-toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,20px);opacity:0;background:#34D399;color:#062;font-weight:700;padding:14px 20px;border-radius:12px;box-shadow:0 20px 40px -20px rgba(0,0,0,.6);transition:all .3s;z-index:90}.pt-toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){.pt-auth{grid-template-columns:1fr}.pt-auth-art{min-height:300px;padding:28px 22px}.pt-auth-art ul,.pt-auth-call{display:none}.pt-auth-art h2{font-size:2.3rem;margin:0}.pt-auth-art img{display:none}.pt-auth-r{padding:0 14px 40px;margin-top:-30px;position:relative;z-index:2}.pt-auth-card{padding:24px 20px}}
 @media (max-width:1100px){.pt-grid,.pt-track{grid-template-columns:minmax(0,1fr)}.pt-perks,.pt-plans{grid-template-columns:1fr 1fr}}
 @media (max-width:820px){.pt-shell{grid-template-columns:1fr}.pt-side{display:none}.pt-view{padding:20px 16px 110px}
  .pt-tabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(13,21,38,.94);backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
@@ -9249,11 +9278,11 @@ const RD_I={
 function rdI(k,size){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('width',size||22); s.setAttribute('height',size||22); s.setAttribute('aria-hidden','true'); s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor'); s.setAttribute('stroke-width','1.9'); s.setAttribute('stroke-linecap','round'); s.setAttribute('stroke-linejoin','round');
   (RD_I[k]||[]).forEach(d=>{ const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',d); s.append(p); }); return s; }
 function roadside(C){
-  const X=C.x, join=okUrl(X.join)||'https://ddroadside.com/register', site=okUrl(X.site)||join;
+  const X=C.x, dq='?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||''), join=dq+'&view=portal&screen=join', site=dq+'&view=portal&screen=login';
   const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
   const P=X.pics||{}, pic=(k,w)=>/^img\/[a-z0-9._-]+$/.test(P[k]||'')?P[k]:/^[0-9]{10,13}-[0-9a-f]{12}$/.test(P[k]||'')?'https://images.unsplash.com/photo-'+P[k]+'?auto=format&fit=crop&w='+(w||1400)+'&q=72':'';
   if(!document.getElementById('rdFonts')){ document.head.append(h('link',{id:'rdFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap'})); }
-  const ext=(href,txt,cls,arrow)=>h('a',{class:cls,href,target:'_blank',rel:'noopener'},txt,arrow?rdI('ne',16):null);
+  const ext=(href,txt,cls,arrow)=>h('a',/^https?:/.test(href)?{class:cls,href,target:'_blank',rel:'noopener'}:{class:cls,href},txt,arrow?rdI('ne',16):null);
   const svcs=(X.services||[]).filter(s=>Array.isArray(s)&&RD_I[s[0]]);
   const plans=(X.plans||[]).filter(p=>p&&p.name);
   const perks=(X.perks||[]).filter(p=>Array.isArray(p)&&p[0]);
@@ -9321,7 +9350,7 @@ function roadside(C){
     h('div',{class:'rd-price'},h('b',null,'$'+(annual?p.yrMo:p.mo)),h('span',null,annual?'/ mo, billed yearly':'/ month')),
     h('p',{class:'rd-tax'},annual&&p.yr?'$'+p.yr+' per year · ':'',p.sub||'',' · includes 5.5% sales tax'),
     h('ul',null,(p.feat||[]).map(f=>h('li',null,rdI('check',16),h('span',null,f[0],f[1]?h('small',null,f[1]):null)))),
-    ext(join,'Get started','rd-btn full',true))));
+    ext(join+'&plan='+encodeURIComponent(p.name),'Get started','rd-btn full',true))));
   const tg=(a,label)=>h('button',{type:'button',class:'rd-tg'+(a===annual?' on':''),'aria-pressed':String(a===annual),onclick:e=>{ annual=a; [...e.currentTarget.parentNode.children].forEach(b=>{ const on=b===e.currentTarget; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); renderPlans(); }},label);
   renderPlans();
   const plansSec=h('section',{class:'rd-sec rd-pricing'+(pic('plansBg')?' photo':''),id:'rd-plans',style:pic('plansBg')?'--rdbg:'+cssUrl(pic('plansBg')):null},h('div',{class:'rd-w'},
@@ -9380,7 +9409,7 @@ function roadside(C){
 /* ---------- D&D member portal concept (?view=portal): sample account, nothing is sent ---------- */
 Object.assign(RD_I,{bell:['M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9','M10.3 21a1.94 1.94 0 0 0 3.4 0'],clock:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 7v5l3 2'],car:['M5 17h14v-5l-2-5H7l-2 5z','M5 12h14','M7.5 17v2M16.5 17v2','M8 14.5h.01M16 14.5h.01'],map:['M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z','M9 4v14M15 6v14'],qr:['M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z','M14 14h2v2h-2zM18 14h2M14 18h2M18 18h2v2'],copy:['M9 9h11v11H9z','M5 15H4V4h11v1'],back:['M15 18l-6-6 6-6'],route:['M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M6 15V9a4 4 0 0 1 4-4h4M18 9v6a4 4 0 0 1-4 4h-4']});
 function rdPortal(C){
-  const X=C.x, join=okUrl(X.join)||'https://ddroadside.com/register';
+  const X=C.x, dq='?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||''), join=dq+'&view=portal&screen=join';
   const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
   const svcs=(X.services||[]).filter(s=>Array.isArray(s)&&RD_I[s[0]]);
   const plans=(X.plans||[]).filter(p=>p&&p.name);
@@ -9388,6 +9417,35 @@ function rdPortal(C){
   const plus=plans.find(p=>p.name==='Plus')||plans[0]||{name:'Plus'};
   const tone={tow:'#FF5A6E',jump:'#FFC53D',tire:'#FF8A3D',key:'#A78BFA',fuel:'#34D399',winch:'#38BDF8',warn:'#F87171',batt:'#4ADE80'};
   if(!document.getElementById('rdFonts')) document.head.append(h('link',{id:'rdFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap'}));
+
+
+  const qs=new URLSearchParams(location.search), screen=qs.get('screen');
+  if(screen==='join'||screen==='login'){
+    let mode=screen, annual=false, pick=(plans.find(p=>p.name===qs.get('plan'))||plus).name;
+    const box=h('div',{class:'pt-auth-card'});
+    const toast=h('div',{class:'pt-toast',role:'status'});
+    const enter=msg=>{ toast.textContent=msg; toast.classList.add('on'); setTimeout(()=>{ history.replaceState(null,'',dq+'&view=portal'); root.replaceChildren(rdPortal(C)); },1100); };
+    const draw=()=>{ const join2=mode==='join';
+      const tabs2=h('div',{class:'pt-seg'},[['login','Log in'],['join','Sign up']].map(([k,t])=>h('button',{type:'button',class:mode===k?'on':'',onclick:()=>{ mode=k; draw(); }},t)));
+      const planPick=join2?h('div',{class:'pt-ppick'},h('div',{class:'pt-ppick-h'},h('b',null,'Choose your plan'),h('div',{class:'pt-seg sm'},[[false,'Monthly'],[true,'Annual']].map(([a,t])=>h('button',{type:'button',class:annual===a?'on':'',onclick:()=>{ annual=a; draw(); }},t)))),
+        h('div',{class:'pt-pgrid'},plans.map(p=>h('button',{type:'button',class:'pt-popt'+(pick===p.name?' on':''),onclick:()=>{ pick=p.name; draw(); }},p.rec?h('em',null,'Popular'):null,h('b',null,p.name),h('span',null,'$'+(annual?p.yrMo:p.mo)),h('small',null,annual?'/mo, billed yearly':'/month')))),
+        annual?h('p',{class:'pt-small'},'Annual plans include 1 month free.'):null):null;
+      const fld=(lbl,type,ph,ac)=>h('label',{class:'pt-lbl'},lbl,h('div',{class:'pt-inp'},rdI(type==='email'?'user':'key',18),h('input',{type,placeholder:ph,autocomplete:ac,required:true})));
+      const form=h('form',{class:'pt-aform',novalidate:true,onsubmit:e=>{ e.preventDefault(); enter(join2?'Demo account created. Welcome to D&D Roadside!':'Signed in to the demo portal.'); }},
+        h('button',{type:'button',class:'pt-google',onclick:()=>enter('Signed in to the demo portal.')},h('b',null,'G'),'Continue with Google'),h('div',{class:'pt-or'},h('span',null,'or')),
+        fld('Email','email','you@example.com','off'),fld('Password','password',join2?'Create a password':'Your password','new-password'),join2?fld('Confirm password','password','Repeat your password','new-password'):null,
+        planPick,h('button',{type:'submit',class:'pt-cta'},join2?'Create account':'Log in',rdI('arrow',18)),
+        h('p',{class:'pt-small'},'Demo only: nothing you type is saved or sent.'),
+        h('p',{class:'pt-switch'},join2?'Already a member? ':'New to D&D Roadside? ',h('button',{type:'button',onclick:()=>{ mode=join2?'login':'join'; draw(); }},join2?'Log in':'Create an account')));
+      box.replaceChildren(h('h1',null,join2?'Become a member':'Welcome back'),h('p',{class:'pt-sub'},join2?'Roadside help 24/7. Coverage starts immediately.':'Log in to request help and manage your membership.'),tabs2,form); };
+    draw();
+    const hero=/^img\//.test((X.pics||{}).hero||'')?X.pics.hero:'';
+    return h('div',{class:'pt pt-authp'},h('div',{class:'pt-ribbon'},h('span',null,'Member portal concept for D&D Wrecker Roadside · demo sign-in'),h('a',{href:dq},'Back to website')),
+      h('div',{class:'pt-auth'},h('div',{class:'pt-auth-art',style:hero?'--rdbg:'+cssUrl(hero):null},h('div',{class:'pt-auth-art-in'},logo?h('img',{src:logo,alt:'D&D Wrecker Service'}):null,h('h2',null,'Roadside help,',h('br'),'one tap away'),
+          h('ul',null,['Request towing, jump starts and more in seconds','Track your driver live','Free tows and member perks included'].map(t=>h('li',null,rdI('check',16),t))),
+          C.tel?h('a',{href:C.tel,class:'pt-auth-call'},rdI('phone',16),'24/7 Hotline '+C.phoneTxt):null)),h('div',{class:'pt-auth-r'},box)),toast);
+  }
+
   const hr=new Date().getHours(), greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   const renew=new Date(Date.now()+200*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   const view=h('div',{class:'pt-view'});
@@ -9467,10 +9525,10 @@ function rdPortal(C){
       const chips=h('div',{class:'pt-chips'},cats.map((c,i)=>h('button',{type:'button',class:i?'':'on',onclick:e=>{ [...chips.children].forEach(b=>b.classList.toggle('on',b===e.currentTarget)); show(c); }},c))); show('All');
       return h('div',{class:'pt-page'},head('Member perks',perks.length+' discounts unlocked'),h('div',{class:'pt-perk-hero'},rdI('tag',28),h('div',null,h('b',null,'Show your member pass'),h('small',null,'Flip your card on the Home tab at checkout.'))),chips,list); },
     plans:()=>h('div',{class:'pt-page'},head('Your plan','Membership'),h('div',{class:'pt-plans'},plans.map(p=>h('div',{class:'pt-plan'+(p===plus?' cur':'')},p===plus?h('em',null,'Current plan'):null,h('b',null,p.name),h('div',{class:'pt-price'},'$'+p.mo,h('small',null,'/mo')),h('ul',null,(p.feat||[]).map(f=>h('li',null,rdI('check',15),f[0]))),
-      p===plus?h('span',{class:'pt-cur'},'You are on this plan'):h('a',{class:'pt-cta',href:join,target:'_blank',rel:'noopener'},plans.indexOf(p)>plans.indexOf(plus)?'Upgrade':'Switch',rdI('arrow',16)))))),
+      p===plus?h('span',{class:'pt-cur'},'You are on this plan'):h('a',{class:'pt-cta',href:join+'&plan='+encodeURIComponent(p.name)},plans.indexOf(p)>plans.indexOf(plus)?'Upgrade':'Switch',rdI('arrow',16)))))),
     refer:()=>h('div',{class:'pt-page'},head('Refer a friend','Share D&D'),h('div',{class:'pt-ref'},h('span',{class:'pt-ref-i'},rdI('gift',30)),h('small',null,'YOUR REFERRAL CODE'),h('b',null,'SAMPLE'),h('p',null,'Friends get covered, you earn rewards.')),
       h('div',{class:'pt-panel pt-fam'},h('div',{class:'pt-ph'},h('h2',null,'Refer a family member')),h('p',null,'They get 25% off every month for as long as they stay subscribed.'),
-        h('div',{class:'pt-copy'},h('span',null,join+'?ref=SAMPLE'),h('button',{type:'button',onclick:e=>{ try{ navigator.clipboard.writeText(join); }catch(_){} e.currentTarget.textContent='Copied'; }},rdI('copy',15),'Copy')))),
+        h('div',{class:'pt-copy'},h('span',null,'ddroadside.com/register?ref=SAMPLE'),h('button',{type:'button',onclick:e=>{ try{ navigator.clipboard.writeText('ddroadside.com/register?ref=SAMPLE'); }catch(_){} e.currentTarget.textContent='Copied'; }},rdI('copy',15),'Copy')))),
     profile:()=>h('div',{class:'pt-page'},head('Profile','Account'),h('div',{class:'pt-panel pt-prof'},h('span',{class:'pt-av lg'},'AS'),h('div',null,h('b',null,'Alex Sample'),h('small',null,'Plus member · sample account'))),
       h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Vehicles')),h('div',{class:'pt-hrow'},h('span',{class:'pt-hic',style:'--c:#5B9BFF'},rdI('car',20)),h('div',null,h('b',null,'Sample vehicle'),h('small',null,'Add year, make and model')),h('em',{class:'pt-tag'},'Primary'))),
       h('div',{class:'pt-panel'},['Text me when my driver is on the way','Email receipts','Perk alerts'].map((t,i)=>h('label',{class:'pt-tog'},h('span',null,t),h('input',{type:'checkbox',checked:i<2?true:null}),h('i')))))
