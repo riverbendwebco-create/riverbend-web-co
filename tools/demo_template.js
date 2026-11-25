@@ -4824,10 +4824,24 @@ function rollin(C){
     h('div',{class:'ri-cards'},why.map((w,i)=>h('div',{class:'ri-card rv'+(i?' d'+i:'')},h('span',null,String(i+1).padStart(2,'0')),h('h3',null,w[0]),h('p',null,w[1]))))));
 
   const gal=(P.g||[]).map(id=>u(id,700)).filter(Boolean);
-  const track=h('div',{class:'ri-track'},gal.map((src,i)=>h('figure',{class:'ri-shot',style:'--t:'+((i%2)?'3deg':'-3deg')},h('img',{src,alt:'Rolled ice cream',loading:'lazy',draggable:'false'}))));
-  let dn=false,sx=0,sl=0; track.addEventListener('pointerdown',e=>{ dn=true; sx=e.clientX; sl=track.scrollLeft; track.classList.add('drag'); });
-  addEventListener('pointerup',()=>{ dn=false; track.classList.remove('drag'); }); track.addEventListener('pointermove',e=>{ if(dn) track.scrollLeft=sl-(e.clientX-sx); });
-  const galSec=h('section',{class:'ri-gal',id:'ri-gal'},h('div',{class:'ri-w ri-gal-h rv'},h('div',null,h('p',{class:'ri-kick'},'Fresh off the plate'),h('h2',{class:'ri-h2'},'Every cup is a little different')),h('p',{class:'ri-small'},'Drag to look around')),track);
+  const shot=(src,i,dup)=>h('figure',{class:'ri-shot',style:'--t:'+((i%2)?'3deg':'-3deg'),'aria-hidden':dup?'true':null},h('img',{src,alt:dup?'':'Rolled ice cream',draggable:'false'}));
+  const track=h('div',{class:'ri-track'},gal.map((src,i)=>shot(src,i,false)),gal.map((src,i)=>shot(src,i,true)));
+  // endless auto-scroll; pauses on hover, drag or touch
+  let dn=false,sx=0,sl=0,hold=false,resume=0,pos=0,last=0;
+  const half=()=>{ const k=track.children; return k.length>gal.length? k[gal.length].offsetLeft-k[0].offsetLeft : 0; };
+  const wrap=()=>{ const H=half(); if(H>0){ if(track.scrollLeft>=H) track.scrollLeft-=H; else if(track.scrollLeft<0) track.scrollLeft+=H; } };
+  track.addEventListener('pointerdown',e=>{ dn=true; sx=e.clientX; sl=track.scrollLeft; track.classList.add('drag'); });
+  addEventListener('pointerup',()=>{ if(dn){ dn=false; track.classList.remove('drag'); resume=performance.now()+1500; pos=track.scrollLeft; } });
+  track.addEventListener('pointermove',e=>{ if(dn){ track.scrollLeft=sl-(e.clientX-sx); wrap(); } });
+  track.addEventListener('mouseenter',()=>{ hold=true; }); track.addEventListener('mouseleave',()=>{ hold=false; pos=track.scrollLeft; });
+  track.addEventListener('touchstart',()=>{ resume=performance.now()+3000; },{passive:true});
+  track.addEventListener('scroll',()=>{ if(dn||performance.now()<resume) pos=track.scrollLeft; },{passive:true});
+  const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const glide=t=>{ const dt=Math.min(50,t-(last||t)); last=t;
+    if(!calm&&!dn&&!hold&&t>resume&&track.isConnected){ const r=track.getBoundingClientRect(); if(r.bottom>0&&r.top<innerHeight){ pos+=dt*0.045; const H=half(); if(H>0&&pos>=H) pos-=H; track.scrollLeft=pos; } }
+    requestAnimationFrame(glide); };
+  requestAnimationFrame(glide);
+  const galSec=h('section',{class:'ri-gal',id:'ri-gal'},h('div',{class:'ri-w ri-gal-h rv'},h('div',null,h('p',{class:'ri-kick'},'Fresh off the plate'),h('h2',{class:'ri-h2'},'Every cup is a little different')),h('p',{class:'ri-small'},'Hover to pause, drag to look around')),track);
 
   const end=h('section',{class:'ri-end',id:'ri-end'},h('div',{class:'ri-sprinkles'},sprink(18)),
     h('h2',{class:'ri-outline sm'},h('span',null,'SEE YOU AT'),h('span',null,'THE PLATE')),
