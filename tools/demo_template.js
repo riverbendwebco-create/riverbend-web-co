@@ -4780,7 +4780,7 @@ function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList
 /* ---------- Rollin' Icecream: factory-tour style (inspired by the Haagen-Dazs Factory Tour) ---------- */
 function rollin(C){
   const X=C.x||{}, P=X.pics||{};
-  const u=(id,w)=>/^[0-9]{10,13}-[0-9a-f]{12}$/.test(id||'')?'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||900)+'&q=75':'';
+  const u=(id,w)=>/^img\/[a-z0-9._-]+$/.test(id||'')?id:/^[0-9]{10,13}-[0-9a-f]{12}$/.test(id||'')?'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||900)+'&q=75':'';
   const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
   if(!document.getElementById('riFonts')) document.head.append(h('link',{id:'riFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=DM+Sans:wght@400;500;700&display=swap'}));
   const steps=(X.steps||[]).filter(s=>Array.isArray(s)&&s[0]);
