@@ -2310,10 +2310,10 @@ function becwar(C){
       h('span',{class:'bw-kick'},[C.cat||'Tile store and installation',(C.city||'Dubuque, IA')].join(' \u00B7 ')),
       h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
       h('p',{class:'bw-lead'},C.tag||'Becwar Tile & Marble sells and installs tile in Dubuque. Try layouts, work out how much you need and ask for an estimate, all from your phone.'),
-      h('div',{class:'bw-cta'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-design')},'Design a room'),call('line')),
-      h('div',{class:'bw-need'},h('span',{class:'bw-needhd'},'What are you looking for?'),h('span',{class:'bw-needsub'},'Tap one to jump right there'),h('div',{class:'bw-needg'},
-        [['w-design','Design a room','See tile in a room'],['w-calc','How much tile','Work out the amount'],['w-pick','Tile picker','Find a starting point'],['w-care','Care tips','Grout, stone, floors'],['w-est','Get an estimate','Send us the details'],['w-visit','Visit the store','Hours and directions']].map(([id,l,s])=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('b',null,l),h('small',null,s),h('i',{class:'bw-arr','aria-hidden':'true'},ico('arrow')))))),
+      h('div',{class:'bw-cta'},call('ink')),
       h('ul',{class:'bw-facts'},h('li',null,'American Olean and Marazzi dealer'),h('li',null,'Showers, floors and backsplashes'),h('li',null,'Right on Central Ave in Dubuque'))),
+    h('div',{class:'bw-need'},h('span',{class:'bw-needhd'},'What are you looking for?'),h('span',{class:'bw-needsub'},'Tap one to jump right there'),h('div',{class:'bw-needg'},
+        [['w-design','Design a room','See tile in a room'],['w-calc','How much tile','Work out the amount'],['w-pick','Tile picker','Find a starting point'],['w-care','Care tips','Grout, stone, floors'],['w-est','Get an estimate','Send us the details'],['w-visit','Visit the store','Hours and directions']].map(([id,l,s])=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('b',null,l),h('small',null,s),h('i',{class:'bw-arr','aria-hidden':'true'},ico('arrow')))))),
     board));
 
   /* ---------- visualizer ---------- */
