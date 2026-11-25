@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.bl-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -112,6 +112,7 @@ function build(d){
   if(/^shade\s?tree\b/i.test(C.name)||C.variant==='shadetree'){ document.body.className='t-st'; const pg=shadeTree(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); stRoll(pg); return; }
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='bloom'){ document.body.className='t-bl'; const pg=bloomTattoo(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='becwar'){ document.body.className='t-bw'; const pg=becwar(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
@@ -2445,6 +2446,150 @@ function becwar(C){
     h('div',{class:'bw-card bw-hrs'},h('span',{class:'bw-lbl'},'Store hours'),hoursRows(C),h('p',{class:'bw-note'},'Hours are as listed online. Call to confirm before you drive over.'))));
   const foot=h('footer',{class:'bw-foot'},h('div',{class:'bw-wrap bw-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
   return h('div',{class:'demo bw on'},top,nav,hero,design,calcSec,pick,svc,care,est,visit,foot);
+}
+
+/* ===== Bloom Tattoo (dark tattoo studio demo) ===== */
+const BLA={
+  flower:(n,len,w)=>{ let s=''; for(let i=0;i<n;i++){ s+='<path d="M100 100C'+(100-w)+' '+(100-len*.45)+' '+(100-w*.6)+' '+(100-len)+' 100 '+(100-len)+'C'+(100+w*.6)+' '+(100-len)+' '+(100+w)+' '+(100-len*.45)+' 100 100Z" transform="rotate('+(i*360/n)+' 100 100)"/>'; } for(let i=0;i<n;i++){ s+='<path d="M100 100L100 '+(100-len*.62)+'" transform="rotate('+(i*360/n)+' 100 100)" style="opacity:.55"/>'; } return s+'<circle cx="100" cy="100" r="9"/><circle cx="100" cy="100" r="3" class="f"/>'; },
+  rose:()=>{ let d='',t=0; for(let i=0;i<=110;i++){ t=i*.1; const r=2+t*4.6, x=100+r*Math.cos(t*1.0), y=88+r*Math.sin(t)*.88; d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }
+    return '<path d="'+d+'"/><path d="M42 84C34 128 72 158 100 158C128 158 166 128 158 84"/><path d="M58 70C46 108 74 134 100 134"/><path d="M142 70C154 108 126 134 100 134"/><path d="M100 158C100 172 98 184 104 196"/><path d="M101 176C82 176 70 166 66 154C84 154 98 160 101 176Z"/><path d="M103 186C122 184 134 174 138 162C120 162 106 170 103 186Z"/>'; },
+  moth:()=>{ const wing='<path d="M100 92C70 40 14 44 20 98C24 124 70 116 100 102"/><path d="M100 104C74 112 40 146 62 178C86 180 100 146 100 112"/><path d="M52 84C44 90 44 98 52 100"/><path d="M40 70C34 80 34 88 40 92" style="opacity:.6"/><circle cx="66" cy="152" r="4"/>'; return wing+'<g transform="translate(200 0) scale(-1 1)">'+wing+'</g><path d="M100 78L100 150" style="stroke-width:5"/><circle cx="100" cy="76" r="5"/><path d="M96 70C88 52 80 46 70 44"/><path d="M104 70C112 52 120 46 130 44"/>'; },
+  dagger:()=>'<path d="M100 14L111 112L100 122L89 112Z"/><path d="M100 22L100 112" style="opacity:.55"/><path d="M66 120C84 134 116 134 134 120"/><path d="M66 120C62 114 62 110 68 108"/><path d="M134 120C138 114 138 110 132 108"/><rect x="95" y="130" width="10" height="34" rx="2"/><path d="M95 140L105 146M95 150L105 156" style="opacity:.6"/><circle cx="100" cy="174" r="8"/><path d="M100 182C100 190 92 196 82 196M100 182C100 190 108 196 118 196" style="opacity:.7"/>',
+  snake:()=>'<path d="M54 36C150 30 156 86 102 96C50 106 46 154 146 164" style="stroke-width:7"/><path d="M54 36C150 30 156 86 102 96C50 106 46 154 146 164" style="stroke-width:1.5;stroke:var(--bl-bg,#0c0c0d);opacity:.8"/><path d="M54 36C42 32 36 40 40 48C44 54 54 50 54 36Z"/><circle cx="46" cy="40" r="1.8" class="f"/><path d="M40 52L34 60M40 52L46 60" style="stroke-width:1.5"/><path d="M146 164L156 168L146 172" style="stroke-width:3"/>',
+  orn:()=>{ let s='<circle cx="100" cy="100" r="62"/><circle cx="100" cy="100" r="54" style="opacity:.5"/><circle cx="100" cy="100" r="30"/>'; for(let i=0;i<24;i++){ s+='<path d="M100 '+(i%2?36:26)+'L100 '+(i%2?42:38)+'" transform="rotate('+(i*15)+' 100 100)"/>'; } for(let i=0;i<12;i++){ s+='<path d="M100 70C108 78 108 90 100 98C92 90 92 78 100 70Z" transform="rotate('+(i*30)+' 100 100)" style="opacity:.8"/>'; } return s+'<circle cx="100" cy="100" r="5" class="f"/>'; },
+  sphere:()=>{ let s=0x9e3779b9; const rnd=()=>{ s=(s+0x6D2B79F5)|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; let o=''; for(let i=0;i<1100;i++){ const a=rnd()*6.283, r=Math.sqrt(rnd())*68, x=r*Math.cos(a), y=r*Math.sin(a); const nz=Math.sqrt(Math.max(0,1-(x*x+y*y)/4624)), lit=Math.max(0,(-x*.5-y*.55)/68*.9+nz*.55); if(rnd()>Math.pow(1-lit,1.6)*1.05) continue; o+='<circle cx="'+(100+x).toFixed(1)+'" cy="'+(100+y).toFixed(1)+'" r="'+(0.7+rnd()*.9).toFixed(2)+'" class="f"/>'; } return o; },
+  rosebud:()=>'<path d="M100 150C70 140 62 104 80 82C92 68 108 68 120 82C138 104 130 140 100 150Z"/><path d="M82 90C94 100 106 100 118 90"/><path d="M90 78C98 84 104 84 112 78"/><path d="M100 150L100 190"/><path d="M100 172C82 172 70 164 66 152C84 152 98 158 100 172Z"/><path d="M100 182C118 180 130 172 134 160C118 160 104 166 100 182Z"/><path d="M70 96C58 86 56 72 64 62M130 96C142 86 144 72 136 62" style="opacity:.7"/>'
+};
+function blSvg(markup,cls){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 200 200'); s.setAttribute('class','bl-art'+(cls?' '+cls:'')); s.setAttribute('aria-hidden','true'); s.innerHTML=markup; return s; }
+
+function bloomTattoo(C){
+  const x=C.x, name=C.name||'Bloom Tattoo', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const book=/^https:\/\/[^\s"'<>]+$/.test(x.bookUrl||'')?x.bookUrl:'';
+  const digits=C.phone.replace(/\D/g,'').slice(-10);
+  const smsHref=body=>digits.length===10?'sms:+1'+digits+(/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body):'';
+  const st=bwStatus(C), heads=String(x.headline||'Custom ink,|made together.').split('|');
+  const bookBtn=(cls,label)=>book?h('a',{class:'bl-btn '+cls,href:book,target:'_blank',rel:'noopener'},label||'Book on Vagaro',ico('arrow',16,'')):null;
+  const callBtn=(cls,label)=>C.tel?h('a',{class:'bl-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
+  const go=id=>()=>scrollTo(id);
+  const hd=(k,t,p)=>h('div',{class:'bl-head rv'},h('span',{class:'bl-kick'},k),h('h2',null,t),p?h('p',null,p):null);
+  const sec=(id,cls,...kids)=>h('section',{class:'bl-sec '+(cls||''),id},h('div',{class:'bl-wrap'},kids));
+  const stopFns=[]; const live=()=>stopFns.every(f=>f!==false);
+
+  /* ---- top, nav ---- */
+  const top=h('div',{class:'bl-top'},h('div',{class:'bl-wrap bl-top-in'},st?h('span',{class:'bl-st'},h('i',{class:'bl-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,h('span',{class:'bl-age'},'18+ studio')));
+  const mark=()=>blSvg(BLA.flower(6,44,22),'bl-mk');
+  const nav=h('header',{class:'bl-nav'},h('div',{class:'bl-wrap bl-nav-in'},
+    h('a',{class:'bl-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('b-top'); }},mark(),h('span',null,h('b',null,'Bloom'),h('i',null,'Tattoo'))),
+    h('nav',{class:'bl-links'},[['b-gal','Gallery'],['b-styles','Styles'],['b-plan','Plan'],['b-care','Aftercare'],['b-visit','Visit']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('div',{class:'bl-nav-r'},callBtn('ghost sm','Call'),bookBtn('red sm','Book'))));
+
+  /* ---- hero ---- */
+  const picks=[['b-gal','Gallery','Work that changes'],['b-styles','Styles','What Josh does'],['b-plan','Plan a tattoo','Build your request'],['b-body','Placement guide','Where it goes'],['b-care','Aftercare','Heal it right'],['b-visit','Visit','Hours and map']];
+  const hero=h('section',{class:'bl-hero',id:'b-top'},h('div',{class:'bl-wrap bl-hero-g'},
+    h('div',{class:'bl-hero-t'},
+      h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' · ')),
+      h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
+      h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
+      h('div',{class:'bl-cta'},bookBtn('red'),callBtn('ghost')),
+      h('ul',{class:'bl-facts'},h('li',null,'Large-scale black and grey realism'),h('li',null,'Neo-traditional, illustrative color and ornamental'),h('li',null,'On Central Ave in Dubuque'))),
+    h('div',{class:'bl-hero-a','aria-hidden':'true'},blSvg(BLA.flower(8,84,34)+BLA.flower(8,52,18).replace(/<circle[^>]*>/g,''),'bl-draw'))),
+    h('div',{class:'bl-wrap'},h('div',{class:'bl-need'},h('span',{class:'bl-needhd'},'What are you looking for?'),h('div',{class:'bl-needg'},picks.map(([id,l,s])=>h('button',{type:'button',onclick:go(id)},h('b',null,l),h('small',null,s),h('i',{class:'bl-arr','aria-hidden':'true'},ico('arrow')))))))); 
+
+  /* ---- gallery slideshow (auto-advancing) ---- */
+  const real=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
+  const SAMPLE=[['rose','Illustrative color','Rose study','#7a1d2b'],['moth','Neo-traditional','Butterfly study','#1d2a33'],['dagger','Neo-traditional','Dagger','#2a1b1f'],['sphere','Black and grey realism','Soft shading','#16181b'],['orn','Ornamental','Sun ornament','#1d1a2a'],['snake','Illustrative color','Coiled snake','#16241f']];
+  const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)+' of '+real.length})):SAMPLE.map(([k,sty,t,bgc])=>({art:k,cap:t,sub:sty,bg:bgc}));
+  const stage=h('div',{class:'bl-stage',tabindex:'0','aria-roledescription':'carousel','aria-label':'Tattoo gallery'});
+  const slEls=slides.map((s,i)=>{ const el=h('figure',{class:'bl-slide'+(i===0?' on':''),'aria-hidden':i===0?'false':'true',style:s.bg?'background:'+s.bg:null},
+      s.img?h('img',{src:s.img,alt:'Tattoo by Josh Clicquennoi, photo '+(i+1),loading:i?'lazy':'eager'}):blSvg(BLA[s.art](),'bl-slart'),
+      h('figcaption',null,h('b',null,s.cap),h('span',null,s.sub))); stage.append(el); return el; });
+  const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'1 / '+slides.length);
+  let cur=0, paused=false, tick=null, ms=4600;
+  const dots=slides.map((s,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show slide '+(i+1),onclick:()=>{ show(i); restart(); }}));
+  function show(i){ cur=(i+slides.length)%slides.length; slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=(cur+1)+' / '+slides.length; }
+  function restart(){ bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; clearTimeout(tick); if(!paused&&!reduce&&inView) tick=setTimeout(next,ms); }
+  function next(){ if(!stage.isConnected) return; show(cur+1); restart(); }
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; let inView=true;
+  const pause=v=>{ paused=v; stage.classList.toggle('paused',v||reduce); if(v) clearTimeout(tick); else restart(); };
+  stage.addEventListener('mouseenter',()=>pause(true)); stage.addEventListener('mouseleave',()=>pause(false)); stage.addEventListener('focusin',()=>pause(true)); stage.addEventListener('focusout',()=>pause(false));
+  stage.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){ show(cur+1); restart(); } if(e.key==='ArrowLeft'){ show(cur-1); restart(); } });
+  let sx=null; stage.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true}); stage.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40){ show(cur+(dx<0?1:-1)); restart(); } sx=null; },{passive:true});
+  if(reduce) stage.classList.add('paused');
+  setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ inView=e.isIntersecting; if(inView) restart(); else clearTimeout(tick); })).observe(stage); } restart(); },200);
+  const gal=sec('b-gal','bl-alt',hd('Gallery','Work, rolling.','The gallery moves on its own. Hover, tap or use the arrows to hold a slide.'),
+    h('div',{class:'bl-gal rv'},stage,h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous slide',onclick:()=>{ show(cur-1); restart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},dots),count,h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next slide',onclick:()=>{ show(cur+1); restart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},bar)),
+    real.length?null:h('p',{class:'bl-note'},'Sample flash art for the preview. These are not Bloom Tattoo’s tattoos. Josh’s real photos replace them once the shop sends them.'));
+
+  /* ---- styles ---- */
+  const STY=[
+    {k:'Black and grey realism',a:'sphere',d:'Smooth shading, soft gradients and fine detail in black and grey ink. This is Josh’s main emphasis, and he does it on a large scale.',g:['Portraits and animals','Florals with depth','Large pieces, like sleeves and back work']},
+    {k:'Neo-traditional',a:'dagger',d:'Bold outlines and rich color with more dimension and detail than old-school flash.',g:['Daggers, snakes and roses','Eye-catching color','Pieces that read from across the room']},
+    {k:'Illustrative color',a:'rose',d:'Line work and color that look like an illustration, with more freedom than strict traditional rules.',g:['Botanical and nature scenes','Story-style pieces','Custom ideas with a lot of color']},
+    {k:'Ornamental',a:'orn',d:'Patterns, symmetry and decorative detail like filigree and mandala work.',g:['Bands, cuffs and chest pieces','Pieces that follow the body','Clean, balanced designs']}
+  ];
+  let sI=0; const sTabs=h('div',{class:'bl-tabs',role:'tablist'}), sBody=h('div',{class:'bl-sbody'});
+  const paintS=()=>{ const s=STY[sI]; sTabs.querySelectorAll('button').forEach((b,i)=>{ b.classList.toggle('on',i===sI); b.setAttribute('aria-selected',i===sI?'true':'false'); }); sBody.replaceChildren(h('div',{class:'bl-sart'},blSvg(BLA[s.a](),'bl-draw2')),h('div',{class:'bl-stxt'},h('h3',null,s.k),h('p',null,s.d),h('span',{class:'bl-lbl'},'Often chosen for'),h('ul',null,s.g.map(t=>h('li',null,t))),bookBtn('red sm','Ask Josh about '+s.k.toLowerCase()))); };
+  STY.forEach((s,i)=>sTabs.append(h('button',{type:'button',role:'tab',onclick:()=>{ sI=i; paintS(); }},s.k))); paintS();
+  const styles=sec('b-styles','',hd('Styles','Four ways Josh works.','Tap a style to see what it means. Illustrations here are simple samples, not finished tattoos.'),h('div',{class:'bl-card rv'},sTabs,sBody));
+
+  /* ---- artist ---- */
+  const stats=Array.isArray(x.stats)&&x.stats.length?x.stats:[['11+','years tattooing'],['5.0','on Google, about 120 reviews'],['18+','studio, no children'],['1:1','design work with you']];
+  const artist=sec('b-artist','bl-alt',h('div',{class:'bl-2c'},
+    h('div',{class:'bl-ph rv','aria-hidden':'true'},blSvg(BLA.flower(6,64,30),'bl-ph-art'),h('span',null,'J')),
+    h('div',{class:'rv'},h('span',{class:'bl-kick'},'The artist'),h('h2',null,'Josh Clicquennoi'),
+      h('p',null,'Josh has been tattooing for over eleven years, most of them in Dubuque. He believes in a collaborative approach: he works with you on the creative side so the tattoo ends up as good as it can be.'),
+      h('p',null,'His main emphasis is large-scale black and grey realism. He also does neo-traditional, illustrative color and ornamental work.'),
+      h('div',{class:'bl-stats'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l)))))));
+
+  /* ---- plan a tattoo ---- */
+  const P={style:'',spot:'',size:'',first:'',idea:'',name:''};
+  const SIZES=['Small (under 3 in)','Medium (3 to 6 in)','Large (6 in or more)','Sleeve or back piece','Not sure yet'];
+  const SPOTS=['Forearm','Upper arm','Shoulder','Chest','Back','Ribs','Thigh','Calf','Ankle or foot','Hand or fingers','Neck','Not sure yet'];
+  const msgEl=h('pre',{class:'bl-msg'}), mActs=h('div',{class:'bl-cta'});
+  const buildMsg=()=>{ const l=['Hi Josh, I’d like to book a tattoo at Bloom Tattoo.']; if(P.style) l.push('Style: '+P.style); if(P.spot) l.push('Placement: '+P.spot); if(P.size) l.push('Size: '+P.size); if(P.first) l.push('First tattoo: '+P.first); if(P.idea.trim()) l.push('Idea: '+P.idea.trim()); l.push('I am 18 or older.'); if(P.name.trim()) l.push('Thanks, '+P.name.trim()); return l.join('\n'); };
+  const paintM=()=>{ const m=buildMsg(); msgEl.textContent=m; const sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn red',href:sms},'Text this to the shop'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(m):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy message',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgEl); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='Selected, press copy'; }); }},'Copy message'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); };
+  const chipRow=(label,opts,key)=>{ const row=h('div',{class:'bl-chips',role:'group','aria-label':label}); opts.forEach(o=>row.append(h('button',{type:'button',onclick:e=>{ P[key]=P[key]===o?'':o; row.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===P[key])); paintM(); }},o))); return h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},label),row); };
+  const idea=h('textarea',{rows:'3',maxlength:'400',placeholder:'Subject, mood, anything you have in mind. You can send reference photos to Josh after.',oninput:e=>{ P.idea=e.target.value; paintM(); }});
+  const nm=h('input',{type:'text',maxlength:'40',placeholder:'Your first name',oninput:e=>{ P.name=e.target.value; paintM(); }});
+  paintM();
+  const plan=sec('b-plan','',hd('Plan a tattoo','Build your request in a minute.','Pick what you know. We write the message, you send it or book through Vagaro. A deposit is part of booking.'),
+    h('div',{class:'bl-card bl-plan rv'},h('div',null,chipRow('Style',STY.map(s=>s.k).concat(['Not sure yet']),'style'),chipRow('Placement',SPOTS,'spot'),chipRow('Size',SIZES,'size'),chipRow('First tattoo?',['Yes','No'],'first'),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Your idea'),idea),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Name'),nm)),
+      h('div',null,h('span',{class:'bl-lbl'},'Your message'),msgEl,mActs)));
+
+  /* ---- placement guide ---- */
+  const AREAS=[['Outer upper arm',1,'A common first spot. Easy to see and to care for.'],['Forearm',1,'Outer forearm is usually easier than the inner side.'],['Thigh',1,'Lots of room for larger pieces.'],['Calf',1,'Fleshy and usually tolerable. Large pieces often fit well.'],['Shoulder and upper back',1,'Good canvas for large designs.'],['Inner bicep and elbow',2,'Thinner skin. More sensitive near the elbow.'],['Ribs and sides',3,'Often one of the more intense spots.'],['Chest and sternum',3,'Bony in the middle, so it can be intense.'],['Spine',3,'Runs over bone. Can be sharp.'],['Neck',2,'Visible and sensitive. Plan around work and clothing.'],['Hands and fingers',3,'Thin skin, heavy use, can fade faster.'],['Ankle, shin and foot',3,'Little padding over bone.']];
+  const LV=['','Usually milder','Moderate','Often intense'];
+  const body=sec('b-body','bl-alt',hd('Placement guide','Where will it go?','A general guide to how different spots usually feel. Everyone is different, and Josh will talk it through with you.'),
+    h('div',{class:'bl-areas rv'},AREAS.map(([a,l,t])=>h('div',{class:'bl-area l'+l},h('b',null,a),h('span',{class:'bl-meter','aria-hidden':'true'},h('i'),h('i'),h('i')),h('em',null,LV[l]),h('small',null,t)))));
+
+  /* ---- before your appointment ---- */
+  const pdate=h('input',{type:'datetime-local',id:'bl-dt','aria-label':'Appointment date and time'}), pout=h('p',{class:'bl-out'},'Pick your appointment date to see your deadline.');
+  pdate.addEventListener('input',()=>{ const v=pdate.value; if(!v){ pout.textContent='Pick your appointment date to see your deadline.'; return; } const d=new Date(v); if(isNaN(d)){ return; } const dl=new Date(d.getTime()-72*3600*1000), f=o=>o.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); const left=dl.getTime()-Date.now(); pout.replaceChildren(h('span',{class:'bl-lbl'},'Last chance to keep your deposit'),h('b',null,f(dl)),h('small',null,left<0?'That time has passed. Changes now would forfeit the deposit, so call the shop.':'Rescheduling or canceling after this time forfeits the deposit (72 hours before your appointment).')); });
+  const PREP=['Moisturize your skin before and after','Arrive well rested','Eat a meal beforehand','Wear comfortable clothing that gives access to the spot'];
+  const prog=h('b',{class:'bl-prog'},'0 of '+PREP.length+' ready'), pbar=h('i',{class:'bl-pfill'});
+  const checks=PREP.map(t=>h('label',{class:'bl-chk'},h('input',{type:'checkbox',onchange:()=>{ const n=checks.filter(c=>c.querySelector('input').checked).length; prog.textContent=n+' of '+PREP.length+' ready'+(n===PREP.length?'. You’re set.':''); pbar.style.width=(n/PREP.length*100)+'%'; }}),h('span',null,t)));
+  const prep=sec('b-prep','',hd('Before you go','Get ready for your appointment.'),
+    h('div',{class:'bl-2c bl-tools'},
+      h('div',{class:'bl-card rv'},h('h3',null,'Deposit deadline'),h('p',{class:'bl-sm'},'Changes need 3 days’ notice to keep your deposit.'),h('label',{class:'bl-lbl',for:'bl-dt'},'Appointment date and time'),pdate,pout),
+      h('div',{class:'bl-card rv'},h('h3',null,'Prep checklist'),h('p',{class:'bl-sm'},'From the shop’s own tips.'),checks,h('span',{class:'bl-ptrack'},pbar),prog)));
+
+  /* ---- aftercare ---- */
+  const AC=[['Day 1','Keep it covered the way your artist tells you. Then wash gently with mild, fragrance-free soap and pat dry.'],['Days 2 to 5','Wash a couple of times a day. Use a thin layer of unscented moisturizer. Do not scrub.'],['Days 5 to 14','It may flake and itch. Do not pick or scratch. Keep moisturizing lightly.'],['Weeks 2 to 4','The surface settles. Skip soaking in pools, baths and hot tubs until it is fully healed, and keep it out of direct sun.']];
+  const care=sec('b-care','bl-alt',hd('Aftercare','Healing, day by day.','General guidance for most tattoos. Always follow the instructions Josh gives you, since they come first.'),
+    h('ol',{class:'bl-tl rv'},AC.map(([a,b],i)=>h('li',null,h('b',null,a),h('span',null,b)))));
+
+  /* ---- faq ---- */
+  const FAQ=[['Can I reschedule my appointment?','Changes need 3 days’ notice to keep your deposit. If you cancel or reschedule within 72 hours of your appointment, the deposit is forfeited.'],['What payment options are there?','Cash is accepted, along with debit and credit cards from Visa, MasterCard, Discover and American Express.'],['Can I bring someone for support?','Yes. You’re welcome to bring a guest or two, and there is seating for them.'],['Is Bloom Tattoo LGBTQIA+ friendly?','Yes. The studio is an inclusive, nonjudgmental space.'],['Are children allowed in the studio?','No. Clients must be 18 to get tattooed, and everyone who enters the studio must be an adult.'],['How can I prepare for my appointment?','Moisturize before and after, arrive well rested, eat a meal beforehand and wear comfortable clothing that gives access to the area.']];
+  const faq=sec('b-faq','',hd('Good to know','Quick answers.'),h('div',{class:'bl-faq rv'},FAQ.map(([q,a],i)=>h('details',null,h('summary',null,q),h('p',null,a)))));
+
+  /* ---- visit ---- */
+  const visit=sec('b-visit','bl-alt',hd('Visit','Come meet Josh.'),
+    h('div',{class:'bl-2c'},
+      h('div',{class:'bl-card rv'},h('span',{class:'bl-lbl'},'Bloom Tattoo'),addrTxt?h('p',{class:'bl-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bl-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+        h('div',{class:'bl-cta'},bookBtn('red'),C.maps?h('a',{class:'bl-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),h('p',{class:'bl-note'},'18 and over only. Bring a photo ID.')),
+      h('div',{class:'bl-card bl-hrs rv'},h('span',{class:'bl-lbl'},'Studio hours'),hoursRows(C),h('p',{class:'bl-note'},'Hours are as listed online. Work is by appointment, so call to confirm.'))));
+  const foot=h('footer',{class:'bl-foot'},h('div',{class:'bl-wrap bl-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'demo bl on'},top,nav,hero,gal,styles,artist,plan,body,prep,care,faq,visit,foot);
 }
 
 function zephyr(C){

@@ -908,6 +908,97 @@ body.t-bw{background:#fff}
 .bw-arr{position:absolute;right:14px;top:50%;margin-top:-16px;width:32px;height:32px;display:grid;place-items:center;background:var(--cu2);color:#fff;border-radius:4px}.bw-arr svg{width:19px;height:19px}
 .bw-needg button:hover,.bw-needg button:focus-visible{background:var(--tl);border-color:var(--tl);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}.bw-needg button:hover small,.bw-needg button:focus-visible small{color:#e3eef0}
 @media (max-width:900px){.bw .bw-need{padding:22px 14px 16px;box-shadow:8px 8px 0 var(--tl)}.bw .bw-needhd{font-size:2rem}.bw .bw-needg button{min-height:104px;padding:14px 44px 14px 14px}.bw .bw-needg button b{font-size:1.08rem}.bw .bw-needg{gap:10px}.bw .bw-arr{right:9px}}
+/* ===== Bloom Tattoo ===== */
+body.t-bl{background:#0c0c0d}
+.bl{--bl-bg:#0c0c0d;--in:#0c0c0d;--in2:#16171a;--in3:#1f2126;--ln:#2a2d33;--wh:#F3F4F6;--mu:#9aa1ab;--rd:#E0364F;--rd2:#B8243A;--bf:'Manrope',system-ui,sans-serif;--hf:'Instrument Serif','Times New Roman',serif;font-family:var(--bf);color:var(--wh);background:var(--in);line-height:1.6;font-weight:500;overflow-x:hidden}
+.bl *{box-sizing:border-box}.bl h1,.bl h2,.bl h3{margin:0;font-weight:400}.bl button{font-family:inherit}
+.bl-wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.bl-top{background:#000;border-bottom:1px solid var(--ln);font-size:.82rem;color:#c9ced6}.bl-top-in{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:7px;padding-bottom:7px}
+.bl-st{display:flex;align-items:center;gap:7px}.bl-dot{width:8px;height:8px;border-radius:50%;background:#7b818b}.bl-dot.on{background:#3ddc84}.bl-age{font:800 .7rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--rd)}
+.bl-nav{position:sticky;top:0;z-index:30;background:rgba(12,12,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}.bl-nav-in{display:flex;align-items:center;gap:18px;padding-top:11px;padding-bottom:11px}
+.bl-brand{display:flex;align-items:center;gap:10px;color:var(--wh);text-decoration:none}.bl-brand span{display:flex;flex-direction:column;line-height:1}.bl-brand b{font:400 1.7rem var(--hf)}.bl-brand i{font:800 .62rem var(--bf);letter-spacing:.3em;text-transform:uppercase;color:var(--rd);font-style:normal;margin-top:3px}
+.bl .bl-mk{width:34px;height:34px;flex:none;color:var(--rd)}
+.bl-links{display:flex;gap:2px;margin-left:auto}.bl-links button{background:none;border:0;color:#d6dae0;font:700 .86rem var(--bf);padding:9px 12px;cursor:pointer;border-radius:4px}.bl-links button:hover{background:var(--in3)}
+.bl-nav-r{display:flex;gap:8px;align-items:center}
+.bl-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:5px;padding:13px 20px;font:800 .95rem var(--bf);text-decoration:none;cursor:pointer;border:2px solid transparent;transition:transform .15s,background .15s,box-shadow .15s}
+.bl-btn.red{background:var(--rd);color:#fff;border-color:var(--rd)}.bl-btn.red:hover{background:var(--rd2);border-color:var(--rd2);transform:translateY(-2px)}
+.bl-btn.ghost{background:transparent;color:var(--wh);border-color:#4a4f58}.bl-btn.ghost:hover{border-color:var(--wh);transform:translateY(-2px)}
+.bl-btn.sm{padding:9px 14px;font-size:.84rem}.bl-btn svg{width:16px;height:16px}
+.bl-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.bl-art{width:100%;height:100%;display:block}.bl-art *{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.bl-art .f{fill:currentColor;stroke:none}
+.bl-hero{padding:56px 0 44px;background:radial-gradient(ellipse at 80% 20%,rgba(224,54,79,.16),transparent 55%),var(--in)}
+.bl-hero-g{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.bl-kick{display:block;font:800 .74rem var(--bf);letter-spacing:.2em;text-transform:uppercase;color:var(--rd);margin-bottom:12px}
+.bl-hero h1{font:400 clamp(3.2rem,7.4vw,6.2rem)/.95 var(--hf)}.bl-hero h1 em{color:var(--rd)}
+.bl-lead{font-size:1.12rem;color:#c3c8d0;max-width:520px;margin:18px 0 22px}
+.bl-facts{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:9px}.bl-facts li{display:flex;gap:11px;align-items:center;font-weight:700;font-size:.95rem}.bl-facts li:before{content:'';width:9px;height:9px;background:var(--rd);flex:none;transform:rotate(45deg)}
+.bl-hero-a{color:var(--wh);max-width:460px;justify-self:center;width:100%;aspect-ratio:1}
+.bl-draw *{stroke-dasharray:1;stroke-dashoffset:1}
+.bl-draw path,.bl-draw ellipse{stroke-width:1.5}
+.bl-draw path{pathLength:1}
+.bl-hero-a .bl-draw path{stroke-dasharray:420;stroke-dashoffset:420;animation:bld 2.6s ease forwards}
+.bl-hero-a .bl-draw path:nth-child(2n){animation-delay:.25s}.bl-hero-a .bl-draw path:nth-child(3n){animation-delay:.5s}
+.bl-hero-a .bl-draw circle{stroke-dasharray:80;stroke-dashoffset:80;animation:bld 1.4s 1.6s ease forwards}
+@keyframes bld{to{stroke-dashoffset:0}}
+.bl-hero-a{animation:blspin 90s linear infinite}@keyframes blspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.bl-hero-a,.bl-hero-a .bl-draw path,.bl-hero-a .bl-draw circle{animation:none!important;stroke-dashoffset:0!important}}
+.bl-need{margin-top:34px;background:var(--in2);border:1px solid var(--ln);border-top:4px solid var(--rd);border-radius:6px;padding:22px}
+.bl-needhd{display:block;font:400 1.9rem/1.1 var(--hf);margin-bottom:14px}
+.bl-needg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.bl-needg button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:var(--in);border:2px solid #3a3e46;border-radius:5px;padding:16px 46px 16px 16px;min-height:84px;color:var(--wh);cursor:pointer;transition:transform .15s,border-color .15s,background .15s}
+.bl-needg button b{font:800 1.08rem var(--bf)}.bl-needg button small{font:500 .84rem var(--bf);color:var(--mu)}
+.bl-arr{position:absolute;right:12px;top:50%;margin-top:-14px;width:28px;height:28px;display:grid;place-items:center;background:var(--rd);color:#fff;border-radius:4px}.bl-arr svg{width:16px;height:16px}
+.bl-needg button:hover,.bl-needg button:focus-visible{border-color:var(--rd);transform:translateY(-3px);background:#15161a}
+.bl-sec{padding:84px 0}.bl-alt{background:var(--in2);border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.bl-head{max-width:640px;margin-bottom:34px}.bl-head h2,.bl-2c h2{font:400 clamp(2.2rem,4.6vw,3.4rem)/1.02 var(--hf)}.bl-head p{color:#b4bac3;margin:12px 0 0}
+.bl-card{background:var(--in2);border:1px solid var(--ln);border-radius:6px;padding:26px}.bl-alt .bl-card{background:var(--in)}
+.bl-lbl{display:block;font:800 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--rd);margin:0 0 8px}
+.bl-note{color:var(--mu);font-size:.86rem;margin:14px 0 0}.bl-sm{color:var(--mu);font-size:.9rem;margin:6px 0 14px}
+.bl-2c{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}.bl-tools{align-items:start}.bl-card h3{font:400 1.7rem var(--hf)}
+/* gallery */
+.bl-gal{max-width:900px;margin:0 auto}
+.bl-stage{position:relative;aspect-ratio:16/10;border:1px solid var(--ln);border-radius:6px;overflow:hidden;background:#000;outline-offset:3px}
+.bl-slide{position:absolute;inset:0;margin:0;opacity:0;transform:scale(1.03);transition:opacity .7s ease,transform 1.2s ease;display:grid;place-items:center}.bl-slide.on{opacity:1;transform:none}
+.bl-slide img{width:100%;height:100%;object-fit:cover}.bl-slart{position:absolute;inset:8% 0 14%;margin:auto;height:78%!important;width:auto!important;aspect-ratio:1;color:var(--wh)}
+.bl-slide figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 22px 16px;background:linear-gradient(transparent,rgba(0,0,0,.82));display:flex;flex-direction:column;gap:2px}.bl-slide figcaption b{font:400 1.7rem var(--hf)}.bl-slide figcaption span{font:800 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--rd)}
+.bl-gbar{display:flex;align-items:center;gap:14px;margin-top:14px}.bl-dots{display:flex;gap:8px;flex:1;justify-content:center;flex-wrap:wrap}
+.bl-dot2{width:26px;height:6px;border:0;border-radius:2px;background:#3a3e46;cursor:pointer;padding:0}.bl-dot2.on{background:var(--rd)}
+.bl-count{font:800 .8rem var(--bf);color:var(--mu);min-width:44px;text-align:right}
+.bl-nb{width:40px;height:40px;border:2px solid #4a4f58;border-radius:5px;background:transparent;color:var(--wh);display:grid;place-items:center;cursor:pointer}.bl-nb:hover{border-color:var(--rd)}.bl-nb:not(.nxt) svg{transform:rotate(180deg)}
+.bl-track{display:block;height:3px;background:#2a2d33;margin-top:12px;overflow:hidden}.bl-bar{display:block;height:100%;width:100%;background:var(--rd);transform-origin:left;animation:blbar 4.6s linear infinite}
+.bl-stage.paused~.bl-gbar,.bl-gal:has(.bl-stage.paused) .bl-bar{animation-play-state:paused}
+@keyframes blbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* styles */
+.bl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.bl-tabs button{background:transparent;border:2px solid #3a3e46;color:var(--wh);border-radius:5px;padding:10px 16px;font:800 .88rem var(--bf);cursor:pointer}.bl-tabs button.on{background:var(--rd);border-color:var(--rd)}
+.bl-sbody{display:grid;grid-template-columns:260px 1fr;gap:34px;align-items:center}.bl-sart{aspect-ratio:1;color:var(--wh);background:#000;border:1px solid var(--ln);border-radius:6px;padding:16px}
+.bl-draw2 path,.bl-draw2 ellipse,.bl-draw2 rect{stroke-dasharray:500;stroke-dashoffset:500;animation:bld 1.8s ease forwards}.bl-draw2 circle:not(.f){stroke-dasharray:500;stroke-dashoffset:500;animation:bld 1.8s ease forwards}
+.bl-stxt h3{font:400 2.2rem var(--hf);margin-bottom:8px}.bl-stxt p{color:#c3c8d0;margin:0 0 16px}.bl-stxt ul{margin:0 0 20px;padding-left:18px;color:#d6dae0}.bl-stxt li{margin:3px 0}
+/* artist */
+.bl-ph{aspect-ratio:4/5;max-width:420px;width:100%;justify-self:center;background:#000;border:1px solid var(--ln);border-radius:6px;position:relative;display:grid;place-items:center;color:#2f3238;overflow:hidden}.bl-ph-art{position:absolute;inset:8%;width:84%;height:84%}.bl-ph span{position:relative;font:400 9rem var(--hf);color:var(--rd);line-height:1}
+.bl-2c p{color:#c3c8d0;margin:12px 0 0}.bl-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.bl-stats div{border:1px solid var(--ln);border-radius:5px;padding:14px;background:var(--in)}.bl-stats b{display:block;font:400 2.2rem/1 var(--hf);color:var(--rd)}.bl-stats span{font-size:.84rem;color:var(--mu)}
+/* plan */
+.bl-plan{display:grid;grid-template-columns:1.1fr .9fr;gap:34px}.bl-fld{margin-bottom:18px}
+.bl-chips{display:flex;flex-wrap:wrap;gap:8px}.bl-chips button{background:var(--in);border:2px solid #3a3e46;color:var(--wh);border-radius:5px;padding:9px 13px;font:700 .86rem var(--bf);cursor:pointer}.bl-chips button.on{background:var(--rd);border-color:var(--rd)}.bl-chips button:hover{border-color:var(--rd)}
+.bl textarea,.bl input[type=text],.bl input[type=datetime-local]{width:100%;background:var(--in);border:2px solid #3a3e46;border-radius:5px;color:var(--wh);padding:12px;font:500 .95rem var(--bf);color-scheme:dark}.bl textarea:focus,.bl input:focus{outline:0;border-color:var(--rd)}
+.bl-msg{white-space:pre-wrap;background:#000;border:1px solid var(--ln);border-radius:5px;padding:16px;font:500 .92rem/1.5 var(--bf);color:#e3e6ea;margin:0 0 16px;min-height:150px}
+/* placement */
+.bl-areas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.bl-area{background:var(--in);border:1px solid var(--ln);border-radius:5px;padding:16px;display:grid;gap:5px}.bl-area b{font:800 1rem var(--bf)}.bl-area small{color:var(--mu);font-size:.84rem;line-height:1.4}.bl-area em{font:800 .7rem var(--bf);letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-style:normal}
+.bl-meter{display:flex;gap:4px}.bl-meter i{width:30px;height:6px;background:#2f3238;border-radius:2px}.bl-area.l1 .bl-meter i:nth-child(1),.bl-area.l2 .bl-meter i:nth-child(-n+2),.bl-area.l3 .bl-meter i{background:var(--rd)}
+/* prep */
+.bl-out{margin:14px 0 0;padding:14px;border:1px dashed #4a4f58;border-radius:5px;color:var(--mu);display:grid;gap:3px}.bl-out b{font:400 1.7rem/1.1 var(--hf);color:var(--wh)}.bl-out small{font-size:.84rem}
+.bl-chk{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--ln);cursor:pointer}.bl-chk input{width:22px;height:22px;accent-color:var(--rd);flex:none}
+.bl-ptrack{display:block;height:6px;background:#2a2d33;margin:16px 0 8px;border-radius:2px;overflow:hidden}.bl-pfill{display:block;height:100%;width:0;background:var(--rd);transition:width .3s}.bl-prog{font:800 .86rem var(--bf);color:var(--wh)}
+/* aftercare */
+.bl-tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:s}.bl-tl li{background:var(--in);border:1px solid var(--ln);border-top:4px solid var(--rd);border-radius:5px;padding:20px;display:grid;gap:8px;align-content:start}.bl-tl b{font:400 1.7rem var(--hf)}.bl-tl span{color:#c3c8d0;font-size:.92rem}
+/* faq */
+.bl-faq{max-width:820px}.bl-faq details{border-bottom:1px solid var(--ln)}.bl-faq summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font:700 1.05rem var(--bf);position:relative}.bl-faq summary::-webkit-details-marker{display:none}.bl-faq summary:after{content:'+';position:absolute;right:4px;top:14px;font:400 1.9rem var(--hf);color:var(--rd)}.bl-faq details[open] summary:after{content:'\2212'}.bl-faq p{margin:0 0 20px;color:#c3c8d0;max-width:680px}
+/* visit */
+.bl-addr{display:flex;gap:10px;align-items:center;margin:8px 0;font-weight:700}.bl-addr svg{width:18px;height:18px;color:var(--rd);flex:none}.bl-addr a{color:var(--wh)}
+.bl-hrs div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--ln)}.bl-hrs .today{color:var(--rd);font-weight:800}
+.bl-foot{background:#000;border-top:1px solid var(--ln);padding:26px 0;color:#9aa1ab;font-size:.88rem}.bl-foot-in{display:flex;gap:18px;flex-wrap:wrap;align-items:center}.bl-foot b{color:var(--wh);font:400 1.3rem var(--hf)}.bl-foot a{color:var(--wh)}.bl-foot em{margin-left:auto;font-style:normal}
+.bl .rv.rv-in{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}.bl .rv.rv-on{opacity:1;transform:none}
+@media (max-width:900px){.bl-links{display:none}.bl-nav-r{margin-left:auto}.bl-hero-g,.bl-2c,.bl-plan,.bl-sbody{grid-template-columns:1fr}.bl-hero{padding:34px 0 30px}.bl-hero-a{max-width:280px;order:-1;margin:0 auto -12px}.bl-needg{grid-template-columns:repeat(2,minmax(0,1fr))}.bl-tl{grid-template-columns:1fr 1fr}.bl-areas{grid-template-columns:1fr 1fr}.bl-sec{padding:56px 0}.bl-sart{max-width:240px}.bl-ph{max-width:300px}.bl-foot em{margin-left:0}}
+@media (max-width:560px){.bl-wrap{padding:0 16px}.bl-tl,.bl-areas{grid-template-columns:1fr}.bl-needg button{min-height:78px;padding:14px 42px 14px 14px}.bl-need{padding:16px}.bl-needhd{font-size:1.6rem}.bl-btn.sm{padding:9px 11px}.bl-brand b{font-size:1.45rem}.bl-stage{aspect-ratio:4/5}.bl-slart{height:62%!important;inset:6% 0 20%}.bl-stats b{font-size:1.9rem}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
@@ -5477,7 +5568,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.bl-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -5545,6 +5636,7 @@ function build(d){
   if(/^shade\s?tree\b/i.test(C.name)||C.variant==='shadetree'){ document.body.className='t-st'; const pg=shadeTree(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); stRoll(pg); return; }
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='bloom'){ document.body.className='t-bl'; const pg=bloomTattoo(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='becwar'){ document.body.className='t-bw'; const pg=becwar(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
@@ -7878,6 +7970,150 @@ function becwar(C){
     h('div',{class:'bw-card bw-hrs'},h('span',{class:'bw-lbl'},'Store hours'),hoursRows(C),h('p',{class:'bw-note'},'Hours are as listed online. Call to confirm before you drive over.'))));
   const foot=h('footer',{class:'bw-foot'},h('div',{class:'bw-wrap bw-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
   return h('div',{class:'demo bw on'},top,nav,hero,design,calcSec,pick,svc,care,est,visit,foot);
+}
+
+/* ===== Bloom Tattoo (dark tattoo studio demo) ===== */
+const BLA={
+  flower:(n,len,w)=>{ let s=''; for(let i=0;i<n;i++){ s+='<path d="M100 100C'+(100-w)+' '+(100-len*.45)+' '+(100-w*.6)+' '+(100-len)+' 100 '+(100-len)+'C'+(100+w*.6)+' '+(100-len)+' '+(100+w)+' '+(100-len*.45)+' 100 100Z" transform="rotate('+(i*360/n)+' 100 100)"/>'; } for(let i=0;i<n;i++){ s+='<path d="M100 100L100 '+(100-len*.62)+'" transform="rotate('+(i*360/n)+' 100 100)" style="opacity:.55"/>'; } return s+'<circle cx="100" cy="100" r="9"/><circle cx="100" cy="100" r="3" class="f"/>'; },
+  rose:()=>{ let d='',t=0; for(let i=0;i<=110;i++){ t=i*.1; const r=2+t*4.6, x=100+r*Math.cos(t*1.0), y=88+r*Math.sin(t)*.88; d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }
+    return '<path d="'+d+'"/><path d="M42 84C34 128 72 158 100 158C128 158 166 128 158 84"/><path d="M58 70C46 108 74 134 100 134"/><path d="M142 70C154 108 126 134 100 134"/><path d="M100 158C100 172 98 184 104 196"/><path d="M101 176C82 176 70 166 66 154C84 154 98 160 101 176Z"/><path d="M103 186C122 184 134 174 138 162C120 162 106 170 103 186Z"/>'; },
+  moth:()=>{ const wing='<path d="M100 92C70 40 14 44 20 98C24 124 70 116 100 102"/><path d="M100 104C74 112 40 146 62 178C86 180 100 146 100 112"/><path d="M52 84C44 90 44 98 52 100"/><path d="M40 70C34 80 34 88 40 92" style="opacity:.6"/><circle cx="66" cy="152" r="4"/>'; return wing+'<g transform="translate(200 0) scale(-1 1)">'+wing+'</g><path d="M100 78L100 150" style="stroke-width:5"/><circle cx="100" cy="76" r="5"/><path d="M96 70C88 52 80 46 70 44"/><path d="M104 70C112 52 120 46 130 44"/>'; },
+  dagger:()=>'<path d="M100 14L111 112L100 122L89 112Z"/><path d="M100 22L100 112" style="opacity:.55"/><path d="M66 120C84 134 116 134 134 120"/><path d="M66 120C62 114 62 110 68 108"/><path d="M134 120C138 114 138 110 132 108"/><rect x="95" y="130" width="10" height="34" rx="2"/><path d="M95 140L105 146M95 150L105 156" style="opacity:.6"/><circle cx="100" cy="174" r="8"/><path d="M100 182C100 190 92 196 82 196M100 182C100 190 108 196 118 196" style="opacity:.7"/>',
+  snake:()=>'<path d="M54 36C150 30 156 86 102 96C50 106 46 154 146 164" style="stroke-width:7"/><path d="M54 36C150 30 156 86 102 96C50 106 46 154 146 164" style="stroke-width:1.5;stroke:var(--bl-bg,#0c0c0d);opacity:.8"/><path d="M54 36C42 32 36 40 40 48C44 54 54 50 54 36Z"/><circle cx="46" cy="40" r="1.8" class="f"/><path d="M40 52L34 60M40 52L46 60" style="stroke-width:1.5"/><path d="M146 164L156 168L146 172" style="stroke-width:3"/>',
+  orn:()=>{ let s='<circle cx="100" cy="100" r="62"/><circle cx="100" cy="100" r="54" style="opacity:.5"/><circle cx="100" cy="100" r="30"/>'; for(let i=0;i<24;i++){ s+='<path d="M100 '+(i%2?36:26)+'L100 '+(i%2?42:38)+'" transform="rotate('+(i*15)+' 100 100)"/>'; } for(let i=0;i<12;i++){ s+='<path d="M100 70C108 78 108 90 100 98C92 90 92 78 100 70Z" transform="rotate('+(i*30)+' 100 100)" style="opacity:.8"/>'; } return s+'<circle cx="100" cy="100" r="5" class="f"/>'; },
+  sphere:()=>{ let s=0x9e3779b9; const rnd=()=>{ s=(s+0x6D2B79F5)|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; let o=''; for(let i=0;i<1100;i++){ const a=rnd()*6.283, r=Math.sqrt(rnd())*68, x=r*Math.cos(a), y=r*Math.sin(a); const nz=Math.sqrt(Math.max(0,1-(x*x+y*y)/4624)), lit=Math.max(0,(-x*.5-y*.55)/68*.9+nz*.55); if(rnd()>Math.pow(1-lit,1.6)*1.05) continue; o+='<circle cx="'+(100+x).toFixed(1)+'" cy="'+(100+y).toFixed(1)+'" r="'+(0.7+rnd()*.9).toFixed(2)+'" class="f"/>'; } return o; },
+  rosebud:()=>'<path d="M100 150C70 140 62 104 80 82C92 68 108 68 120 82C138 104 130 140 100 150Z"/><path d="M82 90C94 100 106 100 118 90"/><path d="M90 78C98 84 104 84 112 78"/><path d="M100 150L100 190"/><path d="M100 172C82 172 70 164 66 152C84 152 98 158 100 172Z"/><path d="M100 182C118 180 130 172 134 160C118 160 104 166 100 182Z"/><path d="M70 96C58 86 56 72 64 62M130 96C142 86 144 72 136 62" style="opacity:.7"/>'
+};
+function blSvg(markup,cls){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 200 200'); s.setAttribute('class','bl-art'+(cls?' '+cls:'')); s.setAttribute('aria-hidden','true'); s.innerHTML=markup; return s; }
+
+function bloomTattoo(C){
+  const x=C.x, name=C.name||'Bloom Tattoo', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const book=/^https:\/\/[^\s"'<>]+$/.test(x.bookUrl||'')?x.bookUrl:'';
+  const digits=C.phone.replace(/\D/g,'').slice(-10);
+  const smsHref=body=>digits.length===10?'sms:+1'+digits+(/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body):'';
+  const st=bwStatus(C), heads=String(x.headline||'Custom ink,|made together.').split('|');
+  const bookBtn=(cls,label)=>book?h('a',{class:'bl-btn '+cls,href:book,target:'_blank',rel:'noopener'},label||'Book on Vagaro',ico('arrow',16,'')):null;
+  const callBtn=(cls,label)=>C.tel?h('a',{class:'bl-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
+  const go=id=>()=>scrollTo(id);
+  const hd=(k,t,p)=>h('div',{class:'bl-head rv'},h('span',{class:'bl-kick'},k),h('h2',null,t),p?h('p',null,p):null);
+  const sec=(id,cls,...kids)=>h('section',{class:'bl-sec '+(cls||''),id},h('div',{class:'bl-wrap'},kids));
+  const stopFns=[]; const live=()=>stopFns.every(f=>f!==false);
+
+  /* ---- top, nav ---- */
+  const top=h('div',{class:'bl-top'},h('div',{class:'bl-wrap bl-top-in'},st?h('span',{class:'bl-st'},h('i',{class:'bl-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,h('span',{class:'bl-age'},'18+ studio')));
+  const mark=()=>blSvg(BLA.flower(6,44,22),'bl-mk');
+  const nav=h('header',{class:'bl-nav'},h('div',{class:'bl-wrap bl-nav-in'},
+    h('a',{class:'bl-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('b-top'); }},mark(),h('span',null,h('b',null,'Bloom'),h('i',null,'Tattoo'))),
+    h('nav',{class:'bl-links'},[['b-gal','Gallery'],['b-styles','Styles'],['b-plan','Plan'],['b-care','Aftercare'],['b-visit','Visit']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('div',{class:'bl-nav-r'},callBtn('ghost sm','Call'),bookBtn('red sm','Book'))));
+
+  /* ---- hero ---- */
+  const picks=[['b-gal','Gallery','Work that changes'],['b-styles','Styles','What Josh does'],['b-plan','Plan a tattoo','Build your request'],['b-body','Placement guide','Where it goes'],['b-care','Aftercare','Heal it right'],['b-visit','Visit','Hours and map']];
+  const hero=h('section',{class:'bl-hero',id:'b-top'},h('div',{class:'bl-wrap bl-hero-g'},
+    h('div',{class:'bl-hero-t'},
+      h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' · ')),
+      h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
+      h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
+      h('div',{class:'bl-cta'},bookBtn('red'),callBtn('ghost')),
+      h('ul',{class:'bl-facts'},h('li',null,'Large-scale black and grey realism'),h('li',null,'Neo-traditional, illustrative color and ornamental'),h('li',null,'On Central Ave in Dubuque'))),
+    h('div',{class:'bl-hero-a','aria-hidden':'true'},blSvg(BLA.flower(8,84,34)+BLA.flower(8,52,18).replace(/<circle[^>]*>/g,''),'bl-draw'))),
+    h('div',{class:'bl-wrap'},h('div',{class:'bl-need'},h('span',{class:'bl-needhd'},'What are you looking for?'),h('div',{class:'bl-needg'},picks.map(([id,l,s])=>h('button',{type:'button',onclick:go(id)},h('b',null,l),h('small',null,s),h('i',{class:'bl-arr','aria-hidden':'true'},ico('arrow')))))))); 
+
+  /* ---- gallery slideshow (auto-advancing) ---- */
+  const real=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
+  const SAMPLE=[['rose','Illustrative color','Rose study','#7a1d2b'],['moth','Neo-traditional','Butterfly study','#1d2a33'],['dagger','Neo-traditional','Dagger','#2a1b1f'],['sphere','Black and grey realism','Soft shading','#16181b'],['orn','Ornamental','Sun ornament','#1d1a2a'],['snake','Illustrative color','Coiled snake','#16241f']];
+  const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)+' of '+real.length})):SAMPLE.map(([k,sty,t,bgc])=>({art:k,cap:t,sub:sty,bg:bgc}));
+  const stage=h('div',{class:'bl-stage',tabindex:'0','aria-roledescription':'carousel','aria-label':'Tattoo gallery'});
+  const slEls=slides.map((s,i)=>{ const el=h('figure',{class:'bl-slide'+(i===0?' on':''),'aria-hidden':i===0?'false':'true',style:s.bg?'background:'+s.bg:null},
+      s.img?h('img',{src:s.img,alt:'Tattoo by Josh Clicquennoi, photo '+(i+1),loading:i?'lazy':'eager'}):blSvg(BLA[s.art](),'bl-slart'),
+      h('figcaption',null,h('b',null,s.cap),h('span',null,s.sub))); stage.append(el); return el; });
+  const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'1 / '+slides.length);
+  let cur=0, paused=false, tick=null, ms=4600;
+  const dots=slides.map((s,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show slide '+(i+1),onclick:()=>{ show(i); restart(); }}));
+  function show(i){ cur=(i+slides.length)%slides.length; slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=(cur+1)+' / '+slides.length; }
+  function restart(){ bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; clearTimeout(tick); if(!paused&&!reduce&&inView) tick=setTimeout(next,ms); }
+  function next(){ if(!stage.isConnected) return; show(cur+1); restart(); }
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; let inView=true;
+  const pause=v=>{ paused=v; stage.classList.toggle('paused',v||reduce); if(v) clearTimeout(tick); else restart(); };
+  stage.addEventListener('mouseenter',()=>pause(true)); stage.addEventListener('mouseleave',()=>pause(false)); stage.addEventListener('focusin',()=>pause(true)); stage.addEventListener('focusout',()=>pause(false));
+  stage.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){ show(cur+1); restart(); } if(e.key==='ArrowLeft'){ show(cur-1); restart(); } });
+  let sx=null; stage.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true}); stage.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40){ show(cur+(dx<0?1:-1)); restart(); } sx=null; },{passive:true});
+  if(reduce) stage.classList.add('paused');
+  setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ inView=e.isIntersecting; if(inView) restart(); else clearTimeout(tick); })).observe(stage); } restart(); },200);
+  const gal=sec('b-gal','bl-alt',hd('Gallery','Work, rolling.','The gallery moves on its own. Hover, tap or use the arrows to hold a slide.'),
+    h('div',{class:'bl-gal rv'},stage,h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous slide',onclick:()=>{ show(cur-1); restart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},dots),count,h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next slide',onclick:()=>{ show(cur+1); restart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},bar)),
+    real.length?null:h('p',{class:'bl-note'},'Sample flash art for the preview. These are not Bloom Tattoo’s tattoos. Josh’s real photos replace them once the shop sends them.'));
+
+  /* ---- styles ---- */
+  const STY=[
+    {k:'Black and grey realism',a:'sphere',d:'Smooth shading, soft gradients and fine detail in black and grey ink. This is Josh’s main emphasis, and he does it on a large scale.',g:['Portraits and animals','Florals with depth','Large pieces, like sleeves and back work']},
+    {k:'Neo-traditional',a:'dagger',d:'Bold outlines and rich color with more dimension and detail than old-school flash.',g:['Daggers, snakes and roses','Eye-catching color','Pieces that read from across the room']},
+    {k:'Illustrative color',a:'rose',d:'Line work and color that look like an illustration, with more freedom than strict traditional rules.',g:['Botanical and nature scenes','Story-style pieces','Custom ideas with a lot of color']},
+    {k:'Ornamental',a:'orn',d:'Patterns, symmetry and decorative detail like filigree and mandala work.',g:['Bands, cuffs and chest pieces','Pieces that follow the body','Clean, balanced designs']}
+  ];
+  let sI=0; const sTabs=h('div',{class:'bl-tabs',role:'tablist'}), sBody=h('div',{class:'bl-sbody'});
+  const paintS=()=>{ const s=STY[sI]; sTabs.querySelectorAll('button').forEach((b,i)=>{ b.classList.toggle('on',i===sI); b.setAttribute('aria-selected',i===sI?'true':'false'); }); sBody.replaceChildren(h('div',{class:'bl-sart'},blSvg(BLA[s.a](),'bl-draw2')),h('div',{class:'bl-stxt'},h('h3',null,s.k),h('p',null,s.d),h('span',{class:'bl-lbl'},'Often chosen for'),h('ul',null,s.g.map(t=>h('li',null,t))),bookBtn('red sm','Ask Josh about '+s.k.toLowerCase()))); };
+  STY.forEach((s,i)=>sTabs.append(h('button',{type:'button',role:'tab',onclick:()=>{ sI=i; paintS(); }},s.k))); paintS();
+  const styles=sec('b-styles','',hd('Styles','Four ways Josh works.','Tap a style to see what it means. Illustrations here are simple samples, not finished tattoos.'),h('div',{class:'bl-card rv'},sTabs,sBody));
+
+  /* ---- artist ---- */
+  const stats=Array.isArray(x.stats)&&x.stats.length?x.stats:[['11+','years tattooing'],['5.0','on Google, about 120 reviews'],['18+','studio, no children'],['1:1','design work with you']];
+  const artist=sec('b-artist','bl-alt',h('div',{class:'bl-2c'},
+    h('div',{class:'bl-ph rv','aria-hidden':'true'},blSvg(BLA.flower(6,64,30),'bl-ph-art'),h('span',null,'J')),
+    h('div',{class:'rv'},h('span',{class:'bl-kick'},'The artist'),h('h2',null,'Josh Clicquennoi'),
+      h('p',null,'Josh has been tattooing for over eleven years, most of them in Dubuque. He believes in a collaborative approach: he works with you on the creative side so the tattoo ends up as good as it can be.'),
+      h('p',null,'His main emphasis is large-scale black and grey realism. He also does neo-traditional, illustrative color and ornamental work.'),
+      h('div',{class:'bl-stats'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l)))))));
+
+  /* ---- plan a tattoo ---- */
+  const P={style:'',spot:'',size:'',first:'',idea:'',name:''};
+  const SIZES=['Small (under 3 in)','Medium (3 to 6 in)','Large (6 in or more)','Sleeve or back piece','Not sure yet'];
+  const SPOTS=['Forearm','Upper arm','Shoulder','Chest','Back','Ribs','Thigh','Calf','Ankle or foot','Hand or fingers','Neck','Not sure yet'];
+  const msgEl=h('pre',{class:'bl-msg'}), mActs=h('div',{class:'bl-cta'});
+  const buildMsg=()=>{ const l=['Hi Josh, I’d like to book a tattoo at Bloom Tattoo.']; if(P.style) l.push('Style: '+P.style); if(P.spot) l.push('Placement: '+P.spot); if(P.size) l.push('Size: '+P.size); if(P.first) l.push('First tattoo: '+P.first); if(P.idea.trim()) l.push('Idea: '+P.idea.trim()); l.push('I am 18 or older.'); if(P.name.trim()) l.push('Thanks, '+P.name.trim()); return l.join('\n'); };
+  const paintM=()=>{ const m=buildMsg(); msgEl.textContent=m; const sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn red',href:sms},'Text this to the shop'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(m):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy message',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgEl); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='Selected, press copy'; }); }},'Copy message'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); };
+  const chipRow=(label,opts,key)=>{ const row=h('div',{class:'bl-chips',role:'group','aria-label':label}); opts.forEach(o=>row.append(h('button',{type:'button',onclick:e=>{ P[key]=P[key]===o?'':o; row.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===P[key])); paintM(); }},o))); return h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},label),row); };
+  const idea=h('textarea',{rows:'3',maxlength:'400',placeholder:'Subject, mood, anything you have in mind. You can send reference photos to Josh after.',oninput:e=>{ P.idea=e.target.value; paintM(); }});
+  const nm=h('input',{type:'text',maxlength:'40',placeholder:'Your first name',oninput:e=>{ P.name=e.target.value; paintM(); }});
+  paintM();
+  const plan=sec('b-plan','',hd('Plan a tattoo','Build your request in a minute.','Pick what you know. We write the message, you send it or book through Vagaro. A deposit is part of booking.'),
+    h('div',{class:'bl-card bl-plan rv'},h('div',null,chipRow('Style',STY.map(s=>s.k).concat(['Not sure yet']),'style'),chipRow('Placement',SPOTS,'spot'),chipRow('Size',SIZES,'size'),chipRow('First tattoo?',['Yes','No'],'first'),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Your idea'),idea),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Name'),nm)),
+      h('div',null,h('span',{class:'bl-lbl'},'Your message'),msgEl,mActs)));
+
+  /* ---- placement guide ---- */
+  const AREAS=[['Outer upper arm',1,'A common first spot. Easy to see and to care for.'],['Forearm',1,'Outer forearm is usually easier than the inner side.'],['Thigh',1,'Lots of room for larger pieces.'],['Calf',1,'Fleshy and usually tolerable. Large pieces often fit well.'],['Shoulder and upper back',1,'Good canvas for large designs.'],['Inner bicep and elbow',2,'Thinner skin. More sensitive near the elbow.'],['Ribs and sides',3,'Often one of the more intense spots.'],['Chest and sternum',3,'Bony in the middle, so it can be intense.'],['Spine',3,'Runs over bone. Can be sharp.'],['Neck',2,'Visible and sensitive. Plan around work and clothing.'],['Hands and fingers',3,'Thin skin, heavy use, can fade faster.'],['Ankle, shin and foot',3,'Little padding over bone.']];
+  const LV=['','Usually milder','Moderate','Often intense'];
+  const body=sec('b-body','bl-alt',hd('Placement guide','Where will it go?','A general guide to how different spots usually feel. Everyone is different, and Josh will talk it through with you.'),
+    h('div',{class:'bl-areas rv'},AREAS.map(([a,l,t])=>h('div',{class:'bl-area l'+l},h('b',null,a),h('span',{class:'bl-meter','aria-hidden':'true'},h('i'),h('i'),h('i')),h('em',null,LV[l]),h('small',null,t)))));
+
+  /* ---- before your appointment ---- */
+  const pdate=h('input',{type:'datetime-local',id:'bl-dt','aria-label':'Appointment date and time'}), pout=h('p',{class:'bl-out'},'Pick your appointment date to see your deadline.');
+  pdate.addEventListener('input',()=>{ const v=pdate.value; if(!v){ pout.textContent='Pick your appointment date to see your deadline.'; return; } const d=new Date(v); if(isNaN(d)){ return; } const dl=new Date(d.getTime()-72*3600*1000), f=o=>o.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); const left=dl.getTime()-Date.now(); pout.replaceChildren(h('span',{class:'bl-lbl'},'Last chance to keep your deposit'),h('b',null,f(dl)),h('small',null,left<0?'That time has passed. Changes now would forfeit the deposit, so call the shop.':'Rescheduling or canceling after this time forfeits the deposit (72 hours before your appointment).')); });
+  const PREP=['Moisturize your skin before and after','Arrive well rested','Eat a meal beforehand','Wear comfortable clothing that gives access to the spot'];
+  const prog=h('b',{class:'bl-prog'},'0 of '+PREP.length+' ready'), pbar=h('i',{class:'bl-pfill'});
+  const checks=PREP.map(t=>h('label',{class:'bl-chk'},h('input',{type:'checkbox',onchange:()=>{ const n=checks.filter(c=>c.querySelector('input').checked).length; prog.textContent=n+' of '+PREP.length+' ready'+(n===PREP.length?'. You’re set.':''); pbar.style.width=(n/PREP.length*100)+'%'; }}),h('span',null,t)));
+  const prep=sec('b-prep','',hd('Before you go','Get ready for your appointment.'),
+    h('div',{class:'bl-2c bl-tools'},
+      h('div',{class:'bl-card rv'},h('h3',null,'Deposit deadline'),h('p',{class:'bl-sm'},'Changes need 3 days’ notice to keep your deposit.'),h('label',{class:'bl-lbl',for:'bl-dt'},'Appointment date and time'),pdate,pout),
+      h('div',{class:'bl-card rv'},h('h3',null,'Prep checklist'),h('p',{class:'bl-sm'},'From the shop’s own tips.'),checks,h('span',{class:'bl-ptrack'},pbar),prog)));
+
+  /* ---- aftercare ---- */
+  const AC=[['Day 1','Keep it covered the way your artist tells you. Then wash gently with mild, fragrance-free soap and pat dry.'],['Days 2 to 5','Wash a couple of times a day. Use a thin layer of unscented moisturizer. Do not scrub.'],['Days 5 to 14','It may flake and itch. Do not pick or scratch. Keep moisturizing lightly.'],['Weeks 2 to 4','The surface settles. Skip soaking in pools, baths and hot tubs until it is fully healed, and keep it out of direct sun.']];
+  const care=sec('b-care','bl-alt',hd('Aftercare','Healing, day by day.','General guidance for most tattoos. Always follow the instructions Josh gives you, since they come first.'),
+    h('ol',{class:'bl-tl rv'},AC.map(([a,b],i)=>h('li',null,h('b',null,a),h('span',null,b)))));
+
+  /* ---- faq ---- */
+  const FAQ=[['Can I reschedule my appointment?','Changes need 3 days’ notice to keep your deposit. If you cancel or reschedule within 72 hours of your appointment, the deposit is forfeited.'],['What payment options are there?','Cash is accepted, along with debit and credit cards from Visa, MasterCard, Discover and American Express.'],['Can I bring someone for support?','Yes. You’re welcome to bring a guest or two, and there is seating for them.'],['Is Bloom Tattoo LGBTQIA+ friendly?','Yes. The studio is an inclusive, nonjudgmental space.'],['Are children allowed in the studio?','No. Clients must be 18 to get tattooed, and everyone who enters the studio must be an adult.'],['How can I prepare for my appointment?','Moisturize before and after, arrive well rested, eat a meal beforehand and wear comfortable clothing that gives access to the area.']];
+  const faq=sec('b-faq','',hd('Good to know','Quick answers.'),h('div',{class:'bl-faq rv'},FAQ.map(([q,a],i)=>h('details',null,h('summary',null,q),h('p',null,a)))));
+
+  /* ---- visit ---- */
+  const visit=sec('b-visit','bl-alt',hd('Visit','Come meet Josh.'),
+    h('div',{class:'bl-2c'},
+      h('div',{class:'bl-card rv'},h('span',{class:'bl-lbl'},'Bloom Tattoo'),addrTxt?h('p',{class:'bl-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bl-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+        h('div',{class:'bl-cta'},bookBtn('red'),C.maps?h('a',{class:'bl-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),h('p',{class:'bl-note'},'18 and over only. Bring a photo ID.')),
+      h('div',{class:'bl-card bl-hrs rv'},h('span',{class:'bl-lbl'},'Studio hours'),hoursRows(C),h('p',{class:'bl-note'},'Hours are as listed online. Work is by appointment, so call to confirm.'))));
+  const foot=h('footer',{class:'bl-foot'},h('div',{class:'bl-wrap bl-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'demo bl on'},top,nav,hero,gal,styles,artist,plan,body,prep,care,faq,visit,foot);
 }
 
 function zephyr(C){
