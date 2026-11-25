@@ -1,0 +1,32 @@
+name: Ad graphics
+# Runs only on the ad-graphics branch: captures site screenshots and renders the social ads.
+on:
+  push:
+    branches: [ad-graphics]
+    paths: ['ads/**', '.github/workflows/ad-graphics.yml']
+permissions:
+  contents: write
+concurrency:
+  group: ad-graphics
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+      - name: Screenshots (only if missing)
+        run: |
+          if [ ! -f ads/shots/home-desk.png ] || [ -f ads/.reshoot ]; then node ads/shots.mjs; rm -f ads/.reshoot; fi
+      - run: node ads/render.mjs
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add ads/shots ads/out
+          git add -u ads || true
+          git commit -m "Render ad graphics [skip ci]" || echo "nothing to commit"
+          git push
