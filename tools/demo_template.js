@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -2294,10 +2294,15 @@ function becwar(C){
   const links=[['w-design','Design a room'],['w-calc','How much tile'],['w-pick','Tile picker'],['w-care','Care tips'],['w-visit','Visit']];
   const markSvg=()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 28 28'); s.setAttribute('class','bw-tilemark'); s.innerHTML='<rect x="1" y="1" width="12" height="12" fill="#0F5F66"/><rect x="15" y="1" width="12" height="12" fill="#C25B33"/><rect x="1" y="15" width="12" height="12" fill="#10222B"/><rect x="15" y="15" width="12" height="12" fill="#9AB3BC"/>'; return s; };
   const brand=h('a',{class:'bw-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('w-top'); },'aria-label':name},markSvg(),h('span',{class:'bw-wm'},h('b',null,'Becwar'),h('i',null,'Tile & Marble')));
+  const allLinks=[['w-design','Design a room'],['w-calc','How much tile do I need?'],['w-pick','Tile picker'],['w-svc','What we do'],['w-care','Care tips'],['w-est','Ask for an estimate'],['w-visit','Visit the store']];
+  const mpanel=h('nav',{class:'bw-mpanel',id:'bw-mpanel','aria-label':'Sections',hidden:''}), menuBtn=h('button',{type:'button',class:'bw-menubtn','aria-expanded':'false','aria-controls':'bw-mpanel'},h('span',{class:'bw-bars','aria-hidden':'true'}),h('span',null,'Menu'));
+  const setMenu=open=>{ if(open) mpanel.removeAttribute('hidden'); else mpanel.setAttribute('hidden',''); menuBtn.setAttribute('aria-expanded',open?'true':'false'); menuBtn.classList.toggle('open',open); };
+  mpanel.append(h('span',{class:'bw-mhd'},'Jump to'),...allLinks.map(([id,l],i)=>h('button',{type:'button',onclick:()=>{ setMenu(false); setTimeout(()=>scrollTo(id),60); }},h('b',null,String(i+1).padStart(2,'0')),l)),call('ink','Call '+(C.phoneTxt||'')));
+  menuBtn.addEventListener('click',()=>setMenu(mpanel.hasAttribute('hidden')));
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') setMenu(false); });
   const nav=h('header',{class:'bw-nav'},h('div',{class:'bw-wrap bw-nav-in'},brand,
-    h('nav',{class:'bw-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),call('ink sm','Call')),
-    h('nav',{class:'bw-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
-  const top=h('div',{class:'bw-top'},h('div',{class:'bw-wrap bw-top-in'},h('span',null,String(x.strip||'Tile sales and installation in Dubuque, Iowa')),
+    h('nav',{class:'bw-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),h('div',{class:'bw-nav-r'},call('ink sm','Call'),menuBtn)),mpanel);
+  const top=h('div',{class:'bw-top'},h('div',{class:'bw-wrap bw-top-in'},
     st?h('span',{class:'bw-st'},h('i',{class:'bw-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null));
 
   /* hero swatch board */
@@ -2308,7 +2313,7 @@ function becwar(C){
       bx.save(); bx.beginPath(); bx.rect(X+4,Y+4,192,142); bx.clip(); bx.drawImage(tx,0,0,tx.width,tx.height,X+4,Y+4,192,142); bx.fillStyle='rgba(16,34,43,.86)'; bx.fillRect(X+4,Y+120,192,26); bx.fillStyle='#fff'; bx.font='700 11px Manrope,sans-serif'; bx.fillText(m.n+' / '+bwLay(c[1]),X+12,Y+137); bx.restore(); },i*110)); },80);
   const hero=h('section',{class:'bw-hero',id:'w-top'},h('div',{class:'bw-wrap bw-hero-g'},
     h('div',{class:'bw-hero-t'},
-      h('span',{class:'bw-kick'},C.cat||'Tile store and installation'),
+      h('span',{class:'bw-kick'},[C.cat||'Tile store and installation',(C.city||'Dubuque, IA')].join(' \u00B7 ')),
       h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
       h('p',{class:'bw-lead'},C.tag||'Becwar Tile & Marble sells and installs tile in Dubuque. Try layouts, work out how much you need and ask for an estimate, all from your phone.'),
       h('div',{class:'bw-cta'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-design')},'Design a room'),call('line')),
