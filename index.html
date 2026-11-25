@@ -1601,6 +1601,38 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}*{animation:none!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .ag-ver{display:block;font-size:.78rem;color:var(--slate);font-weight:600;letter-spacing:.04em;margin-top:2px}
+
+/* Why us: secured background */
+.wu.band-dark{padding-top:110px;background:radial-gradient(ellipse 70% 60% at 72% 45%,#0B2A6B 0%,rgba(11,42,107,0) 60%),radial-gradient(ellipse 50% 50% at 10% 90%,rgba(0,82,204,.18),transparent 70%),linear-gradient(180deg,#050A15 0%,#071228 50%,#050A15 100%);isolation:isolate}
+.wu.band-dark::before{background-image:linear-gradient(rgba(96,165,250,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,.05) 1px,transparent 1px);background-size:48px 48px;z-index:-1}
+.wu::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,#60A5FA 30%,#0052CC 70%,transparent);opacity:.7}
+.wu-bg{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.wu-glow{position:absolute;right:8%;top:50%;width:760px;height:760px;transform:translate(0,-50%);background:radial-gradient(circle,rgba(37,99,235,.35),rgba(37,99,235,0) 62%);filter:blur(10px);animation:wuBreathe 7s ease-in-out infinite}
+.wu-traces{position:absolute;inset:0;width:100%;height:100%}
+.tr-base path{fill:none;stroke:rgba(96,165,250,.16);stroke-width:1.2}
+.tr-pulse path{fill:none;stroke:#60A5FA;stroke-width:1.8;stroke-linecap:round;stroke-dasharray:60 940;stroke-dashoffset:1000;animation:wuPulse 6s linear infinite;filter:drop-shadow(0 0 4px #3B82F6)}
+.tr-node circle{fill:#0B1220;stroke:#60A5FA;stroke-width:1.5}
+.tr-lab text{font-family:var(--mono);font-size:10px;letter-spacing:.12em;fill:rgba(147,197,253,.55)}
+.wu-scan{position:absolute;left:0;right:0;top:-20%;height:20%;background:linear-gradient(180deg,transparent,rgba(96,165,250,.035) 85%,rgba(147,197,253,.14) 100%);border-bottom:1px solid rgba(147,197,253,.18);animation:wuScan 9s linear infinite}
+.wu-stage{position:relative}
+.wu-frame{z-index:1}
+.wu-ctrl{position:relative;z-index:1}
+.wu-shield{position:absolute;left:50%;top:47%;width:132%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.wu-shield svg{width:100%;height:auto;display:block;filter:drop-shadow(0 0 30px rgba(59,130,246,.35));animation:wuBreathe 7s ease-in-out infinite}
+.wu-ring{position:absolute;left:50%;top:50%;width:92%;aspect-ratio:1;border:1px solid rgba(96,165,250,.35);border-radius:50%;transform:translate(-50%,-50%) scale(.7);opacity:0;animation:wuRing 6s ease-out infinite}
+.wu-ring.r2{animation-delay:3s}
+.wu-strip{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:64px;border-top:1px solid rgba(148,163,184,.16)}
+.wu-strip>div{display:flex;gap:14px;align-items:flex-start;padding:24px 20px 0}
+.wu-strip>div+div{border-left:1px solid rgba(148,163,184,.12)}
+.wu-si{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:6px;background:rgba(0,82,204,.18);border:1px solid rgba(96,165,250,.3);color:#93C5FD}
+.wu-strip p{font-size:.86rem;color:#94A3B8;line-height:1.45}
+.wu-strip b{display:block;color:#fff;font-size:.95rem;margin-bottom:2px}
+@keyframes wuPulse{to{stroke-dashoffset:0}}
+@keyframes wuScan{to{top:100%}}
+@keyframes wuBreathe{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes wuRing{0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}20%{opacity:.6}100%{opacity:0;transform:translate(-50%,-50%) scale(1.15)}}
+@media (max-width:880px){.wu-glow{right:50%;top:62%;transform:translate(50%,-50%);width:560px;height:560px}.wu-shield{width:128%}.wu-strip{grid-template-columns:1fr 1fr;margin-top:44px}.wu-strip>div{padding:20px 12px 18px}.wu-strip>div:nth-child(3){border-left:0}.wu-strip>div:nth-child(n+3){border-top:1px solid rgba(148,163,184,.12)}.wu-strip>div{flex-direction:column;gap:10px}.tr-lab{display:none}}
+@media (prefers-reduced-motion:reduce){.wu-scan,.wu-ring{display:none}.tr-pulse path,.wu-glow,.wu-shield svg{animation:none}}
 /* Why us: rotating ad slideshow */
 .wu-grid{display:grid;grid-template-columns:1fr 480px;gap:64px;align-items:center}
 .wu h2{font-size:clamp(1.9rem,4vw,2.75rem);margin:10px 0 12px;letter-spacing:-.03em}
@@ -2056,6 +2088,11 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 
 <!-- WHY US -->
 <section class="section band-dark wu" id="why-us" aria-labelledby="wuTitle">
+  <div class="wu-bg" aria-hidden="true">
+    <div class="wu-glow"></div>
+    <svg class="wu-traces" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice"><g class="tr-base"><path d="M0 120H420L500 200H760L840 280H900"/><path d="M0 780H300L380 700H700L780 620H880"/><path d="M1440 90H1300L1240 150H1160"/><path d="M1440 820H1320L1250 750H1180"/><path d="M620 0V60L700 140H860"/><path d="M760 900V840L820 780H900"/><path d="M1440 450H1320"/><path d="M1440 300H1350L1310 340H1290"/><path d="M560 900V860L600 820H760"/></g><g class="tr-pulse"><path d="M0 120H420L500 200H760L840 280H900" pathLength="1000" style="animation-duration:5.0s;animation-delay:-0.0s"/><path d="M0 780H300L380 700H700L780 620H880" pathLength="1000" style="animation-duration:6.3s;animation-delay:-1.7s"/><path d="M1440 90H1300L1240 150H1160" pathLength="1000" style="animation-duration:7.6s;animation-delay:-3.4s"/><path d="M1440 820H1320L1250 750H1180" pathLength="1000" style="animation-duration:8.9s;animation-delay:-0.1s"/><path d="M620 0V60L700 140H860" pathLength="1000" style="animation-duration:6.2s;animation-delay:-1.8s"/><path d="M760 900V840L820 780H900" pathLength="1000" style="animation-duration:7.5s;animation-delay:-3.5s"/><path d="M1440 450H1320" pathLength="1000" style="animation-duration:8.8s;animation-delay:-0.2s"/><path d="M1440 300H1350L1310 340H1290" pathLength="1000" style="animation-duration:7.4s;animation-delay:-3.6s"/><path d="M560 900V860L600 820H760" pathLength="1000" style="animation-duration:8.7s;animation-delay:-0.3s"/></g><g class="tr-node"><circle cx="900" cy="280" r="3.5"/><circle cx="880" cy="620" r="3.5"/><circle cx="1160" cy="150" r="3.5"/><circle cx="1180" cy="750" r="3.5"/><circle cx="860" cy="140" r="3.5"/><circle cx="900" cy="780" r="3.5"/><circle cx="1320" cy="450" r="3.5"/><circle cx="1290" cy="340" r="3.5"/><circle cx="760" cy="820" r="3.5"/></g><g class="tr-lab"><text x="915" y="266">SSL</text><text x="1176" y="136">2FA</text><text x="1196" y="736">HASHED</text><text x="876" y="126">SERVER AUTH</text><text x="1226" y="326">SQUARE</text></g></svg>
+    <div class="wu-scan"></div>
+  </div>
   <div class="wrap wu-grid">
     <div class="wu-copy reveal">
       <span class="kicker"><b>03</b>Why Riverbend</span>
@@ -2065,6 +2102,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <a class="btn btn-amber wu-cta" href="#contact">Get a free mockup <svg width="16" height="16" aria-hidden="true"><use href="#arrow"/></svg></a>
     </div>
     <div class="wu-stage reveal" aria-roledescription="carousel" aria-label="Why Riverbend">
+      <div class="wu-shield" aria-hidden="true"><span class="wu-ring"></span><span class="wu-ring r2"></span><svg viewBox="0 0 200 240"><defs><linearGradient id="wuSg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#0052CC" stop-opacity=".2"/></linearGradient><linearGradient id="wuSf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D4ED8" stop-opacity=".28"/><stop offset="1" stop-color="#0B1220" stop-opacity="0"/></linearGradient></defs><path d="M100 6L190 40V112C190 170 152 212 100 236C48 212 10 170 10 112V40Z" fill="url(#wuSf)" stroke="url(#wuSg)" stroke-width="1.4"/><path d="M100 20L176 49V112C176 162 144 198 100 220C56 198 24 162 24 112V49Z" fill="none" stroke="#60A5FA" stroke-opacity=".18" stroke-width="1" stroke-dasharray="3 5"/></svg></div>
       <div class="wu-frame" aria-live="off"><img src="/img/why/ad-01.webp" srcset="/img/why/ad-01-sm.webp 720w, /img/why/ad-01.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Websites built by cybersecurity experts." loading="eager" decoding="async" class="on"><img src="/img/why/ad-02.webp" srcset="/img/why/ad-02-sm.webp 720w, /img/why/ad-02.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="No templates. No per-page pricing." loading="lazy" decoding="async"><img src="/img/why/ad-03.webp" srcset="/img/why/ad-03-sm.webp 720w, /img/why/ad-03.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Launch your website for $0 down." loading="lazy" decoding="async"><img src="/img/why/ad-04.webp" srcset="/img/why/ad-04-sm.webp 720w, /img/why/ad-04.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Lower monthly rate. No annual commitment." loading="lazy" decoding="async"><img src="/img/why/ad-05.webp" srcset="/img/why/ad-05-sm.webp 720w, /img/why/ad-05.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Security isn&rsquo;t an add-on. It&rsquo;s how we build." loading="lazy" decoding="async"><img src="/img/why/ad-06.webp" srcset="/img/why/ad-06-sm.webp 720w, /img/why/ad-06.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="We lock down our own systems first." loading="lazy" decoding="async"><img src="/img/why/ad-07.webp" srcset="/img/why/ad-07-sm.webp 720w, /img/why/ad-07.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Take payments on your website, securely." loading="lazy" decoding="async"><img src="/img/why/ad-08.webp" srcset="/img/why/ad-08-sm.webp 720w, /img/why/ad-08.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Your website should work while you sleep." loading="lazy" decoding="async"><img src="/img/why/ad-09.webp" srcset="/img/why/ad-09-sm.webp 720w, /img/why/ad-09.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Automate the busywork." loading="lazy" decoding="async"><img src="/img/why/ad-10.webp" srcset="/img/why/ad-10-sm.webp 720w, /img/why/ad-10.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Your website is your first impression. Make it count." loading="lazy" decoding="async"><img src="/img/why/ad-11.webp" srcset="/img/why/ad-11-sm.webp 720w, /img/why/ad-11.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Get found on Google Maps." loading="lazy" decoding="async"><img src="/img/why/ad-12.webp" srcset="/img/why/ad-12-sm.webp 720w, /img/why/ad-12.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Built for the phone in your customer&rsquo;s hand." loading="lazy" decoding="async"><img src="/img/why/ad-13.webp" srcset="/img/why/ad-13-sm.webp 720w, /img/why/ad-13.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Your domain. Your website." loading="lazy" decoding="async"><img src="/img/why/ad-14.webp" srcset="/img/why/ad-14-sm.webp 720w, /img/why/ad-14.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Real people. Right here in Dubuque." loading="lazy" decoding="async"><img src="/img/why/ad-15.webp" srcset="/img/why/ad-15-sm.webp 720w, /img/why/ad-15.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="From defense contractors to restaurant software." loading="lazy" decoding="async"></div>
       <div class="wu-ctrl">
         <button type="button" class="wu-btn" data-d="-1" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -2075,6 +2113,12 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       </div>
       <a class="btn btn-amber wu-mcta" href="#contact">Get a free mockup</a>
     </div>
+  </div>
+  <div class="wrap wu-strip reveal" aria-label="How we protect your site">
+    <div><span class="wu-si"><svg width="20" height="20"><use href="#lock"/></svg></span><p><b>SSL on every website</b>The padlock your customers look for</p></div>
+    <div><span class="wu-si"><svg width="20" height="20"><use href="#i-shield"/></svg></span><p><b>Two-factor sign-in</b>On our client and billing systems</p></div>
+    <div><span class="wu-si"><svg width="20" height="20"><use href="#check"/></svg></span><p><b>Card numbers never stored</b>Payments run through Square</p></div>
+    <div><span class="wu-si"><svg width="20" height="20"><use href="#i-badge"/></svg></span><p><b>Military cybersecurity background</b>Behind every site we build</p></div>
   </div>
 </section>
 
