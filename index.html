@@ -1486,6 +1486,7 @@ a.lk{text-decoration:none}
 .nav-links a{white-space:nowrap}.nav .brand span{white-space:nowrap}
 @media (min-width:881px){.nav-links{gap:24px}}
 @media (max-width:1060px){.nav-links a[href="#owners"]{display:none}}
+@media (max-width:1180px){.nav-links a[href="#why-us"]{display:none}}
 @media (max-width:880px){.nav-call-m{display:inline-flex;align-items:center;gap:6px;margin-left:auto;margin-right:6px;background:var(--amber);color:#fff;font-weight:700;font-size:.9rem;padding:8px 12px;border-radius:8px}}
 .ct-call{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:22px}.ct-call>span{font-weight:600;color:#E2E8F0;width:100%}
 .ow-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:820px;margin:0 auto 28px}.ow-card{display:flex;gap:18px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:#fff}
@@ -1600,6 +1601,35 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}*{animation:none!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .ag-ver{display:block;font-size:.78rem;color:var(--slate);font-weight:600;letter-spacing:.04em;margin-top:2px}
+/* Why us: rotating ad slideshow */
+.wu-grid{display:grid;grid-template-columns:1fr 480px;gap:64px;align-items:center}
+.wu h2{font-size:clamp(1.9rem,4vw,2.75rem);margin:10px 0 12px;letter-spacing:-.03em}
+.wu-lead{color:#94A3B8;font-size:1.05rem;max-width:520px}
+.wu-list{list-style:none;margin:28px 0 30px;display:grid;grid-template-columns:1fr 1fr;column-gap:22px;border-top:1px solid rgba(148,163,184,.16)}
+.wu-list button{position:relative;width:100%;display:flex;align-items:center;gap:12px;padding:11px 2px;background:none;border:0;border-bottom:1px solid rgba(148,163,184,.16);color:#94A3B8;font-size:.95rem;font-weight:600;text-align:left;cursor:pointer;transition:color .2s}
+.wu-list button:hover{color:#E2E8F0}
+.wu-list button[aria-current]{color:#fff}
+.wu-n{font-family:var(--mono);font-size:.72rem;font-weight:500;color:#475569;min-width:20px}
+.wu-list button[aria-current] .wu-n{color:#60A5FA}
+.wu-list i{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:#0052CC}
+.wu-list button[aria-current] i{width:var(--p,0%)}
+.wu-list button:focus-visible,.wu-btn:focus-visible{outline:2px solid #60A5FA;outline-offset:2px}
+.wu-frame{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#0B1220;border:1px solid rgba(148,163,184,.18);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 6px rgba(255,255,255,.03)}
+.wu-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.015);transition:opacity .7s ease,transform 1.2s ease}
+.wu-frame img.on{opacity:1;transform:none}
+.wu-ctrl{display:flex;align-items:center;gap:10px;margin-top:16px}
+.wu-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:rgba(255,255,255,.04);color:#E2E8F0;cursor:pointer;flex:none}
+.wu-btn:hover{background:rgba(255,255,255,.1)}
+.wu-pp .pl{display:none}.wu.paused .wu-pp .pl{display:block}.wu.paused .wu-pp .pz{display:none}
+.wu-prog{flex:1;height:2px;background:rgba(148,163,184,.2);border-radius:2px;overflow:hidden}
+.wu-prog i{display:block;height:100%;width:var(--p,0%);background:#60A5FA}
+.wu-count{font-family:var(--mono);font-size:.78rem;color:#94A3B8;min-width:56px;text-align:center}
+.wu-count b{color:#fff;font-weight:600}
+@media (max-width:980px){.wu-grid{grid-template-columns:1fr 400px;gap:40px}}
+@media (max-width:880px){.wu-grid{grid-template-columns:1fr;gap:28px}.wu-list{display:none}.wu-stage{max-width:480px;width:100%;margin:0 auto}.wu-cta{display:none}.wu-copy{text-align:center}.wu-lead{margin:0 auto}.wu .kicker{justify-content:center}}
+.wu-mcta{display:none}
+@media (max-width:880px){.wu-mcta{display:flex;margin:22px auto 0;width:100%;max-width:480px}}
+@media (prefers-reduced-motion:reduce){.wu-frame img{transition:none;transform:none}}
 </style>
 </head>
 <body>
@@ -1662,6 +1692,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <span>Riverbend Web Co.<small>Dubuque, Iowa</small></span>
     </a>
     <nav class="nav-links" aria-label="Main">
+      <a href="#why-us">Why Us</a>
       <a href="#how">How It Works</a>
       <a href="#demos">Demo Styles</a>
       <a href="#pricing">Pricing</a>
@@ -1675,6 +1706,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
     </button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
+    <a href="#why-us">Why Us</a>
     <a href="#how">How It Works</a>
     <a href="#demos">Demo Styles</a>
     <a href="#pricing">Pricing</a>
@@ -2022,11 +2054,35 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
   </div>
 </section>
 
+<!-- WHY US -->
+<section class="section band-dark wu" id="why-us" aria-labelledby="wuTitle">
+  <div class="wrap wu-grid">
+    <div class="wu-copy reveal">
+      <span class="kicker"><b>03</b>Why Riverbend</span>
+      <h2 id="wuTitle">What sets us apart.</h2>
+      <p class="wu-lead">Custom builds, security from people who do it for a living, and a local team you can actually reach.</p>
+      <ol class="wu-list" aria-label="Reasons to choose Riverbend"><li><button type="button" data-i="0" aria-current="true"><span class="wu-n">01</span>Cybersecurity experts<i></i></button></li><li><button type="button" data-i="1"><span class="wu-n">02</span>No templates<i></i></button></li><li><button type="button" data-i="2"><span class="wu-n">03</span>&#36;0 down<i></i></button></li><li><button type="button" data-i="3"><span class="wu-n">04</span>Pay upfront<i></i></button></li><li><button type="button" data-i="4"><span class="wu-n">05</span>Security built in<i></i></button></li><li><button type="button" data-i="5"><span class="wu-n">06</span>Our own systems first<i></i></button></li><li><button type="button" data-i="6"><span class="wu-n">07</span>Secure payments<i></i></button></li><li><button type="button" data-i="7"><span class="wu-n">08</span>Works while you sleep<i></i></button></li><li><button type="button" data-i="8"><span class="wu-n">09</span>Business automation<i></i></button></li><li><button type="button" data-i="9"><span class="wu-n">10</span>Website redesigns<i></i></button></li><li><button type="button" data-i="10"><span class="wu-n">11</span>Google Maps<i></i></button></li><li><button type="button" data-i="11"><span class="wu-n">12</span>Built for phones<i></i></button></li><li><button type="button" data-i="12"><span class="wu-n">13</span>You own it<i></i></button></li><li><button type="button" data-i="13"><span class="wu-n">14</span>Local in Dubuque<i></i></button></li><li><button type="button" data-i="14"><span class="wu-n">15</span>Our work<i></i></button></li></ol>
+      <a class="btn btn-amber wu-cta" href="#contact">Get a free mockup <svg width="16" height="16" aria-hidden="true"><use href="#arrow"/></svg></a>
+    </div>
+    <div class="wu-stage reveal" aria-roledescription="carousel" aria-label="Why Riverbend">
+      <div class="wu-frame" aria-live="off"><img src="/img/why/ad-01.webp" srcset="/img/why/ad-01-sm.webp 720w, /img/why/ad-01.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Websites built by cybersecurity experts." loading="eager" decoding="async" class="on"><img src="/img/why/ad-02.webp" srcset="/img/why/ad-02-sm.webp 720w, /img/why/ad-02.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="No templates. No per-page pricing." loading="lazy" decoding="async"><img src="/img/why/ad-03.webp" srcset="/img/why/ad-03-sm.webp 720w, /img/why/ad-03.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Launch your website for $0 down." loading="lazy" decoding="async"><img src="/img/why/ad-04.webp" srcset="/img/why/ad-04-sm.webp 720w, /img/why/ad-04.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Lower monthly rate. No annual commitment." loading="lazy" decoding="async"><img src="/img/why/ad-05.webp" srcset="/img/why/ad-05-sm.webp 720w, /img/why/ad-05.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Security isn&rsquo;t an add-on. It&rsquo;s how we build." loading="lazy" decoding="async"><img src="/img/why/ad-06.webp" srcset="/img/why/ad-06-sm.webp 720w, /img/why/ad-06.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="We lock down our own systems first." loading="lazy" decoding="async"><img src="/img/why/ad-07.webp" srcset="/img/why/ad-07-sm.webp 720w, /img/why/ad-07.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Take payments on your website, securely." loading="lazy" decoding="async"><img src="/img/why/ad-08.webp" srcset="/img/why/ad-08-sm.webp 720w, /img/why/ad-08.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Your website should work while you sleep." loading="lazy" decoding="async"><img src="/img/why/ad-09.webp" srcset="/img/why/ad-09-sm.webp 720w, /img/why/ad-09.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Automate the busywork." loading="lazy" decoding="async"><img src="/img/why/ad-10.webp" srcset="/img/why/ad-10-sm.webp 720w, /img/why/ad-10.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Your website is your first impression. Make it count." loading="lazy" decoding="async"><img src="/img/why/ad-11.webp" srcset="/img/why/ad-11-sm.webp 720w, /img/why/ad-11.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Get found on Google Maps." loading="lazy" decoding="async"><img src="/img/why/ad-12.webp" srcset="/img/why/ad-12-sm.webp 720w, /img/why/ad-12.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Built for the phone in your customer&rsquo;s hand." loading="lazy" decoding="async"><img src="/img/why/ad-13.webp" srcset="/img/why/ad-13-sm.webp 720w, /img/why/ad-13.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Your domain. Your website." loading="lazy" decoding="async"><img src="/img/why/ad-14.webp" srcset="/img/why/ad-14-sm.webp 720w, /img/why/ad-14.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="Real people. Right here in Dubuque." loading="lazy" decoding="async"><img src="/img/why/ad-15.webp" srcset="/img/why/ad-15-sm.webp 720w, /img/why/ad-15.webp 1080w" sizes="(max-width:880px) 92vw, 480px" width="1080" height="1350" alt="From defense contractors to restaurant software." loading="lazy" decoding="async"></div>
+      <div class="wu-ctrl">
+        <button type="button" class="wu-btn" data-d="-1" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="wu-prog"><i></i></div>
+        <span class="wu-count"><b>01</b> / 15</span>
+        <button type="button" class="wu-btn" data-d="1" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        <button type="button" class="wu-btn wu-pp" aria-label="Pause slideshow"><svg class="pz" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="pl" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l12 7-12 7z"/></svg></button>
+      </div>
+      <a class="btn btn-amber wu-mcta" href="#contact">Get a free mockup</a>
+    </div>
+  </div>
+</section>
+
 <!-- COMPARE -->
 <section class="section bg-soft" id="compare">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="kicker"><b>03</b>Side by side</span>
+      <span class="kicker"><b>04</b>Side by side</span>
       <h2>Only Facebook vs. A Riverbend Website</h2>
       <p>Facebook is great for posting photos. It's a terrible place to keep the info that brings people through your door.</p>
     </div>
@@ -2064,7 +2120,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section demos band-dark" id="demos">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="kicker"><b>04</b>Live demo styles</span>
+      <span class="kicker"><b>05</b>Live demo styles</span>
       <h2>Pick a Look. Click to Try It.</h2>
       <p>Six sample styles to spark ideas. Tap any card to open a working preview. Your site is designed from scratch around your business: your colors, photos, layout and features.</p>
     </div>
@@ -2157,7 +2213,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section pay-zero" id="pricing">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="kicker"><b>05</b>Simple, transparent pricing</span>
+      <span class="kicker"><b>06</b>Simple, transparent pricing</span>
       <h2>Professional Websites. Straightforward Pricing.</h2>
       <p>Every business deserves a website designed specifically for them. No templates forced on you. No per-page pricing.</p>
     </div>
@@ -2263,7 +2319,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section bg-soft" id="how">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="kicker"><b>06</b>How it works</span>
+      <span class="kicker"><b>07</b>How it works</span>
       <h2>Live in 3 Simple Steps</h2>
       <p>No meetings that drag on. No tech homework. You talk, we build. Scroll to watch it happen.</p>
     </div>
@@ -2359,7 +2415,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section owners" id="owners">
   <div class="wrap">
     <div class="section-head center reveal">
-      <span class="kicker"><b>07</b>Meet the owners</span>
+      <span class="kicker"><b>08</b>Meet the owners</span>
       <h2>Real People. Right Here in Dubuque.</h2>
       <p>Riverbend Web Co. is owned and operated by Kruz Kitelinger and Rayald Ally. When you call, you talk to one of us, not a call center.</p>
     </div>
@@ -2395,7 +2451,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       <div class="center"><svg class="rw" viewBox="0 0 1115 562" aria-hidden="true"><use href="#rw-light"/></svg></div>
     </div>
     <div class="local-copy reveal">
-      <span class="kicker"><b>08</b>Locally owned</span>
+      <span class="kicker"><b>09</b>Locally owned</span>
       <h2>Built Right Here in Dubuque</h2>
       <p>We're not an out-of-state agency or a do-it-yourself website app. We're your neighbors, and we'll keep your site working long after it's live.</p>
       <div class="guarantees">
@@ -2411,7 +2467,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section" id="faq">
   <div class="wrap faq-grid">
     <div class="faq-side reveal">
-      <span class="kicker"><b>09</b>Questions</span>
+      <span class="kicker"><b>10</b>Questions</span>
       <h2>Straight answers, no fine print.</h2>
       <p>The questions local owners ask us most. Still wondering about something? Text or email us and a real person in Dubuque will answer.</p>
       <a href="#contact" class="faq-cta">Ask us anything <svg width="16" height="16"><use href="#arrow"/></svg></a>
@@ -2438,7 +2494,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 <section class="section contact" id="contact">
   <div class="wrap">
     <div class="reveal">
-      <span class="kicker"><b>10</b>Free preview</span>
+      <span class="kicker"><b>11</b>Free preview</span>
       <h2>See Your Website Before You Spend a Dime.</h2>
       <p class="lead">Tell us a little about your business. We'll put together a free custom preview with your name and info on it, so you can see exactly what you'd get.</p>
       <div class="promise">
@@ -2525,7 +2581,7 @@ footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
       </div>
       <div>
         <h4>Quick Links</h4>
-        <ul><li><a href="#how">How It Works</a></li><li><a href="#demos">Demo Styles</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#contact">Free Preview</a></li></ul>
+        <ul><li><a href="#why-us">Why Us</a></li><li><a href="#how">How It Works</a></li><li><a href="#demos">Demo Styles</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#contact">Free Preview</a></li></ul>
       </div>
       <div>
         <h4>Get in Touch</h4>
@@ -3715,6 +3771,41 @@ function rbReadFile(f){ return new Promise((res,rej)=>{ const r=new FileReader()
   $('#resetForm').addEventListener('click',()=>{
     form.reset(); showLogo(); success.style.display='none'; form.style.display='block'; $('#biz').focus();
   });
+})();
+</script>
+<script>
+/* Why us slideshow */
+(function(){
+  const sec=document.getElementById('why-us'); if(!sec) return;
+  const imgs=[...sec.querySelectorAll('.wu-frame img')], btns=[...sec.querySelectorAll('.wu-list button')];
+  const cnt=sec.querySelector('.wu-count b'), prog=sec.querySelector('.wu-prog'), pp=sec.querySelector('.wu-pp');
+  const N=imgs.length, DUR=5200, reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let i=0, t0=0, el=0, vis=false, hover=false, user=reduce, raf=0;
+  function warm(k){const im=imgs[(k+N)%N]; if(im.loading==='lazy') im.loading='eager';}
+  function show(k){
+    i=(k+N)%N;
+    imgs.forEach((im,j)=>im.classList.toggle('on',j===i));
+    btns.forEach((b,j)=>{ if(j===i) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current'); b.style.removeProperty('--p'); });
+    cnt.textContent=String(i+1).padStart(2,'0'); el=0; t0=performance.now(); warm(i+1);
+  }
+  function running(){return vis&&!hover&&!user&&!document.hidden;}
+  function tick(now){
+    if(running()){ el+=now-t0; if(el>=DUR) show(i+1); }
+    t0=now; const p=Math.min(100,el/DUR*100)+'%';
+    prog.style.setProperty('--p',p); if(btns[i]) btns[i].style.setProperty('--p',p);
+    raf=requestAnimationFrame(tick);
+  }
+  function setPaused(v){user=v; sec.classList.toggle('paused',v); pp.setAttribute('aria-label',v?'Play slideshow':'Pause slideshow');}
+  btns.forEach(b=>b.addEventListener('click',()=>{show(+b.dataset.i);}));
+  sec.querySelectorAll('.wu-btn[data-d]').forEach(b=>b.addEventListener('click',()=>show(i+ +b.dataset.d)));
+  pp.addEventListener('click',()=>setPaused(!user));
+  const st=sec.querySelector('.wu-stage');
+  st.addEventListener('mouseenter',()=>hover=true); st.addEventListener('mouseleave',()=>hover=false);
+  let sx=null; const fr=sec.querySelector('.wu-frame');
+  fr.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+  fr.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; sx=null; if(Math.abs(dx)>40) show(i+(dx<0?1:-1)); },{passive:true});
+  if('IntersectionObserver' in window) new IntersectionObserver(es=>{vis=es[0].isIntersecting; if(vis) warm(i+1);},{threshold:.25}).observe(st); else vis=true;
+  setPaused(reduce); t0=performance.now(); raf=requestAnimationFrame(tick);
 })();
 </script>
 </body>
