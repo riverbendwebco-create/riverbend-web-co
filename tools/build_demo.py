@@ -5073,7 +5073,7 @@ body.t-ri{margin:0;background:#4A0F27;color:#FFF1E0;font-family:"DM Sans",system
 /* rollin catering */
 .ri-links a{display:inline-flex;align-items:center;padding:10px 14px;border-radius:12px;font-weight:600;color:rgba(255,241,224,.85);text-decoration:none}.ri-links a:hover{background:rgba(255,241,224,.08);color:#fff}
 .ri-links a[href*="view=catering"]{color:var(--pink)}.ri-links a.on{background:rgba(246,166,193,.16);color:#fff}
-.ri-nav-r{display:flex;gap:10px;align-items:center}.ri-cat-btn{display:none}
+.ri-nav-r{display:flex;gap:10px;align-items:center}.ri-cat-btn,.ri-ct-btn{display:none!important}
 .ri-chero{position:relative;min-height:78vh;display:flex;align-items:center;justify-content:center;padding:120px 20px 80px;overflow:hidden;text-align:center;background:radial-gradient(60% 60% at 50% 45%,#7A1E42 0%,var(--berry) 55%,var(--deep) 100%)}
 .ri-cout{top:50%!important;transform:translateY(-50%);font-size:clamp(4rem,16vw,15rem)!important}
 .ri-chero-t{position:relative;z-index:3;max-width:720px;display:flex;flex-direction:column;align-items:center}
@@ -5107,7 +5107,7 @@ body.t-ri{margin:0;background:#4A0F27;color:#FFF1E0;font-family:"DM Sans",system
 .ri-done{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding:30px 10px;animation:riPop .6s cubic-bezier(.3,1.5,.5,1)}
 .ri-done img{width:110px;height:110px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 5px var(--pink)}.ri-done h3{font-size:2.2rem;font-weight:800}.ri-done p{margin:0;color:#7A4A5C;max-width:420px}
 .ri-done .ri-btn{background:var(--berry)!important;color:var(--cream)!important;margin-top:8px}
-@media (max-width:900px){.ri-cat-btn{display:inline-flex;height:40px;padding:0 16px;background:var(--pink)!important;color:var(--berry)!important}.ri-nav-r .ri-btn:not(.ri-cat-btn){display:none}.ri-cgrid{grid-template-columns:1fr;gap:36px}.ri-cleft{position:static}.ri-chero .ri-fl.c1,.ri-chero .ri-fl.c3{display:none}}
+@media (max-width:900px){.ri-cat-btn,.ri-ct-btn{display:inline-flex!important;height:40px;padding:0 14px;font-size:.88rem}.ri-cat-btn{background:var(--pink)!important;color:var(--berry)!important}.ri-ct-btn{background:transparent!important;color:var(--cream)!important;border:2px solid rgba(255,241,224,.45)!important}.ri-nav-r{gap:8px}.ri-nav-r .ri-btn:not(.ri-cat-btn){display:none}.ri-cgrid{grid-template-columns:1fr;gap:36px}.ri-cleft{position:static}.ri-chero .ri-fl.c1,.ri-chero .ri-fl.c3{display:none}}
 @media (max-width:640px){.ri-fcard{padding:26px 18px;border-radius:24px}.ri-frow{grid-template-columns:1fr}.ri-cbody{padding:70px 0 90px}.ri-chero{min-height:70vh;padding:100px 16px 60px}.ri-chero .ri-fl{width:84px}.ri-fl.c0{top:12%;left:2%}.ri-fl.c2{bottom:4%;left:auto;right:2%}}
 /* rollin contact */
 .ri-book{font-size:clamp(1.8rem,3.4vw,2.8rem);font-weight:800;color:var(--cream);margin:4px 0 6px}
@@ -5126,7 +5126,9 @@ a.ri-ct:hover{transform:translateY(-3px)}
 .ri-foot-in{align-items:center;flex-wrap:wrap}.ri-foot-l{display:flex;gap:6px;flex-wrap:wrap}
 .ri-foot-l a{display:inline-flex;align-items:center;gap:7px;color:rgba(255,241,224,.75);text-decoration:none;padding:8px 10px;border-radius:10px}.ri-foot-l a:hover{color:#fff;background:rgba(255,241,224,.08)}.ri-foot-l svg{width:18px;height:18px}
 .ri-end{min-height:auto;padding:120px 20px 110px}.ri-end .ri-outline.sm{top:30%}
-@media (max-width:640px){.ri-contact>.ri-ct{flex:1 1 100%}.ri-foot-l span{display:none}.ri-foot-l a{padding:10px}}
+@media (max-width:640px){.ri-contact>.ri-ct{flex:1 1 100%}}
+@media (max-width:440px){.ri-brand b{display:none}.ri-nav .ri-cat-btn,.ri-nav .ri-ct-btn{padding:0 12px}}
+@media (max-width:640px){.ri-foot-l span{display:none}.ri-foot-l a{padding:10px}}
 '''
 
 html = f'''<!DOCTYPE html>

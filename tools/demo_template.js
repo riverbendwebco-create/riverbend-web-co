@@ -4804,8 +4804,8 @@ function rollin(C){
 
   const nav=h('header',{class:'ri-nav'},h('div',{class:'ri-w ri-nav-in'},
     h('a',{class:'ri-brand',href:'#top',onclick:e=>{e.preventDefault();go('top');}},logo?h('img',{src:logo,alt:"Rollin' Icecream logo"}):null,h('b',null,"Rollin' Icecream")),
-    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t)),h('a',{href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Catering')),
-    h('div',{class:'ri-nav-r'},h('a',{class:'ri-btn ri-cat-btn',href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Catering'),h('button',{type:'button',class:'ri-btn',onclick:()=>go('ri-end')},'Come roll with us'))));
+    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t)),h('a',{href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Catering'),h('button',{type:'button',onclick:()=>go('ri-end')},'Contact')),
+    h('div',{class:'ri-nav-r'},h('a',{class:'ri-btn ri-cat-btn',href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Catering'),h('button',{type:'button',class:'ri-btn ri-ct-btn',onclick:()=>go('ri-end')},'Contact'),h('button',{type:'button',class:'ri-btn',onclick:()=>go('ri-end')},'Come roll with us'))));
 
   // hero: logo in a spinning ring, giant outlined title, floating cups
   const ringTxt='FRESH ROLLED ICE CREAM · MADE TO ORDER · '+(C.city||'MARYLAND').toUpperCase()+' · ';
@@ -4883,8 +4883,8 @@ function rollinCatering(C){
   if(!document.getElementById('riFonts')) document.head.append(h('link',{id:'riFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=DM+Sans:wght@400;500;700&display=swap'}));
   const nav=h('header',{class:'ri-nav sc'},h('div',{class:'ri-w ri-nav-in'},
     h('a',{class:'ri-brand',href:dq},logo?h('img',{src:logo,alt:"Rollin' Icecream logo"}):null,h('b',null,"Rollin' Icecream")),
-    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('a',{href:dq+'#'+id},t)),h('a',{href:dq+'&view=catering',class:'on','aria-current':'page'},'Catering')),
-    h('div',{class:'ri-nav-r'},h('a',{class:'ri-btn ri-cat-btn',href:dq+'&view=catering'},'Catering'),h('a',{class:'ri-btn ghost',href:dq},'Back to home'))));
+    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('a',{href:dq+'#'+id},t)),h('a',{href:dq+'&view=catering',class:'on','aria-current':'page'},'Catering'),h('a',{href:dq+'#ri-end'},'Contact')),
+    h('div',{class:'ri-nav-r'},h('a',{class:'ri-btn ri-cat-btn',href:dq+'&view=catering'},'Catering'),h('a',{class:'ri-btn ri-ct-btn',href:dq+'#ri-end'},'Contact'),h('a',{class:'ri-btn ghost',href:dq},'Back to home'))));
   const floats=['hero1','hero2','hero3','hero4'].map((k,i)=>u(P[k])?h('div',{class:'ri-fl c'+i},h('img',{src:u(P[k]),alt:''})):null);
   const hero=h('section',{class:'ri-chero'},floats,h('h1',{class:'ri-outline ri-cout','aria-hidden':'true'},h('span',null,'CATERING')),
     h('div',{class:'ri-chero-t'},h('p',{class:'ri-script'},'bring the roll to your event'),h('h2',{class:'ri-h2'},'Rolled ice cream, made right in front of your guests'),
