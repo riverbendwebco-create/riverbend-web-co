@@ -1,7 +1,68 @@
-{"name":"Rollin' Icecream","variant":"rollin","style":"pub","category":"Rolled ice cream","city":"Maryland",
- "x":{"logo":"img/rollin-logo.png",
-  "pics":{"hero1":"1641665273583-45bfc9f3d292","hero2":"1790900618291-7f6d91f114cb","hero3":"1602296751198-a29df947b640","hero4":"1669127045641-0ae683639570","hero5":"1599594968538-4537cc4d4b27","swirl":"1581016327131-6cf17ab1f2c1",
-   "s1":"1581016327131-6cf17ab1f2c1","s2":"1666819406343-eb01afe4aec5","s3":"1675809919099-e2d4133825d6","s4":"1641665273583-45bfc9f3d292","s5":"1602296751198-a29df947b640",
-   "g":["1641665273583-45bfc9f3d292","1790900618291-7f6d91f114cb","1675809919099-e2d4133825d6","1602296751198-a29df947b640","1669127045641-0ae683639570","1621693129587-48dd0d0aa740","1599594968538-4537cc4d4b27"]},
-  "steps":[["Pour","A sweet cream base is poured onto an ice-cold steel plate."],["Chop","Fruit, cookies or candy get chopped right into the base."],["Spread","It is spread thin so it freezes in seconds."],["Roll","A spatula scrapes it up into tight, creamy rolls."],["Top","The rolls stand up in a cup and get finished with toppings."]],
-  "why":[["Made in front of you","Every cup is mixed, spread and rolled on the plate while you watch."],["Mix-ins in every bite","Toppings are chopped into the base, not just sprinkled on top."],["One cup at a time","Each order starts fresh on a frozen plate, made to order."]]}}
+{
+ "name": "Rollin' Icecream",
+ "variant": "rollin",
+ "style": "pub",
+ "category": "Rolled ice cream",
+ "city": "Maryland",
+ "x": {
+  "logo": "img/rollin-logo.png",
+  "pics": {
+   "hero1": "1641665273583-45bfc9f3d292",
+   "hero2": "1790900618291-7f6d91f114cb",
+   "hero3": "1602296751198-a29df947b640",
+   "hero4": "1669127045641-0ae683639570",
+   "hero5": "1599594968538-4537cc4d4b27",
+   "swirl": "1581016327131-6cf17ab1f2c1",
+   "s1": "1764763771619-86b112d2baa8",
+   "s2": "1549007953-2f2dc0b24019",
+   "s3": "1666819406343-eb01afe4aec5",
+   "s4": "1602296751198-a29df947b640",
+   "s5": "1790900618291-7f6d91f114cb",
+   "g": [
+    "1641665273583-45bfc9f3d292",
+    "1790900618291-7f6d91f114cb",
+    "1675809919099-e2d4133825d6",
+    "1602296751198-a29df947b640",
+    "1669127045641-0ae683639570",
+    "1621693129587-48dd0d0aa740",
+    "1599594968538-4537cc4d4b27"
+   ]
+  },
+  "steps": [
+   [
+    "Pour",
+    "A sweet cream base is poured onto an ice-cold steel plate."
+   ],
+   [
+    "Mix in",
+    "Fresh fruit, cookies or candy get chopped right into the base."
+   ],
+   [
+    "Roll",
+    "Spread thin, it freezes in seconds and is scraped up into tight rolls."
+   ],
+   [
+    "Stand up",
+    "The rolls are stood up side by side in the cup."
+   ],
+   [
+    "Top",
+    "Finished with toppings like whipped cream, fruit and drizzles."
+   ]
+  ],
+  "why": [
+   [
+    "Made in front of you",
+    "Every cup is mixed, spread and rolled on the plate while you watch."
+   ],
+   [
+    "Mix-ins in every bite",
+    "Toppings are chopped into the base, not just sprinkled on top."
+   ],
+   [
+    "One cup at a time",
+    "Each order starts fresh on a frozen plate, made to order."
+   ]
+  ]
+ }
+}
