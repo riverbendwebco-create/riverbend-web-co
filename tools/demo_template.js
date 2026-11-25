@@ -99,7 +99,7 @@ function build(d){
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
   if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
-  if(C.variant==='rollin'){ document.body.className='t-ri'; const pg=rollin(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='rollin'){ document.body.className='t-ri'; const cat=new URLSearchParams(location.search).get('view')==='catering'; const pg=cat?rollinCatering(C):rollin(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); if(cat){ document.title="Catering | "+(C.name||''); scrollTo(0,0); } else if(location.hash){ const el=document.getElementById(location.hash.slice(1)); if(el) setTimeout(()=>el.scrollIntoView(),60); } return; }
   if(C.variant==='roadside'&&new URLSearchParams(location.search).get('view')==='portal'){ document.body.className='t-pt'; document.title=(C.name||'')+' | Member portal concept'; root.replaceChildren(rdPortal(C)); return; }
   if(C.variant==='roadside'){ document.body.className='t-rd'; const pg=roadside(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); rdNav(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
@@ -4790,8 +4790,8 @@ function rollin(C){
 
   const nav=h('header',{class:'ri-nav'},h('div',{class:'ri-w ri-nav-in'},
     h('a',{class:'ri-brand',href:'#top',onclick:e=>{e.preventDefault();go('top');}},logo?h('img',{src:logo,alt:"Rollin' Icecream logo"}):null,h('b',null,"Rollin' Icecream")),
-    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t))),
-    h('button',{type:'button',class:'ri-btn',onclick:()=>go('ri-end')},'Come roll with us')));
+    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t)),h('a',{href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Catering')),
+    h('div',{class:'ri-nav-r'},h('a',{class:'ri-btn ri-cat-btn',href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Catering'),h('button',{type:'button',class:'ri-btn',onclick:()=>go('ri-end')},'Come roll with us'))));
 
   // hero: logo in a spinning ring, giant outlined title, floating cups
   const ringTxt='FRESH ROLLED ICE CREAM · MADE TO ORDER · '+(C.city||'MARYLAND').toUpperCase()+' · ';
@@ -4858,6 +4858,51 @@ function rollin(C){
   let tk=false; const onS=()=>{ tk=false; tourTick(); const y=scrollY; root2.querySelector('.ri-nav').classList.toggle('sc',y>30); const o=root2.querySelector('.ri-hero .ri-outline'); if(o) o.style.transform='translateY('+(y*.25)+'px)'; fl().forEach(f=>f.style.setProperty('--sy',(-y*(+f.dataset.depth)*.5)+'px')); };
   addEventListener('scroll',()=>{ if(!tk){ tk=true; requestAnimationFrame(onS); } },{passive:true}); requestAnimationFrame(onS);
   return root2;
+}
+/* ---------- Rollin' catering inquiry page (?view=catering); demo form, nothing is sent ---------- */
+function rollinCatering(C){
+  const X=C.x||{}, P=X.pics||{};
+  const dq='?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'');
+  const u=id=>/^img\/[a-z0-9._-]+$/.test(id||'')?id:/^[0-9]{10,13}-[0-9a-f]{12}$/.test(id||'')?'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=600&q=80':'';
+  const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
+  if(!document.getElementById('riFonts')) document.head.append(h('link',{id:'riFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=DM+Sans:wght@400;500;700&display=swap'}));
+  const nav=h('header',{class:'ri-nav sc'},h('div',{class:'ri-w ri-nav-in'},
+    h('a',{class:'ri-brand',href:dq},logo?h('img',{src:logo,alt:"Rollin' Icecream logo"}):null,h('b',null,"Rollin' Icecream")),
+    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('a',{href:dq+'#'+id},t)),h('a',{href:dq+'&view=catering',class:'on','aria-current':'page'},'Catering')),
+    h('div',{class:'ri-nav-r'},h('a',{class:'ri-btn ri-cat-btn',href:dq+'&view=catering'},'Catering'),h('a',{class:'ri-btn ghost',href:dq},'Back to home'))));
+  const floats=['hero1','hero2','hero3','hero4'].map((k,i)=>u(P[k])?h('div',{class:'ri-fl c'+i},h('img',{src:u(P[k]),alt:''})):null);
+  const hero=h('section',{class:'ri-chero'},floats,h('h1',{class:'ri-outline ri-cout','aria-hidden':'true'},h('span',null,'CATERING')),
+    h('div',{class:'ri-chero-t'},h('p',{class:'ri-script'},'bring the roll to your event'),h('h2',{class:'ri-h2'},'Rolled ice cream, made right in front of your guests'),
+      h('p',{class:'ri-lead'},'Birthdays, weddings, school events, office parties and festivals. Tell us about your event and we will follow up with options and a quote.'),
+      h('a',{class:'ri-btn lg',href:'#ri-form',onclick:e=>{ e.preventDefault(); scrollTo('ri-form'); }},'Start your inquiry')));
+  const how=h('div',{class:'ri-chow'},[['Tell us about it','Date, place, guest count and the kind of event.'],['We follow up','We reach out with options, flavors and a quote.'],['We roll it fresh','Every cup is rolled to order for your guests.']].map((s,i)=>h('div',{class:'ri-chow-i rv'+(i?' d'+i:'')},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('h3',null,s[0]),h('p',null,s[1])))));
+  // form
+  const types=['Birthday','Wedding','School','Corporate','Festival','Other'];
+  let type='';
+  const typeBox=h('div',{class:'ri-chips',role:'radiogroup','aria-label':'Event type'},types.map(t=>h('button',{type:'button',role:'radio','aria-checked':'false',onclick:e=>{ type=t; [...typeBox.children].forEach(b=>{ const on=b===e.currentTarget; b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); }); }},t)));
+  const fld=(lbl,type2,name,ph,req,extra)=>h('label',{class:'ri-f'},h('span',null,lbl,req?h('em',null,' *'):null),h('input',Object.assign({type:type2,name,placeholder:ph||'',required:req||null},extra||{})));
+  const guests=h('input',{type:'range',min:'10',max:'500',step:'10',value:'50',name:'guests',oninput:e=>{ gOut.textContent=e.target.value+(e.target.value==='500'?'+':''); }});
+  const gOut=h('b',null,'50');
+  const msg=h('p',{class:'ri-ferr',role:'alert'});
+  const form=h('form',{class:'ri-form',novalidate:true,onsubmit:e=>{ e.preventDefault(); const f=e.currentTarget; const bad=[...f.querySelectorAll('input[required]')].filter(i=>!i.value.trim()||!i.checkValidity());
+      f.querySelectorAll('.ri-f').forEach(l=>l.classList.remove('bad')); bad.forEach(i=>i.closest('.ri-f').classList.add('bad'));
+      if(bad.length){ msg.textContent='Please fill in the highlighted fields.'; bad[0].focus(); return; }
+      msg.textContent=''; card.replaceChildren(done()); card.scrollIntoView({behavior:'smooth',block:'center'}); }},
+    h('div',{class:'ri-frow'},fld('Your name','text','name','First and last name',true,{autocomplete:'name'}),fld('Phone','tel','phone','(555) 555-5555',true,{autocomplete:'tel'})),
+    fld('Email','email','email','you@example.com',true,{autocomplete:'email'}),
+    h('div',{class:'ri-f'},h('span',null,'Type of event'),typeBox),
+    h('div',{class:'ri-frow'},fld('Event date','date','date','',true),fld('Start time','time','time','',false)),
+    fld('Event location','text','where','City or venue',true),
+    h('label',{class:'ri-f'},h('span',null,'About how many guests? ',gOut),guests,h('div',{class:'ri-range-l'},h('small',null,'10'),h('small',null,'500+'))),
+    h('label',{class:'ri-f'},h('span',null,'Anything else?'),h('textarea',{name:'notes',rows:4,placeholder:'Indoor or outdoor, flavors you love, dietary needs, budget...'})),
+    msg,h('button',{type:'submit',class:'ri-btn lg ri-fsend'},'Send inquiry'),
+    h('p',{class:'ri-fnote'},'Demo: this form does not send anything yet.'));
+  const done=()=>h('div',{class:'ri-done'},logo?h('img',{src:logo,alt:''}):null,h('h3',null,'Thanks, we got it!'),h('p',null,"In the live site, your inquiry goes straight to Rollin' Icecream and they reach out to plan your event."),h('p',{class:'ri-fnote'},'Demo: nothing was sent.'),h('a',{class:'ri-btn lg',href:dq},'Back to home'));
+  const card=h('div',{class:'ri-fcard rv',id:'ri-form'},h('h2',null,'Catering inquiry'),h('p',{class:'ri-fsub'},'Takes about a minute.'),form);
+  const body=h('section',{class:'ri-cbody'},h('div',{class:'ri-w ri-cgrid'},h('div',{class:'ri-cleft'},h('p',{class:'ri-kick'},'How it works'),h('h2',{class:'ri-h2'},'Three easy steps'),how,
+      h('div',{class:'ri-cphotos'},['hero2','hero3'].map(k=>u(P[k])?h('div',{class:'rv'},h('img',{src:u(P[k]),alt:'Rolled ice cream',loading:'lazy'})):null))),card));
+  const foot=h('footer',{class:'ri-foot'},h('div',{class:'ri-w ri-foot-in'},h('span',null,"© "+new Date().getFullYear()+" Rollin' Icecream"),h('span',null,C.city||'')));
+  return h('div',{class:'ri ri-catpage'},nav,h('main',null,hero,body),foot);
 }
 function rbBar(C){
   if(C.x&&C.x.sample) return h('div',{class:'rb-bar'},h('div',{class:'rb-in'},
