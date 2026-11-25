@@ -4655,7 +4655,12 @@ body.t-rd{background:#fff;font-family:"DM Sans",Inter,system-ui,sans-serif;color
  .rd-photos{grid-template-columns:1fr 1fr;margin-top:46px}.rd-fleet-l{grid-template-columns:1fr}.rd-perks{grid-template-columns:1fr}.rd-refer-in{flex-direction:column;align-items:flex-start}.rd-refer-i{width:70px;height:70px}
  .rd-q>button{font-size:1.1rem}.rd-req-l{padding:60px 18px}.rd-foot-ph i{width:56px;height:56px}.rd-foot-g{grid-template-columns:1fr}
  .rd-mbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(20,20,20,.96);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}.rd-mbar .rd-btn{flex:1;height:46px}
- body.t-rd .rb-bar{bottom:66px}}
+ body.t-rd .rb-bar{bottom:66px}
+ body.t-rd .rb-bar .t span,body.t-rd .rb-bar .t br,body.t-rd .rb-bar .rb-tag{display:none}body.t-rd .rb-bar .rb-in{padding-top:8px;padding-bottom:8px}body.t-rd .rb-bar .go{padding:8px 12px;font-size:.85rem}
+ .rd-svc-g>div:last-child{display:none}.rd-row.on small{max-height:80px}.rd-row{padding:14px 16px}
+ .rd-toggle{display:grid;grid-template-columns:1fr 1fr;width:100%}.rd-tg{padding:12px 8px;font-size:.9rem}
+ .rd-perk a,.rd-perk span{min-height:32px}.rd-perk a{min-height:40px}
+ .rd-svc-card .rd-btn,.rd-hot .rd-btn{height:46px}}
 @media (prefers-reduced-motion:reduce){.rd-hero-pic img,.rd-play i,.rd-perk{animation:none}}
 /* ===== D&D member portal concept (?view=portal) ===== */
 body.t-pt{margin:0;background:#060B16;color:#E8EEF9;font-family:"DM Sans",Inter,system-ui,sans-serif}
