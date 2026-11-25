@@ -7,27 +7,31 @@
  "x": {
   "logo": "img/rollin-logo.png",
   "pics": {
-   "hero1": "1641665273583-45bfc9f3d292",
-   "hero2": "1790900618291-7f6d91f114cb",
-   "hero3": "1602296751198-a29df947b640",
-   "hero4": "1669127045641-0ae683639570",
-   "hero5": "1599594968538-4537cc4d4b27",
+   "hero1": "img/rollin-berry-rolls.jpg",
+   "hero2": "img/rollin-oreo-tower.jpg",
+   "hero3": "img/rollin-trio-berry.jpg",
+   "hero4": "img/rollin-oreo-cup.jpg",
+   "hero5": "img/rollin-choc-rolls.jpg",
    "swirl": "1581016327131-6cf17ab1f2c1",
    "s1": "img/rollin-pour.jpg",
-   "s2": "1601493701002-3223e7e1ebaf",
+   "s2": "img/rollin-hands-cup.jpg",
    "s3": "img/rollin-spread.jpg",
-   "s4": "1666819406343-eb01afe4aec5",
+   "s4": "img/rollin-roll-berry.jpg",
    "s5": "img/rollin-standup.jpg",
    "g": [
-    "1641665273583-45bfc9f3d292",
-    "1790900618291-7f6d91f114cb",
-    "1675809919099-e2d4133825d6",
-    "1602296751198-a29df947b640",
-    "1669127045641-0ae683639570",
-    "1621693129587-48dd0d0aa740",
-    "1599594968538-4537cc4d4b27"
+    "img/rollin-oreo-tower.jpg",
+    "img/rollin-roll-caramel.jpg",
+    "img/rollin-trio-berry.jpg",
+    "img/rollin-choc-rolls.jpg",
+    "img/rollin-oreo-stack.jpg",
+    "img/rollin-hands-cup.jpg",
+    "img/rollin-trio-mango.jpg",
+    "img/rollin-berry-rolls.jpg",
+    "img/rollin-oreo-cup.jpg",
+    "img/rollin-trio-choc.jpg",
+    "img/rollin-roll-berry.jpg"
    ],
-   "s6": "1790900618291-7f6d91f114cb"
+   "s6": "img/rollin-oreo-cup.jpg"
   },
   "steps": [
    [
@@ -36,7 +40,7 @@
    ],
    [
     "Mix in",
-    "Pick your mix-ins: fruit, cookies, candy and more, chopped right into the base."
+    "Pick from the toppings bar: fruit, cookies, candy and more, chopped right into the base."
    ],
    [
     "Spread",
