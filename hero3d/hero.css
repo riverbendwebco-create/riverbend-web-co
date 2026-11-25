@@ -126,7 +126,7 @@
 @keyframes h3Bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
 /* caption + controls */
-.h3-cap{position:absolute;z-index:6;left:8%;right:4%;bottom:-2%;display:flex;align-items:center;gap:14px}
+.h3-cap{position:absolute;z-index:6;left:10%;right:4%;bottom:-1%;display:flex;align-items:center;gap:14px;padding:8px 8px 8px 14px;border-radius:10px;background:rgba(4,8,20,.62);border:1px solid rgba(148,163,184,.16);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .h3-label{font-family:var(--mono,ui-monospace,monospace);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#93A4BC;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h3-label b{color:#60A5FA;font-weight:600}
 .h3-dots{display:flex;gap:6px}
@@ -185,7 +185,7 @@ a.h3-ti:hover .go{transform:translateX(3px);opacity:1}
   .h3-card i svg{width:15px;height:15px}
   .h3-card b{font-size:.76rem}.h3-card span{display:none}
   .h3-card{max-width:64%}.h3-card.c1{left:0;top:0}.h3-card.c2{right:0;top:auto;bottom:12%}.h3-card.c3{display:none}
-  .h3-cap{left:0;right:0;bottom:-4%;flex-wrap:wrap;justify-content:center;row-gap:10px}.h3-label{flex-basis:100%;text-align:center}
+  .h3-cap{left:0;right:0;bottom:-4%;flex-wrap:wrap;justify-content:center;row-gap:10px;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0}.h3-label{flex-basis:100%;text-align:center}
   .h3-nav{display:none}
   .h3-ti{flex-direction:column;align-items:flex-start;gap:10px;padding:18px 16px}
   .h3-ti .go{display:none}
