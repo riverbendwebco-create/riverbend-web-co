@@ -4317,7 +4317,7 @@ function rdPortal(C){
   const side=h('aside',{class:'pt-side'},h('div',{class:'pt-brand'},logo?h('img',{src:logo,alt:'D&D Wrecker Service'}):null,h('div',null,h('b',null,'D&D Roadside'),h('small',null,'Member portal'))),mkNav('pt-snav'),
     h('a',{class:'pt-side-call',href:C.tel||'#'},h('i',null,rdI('phone',18)),h('span',null,h('small',null,'24/7 Hotline'),h('b',null,C.phoneTxt||''))));
   const tabbar=mkNav('pt-tabs');
-  function go(k,arg){ Object.values(navBtns).flat().forEach(b=>b.classList.toggle('on',b.dataset.k===k)); view.replaceChildren(PAGES[k](arg)); view.scrollTop=0; scrollTo(0,0); view.animate&&view.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'}); }
+  function go(k,arg){ Object.values(navBtns).flat().forEach(b=>b.classList.toggle('on',b.dataset.k===k)); view.replaceChildren(PAGES[k](arg)); view.scrollTop=0; window.scrollTo({top:0,left:0,behavior:'instant'}); view.animate&&view.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'}); }
   const head=(t,sub)=>h('div',{class:'pt-head'},h('div',null,sub?h('small',null,sub):null,h('h1',null,t)),h('div',{class:'pt-head-r'},h('button',{type:'button',class:'pt-icbtn','aria-label':'Notifications'},rdI('bell',20),h('i')),h('span',{class:'pt-av'},'AS')));
 
   // membership card with tilt and flip
@@ -4406,10 +4406,13 @@ function rdPortal(C){
         h('div',{class:'pt-tside'},h('div',{class:'pt-sel',style:'--c:'+tone[sv?sv[0]:'tow']},h('span',null,rdI(sv?sv[0]:'tow',22)),h('div',null,h('b',null,sv?sv[1]:''),h('small',null,st.pri+' · '+st.when))),ul,
           h('div',{class:'pt-driver'},h('span',{class:'pt-av'},rdI('tow',18)),h('div',null,h('b',null,'Your D&D driver'),h('small',null,'Driver details appear here')),C.tel?h('a',{href:C.tel,'aria-label':'Call'},rdI('phone',18)):null),
           h('p',{class:'pt-note'},'Concept demo: this tracker is a simulation. No truck was dispatched.'),h('button',{type:'button',class:'pt-ghost',onclick:()=>go('home')},'Back to home'))));
+    requestAnimationFrame(()=>{ const mp=box.querySelector('.pt-tmap'); if(!mp) return; const W=mp.clientWidth,H=mp.clientHeight,px=W*.72,py=H*.52-12;
+      truck.style.offsetPath=`path('M 30 ${H-40} C ${W*.25} ${H*.9} ${W*.35} ${H*.55} ${W*.5} ${H*.62} S ${px-40} ${py+20} ${px-24} ${py}')`; });
     let m=18; const t=setInterval(()=>{ if(!box.isConnected){ clearInterval(t); return; } m=Math.max(1,m-1); eta.textContent=String(m); },2500);
     return box; }
   const top=h('div',{class:'pt-ribbon'},h('span',null,'Member portal concept for D&D Wrecker Roadside · sample account'),h('a',{href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')},'Back to website'));
   const app=h('div',{class:'pt'},top,h('div',{class:'pt-shell'},side,h('main',{class:'pt-main'},view)),tabbar);
+  let tc=document.querySelector('meta[name="theme-color"]'); if(!tc){ tc=h('meta',{name:'theme-color'}); document.head.append(tc); } tc.setAttribute('content','#060B16');
   go('home'); return app;
 }
 function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
