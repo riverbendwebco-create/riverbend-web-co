@@ -3,5 +3,7 @@ Disallow: /studio/
 Disallow: /demo/
 Disallow: /leads/
 Disallow: /concept/
+Disallow: /dd/
+Disallow: /dd-app/
 
 Sitemap: https://riverbendwebco.com/sitemap.xml
