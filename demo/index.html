@@ -899,13 +899,14 @@ body.t-bw{background:#fff}
 @media (max-width:560px){.bw-wrap{padding:0 18px}.bw-svc{grid-template-columns:1fr}.bw-fl{grid-template-columns:1fr}.bw-top-in{flex-direction:column;gap:2px;font-size:.78rem}.bw-card{padding:20px}.bw-foot em{margin-left:0}.bw-big b{font-size:3.4rem}.bw-wm b{font-size:1.5rem}.bw-tilemark{width:32px;height:32px}.bw-nav-in .bw-btn{padding:9px 14px}}
 @media (prefers-reduced-motion:reduce){.bw-bc{animation:none}}
 .bw-top-in{justify-content:flex-start!important}
-.bw-need{margin:26px 0 4px;max-width:560px}
-.bw-needhd{display:block;font:800 .74rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--cu2);margin-bottom:10px}
+.bw-need{margin:28px 0 6px;max-width:600px;background:#fff;border:2px solid var(--ink);border-top:6px solid var(--cu2);border-radius:6px;padding:18px 18px 18px;box-shadow:8px 8px 0 var(--tl)}
+.bw-needhd{display:block;font:400 1.9rem/1.1 var(--hf);letter-spacing:0;text-transform:none;color:var(--ink)}
+.bw-needsub{display:block;font:600 .84rem var(--bf);color:var(--mu);margin:5px 0 14px}
 .bw-needg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.bw-needg button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:#fff;border:2px solid var(--ink);border-radius:5px;padding:12px 14px;cursor:pointer;font-family:var(--bf);color:var(--ink);min-height:62px}
-.bw-needg button b{font:800 .95rem var(--bf)}.bw-needg button small{font:500 .78rem var(--bf);color:var(--mu)}
-.bw-needg button:hover,.bw-needg button:focus-visible{background:var(--ink);color:#fff}.bw-needg button:hover small,.bw-needg button:focus-visible small{color:#cfd9de}
-@media (min-width:560px){.bw-needg{grid-template-columns:repeat(3,1fr)}}
+.bw-needg button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:var(--ink);border:2px solid var(--ink);border-radius:5px;padding:13px 40px 13px 14px;cursor:pointer;font-family:var(--bf);color:#fff;min-height:70px;transition:transform .15s,background .15s,box-shadow .15s}
+.bw-needg button b{font:800 1rem var(--bf)}.bw-needg button small{font:500 .78rem var(--bf);color:#b9c8cf}
+.bw-arr{position:absolute;right:11px;top:50%;margin-top:-13px;width:26px;height:26px;display:grid;place-items:center;background:var(--cu2);color:#fff;border-radius:4px}.bw-arr svg{width:16px;height:16px}
+.bw-needg button:hover,.bw-needg button:focus-visible{background:var(--tl);border-color:var(--tl);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}.bw-needg button:hover small,.bw-needg button:focus-visible small{color:#e3eef0}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
@@ -7570,7 +7571,7 @@ function becwar(C){
   const markSvg=()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 28 28'); s.setAttribute('class','bw-tilemark'); s.innerHTML='<rect x="1" y="1" width="12" height="12" fill="#0F5F66"/><rect x="15" y="1" width="12" height="12" fill="#C25B33"/><rect x="1" y="15" width="12" height="12" fill="#10222B"/><rect x="15" y="15" width="12" height="12" fill="#9AB3BC"/>'; return s; };
   const brand=h('a',{class:'bw-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('w-top'); },'aria-label':name},markSvg(),h('span',{class:'bw-wm'},h('b',null,'Becwar'),h('i',null,'Tile & Marble')));
   const nav=h('header',{class:'bw-nav'},h('div',{class:'bw-wrap bw-nav-in'},brand,
-    h('nav',{class:'bw-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),call('ink sm','Call')));
+    call('ink sm','Call')));
   const top=h('div',{class:'bw-top'},h('div',{class:'bw-wrap bw-top-in'},
     st?h('span',{class:'bw-st'},h('i',{class:'bw-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null));
 
@@ -7586,8 +7587,8 @@ function becwar(C){
       h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
       h('p',{class:'bw-lead'},C.tag||'Becwar Tile & Marble sells and installs tile in Dubuque. Try layouts, work out how much you need and ask for an estimate, all from your phone.'),
       h('div',{class:'bw-cta'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-design')},'Design a room'),call('line')),
-      h('div',{class:'bw-need'},h('span',{class:'bw-needhd'},'What are you looking for?'),h('div',{class:'bw-needg'},
-        [['w-design','Design a room','See tile in a room'],['w-calc','How much tile','Work out the amount'],['w-pick','Tile picker','Find a starting point'],['w-care','Care tips','Grout, stone, floors'],['w-est','Get an estimate','Send us the details'],['w-visit','Visit the store','Hours and directions']].map(([id,l,s])=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('b',null,l),h('small',null,s))))),
+      h('div',{class:'bw-need'},h('span',{class:'bw-needhd'},'What are you looking for?'),h('span',{class:'bw-needsub'},'Tap one to jump right there'),h('div',{class:'bw-needg'},
+        [['w-design','Design a room','See tile in a room'],['w-calc','How much tile','Work out the amount'],['w-pick','Tile picker','Find a starting point'],['w-care','Care tips','Grout, stone, floors'],['w-est','Get an estimate','Send us the details'],['w-visit','Visit the store','Hours and directions']].map(([id,l,s])=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('b',null,l),h('small',null,s),h('i',{class:'bw-arr','aria-hidden':'true'},ico('arrow')))))),
       h('ul',{class:'bw-facts'},h('li',null,'American Olean and Marazzi dealer'),h('li',null,'Showers, floors and backsplashes'),h('li',null,'Right on Central Ave in Dubuque'))),
     board));
 

@@ -652,13 +652,14 @@ body.t-bw{background:#fff}
 @media (max-width:560px){.bw-wrap{padding:0 18px}.bw-svc{grid-template-columns:1fr}.bw-fl{grid-template-columns:1fr}.bw-top-in{flex-direction:column;gap:2px;font-size:.78rem}.bw-card{padding:20px}.bw-foot em{margin-left:0}.bw-big b{font-size:3.4rem}.bw-wm b{font-size:1.5rem}.bw-tilemark{width:32px;height:32px}.bw-nav-in .bw-btn{padding:9px 14px}}
 @media (prefers-reduced-motion:reduce){.bw-bc{animation:none}}
 .bw-top-in{justify-content:flex-start!important}
-.bw-need{margin:26px 0 4px;max-width:560px}
-.bw-needhd{display:block;font:800 .74rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--cu2);margin-bottom:10px}
+.bw-need{margin:28px 0 6px;max-width:600px;background:#fff;border:2px solid var(--ink);border-top:6px solid var(--cu2);border-radius:6px;padding:18px 18px 18px;box-shadow:8px 8px 0 var(--tl)}
+.bw-needhd{display:block;font:400 1.9rem/1.1 var(--hf);letter-spacing:0;text-transform:none;color:var(--ink)}
+.bw-needsub{display:block;font:600 .84rem var(--bf);color:var(--mu);margin:5px 0 14px}
 .bw-needg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.bw-needg button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:#fff;border:2px solid var(--ink);border-radius:5px;padding:12px 14px;cursor:pointer;font-family:var(--bf);color:var(--ink);min-height:62px}
-.bw-needg button b{font:800 .95rem var(--bf)}.bw-needg button small{font:500 .78rem var(--bf);color:var(--mu)}
-.bw-needg button:hover,.bw-needg button:focus-visible{background:var(--ink);color:#fff}.bw-needg button:hover small,.bw-needg button:focus-visible small{color:#cfd9de}
-@media (min-width:560px){.bw-needg{grid-template-columns:repeat(3,1fr)}}
+.bw-needg button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:var(--ink);border:2px solid var(--ink);border-radius:5px;padding:13px 40px 13px 14px;cursor:pointer;font-family:var(--bf);color:#fff;min-height:70px;transition:transform .15s,background .15s,box-shadow .15s}
+.bw-needg button b{font:800 1rem var(--bf)}.bw-needg button small{font:500 .78rem var(--bf);color:#b9c8cf}
+.bw-arr{position:absolute;right:11px;top:50%;margin-top:-13px;width:26px;height:26px;display:grid;place-items:center;background:var(--cu2);color:#fff;border-radius:4px}.bw-arr svg{width:16px;height:16px}
+.bw-needg button:hover,.bw-needg button:focus-visible{background:var(--tl);border-color:var(--tl);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}.bw-needg button:hover small,.bw-needg button:focus-visible small{color:#e3eef0}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
