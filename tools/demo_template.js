@@ -2462,35 +2462,96 @@ const BLA={
 };
 function blSvg(markup,cls){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 200 200'); s.setAttribute('class','bl-art'+(cls?' '+cls:'')); s.setAttribute('aria-hidden','true'); s.innerHTML=markup; return s; }
 
-/* ===== Bloom: skin close-up renderer (tattoo wrapped round a limb, lit like a photo) ===== */
-const BL_IMG={}, BL_GRAIN={};
+/* ===== Bloom: per-pixel lit skin (limbs + body), tattoos wrapped on real curvature ===== */
+const BL_IMG={};
 function blInkImg(art,ink,cb){ const key=art+'|'+ink; let e=BL_IMG[key]; if(e&&e.ok){ cb(e.img); return; } if(!e){ e=BL_IMG[key]={ok:false,q:[]}; const img=new Image(); e.img=img; img.onload=()=>{ e.ok=true; e.q.forEach(f=>f(img)); e.q=[]; }; const body=art==='flower'?BLA.flower(7,76,30):BLA[art](); const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="800" height="800"><style>g *{fill:none;stroke:'+ink+';stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}g .f{fill:'+ink+';stroke:none}</style><g>'+body+'</g></svg>'; img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); } e.q.push(cb); }
-function blGrain(){ if(BL_GRAIN.c) return BL_GRAIN.c; const c=document.createElement('canvas'); c.width=c.height=160; const x=c.getContext('2d'), d=x.createImageData(160,160); let s=7; for(let i=0;i<d.data.length;i+=4){ s=(s*16807)%2147483647; const v=(s/2147483647); const n=v>.5?255:0; d.data[i]=d.data[i+1]=d.data[i+2]=n; d.data[i+3]=Math.abs(v-.5)*38; } x.putImageData(d,0,0); BL_GRAIN.c=c; return c; }
-function blSkin(cv,o){
-  const w=cv.width, hh=cv.height, ctx=cv.getContext('2d'); const sk=o.skin, dia=o.dia||3, flat=!!o.flat;
-  const draw=img=>{
-    ctx.clearRect(0,0,w,hh);
-    if(o.dark!==false){ let g=ctx.createRadialGradient(w*(o.cx||.5),hh*.5,10,w*(o.cx||.5),hh*.5,Math.max(w,hh)*.75); g.addColorStop(0,'#2a2522'); g.addColorStop(.55,'#121212'); g.addColorStop(1,'#050505'); ctx.fillStyle=g; ctx.fillRect(0,0,w,hh); }
-    const LW=Math.round(o.band||hh*.6), LH=hh, ox=Math.round((w*(o.cx||.5))-LW/2);
-    const L=document.createElement('canvas'); L.width=LW; L.height=LH; const c=L.getContext('2d');
-    c.fillStyle=sk; c.fillRect(0,0,LW,LH);
-    /* soft color variation */
-    let vg=c.createLinearGradient(0,0,0,LH); vg.addColorStop(0,'rgba(120,60,40,.10)'); vg.addColorStop(.5,'rgba(255,255,255,.04)'); vg.addColorStop(1,'rgba(90,40,30,.12)'); c.fillStyle=vg; c.fillRect(0,0,LW,LH);
-    c.globalAlpha=.9; c.fillStyle=c.createPattern(blGrain(),'repeat'); c.fillRect(0,0,LW,LH); c.globalAlpha=1;
-    /* tattoo wrapped on cylinder */
-    if(img){ const S=o.size, rot=(o.rot||0)*Math.PI/180, R=document.createElement('canvas'); R.width=R.height=800; const r=R.getContext('2d'); r.translate(400,400); r.rotate(rot); r.drawImage(img,-320,-320,640,640); const boxIn=S*1.5625; const pxIn=LW/dia; const hpx=boxIn*pxIn, y0=LH/2-hpx/2+(o.dy||0)*pxIn;
-      const T=document.createElement('canvas'); T.width=LW; T.height=LH; const t=T.getContext('2d'); const half=dia/2;
-      for(let i=0;i<LW;i++){ const u=((i+.5)/LW)*2-1; const m=flat?u*.55:u; const phi=Math.asin(Math.max(-.999,Math.min(.999,m))); const s=half*phi/(flat?.55:1); const a=.5+s/boxIn; if(a<0||a>1) continue; const sw=Math.max(.6,(1/Math.sqrt(1-m*m))*(flat?.55:1)*(2/LW)*half/boxIn*800); const sx=a*800-sw/2; t.drawImage(R,Math.max(0,sx),0,Math.min(sw,800-Math.max(0,sx)),800,i,y0,1,hpx); }
-      c.save(); if('filter' in c) c.filter='blur(.55px)'; c.globalCompositeOperation='multiply'; c.globalAlpha=.93; c.drawImage(T,0,0); c.restore(); }
-    /* lighting: cylinder shading, soft highlight, edge falloff */
-    const e=flat?.22:.7;
-    let sh=c.createLinearGradient(0,0,LW,0); sh.addColorStop(0,'rgba(10,4,2,'+e+')'); sh.addColorStop(.14,'rgba(10,4,2,'+(e*.38)+')'); sh.addColorStop(.38,'rgba(10,4,2,0)'); sh.addColorStop(.7,'rgba(10,4,2,'+(e*.12)+')'); sh.addColorStop(1,'rgba(10,4,2,'+(e*1.05)+')'); c.fillStyle=sh; c.fillRect(0,0,LW,LH);
-    c.globalCompositeOperation='screen'; let hl=c.createLinearGradient(0,0,LW,0); hl.addColorStop(.18,'rgba(255,235,220,0)'); hl.addColorStop(.33,'rgba(255,235,220,'+(flat?.05:.16)+')'); hl.addColorStop(.46,'rgba(255,235,220,0)'); c.fillStyle=hl; c.fillRect(0,0,LW,LH);
-    let vv=c.createLinearGradient(0,0,0,LH); c.globalCompositeOperation='multiply'; vv.addColorStop(0,'rgba(0,0,0,.35)'); vv.addColorStop(.2,'rgba(0,0,0,0)'); vv.addColorStop(.8,'rgba(0,0,0,0)'); vv.addColorStop(1,'rgba(0,0,0,.4)'); c.fillStyle=vv; c.fillRect(0,0,LW,LH);
-    ctx.drawImage(L,ox,0);
-    if(o.dark===false){ /* vignette only */ }
+const blH=(x,y)=>{ let n=(x*374761393+y*668265263)|0; n=(n^(n>>>13))*1274126177|0; return ((n^(n>>>16))>>>0)/4294967296; };
+const blSm=t=>t*t*(3-2*t);
+function blVN(x,y){ const xi=Math.floor(x), yi=Math.floor(y), fx=blSm(x-xi), fy=blSm(y-yi); const a=blH(xi,yi), b=blH(xi+1,yi), c=blH(xi,yi+1), d=blH(xi+1,yi+1); return a+(b-a)*fx+(c-a)*fy+(a-b-c+d)*fx*fy; }
+const blHex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const BL_L=(()=>{ const l=[-.55,-.62,.56], n=Math.hypot(...l); return l.map(v=>v/n); })();
+const BL_HV=(()=>{ const h=[BL_L[0],BL_L[1],BL_L[2]+1], n=Math.hypot(...h); return h.map(v=>v/n); })();
+function blLight(nx,ny,nz,ao,oil){ const ndl=nx*BL_L[0]+ny*BL_L[1]+nz*BL_L[2]; let w=(ndl+.4)/1.4; w=w<0?0:w>1?1:w; const diff=Math.pow(w,1.15); const sss=Math.max(0,1-Math.abs(ndl-.1)*3.4)*.24; const lum=(.3+diff*.8)*ao; const nh=Math.max(0,nx*BL_HV[0]+ny*BL_HV[1]+nz*BL_HV[2]); const spec=Math.pow(nh,34)*.15*(.7+oil*.6)*(ao>.8?1:ao); const rim=Math.pow(1-nz,3)*.1;
+  return [lum+sss*.95, lum+sss*.28, lum-sss*.12+rim*.5, spec+rim*.25]; }
+
+/* limb: a lit cylinder with real taper and muscle bulge, tattoo wrapped round it */
+function blLimb(cv,o){
+  const W=cv.width, H=cv.height, ctx=cv.getContext('2d'); const sk=blHex(o.skin), ang=(o.ang||0)*Math.PI/180, ca=Math.cos(ang), sa=Math.sin(ang);
+  const cx=(o.cx!=null?o.cx:.5)*W, cy=(o.cy!=null?o.cy:.5)*H, R0=o.R0, R1=o.R1!=null?o.R1:o.R0, Lh=o.len||900, bul=o.bulge||[0,0,200];
+  const rAt=v=>{ const k=Math.max(0,Math.min(1,(v+Lh)/(2*Lh))); return R0+(R1-R0)*k+bul[1]*Math.exp(-Math.pow((v-bul[0])/bul[2],2)); };
+  const finish=(art)=>{
+    ctx.clearRect(0,0,W,H);
+    if(o.dark!==false){ const g=ctx.createRadialGradient(W*.5,H*.5,20,W*.5,H*.5,Math.max(W,H)*.8); g.addColorStop(0,'#2b2622'); g.addColorStop(.6,'#131211'); g.addColorStop(1,'#050505'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
+    const off=document.createElement('canvas'); off.width=W; off.height=H; const oc=off.getContext('2d'); const im=oc.createImageData(W,H), D=im.data;
+    const rMean=(R0+R1)/2, pxIn=rMean*2/o.dia, boxPx=o.size*1.5625*pxIn, s0=(o.sx||0)*pxIn, v0=(o.sy||0)*pxIn;
+    const flat=!!o.flat;
+    for(let py=0;py<H;py++) for(let px=0;px<W;px++){
+      const dx=px-cx, dy=py-cy, v=dx*ca+dy*sa, xp=-dx*sa+dy*ca, r=rAt(v); const ax=Math.abs(xp); if(ax>=r) continue;
+      const drdv=(rAt(v+1)-rAt(v-1))/2; const t=xp/r, nzr=Math.sqrt(1-t*t); const na=-drdv*nzr, np=t; let nl=Math.hypot(np,na,nzr); const npp=np/nl, naa=na/nl, nzz=nzr/nl;
+      const nx=npp*(-sa)+naa*ca, ny=npp*ca+naa*sa, nz=nzz;
+      /* albedo: skin with mottling, pores, redness, faint vein */
+      const m1=blVN(px*.011,py*.011), m2=blVN(px*.045,py*.045), pore=blH(px,py);
+      let k=1+(m1-.5)*.1+(m2-.5)*.05+(pore-.5)*.05; let red=(m1-.5)*.07+(o.red||0);
+      let ar=sk[0]*k*(1+red), ag=sk[1]*k*(1-red*.5), ab=sk[2]*k*(1-red*.7);
+      if(o.vein){ const vx=Math.sin(v*.011+1.3)*r*.32+r*.12, dv=(xp-vx)/ (r*.09); const vv=Math.exp(-dv*dv); ar*=1-.1*vv; ag*=1-.06*vv; ab*=1+.02*vv; }
+      /* tattoo */
+      if(art){ const s=r*Math.asin(flat?t*.55:t)/(flat?.55:1); const u=(s-s0)/boxPx+.5, w=(v-v0)/boxPx+.5; if(u>=0&&u<1&&w>=0&&w<1){ const ix=(u*800)|0, iy=(w*800)|0, a=art.d[(iy*800+ix)*4+3]/255; if(a>.01){ const f=Math.max(.1,1-.9*a); const ink=art.ink; ar=ar*(1-a*.93)+ink[0]*a*.9*.15*(ar/255); ag=ag*(1-a*.93)+ink[1]*a*.9*.15*(ag/255); ab=ab*(1-a*.93)+ink[2]*a*.9*.15*(ab/255); ar*=1; } } }
+      const edge=Math.min(1,(r-ax)/1.3), ao=.72+.28*Math.pow(nz,.5);
+      const L=blLight(nx,ny,nz,ao,blVN(px*.09,py*.09));
+      const i=(py*W+px)*4; D[i]=Math.min(255,ar*L[0]+L[3]*255); D[i+1]=Math.min(255,ag*L[1]+L[3]*245); D[i+2]=Math.min(255,ab*L[2]+L[3]*235); D[i+3]=edge*255;
+    }
+    oc.putImageData(im,0,0);
+    if(o.hair){ oc.save(); oc.strokeStyle='rgba(28,20,16,.34)'; oc.lineWidth=.9; oc.lineCap='round'; const n=Math.round(W*H/380); for(let i=0;i<n;i++){ const px=blH(i,7)*W, py=blH(i,13)*H, dx=px-cx, dy=py-cy, v=dx*ca+dy*sa, xp=-dx*sa+dy*ca, r=rAt(v); if(Math.abs(xp)>r*.93) continue; const dir=ang+(blH(i,3)-.5)*.9, L=5+blH(i,5)*6, bend=(blH(i,9)-.5)*3; oc.beginPath(); oc.moveTo(px,py); oc.quadraticCurveTo(px+Math.cos(dir)*L*.5+bend,py+Math.sin(dir)*L*.5-bend,px+Math.cos(dir)*L,py+Math.sin(dir)*L); oc.stroke(); } oc.restore(); }
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,.65)'; ctx.shadowBlur=36; ctx.shadowOffsetX=18; ctx.shadowOffsetY=10; ctx.drawImage(off,0,0); ctx.restore(); ctx.drawImage(off,0,0);
   };
-  draw(null); blInkImg(o.art,o.ink,img=>draw(img));
+  finish(null);
+  if(!o.art) return;
+  blInkImg(o.art,o.ink,img=>{ try{ const R=document.createElement('canvas'); R.width=R.height=800; const r=R.getContext('2d'); r.translate(400,400); r.rotate((o.rot||0)*Math.PI/180); if('filter' in r) r.filter='blur(1.1px)'; r.drawImage(img,-320,-320,640,640); const d=r.getImageData(0,0,800,800).data; finish({d,ink:blHex(o.ink)}); }catch(e){} });
+}
+
+/* full body: height-field model lit per pixel; returns albedo / light / spec canvases */
+const BLB={};
+function blBodyModel(view){
+  if(BLB[view]) return BLB[view]; const S=2, W=400, H=880, N=W*H; let z=new Float32Array(N);
+  const cap=(x1,y1,x2,y2,r1,r2,zk,bf)=>{ const rm=Math.max(r1,r2)+(bf?4:0); const xa=Math.max(0,Math.floor((Math.min(x1,x2)-rm)*S)), xb=Math.min(W-1,Math.ceil((Math.max(x1,x2)+rm)*S)), ya=Math.max(0,Math.floor((Math.min(y1,y2)-rm)*S)), yb=Math.min(H-1,Math.ceil((Math.max(y1,y2)+rm)*S)); const vx=x2-x1, vy=y2-y1, l2=vx*vx+vy*vy||1;
+    for(let py=ya;py<=yb;py++) for(let px=xa;px<=xb;px++){ const x=(px+.5)/S, y=(py+.5)/S; let t=((x-x1)*vx+(y-y1)*vy)/l2; t=t<0?0:t>1?1:t; const cx=x1+vx*t, cy=y1+vy*t, d=Math.hypot(x-cx,y-cy), r=r1+(r2-r1)*t+(bf?bf(t):0); if(d<r){ const zz=Math.sqrt(r*r-d*d)*zk; const i=py*W+px; if(zz>z[i]) z[i]=zz; } } };
+  const ell=(cx,cy,rx,ry,rz)=>{ const xa=Math.max(0,Math.floor((cx-rx)*S)), xb=Math.min(W-1,Math.ceil((cx+rx)*S)), ya=Math.max(0,Math.floor((cy-ry)*S)), yb=Math.min(H-1,Math.ceil((cy+ry)*S)); for(let py=ya;py<=yb;py++) for(let px=xa;px<=xb;px++){ const x=(px+.5)/S, y=(py+.5)/S, q=((x-cx)/rx)**2+((y-cy)/ry)**2; if(q<1){ const zz=rz*Math.sqrt(1-q), i=py*W+px; if(zz>z[i]) z[i]=zz; } } };
+  const mirr=f=>{ f(0); f(1); };
+  ell(100,34,17,21.5,17); ell(83,38,2.4,5,3); ell(117,38,2.4,5,3);
+  cap(100,50,100,72,7.5,9.5,1,0);
+  { const P=[[62,10,6],[72,30,9],[86,36.5,15],[104,35,16.5],[122,31,14.5],[142,26.5,12.5],[162,25.5,12],[184,28.5,13],[204,33,15],[222,32,13],[238,24,5]]; const at=(y,k)=>{ let i=0; while(i<P.length-2&&y>P[i+1][0]) i++; const a=P[i], b=P[i+1]; let f=(y-a[0])/(b[0]-a[0]); f=f<0?0:f>1?1:f; f=(1-Math.cos(f*Math.PI))/2; return a[k]+(b[k]-a[k])*f; };
+      for(let py=Math.floor(62*S);py<Math.min(H,238*S);py++){ const y=(py+.5)/S, w=at(y,1), d=at(y,2); for(let px=Math.floor((100-w)*S);px<=Math.ceil((100+w)*S);px++){ const x=(px+.5)/S, q=Math.abs(x-100)/w; if(q<1){ const zz=d*Math.sqrt(1-q*q), i=py*W+px; if(zz>z[i]) z[i]=zz; } } } }
+  mirr(s=>{ const X=a=>s?200-a:a; ell(X(68),82,12,11,12); cap(X(62),82,X(46),150,10.5,8,1,t=>3*Math.sin(Math.PI*Math.min(1,t*1.1))*(t>.15?1:t/.15)); cap(X(46),150,X(36),222,8.2,5.2,1,t=>2.6*Math.exp(-Math.pow((t-.18)/.2,2))); ell(X(33.5),236,6.5,12,4.5);
+    ell(X(80),262,18.5,50,17); cap(X(82),218,X(80),306,18,12.5,1,t=>3*Math.exp(-Math.pow((t-.35)/.3,2))); ell(X(80),308,11.5,9,10.5); cap(X(80),308,X(79),400,11,5.4,1,t=>3.6*Math.exp(-Math.pow((t-.22)/.2,2))); ell(X(76),418,13.5,7.5,7); });
+  const g=(d,s)=>Math.exp(-d*d/(2*s*s));
+  for(let py=0;py<H;py++) for(let px=0;px<W;px++){ const i=py*W+px; if(z[i]<=0) continue; const x=(px+.5)/S, y=(py+.5)/S; let b=0;
+    if(view==='front'){ const ax=Math.abs(x-100); if(y>84&&y<118) b-=1*g(x-100,1.3); if(y>122&&y<190) b-=.8*g(x-100,1.1); [134,150,166].forEach(yc=>{ if(ax<13) b-=.55*g(y-yc,1.4)*(1-Math.pow(ax/13,4)); }); if(ax<26) b-=1.2*g(y-(118+Math.pow((x-100)/24,2)*6),1.6); if(ax>6&&ax<30) b-=.8*g(y-(79-ax*.08),1.3); b-=1.6*g(Math.hypot(x-100,y-194),2); if(y<56){ b+=3*g(Math.hypot(x-100,y-41),2.6); b-=1.1*g(Math.hypot(x-93,y-33.5),2.6)+1.1*g(Math.hypot(x-107,y-33.5),2.6); b-=.6*g(Math.hypot(x-100,y-46.5),3); b+=.8*g(Math.hypot(x-100,y-47.8),3.4); } }
+    else { if(y>80&&y<214) b-=1.5*g(x-100,1.1); b+=1.5*Math.exp(-(Math.pow((x-79)/9,2)+Math.pow((y-106)/13,2)))+1.5*Math.exp(-(Math.pow((x-121)/9,2)+Math.pow((y-106)/13,2))); b-=1.5*g(Math.hypot(x-91,y-206),2)+1.5*g(Math.hypot(x-109,y-206),2); b-=1.2*g(y-174,1.6)*(Math.abs(x-100)<22?1:0); }
+    z[i]+=b; }
+  const blur=(src,r)=>{ const out=new Float32Array(N), tmp=new Float32Array(N), n=2*r+1; for(let y=0;y<H;y++){ let s=0; for(let x=-r;x<=r;x++) s+=src[y*W+Math.max(0,Math.min(W-1,x))]; for(let x=0;x<W;x++){ tmp[y*W+x]=s/n; s+=src[y*W+Math.min(W-1,x+r+1)]-src[y*W+Math.max(0,x-r)]; } } for(let x=0;x<W;x++){ let s=0; for(let y=-r;y<=r;y++) s+=tmp[Math.max(0,Math.min(H-1,y))*W+x]; for(let y=0;y<H;y++){ out[y*W+x]=s/n; s+=tmp[Math.min(H-1,y+r+1)*W+x]-tmp[Math.max(0,y-r)*W+x]; } } return out; };
+  const zs=blur(blur(z,2),2), zb=blur(z,9);
+  const Bd=new Uint8ClampedArray(N*4), Cd=new Uint8ClampedArray(N*4), alpha=new Uint8Array(N);
+  for(let py=1;py<H-1;py++) for(let px=1;px<W-1;px++){ const i=py*W+px; if(z[i]<=0.05&&zs[i]<=.05) continue; const zi=zs[i]; if(zi<=0) continue; const sx=S*(zs[i+1]-zs[i-1])/2, sy=S*(zs[i+W]-zs[i-W])/2; const nl=Math.hypot(sx,sy,1), nx=-sx/nl, ny=-sy/nl, nz=1/nl; const ao=Math.max(.5,Math.min(1,1-(zb[i]-zs[i])*.09)); const a=Math.max(0,Math.min(1,zi/1.5));
+    const L=blLight(nx,ny,nz,ao,blVN(px*.09,py*.09)); const j=i*4; Bd[j]=Math.min(255,L[0]*255); Bd[j+1]=Math.min(255,L[1]*255); Bd[j+2]=Math.min(255,L[2]*255); Bd[j+3]=a*255; Cd[j]=Cd[j+1]=Cd[j+2]=255; Cd[j+3]=Math.min(255,L[3]*255*a); alpha[i]=a*255; }
+  return BLB[view]={W,H,S,Bd,Cd,alpha};
+}
+function blBodyPaint(view,skin,cA,cB,cC){
+  const M=blBodyModel(view), W=M.W, H=M.H, S=M.S; [cA,cB,cC].forEach(c=>{ c.width=W; c.height=H; });
+  cB.getContext('2d').putImageData(new ImageData(M.Bd,W,H),0,0); cC.getContext('2d').putImageData(new ImageData(M.Cd,W,H),0,0);
+  const sk=blHex(skin), im=new ImageData(W,H), D=im.data;
+  for(let py=0;py<H;py++) for(let px=0;px<W;px++){ const i=py*W+px, a=M.alpha[i]; if(!a) continue; const x=(px+.5)/S, y=(py+.5)/S; const m1=blVN(px*.02,py*.02), pore=blH(px,py), k=1+(m1-.5)*.09+(pore-.5)*.05; let r=sk[0]*k, g=sk[1]*k, b=sk[2]*k;
+    const head=y<62&&Math.hypot((x-100)/17.6,(y-35)/22)<1.02; let hair=false;
+    if(head){ hair=view==='front'?(y<22+6*Math.pow((x-100)/17,2)||(Math.abs(x-100)>14.5&&y<39)):(y<49); }
+    if(hair){ const st=blVN(px*.55,py*.09), q=.5+st*.9; r=34*q; g=26*q; b=22*q; }
+    else {
+      const red=Math.exp(-(Math.pow((x-46)/9,2)+Math.pow((y-150)/7,2)))+Math.exp(-(Math.pow((x-154)/9,2)+Math.pow((y-150)/7,2)))+Math.exp(-(Math.pow((x-80)/11,2)+Math.pow((y-308)/8,2)))+Math.exp(-(Math.pow((x-120)/11,2)+Math.pow((y-308)/8,2)));
+      if(red>.02){ r*=1+.07*red; g*=1-.04*red; b*=1-.05*red; }
+      if(view==='front'&&y<56){ const lip=Math.exp(-(Math.pow((x-100)/4.2,2)+Math.pow((y-46.6)/1.4,2))); if(lip>.05){ r=r*(1-lip*.35)+205*lip*.35; g=g*(1-lip*.5)+110*lip*.5; b=b*(1-lip*.45)+110*lip*.45; } const br=Math.exp(-(Math.pow((x-93)/3.2,2)+Math.pow((y-29.3)/.9,2)))+Math.exp(-(Math.pow((x-107)/3.2,2)+Math.pow((y-29.3)/.9,2))); if(br>.05){ r*=1-.6*br; g*=1-.6*br; b*=1-.6*br; } const ey=Math.exp(-(Math.pow((x-93)/1.7,2)+Math.pow((y-33.8)/1.05,2)))+Math.exp(-(Math.pow((x-107)/1.7,2)+Math.pow((y-33.8)/1.05,2))); if(ey>.05){ r=r*(1-ey)+45*ey; g=g*(1-ey)+32*ey; b=b*(1-ey)+28*ey; } }
+    }
+    const j=i*4; D[j]=r; D[j+1]=g; D[j+2]=b; D[j+3]=a; }
+  cA.getContext('2d').putImageData(im,0,0);
+  /* ground shadow into the light layer (outside the body) */
+  const sc=cB.getContext('2d'); sc.save(); sc.globalCompositeOperation='destination-over'; const gg=sc.createRadialGradient(W/2,H-24,6,W/2,H-24,130); gg.addColorStop(0,'rgba(0,0,0,.45)'); gg.addColorStop(1,'rgba(0,0,0,0)'); sc.fillStyle=gg; sc.save(); sc.translate(W/2,H-24); sc.scale(1,.14); sc.translate(-W/2,-(H-24)); sc.fillRect(0,H-24-140,W,280); sc.restore(); sc.restore();
 }
 
 function bloomTattoo(C){
@@ -2529,7 +2590,13 @@ function bloomTattoo(C){
 
   /* ---- gallery slideshow (auto-advancing) ---- */
   const real=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
-  const SAMPLE=[['rose','Illustrative color','Rose on a forearm',{skin:2,dia:2.9,size:3.1,rot:0,ink:'#16120f',cx:.66}],['moth','Neo-traditional','Butterfly on a calf',{skin:1,dia:4.2,size:3.4,rot:-8,ink:'#14110f',cx:.34}],['dagger','Neo-traditional','Dagger on a forearm',{skin:3,dia:3,size:4.4,rot:0,ink:'#0f0d0c',cx:.66}],['sphere','Black and grey realism','Soft shading on an upper arm',{skin:1,dia:3.6,size:3.5,rot:0,ink:'#1a1a1a',cx:.34}],['orn','Ornamental','Sun ornament on a shoulder',{skin:0,dia:5.4,size:3.4,rot:0,ink:'#1a1614',cx:.66}],['snake','Illustrative color','Snake on a thigh',{skin:4,dia:6,size:5.4,rot:12,ink:'#0c0b0b',cx:.34}]];
+  const SAMPLE=[
+    ['rose','Illustrative color','Rose on a forearm',{skin:2,ang:-16,cx:.64,cy:.5,R0:158,R1:122,bulge:[-380,26,230],dia:2.9,size:3.3,rot:0,ink:'#16120f',vein:1,hair:1}],
+    ['moth','Neo-traditional','Butterfly on a calf',{skin:1,ang:98,cx:.36,cy:.5,R0:150,R1:96,bulge:[-170,44,240],dia:4.2,size:3.6,rot:-8,ink:'#14110f',hair:1,sy:-.4}],
+    ['dagger','Neo-traditional','Dagger on a forearm',{skin:3,ang:14,cx:.64,cy:.5,R0:150,R1:116,bulge:[-380,24,230],dia:3,size:4.6,rot:0,ink:'#0f0d0c',vein:1,hair:1}],
+    ['sphere','Black and grey realism','Soft shading on an upper arm',{skin:1,ang:-72,cx:.36,cy:.5,R0:150,R1:166,bulge:[40,30,200],dia:3.6,size:3.8,rot:0,ink:'#1b1b1b',hair:1}],
+    ['orn','Ornamental','Sun ornament on a forearm',{skin:0,ang:-6,cx:.64,cy:.5,R0:152,R1:120,bulge:[-380,22,230],dia:2.8,size:2.9,rot:0,ink:'#1c1613',vein:1}],
+    ['snake','Illustrative color','Snake on a thigh',{skin:4,ang:78,cx:.36,cy:.5,R0:230,R1:190,bulge:[-100,26,260],dia:6,size:5.6,rot:12,ink:'#0c0b0b',hair:1}]];
   const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)})):SAMPLE.map(([k,sty,t,sc])=>({art:k,cap:t,sub:sty,sc}));
   const stage=h('div',{class:'bl-stage',tabindex:'0','aria-roledescription':'carousel','aria-label':'Tattoo gallery'});
   const slEls=slides.map((s,i)=>{ const el=h('figure',{class:'bl-slide'+(i===0?' on':''),'aria-hidden':i===0?'false':'true',style:s.bg?'background:'+s.bg:null},
@@ -2539,7 +2606,7 @@ function bloomTattoo(C){
   const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'01 / '+String(slides.length).padStart(2,'0'));
   let cur=0, paused=false, tick=null, inView=true; const ms=4600;
   const dots=slides.map((s,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show slide '+(i+1),onclick:()=>{ show(i); restart(); }}));
-  const rendered={}; const paintSlide=i=>{ i=(i+slides.length)%slides.length; const s=slides[i]; if(!s.cv||rendered[i]) return; rendered[i]=1; const SKIN2=['#F3D9C6','#E2B089','#B98760','#8B5D3F','#5A3A29']; blSkin(s.cv,{art:s.art,ink:s.sc.ink,skin:SKIN2[s.sc.skin],dia:s.sc.dia,size:s.sc.size,rot:s.sc.rot,cx:s.sc.cx,band:330}); };
+  const rendered={}; const SKIN2=['#F3D9C6','#E2B089','#B98760','#8B5D3F','#5A3A29']; const paintSlide=i=>{ i=(i+slides.length)%slides.length; const s=slides[i]; if(!s.cv||rendered[i]) return; rendered[i]=1; setTimeout(()=>blLimb(s.cv,Object.assign({},s.sc,{art:s.art,skin:SKIN2[s.sc.skin],len:700})),i?60:0); };
   function show(i){ cur=(i+slides.length)%slides.length; paintSlide(cur); paintSlide(cur+1); slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0'); }
   function restart(){ bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; clearTimeout(tick); if(!paused&&!reduce&&inView) tick=setTimeout(next,ms); }
   function next(){ if(!stage.isConnected) return; show(cur+1); restart(); }
@@ -2581,29 +2648,15 @@ function bloomTattoo(C){
   const NS='http://www.w3.org/2000/svg';
   const closeCv=h('canvas',{class:'bl-close',width:'520',height:'380',role:'img','aria-label':'Close-up of the design wrapped around the skin'});
   const DIA=n=>/Neck/.test(n)?4:/Forearm/.test(n)?2.9:/Upper arm/.test(n)?3.6:/Hand/.test(n)?3.2:/Thigh/.test(n)?6:/Calf/.test(n)?4.2:/Ankle/.test(n)?3.2:/Shoulder$/.test(n)?5.4:12;
-  let ccRaf=0; const paintClose=()=>{ cancelAnimationFrame(ccRaf); ccRaf=requestAnimationFrame(()=>{ const n=nearest(); const nm=n.d<=34?n.z.n:'Spine'; const flat=DIA(nm)>=12; blSkin(closeCv,{art:T.art,ink:INK[T.ink][1],skin:SKIN[T.skin],dia:flat?Math.max(9,T.size*1.9):DIA(nm),size:T.size,rot:T.rot,flat,cx:.5,band:flat?500:250,dark:true}); }); };
-  const bodySvg=h('div',{class:'bl-fig'}); const svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 200 440'); svg.setAttribute('class','bl-body'); svg.setAttribute('role','img'); svg.setAttribute('aria-label','Body outline. Drag the design to place it.'); bodySvg.append(svg);
-  const limbs=[[62,80,46,150,20],[46,150,36,222,17],[82,218,80,308,34],[80,308,79,400,24],[100,56,100,72,16]];
-  const mixc=(hex,f)=>{ const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255; const t=f<0?0:255, k=Math.abs(f); r=Math.round(r+(t-r)*k); g=Math.round(g+(t-g)*k); b=Math.round(b+(t-b)*k); return '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1); };
-  const bodyMarkup=skin=>{ const mir=([a,b,c,d,w])=>[[a,b,c,d,w],[200-a,b,200-c,d,w]]; const L=limbs.flatMap(mir); const dk=mixc(skin,-.42), sd=mixc(skin,-.2), lt=mixc(skin,.22), hi=mixc(skin,.38);
-    const torso='M65 74Q100 62 135 74Q139 100 133 130Q127 160 131 190L138 222Q100 238 62 222L69 190Q73 160 67 130Q61 100 65 74Z';
-    const cap=(a,b,c,d,w,col,dx,al,ww)=>'<path d="M'+(a+dx)+' '+b+'L'+(c+dx)+' '+d+'" stroke="'+col+'" stroke-width="'+ww+'" stroke-linecap="round" fill="none" opacity="'+al+'"/>';
-    let s='<defs><linearGradient id="blTor" x1="0" x2="1"><stop offset="0" stop-color="'+dk+'"/><stop offset=".22" stop-color="'+sd+'"/><stop offset=".42" stop-color="'+hi+'"/><stop offset=".62" stop-color="'+skin+'"/><stop offset=".86" stop-color="'+sd+'"/><stop offset="1" stop-color="'+dk+'"/></linearGradient><radialGradient id="blHd" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="'+hi+'"/><stop offset=".6" stop-color="'+skin+'"/><stop offset="1" stop-color="'+sd+'"/></radialGradient><filter id="blSoft"><feGaussianBlur stdDeviation="1.1"/></filter></defs>';
-    s+='<ellipse cx="100" cy="428" rx="66" ry="6" fill="rgba(0,0,0,.22)" filter="url(#blSoft)"/>';
-    s+=L.map(([a,b,c,d,w])=>cap(a,b,c,d,w,dk,0,1,w+3)).join('');
-    s+=L.map(([a,b,c,d,w])=>cap(a,b,c,d,w,skin,0,1,w)).join('');
-    s+=L.map(([a,b,c,d,w])=>cap(a,b,c,d,w,sd,w*.2,.7,w*.55)+cap(a,b,c,d,w,lt,-w*.17,.75,w*.38)+cap(a,b,c,d,w,hi,-w*.22,.45,w*.14)).join('');
-    s+='<path d="'+torso+'" fill="'+dk+'" stroke="'+dk+'" stroke-width="3" stroke-linejoin="round"/><path d="'+torso+'" fill="url(#blTor)"/>';
-    s+='<ellipse cx="100" cy="35" rx="18.5" ry="22.5" fill="'+dk+'"/><ellipse cx="82.5" cy="38" rx="3" ry="6" fill="'+skin+'"/><ellipse cx="117.5" cy="38" rx="3" ry="6" fill="'+sd+'"/><ellipse cx="100" cy="35" rx="17" ry="21" fill="url(#blHd)"/>';
-    s+=T.view==='back'?'<path d="M82 30C82 8 118 8 118 30C118 42 112 50 100 52C88 50 82 42 82 30Z" fill="#1d1816"/>':'<path d="M83 28C84 8 116 8 117 28C108 18 92 18 83 28Z" fill="#1d1816"/><circle cx="93" cy="35" r="1.3" fill="rgba(0,0,0,.45)"/><circle cx="107" cy="35" r="1.3" fill="rgba(0,0,0,.45)"/><path d="M95 46Q100 49 105 46" stroke="rgba(0,0,0,.35)" stroke-width="1.2" fill="none"/>';
-    s+=[[34,236,8,12],[166,236,8,12],[76,418,14,7],[124,418,14,7]].map(([cx,cy,rx,ry])=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(rx+1.4)+'" ry="'+(ry+1.4)+'" fill="'+dk+'"/><ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" fill="'+skin+'"/>').join('');
-    s+='<g fill="rgba(0,0,0,.10)"><ellipse cx="46" cy="150" rx="8" ry="6"/><ellipse cx="154" cy="150" rx="8" ry="6"/><ellipse cx="80" cy="308" rx="12" ry="8"/><ellipse cx="120" cy="308" rx="12" ry="8"/></g>';
-    s+=T.view==='back'?'<g fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1.3" stroke-linecap="round"><path d="M100 76L100 214" stroke-dasharray="2 4"/><path d="M80 86Q92 104 99 116M120 86Q108 104 101 116"/><path d="M72 150Q86 156 99 150M128 150Q114 156 101 150"/><path d="M84 214Q100 224 116 214"/></g>':'<g fill="none" stroke="rgba(0,0,0,.2)" stroke-width="1.3" stroke-linecap="round"><path d="M72 92Q86 112 99 104M128 92Q114 112 101 104"/><path d="M82 130Q100 138 118 130M84 150Q100 158 116 150M86 170Q100 177 114 170"/><path d="M100 104L100 186"/></g><circle cx="100" cy="196" r="1.8" fill="rgba(0,0,0,.35)"/>';
-    s+='<g fill="rgba(0,0,0,.16)" filter="url(#blSoft)"><path d="M100 222L100 236"/><ellipse cx="100" cy="228" rx="30" ry="5"/></g>';
-    return s; };
-  const bodyG=document.createElementNS(NS,'g'), detG=document.createElementNS(NS,'g'), dotG=document.createElementNS(NS,'g'), tatG=document.createElementNS(NS,'g');
-  svg.append(bodyG,detG,dotG,tatG);
-  const detail=()=>{ detG.innerHTML='';/* baked into bodyMarkup */ void (T.view==='back'?'<path d="M100 76L100 214" stroke="rgba(0,0,0,.28)" stroke-width="1.4" stroke-dasharray="2 4" fill="none"/><path d="M78 88Q92 112 98 100M122 88Q108 112 102 100" stroke="rgba(0,0,0,.22)" fill="none"/>':'<circle cx="100" cy="190" r="1.8" fill="rgba(0,0,0,.35)"/><path d="M84 112Q100 124 116 112" stroke="rgba(0,0,0,.2)" fill="none"/>'); };
+  let ccRaf=0; const paintClose=()=>{ cancelAnimationFrame(ccRaf); ccRaf=requestAnimationFrame(()=>{ const n=nearest(); const nm=n.d<=34?n.z.n:'Spine'; const dia0=DIA(nm), flat=dia0>=12; const dia=flat?Math.max(9,T.size*1.9):dia0; blLimb(closeCv,{art:T.art,ink:INK[T.ink][1],skin:SKIN[T.skin],ang:90,cx:.5,cy:.5,R0:flat?420:128,R1:flat?420:128,len:600,dia,size:T.size,rot:T.rot,flat,hair:/Forearm|Calf|Thigh|Upper arm/.test(nm),vein:/Forearm/.test(nm)}); }); };
+  const cA=h('canvas',{class:'bl-lay a','aria-hidden':'true'}), cB=h('canvas',{class:'bl-lay b','aria-hidden':'true'}), cC=h('canvas',{class:'bl-lay c','aria-hidden':'true'});
+  const svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 200 440'); svg.setAttribute('class','bl-body bl-ts'); svg.setAttribute('role','img'); svg.setAttribute('aria-label','Body. Drag the design to place it.');
+  const svg2=document.createElementNS(NS,'svg'); svg2.setAttribute('viewBox','0 0 200 440'); svg2.setAttribute('class','bl-body bl-ds');
+  const bodySvg=h('div',{class:'bl-fig'},cA,svg,cB,cC,svg2);
+  const bodyG={set innerHTML(v){}}, detG={set innerHTML(v){}};
+  const dotG=document.createElementNS(NS,'g'), tatG=document.createElementNS(NS,'g');
+  svg.append(tatG); svg2.append(dotG);
+  const paintBody=()=>{ try{ blBodyPaint(T.view,SKIN[T.skin],cA,cB,cC); }catch(e){} };
   const readName=h('b',null,''), readMeta=h('span',null,''), meter=h('span',{class:'bl-meter'},h('i'),h('i'),h('i'));
   const nearest=()=>{ let b=null,d=1e9; ZS[T.view].forEach(z=>{ const q=Math.hypot(z.x-T.x,z.y-T.y); if(q<d){ d=q; b=z; } }); return {z:b,d}; };
   const side=()=>(T.x<100)===(T.view==='front')?'right':'left';
@@ -2622,7 +2675,7 @@ function bloomTattoo(C){
   tatG.addEventListener('pointerdown',e=>{ const q=pt(e); drag={dx:T.x-q.x,dy:T.y-q.y}; try{ tatG.setPointerCapture(e.pointerId); }catch(_){} tatG.classList.add('drag'); e.preventDefault(); });
   tatG.addEventListener('pointermove',e=>{ if(!drag) return; const q=pt(e); T.x=Math.max(8,Math.min(192,q.x+drag.dx)); T.y=Math.max(14,Math.min(430,q.y+drag.dy)); drawTat(); paintRead(); paintClose(); });
   const endDrag=()=>{ drag=null; tatG.classList.remove('drag'); }; tatG.addEventListener('pointerup',endDrag); tatG.addEventListener('pointercancel',endDrag);
-  function full(){ bodyG.innerHTML=bodyMarkup(SKIN[T.skin]); detail(); drawDots(); drawTat(); paintRead(); paintActs(); paintHeal(); paintClose(); }
+  function full(){ paintBody(); drawDots(); drawTat(); paintRead(); paintActs(); paintHeal(); paintClose(); }
   function paintActs(){ const m=msg(), sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn hot',href:sms},'Text this idea'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(msg()):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgPre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }); }},'Copy'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); }
   const syncCtl=()=>{ sizeIn.value=T.size; rotIn.value=T.rot; sizeOut.textContent=sizeTxt(); };
   const sizeOut=h('b',null,''), rotOut=h('b',null,'');
@@ -2630,7 +2683,7 @@ function bloomTattoo(C){
   const rotIn=h('input',{type:'range',min:'-180',max:'180',step:'5',value:String(T.rot),'aria-label':'Rotation',oninput:e=>{ T.rot=+e.target.value; drawTat(); paintClose(); }});
   const designs=h('div',{class:'bl-des'},ART.map(([k,n])=>h('button',{type:'button',class:k===T.art?'on':'','aria-label':n,title:n,onclick:e=>{ T.art=k; designs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); drawTat(); paintRead(); paintActs(); paintClose(); }},blSvg(artM(k)))));
   const inkRow=h('div',{class:'bl-sw'},INK.map(([n,c],i)=>h('button',{type:'button',class:i===T.ink?'on':'','aria-label':n+' ink',style:'--c:'+c,onclick:e=>{ T.ink=i; inkRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); drawTat(); paintRead(); paintActs(); paintClose(); }})));
-  const skinRow=h('div',{class:'bl-sw'},SKIN.map((c,i)=>h('button',{type:'button',class:i===T.skin?'on':'','aria-label':'Skin tone '+(i+1),style:'--c:'+c,onclick:e=>{ T.skin=i; skinRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); bodyG.innerHTML=bodyMarkup(SKIN[i]); paintHeal(); paintClose(); }})));
+  const skinRow=h('div',{class:'bl-sw'},SKIN.map((c,i)=>h('button',{type:'button',class:i===T.skin?'on':'','aria-label':'Skin tone '+(i+1),style:'--c:'+c,onclick:e=>{ T.skin=i; skinRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); paintBody(); paintHeal(); paintClose(); }})));
   const viewRow=h('div',{class:'bl-seg'},['front','back'].map(v=>h('button',{type:'button',class:v===T.view?'on':'',onclick:e=>{ T.view=v; const z=ZS[v][v==='front'?3:5]; T.x=z.x; T.y=z.y; T.rot=z.r; T.size=z.s; viewRow.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); syncCtl(); full(); }},v==='front'?'Front':'Back')));
   const ctl=(l,...k)=>h('div',{class:'bl-ctl'},h('span',{class:'bl-lbl'},l),k);
   const tryIt=sec('b-try','bl-dk',hd('04','Try it on.','Pick a design, then drag it onto the body or tap a dot. Resize it, turn it and see roughly how big it will sit. Sample art only.'),
