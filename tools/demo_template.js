@@ -4276,7 +4276,7 @@ function rdPortal(C){
   const svcs=(X.services||[]).filter(s=>Array.isArray(s)&&RD_I[s[0]]);
   const plans=(X.plans||[]).filter(p=>p&&p.name);
   const perks=(X.perks||[]).filter(p=>Array.isArray(p)&&p[0]);
-  const plus=plans.find(p=>p.name==='Plus')||plans[0]||{name:'Plus'};
+  const plus=plans.find(p=>p.name===new URLSearchParams(location.search).get('plan'))||plans.find(p=>p.name==='Plus')||plans[0]||{name:'Plus'};
   const tone={tow:'#FF5A6E',jump:'#FFC53D',tire:'#FF8A3D',key:'#A78BFA',fuel:'#34D399',winch:'#38BDF8',warn:'#F87171',batt:'#4ADE80'};
   if(!document.getElementById('rdFonts')) document.head.append(h('link',{id:'rdFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap'}));
 
@@ -4286,7 +4286,7 @@ function rdPortal(C){
     let mode=screen, annual=false, pick=(plans.find(p=>p.name===qs.get('plan'))||plus).name;
     const box=h('div',{class:'pt-auth-card'});
     const toast=h('div',{class:'pt-toast',role:'status'});
-    const enter=msg=>{ toast.textContent=msg; toast.classList.add('on'); setTimeout(()=>{ history.replaceState(null,'',dq+'&view=portal'); root.replaceChildren(rdPortal(C)); },1100); };
+    const enter=msg=>{ toast.textContent=msg; toast.classList.add('on'); setTimeout(()=>{ history.replaceState(null,'',dq+'&view=portal'+(mode==='join'?'&plan='+encodeURIComponent(pick):'')); root.replaceChildren(rdPortal(C)); },1100); };
     const draw=()=>{ const join2=mode==='join';
       const tabs2=h('div',{class:'pt-seg'},[['login','Log in'],['join','Sign up']].map(([k,t])=>h('button',{type:'button',class:mode===k?'on':'',onclick:()=>{ mode=k; draw(); }},t)));
       const planPick=join2?h('div',{class:'pt-ppick'},h('div',{class:'pt-ppick-h'},h('b',null,'Choose your plan'),h('div',{class:'pt-seg sm'},[[false,'Monthly'],[true,'Annual']].map(([a,t])=>h('button',{type:'button',class:annual===a?'on':'',onclick:()=>{ annual=a; draw(); }},t)))),
@@ -4377,7 +4377,7 @@ function rdPortal(C){
           body=[h('h2',{class:'pt-q'},'How urgent is it?'),h('div',{class:'pt-two'},[['Standard','Safe spot, no rush'],['Urgent','Safety risk or highway']].map(o=>h('button',{type:'button',class:'pt-big'+(st.pri===o[0]?' on':'')+(o[0]==='Urgent'?' urg':''),onclick:()=>pick('pri',o[0])},h('b',null,o[0]),h('small',null,o[1])))),
             h('h2',{class:'pt-q'},'When do you need us?'),h('div',{class:'pt-two'},[['ASAP','Dispatch now'],['Schedule','Pick a future time']].map(o=>h('button',{type:'button',class:'pt-big'+(st.when===o[0]?' on':''),onclick:()=>pick('when',o[0])},h('b',null,o[0]),h('small',null,o[1])))),
             st.when==='Schedule'?h('label',{class:'pt-lbl'},'Date and time',h('div',{class:'pt-inp'},rdI('clock',18),h('input',{type:'datetime-local'}))):null,nav(true)]; }
-        else body=[h('h2',{class:'pt-q'},'Review your request'),h('div',{class:'pt-review'},[['Service',sv?sv[1]:''],['Location',st.loc],['Details',st.det||'None'],['Priority',st.pri],['When',st.when],['Covered by','Plus membership']].map(r=>h('div',null,h('small',null,r[0]),h('b',null,r[1])))),
+        else body=[h('h2',{class:'pt-q'},'Review your request'),h('div',{class:'pt-review'},[['Service',sv?sv[1]:''],['Location',st.loc],['Details',st.det||'None'],['Priority',st.pri],['When',st.when],['Covered by',plus.name+' membership']].map(r=>h('div',null,h('small',null,r[0]),h('b',null,r[1])))),
           h('p',{class:'pt-note'},'Concept demo: no truck is dispatched from this page.'),nav(true,'Request help',()=>{ wrap.replaceChildren(tracker(sv,st)); })];
         paint(bar,body); };
       const paint=(bar,body)=>{ wrap.replaceChildren(head('Request assistance','Step '+(step+1)+' of 4'),bar,h('div',{class:'pt-form'},body)); return wrap; };
@@ -4391,7 +4391,7 @@ function rdPortal(C){
     refer:()=>h('div',{class:'pt-page'},head('Refer a friend','Share D&D'),h('div',{class:'pt-ref'},h('span',{class:'pt-ref-i'},rdI('gift',30)),h('small',null,'YOUR REFERRAL CODE'),h('b',null,'SAMPLE'),h('p',null,'Friends get covered, you earn rewards.')),
       h('div',{class:'pt-panel pt-fam'},h('div',{class:'pt-ph'},h('h2',null,'Refer a family member')),h('p',null,'They get 25% off every month for as long as they stay subscribed.'),
         h('div',{class:'pt-copy'},h('span',null,'ddroadside.com/register?ref=SAMPLE'),h('button',{type:'button',onclick:e=>{ try{ navigator.clipboard.writeText('ddroadside.com/register?ref=SAMPLE'); }catch(_){} e.currentTarget.textContent='Copied'; }},rdI('copy',15),'Copy')))),
-    profile:()=>h('div',{class:'pt-page'},head('Profile','Account'),h('div',{class:'pt-panel pt-prof'},h('span',{class:'pt-av lg'},'AS'),h('div',null,h('b',null,'Alex Sample'),h('small',null,'Plus member · sample account'))),
+    profile:()=>h('div',{class:'pt-page'},head('Profile','Account'),h('div',{class:'pt-panel pt-prof'},h('span',{class:'pt-av lg'},'AS'),h('div',null,h('b',null,'Alex Sample'),h('small',null,plus.name+' member · sample account'))),
       h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Vehicles')),h('div',{class:'pt-hrow'},h('span',{class:'pt-hic',style:'--c:#5B9BFF'},rdI('car',20)),h('div',null,h('b',null,'Sample vehicle'),h('small',null,'Add year, make and model')),h('em',{class:'pt-tag'},'Primary'))),
       h('div',{class:'pt-panel'},['Text me when my driver is on the way','Email receipts','Perk alerts'].map((t,i)=>h('label',{class:'pt-tog'},h('span',null,t),h('input',{type:'checkbox',checked:i<2?true:null}),h('i')))))
   };
