@@ -2590,11 +2590,12 @@ function bloomTattoo(C){
   /* ---- cover: flash wall ---- */
   const wall=[['rose',4,8,150,-12,'w'],['dagger',66,2,120,9,'o'],['moth',78,40,150,-8,'w'],['snake',40,52,110,14,'o'],['flower',2,54,130,10,'o'],['orn',86,76,100,-14,'w']];
   const coll=h('div',{class:'bl-coll','aria-hidden':'true'},wall.map(([k,l,t,w,r,c],i)=>h('div',{class:'bl-fl '+c,style:'left:'+l+'%;top:'+t+'%;width:'+w+'px;transform:rotate('+r+'deg);animation-delay:'+(i*.35)+'s'},blSvg(artM(k)))));
+  const rvSlot=h('div',{class:'bl-rvslot'});
   const hero=h('section',{class:'bl-hero',id:'b-top'},coll,h('div',{class:'bl-wrap bl-hero-in'},
     h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' / ')),
     h('h1',null,h('span',null,heads[0]),heads[1]?h('span',{class:'ol'},heads[1]):null),
     h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
-    h('div',{class:'bl-cta'},bookBtn('hot'),callBtn('ghost'))));
+    h('div',{class:'bl-cta'},bookBtn('hot'),callBtn('ghost')),rvSlot));
   const MQ=['Black and grey realism','Neo-traditional','Illustrative color','Ornamental','Custom designs','Dubuque, Iowa'];
   const mqItems=()=>MQ.map(t=>h('span',null,t));
   const marquee=h('div',{class:'bl-mq','aria-hidden':'true'},h('div',{class:'bl-mq-in'},mqItems(),mqItems(),mqItems(),mqItems()));
@@ -2646,6 +2647,21 @@ function bloomTattoo(C){
       h('p',null,'Josh has been tattooing for over eleven years, most of them in Dubuque. He believes in a collaborative approach: he works with you on the creative side so the tattoo ends up as good as it can be.'),
       h('p',null,'His main emphasis is large-scale black and grey realism, along with neo-traditional, illustrative color and ornamental work.'),bookBtn('blk')),
     h('div',{class:'bl-stats rv'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l))))));
+
+  /* ---- reviews: auto-advancing "Josh makes it work" ---- */
+  const RV=Array.isArray(x.reviews)&&x.reviews.length?x.reviews:[['Bring a rough idea.','Clients say Josh takes a loose idea and builds it into something detailed and personal.'],['Make it bigger.','Several clients had him rework an older tattoo into a half sleeve, and loved the result.'],['Easy from start to finish.','Reviewers describe everything from the first consult to the finished piece as smooth and professional.'],['Gentle and patient.','Clients talk about how attentive and calm he is while he works.'],['Still looks great.','One client says a tattoo Josh did still gets compliments four years later.'],['Back for more.','Repeat clients say their next pieces will all be done with Josh.']];
+  const star=()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('class','bl-star'); s.innerHTML='<path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L5.8 21l1.6-7L2 9.2l7.1-.6z"/>'; return s; };
+  const rvSlides=RV.map(([hd2,tx],i)=>h('div',{class:'bl-rv'+(i===0?' on':''),'aria-hidden':i===0?'false':'true'},h('span',{class:'bl-qm','aria-hidden':'true'},'\u201C'),h('h3',null,hd2),h('p',null,tx),h('div',{class:'bl-by'},h('span',{class:'bl-stars','aria-label':'5 out of 5 stars'},[0,1,2,3,4].map(star)),h('em',null,'From Josh\u2019s Google reviews'))));
+  const rvBar=h('i',{class:'bl-bar'}), rvDots=RV.map((_,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show review '+(i+1),onclick:()=>{ rvShow(i); rvRestart(); }}));
+  let rc=0, rvPaused=false, rvT=null, rvIn=true;
+  function rvShow(i){ rc=(i+RV.length)%RV.length; rvSlides.forEach((e,k)=>{ e.classList.toggle('on',k===rc); e.setAttribute('aria-hidden',k===rc?'false':'true'); }); rvDots.forEach((d,k)=>d.classList.toggle('on',k===rc)); }
+  function rvRestart(){ rvBar.style.animation='none'; void rvBar.offsetWidth; rvBar.style.animation=''; clearTimeout(rvT); if(!rvPaused&&!reduce&&rvIn) rvT=setTimeout(()=>{ if(!rvBox.isConnected) return; rvShow(rc+1); rvRestart(); },5200); }
+  const rvBox=h('div',{class:'bl-rvbox'+(reduce?' paused':''),tabindex:'0','aria-roledescription':'carousel','aria-label':'What clients say'},h('div',{class:'bl-rvstage'},rvSlides),h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous review',onclick:()=>{ rvShow(rc-1); rvRestart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},rvDots),h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next review',onclick:()=>{ rvShow(rc+1); rvRestart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},rvBar));
+  const rvPause=v=>{ rvPaused=v; rvBox.classList.toggle('paused',v||reduce); if(v) clearTimeout(rvT); else rvRestart(); };
+  rvBox.addEventListener('mouseenter',()=>rvPause(true)); rvBox.addEventListener('mouseleave',()=>rvPause(false)); rvBox.addEventListener('focusin',()=>rvPause(true)); rvBox.addEventListener('focusout',()=>rvPause(false));
+  let rsx=null; rvBox.addEventListener('touchstart',e=>{ rsx=e.touches[0].clientX; },{passive:true}); rvBox.addEventListener('touchend',e=>{ if(rsx==null) return; const dx=e.changedTouches[0].clientX-rsx; if(Math.abs(dx)>40){ rvShow(rc+(dx<0?1:-1)); rvRestart(); } rsx=null; },{passive:true});
+  setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ rvIn=e.isIntersecting; if(rvIn) rvRestart(); else clearTimeout(rvT); })).observe(rvBox); } rvRestart(); },250);
+  rvSlot.append(h('div',{class:'bl-rvtop'},h('b',null,'5.0'),h('span',{class:'bl-stars'},[0,1,2,3,4].map(star)),h('strong',null,'Josh makes it work.'),h('em',null,'About 120 Google reviews')),rvBox,h('p',{class:'bl-note'},'Summarized from public Google reviews.'));
 
   /* ---- TRY IT ON: body visualizer ---- */
   const SKIN=['#F3D9C6','#E2B089','#B98760','#8B5D3F','#5A3A29'], INK=[['Black','#0b0b0c'],['Red','#C0182C'],['Teal','#0B7F86'],['Purple','#6B2D91']];

@@ -1002,6 +1002,15 @@ body.t-bl{background:#0a0a0a}
 .bl .rv.rv-in{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}.bl .rv.rv-on{opacity:1;transform:none}
 @media (max-width:900px){.bl-links{display:none}.bl-nav-r{margin-left:auto}.bl-2c,.bl-lab,.bl-heal{grid-template-columns:1fr}.bl-sty{grid-template-columns:1fr 1fr}.bl-sec{padding:58px 0}.bl-stage2{position:static;max-width:340px;margin:0 auto}.bl-hero{min-height:560px}.bl-foot em{margin-left:0}.bl-slart{height:70%!important;top:6%}.bl-slide figcaption b{font-size:1.9rem}}
 @media (max-width:560px){.bl-wrap{padding:0 16px}.bl-sty{grid-template-columns:1fr}.bl-des{grid-template-columns:repeat(4,minmax(0,1fr))}.bl-two{grid-template-columns:1fr}.bl-btn.sm{padding:8px 10px}.bl-brand b{font-size:1.6rem}.bl-brand i{font-size:1rem}.bl-stage{aspect-ratio:4/5}.bl-slart{height:62%!important;top:8%;right:auto;left:50%;translate:-50% 0}.bl-slide:nth-child(even) .bl-slart{left:50%}.bl-fl{opacity:.5!important}.bl-day b{font-size:4.5rem}.bl-hero h1{font-size:4.6rem}}
+/* reviews (cover) */
+.bl-rvslot{box-sizing:border-box;width:100%;margin-top:26px;max-width:560px;background:rgba(0,0,0,.82);border:2px solid #fff;padding:14px 16px}
+.bl-rvtop{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin-bottom:8px}.bl-rvtop b{font:400 2rem/1 var(--df);color:var(--hot)}.bl-rvtop strong{font:400 1.5rem/1 var(--df);text-transform:uppercase;letter-spacing:.02em}.bl-rvtop em{font-style:normal;font:700 .68rem var(--bf);letter-spacing:.14em;text-transform:uppercase;color:#aaa}
+.bl-stars{display:inline-flex;gap:2px}.bl-star{width:15px;height:15px;fill:var(--hot)}
+.bl-rvstage{position:relative;min-height:112px}.bl-rv{position:absolute;inset:0;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;pointer-events:none}.bl-rv.on{opacity:1;transform:none;pointer-events:auto}
+.bl-rv h3{font:400 1.7rem/1 var(--df);text-transform:uppercase;color:var(--hot)}.bl-rv p{font-size:.98rem;margin:6px 0 0;color:#eee}.bl-qm,.bl-by{display:none}
+.bl-rvbox .bl-gbar{margin-top:6px}.bl-rvbox .bl-nb{display:none}.bl-rvbox.paused .bl-bar{animation-play-state:paused}
+.bl-rvslot .bl-note{font-size:.7rem;color:#999;margin-top:6px}
+@media (max-width:560px){.bl-rvstage{min-height:140px}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
@@ -8117,11 +8126,12 @@ function bloomTattoo(C){
   /* ---- cover: flash wall ---- */
   const wall=[['rose',4,8,150,-12,'w'],['dagger',66,2,120,9,'o'],['moth',78,40,150,-8,'w'],['snake',40,52,110,14,'o'],['flower',2,54,130,10,'o'],['orn',86,76,100,-14,'w']];
   const coll=h('div',{class:'bl-coll','aria-hidden':'true'},wall.map(([k,l,t,w,r,c],i)=>h('div',{class:'bl-fl '+c,style:'left:'+l+'%;top:'+t+'%;width:'+w+'px;transform:rotate('+r+'deg);animation-delay:'+(i*.35)+'s'},blSvg(artM(k)))));
+  const rvSlot=h('div',{class:'bl-rvslot'});
   const hero=h('section',{class:'bl-hero',id:'b-top'},coll,h('div',{class:'bl-wrap bl-hero-in'},
     h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' / ')),
     h('h1',null,h('span',null,heads[0]),heads[1]?h('span',{class:'ol'},heads[1]):null),
     h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
-    h('div',{class:'bl-cta'},bookBtn('hot'),callBtn('ghost'))));
+    h('div',{class:'bl-cta'},bookBtn('hot'),callBtn('ghost')),rvSlot));
   const MQ=['Black and grey realism','Neo-traditional','Illustrative color','Ornamental','Custom designs','Dubuque, Iowa'];
   const mqItems=()=>MQ.map(t=>h('span',null,t));
   const marquee=h('div',{class:'bl-mq','aria-hidden':'true'},h('div',{class:'bl-mq-in'},mqItems(),mqItems(),mqItems(),mqItems()));
@@ -8173,6 +8183,21 @@ function bloomTattoo(C){
       h('p',null,'Josh has been tattooing for over eleven years, most of them in Dubuque. He believes in a collaborative approach: he works with you on the creative side so the tattoo ends up as good as it can be.'),
       h('p',null,'His main emphasis is large-scale black and grey realism, along with neo-traditional, illustrative color and ornamental work.'),bookBtn('blk')),
     h('div',{class:'bl-stats rv'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l))))));
+
+  /* ---- reviews: auto-advancing "Josh makes it work" ---- */
+  const RV=Array.isArray(x.reviews)&&x.reviews.length?x.reviews:[['Bring a rough idea.','Clients say Josh takes a loose idea and builds it into something detailed and personal.'],['Make it bigger.','Several clients had him rework an older tattoo into a half sleeve, and loved the result.'],['Easy from start to finish.','Reviewers describe everything from the first consult to the finished piece as smooth and professional.'],['Gentle and patient.','Clients talk about how attentive and calm he is while he works.'],['Still looks great.','One client says a tattoo Josh did still gets compliments four years later.'],['Back for more.','Repeat clients say their next pieces will all be done with Josh.']];
+  const star=()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('class','bl-star'); s.innerHTML='<path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L5.8 21l1.6-7L2 9.2l7.1-.6z"/>'; return s; };
+  const rvSlides=RV.map(([hd2,tx],i)=>h('div',{class:'bl-rv'+(i===0?' on':''),'aria-hidden':i===0?'false':'true'},h('span',{class:'bl-qm','aria-hidden':'true'},'\u201C'),h('h3',null,hd2),h('p',null,tx),h('div',{class:'bl-by'},h('span',{class:'bl-stars','aria-label':'5 out of 5 stars'},[0,1,2,3,4].map(star)),h('em',null,'From Josh\u2019s Google reviews'))));
+  const rvBar=h('i',{class:'bl-bar'}), rvDots=RV.map((_,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show review '+(i+1),onclick:()=>{ rvShow(i); rvRestart(); }}));
+  let rc=0, rvPaused=false, rvT=null, rvIn=true;
+  function rvShow(i){ rc=(i+RV.length)%RV.length; rvSlides.forEach((e,k)=>{ e.classList.toggle('on',k===rc); e.setAttribute('aria-hidden',k===rc?'false':'true'); }); rvDots.forEach((d,k)=>d.classList.toggle('on',k===rc)); }
+  function rvRestart(){ rvBar.style.animation='none'; void rvBar.offsetWidth; rvBar.style.animation=''; clearTimeout(rvT); if(!rvPaused&&!reduce&&rvIn) rvT=setTimeout(()=>{ if(!rvBox.isConnected) return; rvShow(rc+1); rvRestart(); },5200); }
+  const rvBox=h('div',{class:'bl-rvbox'+(reduce?' paused':''),tabindex:'0','aria-roledescription':'carousel','aria-label':'What clients say'},h('div',{class:'bl-rvstage'},rvSlides),h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous review',onclick:()=>{ rvShow(rc-1); rvRestart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},rvDots),h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next review',onclick:()=>{ rvShow(rc+1); rvRestart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},rvBar));
+  const rvPause=v=>{ rvPaused=v; rvBox.classList.toggle('paused',v||reduce); if(v) clearTimeout(rvT); else rvRestart(); };
+  rvBox.addEventListener('mouseenter',()=>rvPause(true)); rvBox.addEventListener('mouseleave',()=>rvPause(false)); rvBox.addEventListener('focusin',()=>rvPause(true)); rvBox.addEventListener('focusout',()=>rvPause(false));
+  let rsx=null; rvBox.addEventListener('touchstart',e=>{ rsx=e.touches[0].clientX; },{passive:true}); rvBox.addEventListener('touchend',e=>{ if(rsx==null) return; const dx=e.changedTouches[0].clientX-rsx; if(Math.abs(dx)>40){ rvShow(rc+(dx<0?1:-1)); rvRestart(); } rsx=null; },{passive:true});
+  setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ rvIn=e.isIntersecting; if(rvIn) rvRestart(); else clearTimeout(rvT); })).observe(rvBox); } rvRestart(); },250);
+  rvSlot.append(h('div',{class:'bl-rvtop'},h('b',null,'5.0'),h('span',{class:'bl-stars'},[0,1,2,3,4].map(star)),h('strong',null,'Josh makes it work.'),h('em',null,'About 120 Google reviews')),rvBox,h('p',{class:'bl-note'},'Summarized from public Google reviews.'));
 
   /* ---- TRY IT ON: body visualizer ---- */
   const SKIN=['#F3D9C6','#E2B089','#B98760','#8B5D3F','#5A3A29'], INK=[['Black','#0b0b0c'],['Red','#C0182C'],['Teal','#0B7F86'],['Purple','#6B2D91']];
