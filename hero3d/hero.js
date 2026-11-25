@@ -122,12 +122,13 @@
   /* ribbon geometry, rebuilt on the CPU each frame (cheap: ~1k vertices) */
   var SEG=small?120:220;
   function ribbonSpec(i){ return i===0
-    ? {w:.78,yo:0,   ph:0,   z:1, f0:[.08,.3,1.], tint:0}
-    : {w:.16,yo:.42, ph:1.3, z:.9,f0:[.5,.7,1.],  tint:1}; }
+    ? {w:.62,yo:0,   ph:0,   z:1, f0:[.08,.3,1.], tint:0}
+    : {w:.15,yo:-.3, ph:1.3, z:.9,f0:[.5,.7,1.],  tint:1}; }
   function center(u,t,s,o){
     o[0]=-2.2+5.4*u;
-    o[1]=-1.35+2.15*Math.pow(u,1.7)+.26*Math.sin(u*5.6+t*.42+s.ph)+s.yo;
-    o[2]=(.75*Math.sin(Math.PI*(u*2.05+.02))-.1+.12*Math.sin(t*.3+u*3.1+s.ph))*s.z;
+    var k=Math.min(1,Math.max(0,(u-.36)/.64));k=k*k*(3-2*k);
+    o[1]=-1.5+2.45*k+(.1+.16*k)*Math.sin(u*5.6+t*.42+s.ph)+s.yo;
+    o[2]=(.6*Math.sin(Math.PI*(u*2.05+.02))-.1+.12*Math.sin(t*.3+u*3.1+s.ph))*s.z;
   }
   function buildRibbon(buf,t,s){
     var A=[0,0,0],B=[0,0,0],C=[0,0,0],k=0;
