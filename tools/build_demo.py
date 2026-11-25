@@ -755,6 +755,15 @@ body.t-bl{background:#0a0a0a}
 .bl .rv.rv-in{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}.bl .rv.rv-on{opacity:1;transform:none}
 @media (max-width:900px){.bl-links{display:none}.bl-nav-r{margin-left:auto}.bl-2c,.bl-lab,.bl-heal{grid-template-columns:1fr}.bl-sty{grid-template-columns:1fr 1fr}.bl-sec{padding:58px 0}.bl-stage2{position:static;max-width:340px;margin:0 auto}.bl-hero{min-height:560px}.bl-foot em{margin-left:0}.bl-slart{height:70%!important;top:6%}.bl-slide figcaption b{font-size:1.9rem}}
 @media (max-width:560px){.bl-wrap{padding:0 16px}.bl-sty{grid-template-columns:1fr}.bl-des{grid-template-columns:repeat(4,minmax(0,1fr))}.bl-two{grid-template-columns:1fr}.bl-btn.sm{padding:8px 10px}.bl-brand b{font-size:1.6rem}.bl-brand i{font-size:1rem}.bl-stage{aspect-ratio:4/5}.bl-slart{height:62%!important;top:8%;right:auto;left:50%;translate:-50% 0}.bl-slide:nth-child(even) .bl-slart{left:50%}.bl-fl{opacity:.5!important}.bl-day b{font-size:4.5rem}.bl-hero h1{font-size:4.6rem}}
+/* reviews (cover) */
+.bl-rvslot{box-sizing:border-box;width:100%;margin-top:26px;max-width:560px;background:rgba(0,0,0,.82);border:2px solid #fff;padding:14px 16px}
+.bl-rvtop{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin-bottom:8px}.bl-rvtop b{font:400 2rem/1 var(--df);color:var(--hot)}.bl-rvtop strong{font:400 1.5rem/1 var(--df);text-transform:uppercase;letter-spacing:.02em}.bl-rvtop em{font-style:normal;font:700 .68rem var(--bf);letter-spacing:.14em;text-transform:uppercase;color:#aaa}
+.bl-stars{display:inline-flex;gap:2px}.bl-star{width:15px;height:15px;fill:var(--hot)}
+.bl-rvstage{position:relative;min-height:112px}.bl-rv{position:absolute;inset:0;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;pointer-events:none}.bl-rv.on{opacity:1;transform:none;pointer-events:auto}
+.bl-rv h3{font:400 1.7rem/1 var(--df);text-transform:uppercase;color:var(--hot)}.bl-rv p{font-size:.98rem;margin:6px 0 0;color:#eee}.bl-qm,.bl-by{display:none}
+.bl-rvbox .bl-gbar{margin-top:6px}.bl-rvbox .bl-nb{display:none}.bl-rvbox.paused .bl-bar{animation-play-state:paused}
+.bl-rvslot .bl-note{font-size:.7rem;color:#999;margin-top:6px}
+@media (max-width:560px){.bl-rvstage{min-height:140px}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
