@@ -99,6 +99,7 @@ function build(d){
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
   if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='roadside'&&new URLSearchParams(location.search).get('view')==='portal'){ document.body.className='t-pt'; document.title=(C.name||'')+' | Member portal concept'; root.replaceChildren(rdPortal(C)); return; }
   if(C.variant==='roadside'){ document.body.className='t-rd'; const pg=roadside(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); rdNav(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='cloud'){ clAge(C); document.body.className='t-cl'; const pg=cloudShop(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
@@ -4234,6 +4235,16 @@ function roadside(C){
     h('div',null,h('h2',null,'Cover the whole family'),h('p',null,'Refer a family member and they get 25% off every month for as long as they stay subscribed. Every member gets a referral code, link and QR code to share.')),
     ext(join,'Join and share','rd-btn',true)));
 
+  const purl='?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=portal';
+  const portalSec=h('section',{class:'rd-portal'},h('div',{class:'rd-w rd-portal-in'},
+    h('div',{class:'rd-portal-t rv'},h('p',{class:'rd-kick'},'Member portal'),h('h2',{class:'rd-h2'},'Your membership, in your pocket'),
+      h('p',null,'Request help in a few taps, track your driver, check your free tows and show your member pass at partner shops.'),
+      h('ul',null,['Branded membership card and member pass','Coverage meters for tows, jump starts and lockouts','Step-by-step requests with live driver tracking','Perks, plans and family referrals in one place'].map(t=>h('li',null,rdI('check',16),t))),
+      h('a',{class:'rd-btn y',href:purl},'Open the member portal',rdI('ne',16))),
+    h('a',{class:'rd-phone-mock rv d1',href:purl,'aria-label':'Open the member portal'},h('div',{class:'rd-pm-scr'},
+      h('small',null,'Good evening, Alex'),h('div',{class:'rd-pm-card'},h('span',null,'PLUS'),logo?h('img',{src:logo,alt:''}):null,h('em',null,h('i'),'Active')),
+      h('div',{class:'rd-pm-tiles'},svcs.slice(0,8).map(s=>h('span',null,rdI(s[0],18)))),
+      h('div',{class:'rd-pm-hot'},rdI('phone',14),'24/7 Hotline')))));
   const faqSec=faq.length?h('section',{class:'rd-sec',id:'rd-faq'},h('div',{class:'rd-w rd-faq'},
     h('div',{class:'rd-center rv'},kick('Useful information'),h('h2',{class:'rd-h2'},'Frequently asked questions')),
     h('div',{class:'rd-qs rv'},faq.map((f,i)=>{ const it=h('div',{class:'rd-q'+(i?'':' open')},h('button',{type:'button','aria-expanded':String(!i),onclick:()=>{ const o=!it.classList.contains('open'); it.classList.toggle('open',o); it.firstChild.setAttribute('aria-expanded',String(o)); }},h('span',null,f[0]),h('i',null,rdI('plus',14))),h('div',{class:'rd-a'},h('div',null,h('p',null,f[1])))); return it; })))):null;
@@ -4255,7 +4266,122 @@ function roadside(C){
     h('div',{class:'rd-foot-b'},h('span',null,'© '+new Date().getFullYear()+' D&D Wrecker Roadside'),h('span',null,C.city||''))));
 
   const mbar=h('div',{class:'rd-mbar'},C.tel?h('a',{href:C.tel,class:'rd-btn'},rdI('phone',17),'Call'):null,ext(join,'Join now','rd-btn y'));
-  return h('div',{class:'rd'},nav,h('main',null,hero,strip,svc,featSec,band,about,fleetSec,plansSec,perkSec,refer,faqSec,req),foot,mbar);
+  return h('div',{class:'rd'},nav,h('main',null,hero,strip,svc,featSec,band,about,fleetSec,plansSec,perkSec,refer,portalSec,faqSec,req),foot,mbar);
+}
+/* ---------- D&D member portal concept (?view=portal): sample account, nothing is sent ---------- */
+Object.assign(RD_I,{bell:['M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9','M10.3 21a1.94 1.94 0 0 0 3.4 0'],clock:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 7v5l3 2'],car:['M5 17h14v-5l-2-5H7l-2 5z','M5 12h14','M7.5 17v2M16.5 17v2','M8 14.5h.01M16 14.5h.01'],map:['M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z','M9 4v14M15 6v14'],qr:['M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z','M14 14h2v2h-2zM18 14h2M14 18h2M18 18h2v2'],copy:['M9 9h11v11H9z','M5 15H4V4h11v1'],back:['M15 18l-6-6 6-6'],route:['M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M6 15V9a4 4 0 0 1 4-4h4M18 9v6a4 4 0 0 1-4 4h-4']});
+function rdPortal(C){
+  const X=C.x, join=okUrl(X.join)||'https://ddroadside.com/register';
+  const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
+  const svcs=(X.services||[]).filter(s=>Array.isArray(s)&&RD_I[s[0]]);
+  const plans=(X.plans||[]).filter(p=>p&&p.name);
+  const perks=(X.perks||[]).filter(p=>Array.isArray(p)&&p[0]);
+  const plus=plans.find(p=>p.name==='Plus')||plans[0]||{name:'Plus'};
+  const tone={tow:'#FF5A6E',jump:'#FFC53D',tire:'#FF8A3D',key:'#A78BFA',fuel:'#34D399',winch:'#38BDF8',warn:'#F87171',batt:'#4ADE80'};
+  if(!document.getElementById('rdFonts')) document.head.append(h('link',{id:'rdFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap'}));
+  const hr=new Date().getHours(), greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  const renew=new Date(Date.now()+200*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const view=h('div',{class:'pt-view'});
+  const tabs=[['home','home','Home'],['request','plus','Request'],['history','clock','History'],['perks','tag','Perks'],['plans','card','Plans'],['refer','gift','Refer'],['profile','user','Profile']];
+  const navBtns={};
+  const mkNav=cls=>h('nav',{class:cls,'aria-label':'Portal'},tabs.map(([k,ic,t])=>{ const b=h('button',{type:'button','data-k':k,onclick:()=>go(k)},rdI(ic,20),h('span',null,t)); (navBtns[k]=navBtns[k]||[]).push(b); return b; }));
+  const side=h('aside',{class:'pt-side'},h('div',{class:'pt-brand'},logo?h('img',{src:logo,alt:'D&D Wrecker Service'}):null,h('div',null,h('b',null,'D&D Roadside'),h('small',null,'Member portal'))),mkNav('pt-snav'),
+    h('a',{class:'pt-side-call',href:C.tel||'#'},h('i',null,rdI('phone',18)),h('span',null,h('small',null,'24/7 Hotline'),h('b',null,C.phoneTxt||''))));
+  const tabbar=mkNav('pt-tabs');
+  function go(k,arg){ Object.values(navBtns).flat().forEach(b=>b.classList.toggle('on',b.dataset.k===k)); view.replaceChildren(PAGES[k](arg)); view.scrollTop=0; scrollTo(0,0); view.animate&&view.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'}); }
+  const head=(t,sub)=>h('div',{class:'pt-head'},h('div',null,sub?h('small',null,sub):null,h('h1',null,t)),h('div',{class:'pt-head-r'},h('button',{type:'button',class:'pt-icbtn','aria-label':'Notifications'},rdI('bell',20),h('i')),h('span',{class:'pt-av'},'AS')));
+
+  // membership card with tilt and flip
+  function card(){
+    const inner=h('div',{class:'pt-card-in'},
+      h('div',{class:'pt-card-f'},h('div',{class:'pt-card-top'},h('div',null,h('small',null,'MEMBERSHIP'),h('b',null,plus.name.toUpperCase())),logo?h('img',{src:logo,alt:''}):null),
+        h('div',{class:'pt-chip'}),
+        h('div',{class:'pt-card-bot'},h('div',null,h('small',null,'MEMBER'),h('b',null,'Alex Sample'),h('em',null,'Renews '+renew)),h('div',{class:'pt-st'},h('small',null,'STATUS'),h('b',null,h('i'),'Active'))),
+        h('span',{class:'pt-flip-hint'},rdI('qr',14),'Tap for member pass')),
+      h('div',{class:'pt-card-b'},h('div',{class:'pt-qr'},qr()),h('div',null,h('small',null,'MEMBER PASS'),h('b',null,'Show at partner shops'),h('p',null,'Your discount applies at all '+perks.length+' partners.'),h('em',null,'Sample pass'))));
+    const el=h('div',{class:'pt-card',tabindex:'0',role:'button','aria-label':'Membership card, tap to flip',onclick:()=>el.classList.toggle('flip'),onkeydown:e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.classList.toggle('flip'); } },
+      onmousemove:e=>{ const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5; el.style.setProperty('--rx',(-y*10)+'deg'); el.style.setProperty('--ry',(x*14)+'deg'); el.style.setProperty('--gx',(x*100+50)+'%'); },
+      onmouseleave:()=>{ el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); }},inner);
+    return el;
+  }
+  function qr(){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 25 25'); s.setAttribute('aria-hidden','true'); let seed=7; const rnd=()=>{ seed=(seed*9301+49297)%233280; return seed/233280; };
+    const add=(x,y,w,hh)=>{ const r=document.createElementNS('http://www.w3.org/2000/svg','rect'); r.setAttribute('x',x); r.setAttribute('y',y); r.setAttribute('width',w); r.setAttribute('height',hh); s.append(r); };
+    for(let y=0;y<25;y++) for(let x=0;x<25;x++){ const f=(x<8&&y<8)||(x>16&&y<8)||(x<8&&y>16); if(!f&&rnd()>.52) add(x,y,1,1); }
+    [[0,0],[17,0],[0,17]].forEach(([a,b])=>{ add(a,b,7,1);add(a,b+6,7,1);add(a,b,1,7);add(a+6,b,1,7);add(a+2,b+2,3,3); }); return s; }
+  function ring(val,max,label,sub,color){ const R=26,Cc=2*Math.PI*R,s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 64 64'); s.setAttribute('aria-hidden','true');
+    const c1=document.createElementNS('http://www.w3.org/2000/svg','circle'); [['cx',32],['cy',32],['r',R],['class','bg']].forEach(a=>c1.setAttribute(...a));
+    const c2=c1.cloneNode(); c2.setAttribute('class','fg'); c2.style.stroke=color; c2.style.strokeDasharray=Cc; c2.style.strokeDashoffset=Cc; s.append(c1,c2);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ c2.style.strokeDashoffset=Cc*(1-val/max); }));
+    return h('div',{class:'pt-ring'},h('div',{class:'pt-ring-g'},s,h('b',null,String(val),h('small',null,'/'+max))),h('div',null,h('b',null,label),h('small',null,sub))); }
+  const tile=(s,i)=>h('button',{type:'button',class:'pt-tile',style:'--c:'+(tone[s[0]]||'#5B9BFF')+';animation-delay:'+(i*45)+'ms',onclick:()=>go('request',s[0])},h('span',null,rdI(s[0],26)),h('b',null,s[1]));
+  const hotline=()=>h('div',{class:'pt-hot'},h('div',null,h('small',null,'24/7 ROADSIDE HOTLINE'),h('b',null,'Prefer to talk?'),h('p',null,'Dispatchers are standing by day and night.')),C.tel?h('a',{href:C.tel,class:'pt-hot-btn'},h('i',null,rdI('phone',22)),C.phoneTxt):null);
+  const hist=[['jump','Jump Start','Completed','Dubuque, IA','Oct 28'],['key','Lockout','Completed','Dubuque, IA','Sep 14'],['tow','Towing','Completed','Hazel Green, WI','Aug 02']];
+  const histRow=r=>h('div',{class:'pt-hrow'},h('span',{class:'pt-hic',style:'--c:'+tone[r[0]]},rdI(r[0],20)),h('div',null,h('b',null,r[1]),h('small',null,r[3]+' · '+r[4])),h('em',null,h('i'),r[2]));
+
+  const PAGES={
+    home:()=>h('div',{class:'pt-page'},head(greet+', Alex','Welcome back'),
+      h('div',{class:'pt-grid'},
+        h('div',{class:'pt-col'},card(),
+          h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Your coverage'),h('button',{type:'button',onclick:()=>go('plans')},'Plan details')),
+            h('div',{class:'pt-rings'},ring(1,1,'Free tow','Every 3 months · up to 15 mi','#5B9BFF'),ring(1,1,'Jump start','Resets monthly','#FFC53D'),ring(1,1,'Lockout','Resets monthly','#A78BFA')))),
+        h('div',{class:'pt-col'},
+          h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Request assistance'),h('small',null,'Tap a service')),h('div',{class:'pt-tiles'},svcs.map(tile))),
+          hotline(),
+          h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Recent requests'),h('button',{type:'button',onclick:()=>go('history')},'View all')),histRow(hist[0])),
+          h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Member perks'),h('button',{type:'button',onclick:()=>go('perks')},'All '+perks.length)),
+            h('div',{class:'pt-hscroll'},perks.slice(0,6).map(p=>h('div',{class:'pt-pmini'},h('em',null,p[4]),h('b',null,p[0]),h('small',null,p[1])))))))),
+    request:pre=>{ const st={svc:pre||'',loc:'',det:'',pri:'Standard',when:'ASAP'}; let step=pre?1:0;
+      const wrap=h('div',{class:'pt-page'}); const labels=['Service','Location','Priority','Review'];
+      const draw=()=>{ const bar=h('div',{class:'pt-steps'},labels.map((l,i)=>h('div',{class:i<step?'done':i===step?'on':''},h('i',null,i<step?rdI('check',14):String(i+1)),h('span',null,l))));
+        const sv=svcs.find(s=>s[0]===st.svc);
+        const nav=(ok,label,fn)=>h('div',{class:'pt-fnav'},step?h('button',{type:'button',class:'pt-ghost',onclick:()=>{ step--; draw(); }},rdI('back',18),'Back'):null,h('button',{type:'button',class:'pt-cta',disabled:!ok,onclick:fn||(()=>{ step++; draw(); })},label||'Continue',rdI('arrow',18)));
+        let body;
+        if(step===0) body=[h('h2',{class:'pt-q'},'What do you need help with?'),h('div',{class:'pt-opts'},svcs.map(s=>h('button',{type:'button',class:'pt-opt'+(st.svc===s[0]?' on':''),style:'--c:'+tone[s[0]],onclick:()=>{ st.svc=s[0]; step=1; draw(); }},h('span',null,rdI(s[0],24)),h('div',null,h('b',null,s[1]),h('small',null,s[2])))))];
+        else if(step===1){ const inp=h('input',{type:'text',placeholder:'Address or nearest landmark',value:st.loc,oninput:e=>{ st.loc=e.target.value; ctas.querySelector('.pt-cta').disabled=!st.loc.trim(); }});
+          const ctas=nav(!!st.loc.trim());
+          body=[h('div',{class:'pt-sel',style:'--c:'+tone[st.svc]},h('span',null,rdI(st.svc,22)),h('div',null,h('b',null,sv?sv[1]:''),h('button',{type:'button',onclick:()=>{ step=0; draw(); }},'Change'))),
+            h('div',{class:'pt-map'},mapSvg(!!st.loc),h('span',{class:'pt-pin'+(st.loc?' drop':'')},rdI('pin',30))),
+            h('label',{class:'pt-lbl'},'Your location',h('div',{class:'pt-inp'},rdI('pin',18),inp)),
+            h('button',{type:'button',class:'pt-link',onclick:()=>{ st.loc='Current location (sample): US-20 near Dubuque, IA'; draw(); }},rdI('route',16),'Use my current location'),
+            h('label',{class:'pt-lbl'},'Details (optional)',h('textarea',{rows:3,placeholder:'e.g. On the shoulder of US-61 southbound, flat front-right tire',oninput:e=>{ st.det=e.target.value; }},st.det)),ctas]; return paint(bar,body,true); }
+        else if(step===2){ const pick=(k,v)=>{ st[k]=v; draw(); };
+          body=[h('h2',{class:'pt-q'},'How urgent is it?'),h('div',{class:'pt-two'},[['Standard','Safe spot, no rush'],['Urgent','Safety risk or highway']].map(o=>h('button',{type:'button',class:'pt-big'+(st.pri===o[0]?' on':'')+(o[0]==='Urgent'?' urg':''),onclick:()=>pick('pri',o[0])},h('b',null,o[0]),h('small',null,o[1])))),
+            h('h2',{class:'pt-q'},'When do you need us?'),h('div',{class:'pt-two'},[['ASAP','Dispatch now'],['Schedule','Pick a future time']].map(o=>h('button',{type:'button',class:'pt-big'+(st.when===o[0]?' on':''),onclick:()=>pick('when',o[0])},h('b',null,o[0]),h('small',null,o[1])))),
+            st.when==='Schedule'?h('label',{class:'pt-lbl'},'Date and time',h('div',{class:'pt-inp'},rdI('clock',18),h('input',{type:'datetime-local'}))):null,nav(true)]; }
+        else body=[h('h2',{class:'pt-q'},'Review your request'),h('div',{class:'pt-review'},[['Service',sv?sv[1]:''],['Location',st.loc],['Details',st.det||'None'],['Priority',st.pri],['When',st.when],['Covered by','Plus membership']].map(r=>h('div',null,h('small',null,r[0]),h('b',null,r[1])))),
+          h('p',{class:'pt-note'},'Concept demo: no truck is dispatched from this page.'),nav(true,'Request help',()=>{ wrap.replaceChildren(tracker(sv,st)); })];
+        paint(bar,body); };
+      const paint=(bar,body)=>{ wrap.replaceChildren(head('Request assistance','Step '+(step+1)+' of 4'),bar,h('div',{class:'pt-form'},body)); return wrap; };
+      draw(); return wrap; },
+    history:()=>h('div',{class:'pt-page'},head('History','Your requests'),h('div',{class:'pt-panel'},hist.map(histRow))),
+    perks:()=>{ const list=h('div',{class:'pt-perks'}); const cats=['All',...new Set(perks.map(p=>p[1]))]; const show=c=>list.replaceChildren(...perks.filter(p=>c==='All'||p[1]===c).map((p,i)=>h('div',{class:'pt-perk',style:'animation-delay:'+(i*35)+'ms'},h('em',null,p[4]),h('b',null,p[0]),h('small',null,p[1]),p[2]?h('span',null,rdI('pin',14),p[2]):null,p[3]?h('a',{href:'tel:+1'+p[3].replace(/\D/g,'').slice(-10)},rdI('phone',14),p[3]):null)));
+      const chips=h('div',{class:'pt-chips'},cats.map((c,i)=>h('button',{type:'button',class:i?'':'on',onclick:e=>{ [...chips.children].forEach(b=>b.classList.toggle('on',b===e.currentTarget)); show(c); }},c))); show('All');
+      return h('div',{class:'pt-page'},head('Member perks',perks.length+' discounts unlocked'),h('div',{class:'pt-perk-hero'},rdI('tag',28),h('div',null,h('b',null,'Show your member pass'),h('small',null,'Flip your card on the Home tab at checkout.'))),chips,list); },
+    plans:()=>h('div',{class:'pt-page'},head('Your plan','Membership'),h('div',{class:'pt-plans'},plans.map(p=>h('div',{class:'pt-plan'+(p===plus?' cur':'')},p===plus?h('em',null,'Current plan'):null,h('b',null,p.name),h('div',{class:'pt-price'},'$'+p.mo,h('small',null,'/mo')),h('ul',null,(p.feat||[]).map(f=>h('li',null,rdI('check',15),f[0]))),
+      p===plus?h('span',{class:'pt-cur'},'You are on this plan'):h('a',{class:'pt-cta',href:join,target:'_blank',rel:'noopener'},plans.indexOf(p)>plans.indexOf(plus)?'Upgrade':'Switch',rdI('arrow',16)))))),
+    refer:()=>h('div',{class:'pt-page'},head('Refer a friend','Share D&D'),h('div',{class:'pt-ref'},h('span',{class:'pt-ref-i'},rdI('gift',30)),h('small',null,'YOUR REFERRAL CODE'),h('b',null,'SAMPLE'),h('p',null,'Friends get covered, you earn rewards.')),
+      h('div',{class:'pt-panel pt-fam'},h('div',{class:'pt-ph'},h('h2',null,'Refer a family member')),h('p',null,'They get 25% off every month for as long as they stay subscribed.'),
+        h('div',{class:'pt-copy'},h('span',null,join+'?ref=SAMPLE'),h('button',{type:'button',onclick:e=>{ try{ navigator.clipboard.writeText(join); }catch(_){} e.currentTarget.textContent='Copied'; }},rdI('copy',15),'Copy')))),
+    profile:()=>h('div',{class:'pt-page'},head('Profile','Account'),h('div',{class:'pt-panel pt-prof'},h('span',{class:'pt-av lg'},'AS'),h('div',null,h('b',null,'Alex Sample'),h('small',null,'Plus member · sample account'))),
+      h('div',{class:'pt-panel'},h('div',{class:'pt-ph'},h('h2',null,'Vehicles')),h('div',{class:'pt-hrow'},h('span',{class:'pt-hic',style:'--c:#5B9BFF'},rdI('car',20)),h('div',null,h('b',null,'Sample vehicle'),h('small',null,'Add year, make and model')),h('em',{class:'pt-tag'},'Primary'))),
+      h('div',{class:'pt-panel'},['Text me when my driver is on the way','Email receipts','Perk alerts'].map((t,i)=>h('label',{class:'pt-tog'},h('span',null,t),h('input',{type:'checkbox',checked:i<2?true:null}),h('i')))))
+  };
+  function mapSvg(on){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 400 180'); s.setAttribute('preserveAspectRatio','xMidYMid slice'); s.setAttribute('aria-hidden','true');
+    ['M-10 120 C80 100 140 140 220 110 S360 60 420 80','M60 -10 L90 200','M250 -10 C240 60 270 120 260 200','M-10 40 L420 55','M150 -10 L170 200'].forEach((d,i)=>{ const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',d); p.setAttribute('class',i?'rd2':'rd1'); s.append(p); });
+    const river=document.createElementNS('http://www.w3.org/2000/svg','path'); river.setAttribute('d','M330 -10 C300 50 360 110 320 200'); river.setAttribute('class','rv1'); s.prepend(river); return s; }
+  function tracker(sv,st){ const steps=['Request received','Dispatcher assigned','Driver en route','Arrived'];
+    const ul=h('ol',{class:'pt-tl'},steps.map((t,i)=>h('li',{class:i<2?'done':i===2?'on':''},h('i',null,i<2?rdI('check',13):''),h('span',null,t))));
+    const eta=h('b',null,'18'); const truck=h('span',{class:'pt-truck'},rdI('tow',22));
+    const box=h('div',{class:'pt-page'},head('Help is on the way','Request #DD-SAMPLE'),
+      h('div',{class:'pt-track'},h('div',{class:'pt-tmap'},mapSvg(true),h('span',{class:'pt-pin drop'},rdI('pin',30)),truck,h('div',{class:'pt-eta'},h('small',null,'ETA'),eta,h('small',null,'min'))),
+        h('div',{class:'pt-tside'},h('div',{class:'pt-sel',style:'--c:'+tone[sv?sv[0]:'tow']},h('span',null,rdI(sv?sv[0]:'tow',22)),h('div',null,h('b',null,sv?sv[1]:''),h('small',null,st.pri+' · '+st.when))),ul,
+          h('div',{class:'pt-driver'},h('span',{class:'pt-av'},rdI('tow',18)),h('div',null,h('b',null,'Your D&D driver'),h('small',null,'Driver details appear here')),C.tel?h('a',{href:C.tel,'aria-label':'Call'},rdI('phone',18)):null),
+          h('p',{class:'pt-note'},'Concept demo: this tracker is a simulation. No truck was dispatched.'),h('button',{type:'button',class:'pt-ghost',onclick:()=>go('home')},'Back to home'))));
+    let m=18; const t=setInterval(()=>{ if(!box.isConnected){ clearInterval(t); return; } m=Math.max(1,m-1); eta.textContent=String(m); },2500);
+    return box; }
+  const top=h('div',{class:'pt-ribbon'},h('span',null,'Member portal concept for D&D Wrecker Roadside · sample account'),h('a',{href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')},'Back to website'));
+  const app=h('div',{class:'pt'},top,h('div',{class:'pt-shell'},side,h('main',{class:'pt-main'},view)),tabbar);
+  go('home'); return app;
 }
 function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
 function rbBar(C){
