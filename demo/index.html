@@ -818,7 +818,7 @@ body.t-bw{background:#fff}
 .bw-facts{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:8px;font-weight:700;font-size:.92rem}
 .bw-facts li{padding-left:22px;position:relative}.bw-facts li:before{content:"";position:absolute;left:0;top:.5em;width:10px;height:10px;background:var(--cu)}
 .bw-board{background:#fff;padding:12px;border:1px solid var(--ln);box-shadow:14px 14px 0 var(--tl);border-radius:4px}
-.bw-board svg{display:block;width:100%;height:auto}
+.bw-board canvas{display:block;width:100%;height:auto}
 .bw-bc{animation:bwIn .6s cubic-bezier(.2,.8,.3,1) both;transform-box:fill-box;transform-origin:center}
 @keyframes bwIn{0%{opacity:0;transform:scale(.86)}100%{opacity:1;transform:none}}
 .bw-sec{padding:84px 0}
@@ -836,7 +836,10 @@ body.t-bw{background:#fff}
 .bw-pre button:hover{border-color:var(--ink)}.bw-pre .sur{background:var(--cu);border-color:var(--cu);color:#fff}
 .bw-lab{display:grid;grid-template-columns:1.35fr 1fr;gap:34px;align-items:start}
 .bw-scene{border:1px solid var(--ln);border-radius:6px;overflow:hidden;background:#E3E8EA}
-.bw-scene svg{display:block;width:100%;height:auto}
+.bw-scene{position:relative}.bw-cv{display:block;width:100%;height:auto;cursor:pointer;background:#DDE3E6}
+.bw-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}.bw-tools .bw-seg{flex:0 0 auto}.bw-tools .bw-seg button{padding:9px 14px}
+.bw-tagb{position:absolute;background:rgba(16,34,43,.82);color:#fff;border:0;border-radius:4px;padding:4px 8px;font:800 .66rem var(--bf);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35)}.bw-tagb.on{background:var(--cu)}
+.bw-load{position:absolute;inset:0;display:grid;place-items:center;background:rgba(227,232,234,.9);font:800 .9rem var(--bf);color:var(--ink)}
 .bw-sum{font-size:.88rem;color:var(--mu);margin:12px 0 0}
 .bw-cta2{margin-top:14px}
 .bw-ctl{display:grid;gap:20px}
@@ -7353,70 +7356,186 @@ function zpIco(k){ const d=h('span',{class:'zp-ico','aria-hidden':'true'}); d.in
 function zpIcoFor(n){ n=String(n||'').toLowerCase(); return /mirror/.test(n)?'mirror':/glass/.test(n)?'glass':/commercial|store|business/.test(n)?'shop':/door/.test(n)?'door':/home|residential/.test(n)?'home':'win'; }
 /* ===================== BECWAR (tile showroom) ===================== */
 const BW_MAT=[
-  {id:'carrara',n:'White marble look',c:'#EDEFF0',vein:'#8F99A3',gl:1},
-  {id:'slate',n:'Charcoal slate look',c:'#3B4146',tex:1},
-  {id:'concrete',n:'Soft gray concrete look',c:'#A2A7A8',tex:1},
-  {id:'oak',n:'Warm oak wood look',c:'#B58657',wood:1},
-  {id:'white',n:'Glossy white',c:'#F6F7F7',gl:1},
-  {id:'sage',n:'Sage glaze',c:'#8CA48E',gl:1},
-  {id:'navy',n:'Deep blue glaze',c:'#26405E',gl:1},
-  {id:'terra',n:'Terracotta',c:'#B65D39',tex:1},
-  {id:'black',n:'Matte black',c:'#1F2224'},
-  {id:'mist',n:'Blue gray glaze',c:'#7B95A7',gl:1}];
+  {id:'carrara',n:'White marble look',c:'#ECEFF0',k:'marble',gl:1,j:.04},
+  {id:'slate',n:'Charcoal slate look',c:'#3B4146',k:'slate',j:.07},
+  {id:'concrete',n:'Soft gray concrete look',c:'#A2A7A8',k:'concrete',j:.05},
+  {id:'oak',n:'Warm oak wood look',c:'#B58657',k:'wood',j:.09},
+  {id:'white',n:'Glossy white',c:'#F4F6F6',k:'glaze',gl:1,j:.04},
+  {id:'sage',n:'Sage glaze',c:'#8CA48E',k:'glaze',gl:1,j:.06},
+  {id:'navy',n:'Deep blue glaze',c:'#26405E',k:'glaze',gl:1,j:.06},
+  {id:'terra',n:'Terracotta',c:'#B65D39',k:'terra',j:.09},
+  {id:'black',n:'Matte black',c:'#1F2224',k:'matte',j:.05},
+  {id:'mist',n:'Blue gray glaze',c:'#7B95A7',k:'glaze',gl:1,j:.06}];
 const BW_LAY=[['grid','Grid'],['brick','Brick'],['stack','Stacked'],['herring','Herringbone'],['diag','Diagonal']];
 const BW_GROUT=[['white','White','#F1F3F3'],['light','Light gray','#B9BFC2'],['char','Charcoal','#454A4E'],['match','Matches tile','']];
 const BW_SIZE=[['s','Small'],['m','Medium'],['l','Large']];
 const BW_SURF=[['wall','Shower wall'],['back','Backsplash'],['floor','Floor']];
 function bwRng(seed){ let s=(seed|0)||1; return ()=>{ s=(Math.imul(s,1664525)+1013904223)|0; return ((s>>>8)&0xffff)/0xffff; }; }
 function bwShade(hex,t){ const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255; const f=t<0?0:255, a=Math.abs(t); const c=v=>Math.max(0,Math.min(255,Math.round(v+(f-v)*a))).toString(16).padStart(2,'0'); return '#'+c(r)+c(g)+c(b); }
-function bwTile(m,x,y,w,hh,g,rng){
-  const X=x+g/2, Y=y+g/2, W=w-g, H=hh-g, f=n=>n.toFixed(2);
-  let o='<rect x="'+f(X)+'" y="'+f(Y)+'" width="'+f(W)+'" height="'+f(H)+'" fill="'+bwShade(m.c,(rng()-.5)*.12)+'"/>';
-  if(m.vein){ for(let i=0;i<2;i++){ o+='<path d="M'+f(X+rng()*W)+' '+f(Y)+'Q'+f(X+rng()*W)+' '+f(Y+H*.5)+' '+f(X+rng()*W)+' '+f(Y+H)+'" stroke="'+m.vein+'" stroke-width="'+f(.5+rng()*.8)+'" opacity="'+f(.2+rng()*.25)+'" fill="none"/>'; } }
-  if(m.wood){ for(let i=1;i<4;i++){ const yy=Y+H*i/4; o+='<path d="M'+f(X)+' '+f(yy)+'H'+f(X+W)+'" stroke="'+bwShade(m.c,-.3)+'" stroke-width=".6" opacity=".35"/>'; } }
-  if(m.tex){ o+='<path d="M'+f(X+W*.15)+' '+f(Y+H*.3)+'l'+f(W*.25)+' '+f(H*.12)+'M'+f(X+W*.5)+' '+f(Y+H*.7)+'l'+f(W*.3)+' -'+f(H*.1)+'" stroke="'+bwShade(m.c,.25)+'" stroke-width=".8" opacity=".3"/>'; }
-  if(m.gl){ o+='<path d="M'+f(X)+' '+f(Y)+'h'+f(W*.55)+'L'+f(X)+' '+f(Y+H*.55)+'z" fill="#fff" opacity=".17"/>'; }
-  return o;
+/* ---------- realistic tile engine (procedural textures + perspective room) ---------- */
+const BWN=(()=>{ const P=new Uint8Array(512); let s=90210; const r=()=>{ s=(Math.imul(s,1664525)+1013904223)|0; return (s>>>8)&255; };
+  const a=[]; for(let i=0;i<256;i++) a.push(i); for(let i=255;i>0;i--){ const j=r()%(i+1); const t=a[i]; a[i]=a[j]; a[j]=t; } for(let i=0;i<512;i++) P[i]=a[i&255];
+  const val=(x,y)=>{ const xi=Math.floor(x), yi=Math.floor(y), xf=x-xi, yf=y-yi, X=xi&255, Y=yi&255, u=xf*xf*(3-2*xf), v=yf*yf*(3-2*yf);
+    const g=(i,j)=>P[P[(X+i)&255]+((Y+j)&255)]/255; return (g(0,0)*(1-u)+g(1,0)*u)*(1-v)+(g(0,1)*(1-u)+g(1,1)*u)*v; };
+  const fbm=(x,y,o)=>{ let amp=.5,f=1,t=0,n=0; for(let i=0;i<o;i++){ t+=amp*val(x*f,y*f); n+=amp; amp*=.5; f*=2.03; } return t/n; };
+  return {val,fbm}; })();
+const bwHex=h=>{ const n=parseInt(h.slice(1),16); return [n>>16,(n>>8)&255,n&255]; };
+const BW_SLABS={}, BW_SS=320;
+function bwCv(w,h){ const c=document.createElement('canvas'); c.width=Math.max(1,Math.round(w)); c.height=Math.max(1,Math.round(h)); return c; }
+function bwSlab(m){
+  if(BW_SLABS[m.id]) return BW_SLABS[m.id];
+  const S=BW_SS, c=bwCv(S,S), x=c.getContext('2d'), im=x.createImageData(S,S), d=im.data, B=bwHex(m.c), F=BWN.fbm, rr=bwRng(m.id.length*977+m.c.charCodeAt(2));
+  for(let y=0;y<S;y++){ for(let px=0;px<S;px++){ const nx=px/S, ny=y/S; let r=B[0],g=B[1],b=B[2], L=0;
+    if(m.k==='marble'){ const cl=F(nx*3,ny*3,4); L=(cl-.5)*.1;
+      const wx=F(nx*2,ny*2,3), wy=F(nx*2+7,ny*2+3,3), n=F(nx*3+wx*1.9,ny*3+wy*1.9,4), n2=F(nx*5+wy*2.2+11,ny*5+wx*2.2,3);
+      const v=Math.min(.8,Math.pow(1-Math.abs(n-.5)*2,24)*.8+Math.pow(1-Math.abs(n2-.5)*2,40)*.4);
+      r+=(150-r)*v; g+=(160-g)*v; b+=(170-b)*v; }
+    else if(m.k==='slate'){ const cl=F(nx*4,ny*7,4), st=F(nx*1.5,ny*16,3); L=(cl-.5)*.42+(st-.5)*.3; }
+    else if(m.k==='concrete'){ const lo=F(nx*2,ny*2,5), mid=F(nx*14,ny*14,3); L=(lo-.5)*.28+(mid-.5)*.16; if(rr()>.994) L-=.22; }
+    else if(m.k==='wood'){ const warp=F(nx*1.5,ny*5,3)*7, ring=Math.sin((ny*26+warp)*6.2832)*.5+.5, fine=F(nx*3,ny*46,3); L=(fine-.5)*.34+(ring-.5)*.14; const gdk=Math.pow(ring,7)*.4; r+=(104-r)*gdk; g+=(64-g)*gdk; b+=(34-b)*gdk; if(F(nx*9,ny*3,2)>.74){ L-=.1; } }
+    else if(m.k==='terra'){ L=(F(nx*5,ny*5,4)-.5)*.4+(F(nx*22,ny*22,2)-.5)*.14; if(rr()>.99) L-=.2; }
+    else if(m.k==='matte'){ L=(F(nx*6,ny*6,3)-.5)*.1; if(rr()>.993) L+=.12; }
+    else { L=(F(nx*3,ny*3,3)-.5)*.07; }
+    const f=1+L; const o=(y*S+px)*4; d[o]=Math.max(0,Math.min(255,r*f)); d[o+1]=Math.max(0,Math.min(255,g*f)); d[o+2]=Math.max(0,Math.min(255,b*f)); d[o+3]=255; } }
+  x.putImageData(im,0,0); BW_SLABS[m.id]=c; return c;
 }
-function bwPat(id,m,lay,sz,groutKey,gw){
-  const k={s:.72,m:1,l:1.6}[sz]||1, u=22*k, gc=(BW_GROUT.find(g=>g[0]===groutKey)||BW_GROUT[1])[2]||bwShade(m.c,-.22);
-  const g=gw==='wide'?4.2:1.8, rng=bwRng(id.length*131+lay.length*17+m.id.length*7+k*10);
-  let W,H,b='',tr='';
-  const T=(x,y,w,hh)=>bwTile(m,x,y,w,hh,g,rng);
-  if(lay==='grid'){ W=H=u*2; b=T(0,0,W,H); }
-  else if(lay==='diag'){ W=H=u*2.2; b=T(0,0,W,H); tr=' patternTransform="rotate(45)"'; }
-  else if(lay==='stack'){ W=u*2; H=u; b=T(0,0,W,H); }
-  else if(lay==='brick'){ W=u*2; H=u*2; b=T(0,0,u*2,u)+T(-u,u,u*2,u)+T(u,u,u*2,u); }
-  else { const q=u*.9; W=H=q*4; for(let i=-6;i<=6;i++){ for(let j=-6;j<=6;j++){ const ox=(-4*i-3*j)*q, oy=j*q;
-      [[ox,oy,2*q,q],[ox-2*q,oy-q,q,2*q]].forEach(t=>{ if(t[0]<W&&t[0]+t[2]>0&&t[1]<H&&t[1]+t[3]>0) b+=T(t[0],t[1],t[2],t[3]); }); } } }
-  return '<pattern id="'+id+'" patternUnits="userSpaceOnUse" width="'+W.toFixed(2)+'" height="'+H.toFixed(2)+'"'+tr+'><rect width="'+W.toFixed(2)+'" height="'+H.toFixed(2)+'" fill="'+gc+'"/>'+b+'</pattern>';
+const BW_DIM={grid:{s:.1,m:.305,l:.61},brick:{s:.075,m:.1,l:.15},stack:{s:.075,m:.1,l:.15},herring:{s:.05,m:.075,l:.1},diag:{s:.15,m:.305,l:.61}};
+function bwBuildTex(m,lay,sz,gk,gw,Wm,Hm,ppm,seed){
+  const W=Math.round(Wm*ppm), H=Math.round(Hm*ppm), c=bwCv(W,H), x=c.getContext('2d'), slab=bwSlab(m), S=BW_SS, wood=m.k==='wood';
+  const gcol=(BW_GROUT.find(g=>g[0]===gk)||BW_GROUT[1])[2]||bwShade(m.c,-.3), gp=(gw==='wide'?.009:.0045)*ppm, rng=bwRng((seed||1)*7919+m.id.length*131+lay.length*17);
+  x.fillStyle=gcol; x.fillRect(0,0,W,H);
+  const tile=(tx,ty,tw,th,vert,cull)=>{
+    const X=tx+gp/2, Y=ty+gp/2, w=tw-gp, hh=th-gp; if(w<=1||hh<=1) return; if(cull&&(X>W||Y>H||X+w<0||Y+hh<0)) return;
+    x.save(); x.shadowColor='rgba(0,0,0,.5)'; x.shadowBlur=gp*1.3+1; x.shadowOffsetY=gp*.3; x.fillStyle=m.c; x.fillRect(X,Y,w,hh); x.restore();
+    x.save(); x.beginPath(); x.rect(X,Y,w,hh); x.clip();
+    const L1=vert?hh:w, L2=vert?w:hh, sw=Math.min(S,L1), sh=Math.min(S,L2), sx=rng()*(S-sw), sy=rng()*(S-sh);
+    if(vert){ x.translate(X+w/2,Y+hh/2); x.rotate(Math.PI/2); x.drawImage(slab,sx,sy,sw,sh,-hh/2,-w/2,hh,w); }
+    else x.drawImage(slab,sx,sy,sw,sh,X,Y,w,hh);
+    x.restore(); x.save(); x.beginPath(); x.rect(X,Y,w,hh); x.clip();
+    const j=(rng()-.5)*(m.j||.05); x.fillStyle=j>0?'rgba(255,255,255,'+j+')':'rgba(0,0,0,'+(-j)+')'; x.fillRect(X,Y,w,hh);
+    if(m.gl){ const g=x.createLinearGradient(X,Y,X+w*.8,Y+hh*.9); g.addColorStop(0,'rgba(255,255,255,.22)'); g.addColorStop(.45,'rgba(255,255,255,0)'); g.addColorStop(1,'rgba(0,0,0,.07)'); x.fillStyle=g; x.fillRect(X,Y,w,hh); }
+    x.restore();
+    const lw=Math.max(1,ppm/320); x.lineWidth=lw; x.strokeStyle=m.gl?'rgba(255,255,255,.4)':'rgba(255,255,255,.16)'; x.beginPath(); x.moveTo(X+lw/2,Y+hh); x.lineTo(X+lw/2,Y+lw/2); x.lineTo(X+w,Y+lw/2); x.stroke();
+    x.strokeStyle='rgba(0,0,0,.26)'; x.beginPath(); x.moveTo(X+w-lw/2,Y); x.lineTo(X+w-lw/2,Y+hh-lw/2); x.lineTo(X,Y+hh-lw/2); x.stroke();
+  };
+  const D=(BW_DIM[lay]||BW_DIM.grid)[sz]||.3;
+  if(lay==='diag'){ x.save(); x.translate(W/2,H/2); x.rotate(-Math.PI/4); const ts=D*ppm, R=Math.hypot(W,H)/2+ts, n=Math.ceil(R/ts);
+    for(let j=-n;j<=n;j++) for(let i=-n;i<=n;i++) tile(i*ts-ts/2,j*ts-ts/2,ts,ts,false,false); x.restore(); }
+  else if(lay==='herring'){ const L=wood?5:2, q=(wood?D*1.3:D)*ppm, Wq=W/q, Hq=H/q, off=wood?[-5,-4]:[-3,-2], a0=2*L, b0=-(2*L-1);
+    for(let j=-(L+3);j<=Hq+L+3;j++){ const base=b0*j, i0=Math.ceil((-3*L-base)/a0), i1=Math.floor((Wq+3*L-base)/a0);
+      for(let i=i0;i<=i1;i++){ const ox=i*a0+base, oy=j; tile(ox*q,oy*q,L*q,q,false,true); tile((ox+off[0])*q,(oy+off[1])*q,q,L*q,true,true); } } }
+  else { let tw,th,shift,rowsJ=false;
+    if(wood){ th=D*1.4*ppm; tw=th*6; } else if(lay==='grid'){ tw=th=D*ppm; } else { th=D*ppm; tw=th*2; }
+    for(let r=0,y=0;y<H+th;r++,y+=th){ const o=wood?(lay==='stack'?0:rng()*tw):(lay==='brick'?(r%2)*tw/2:0);
+      for(let xx=-o-(o?tw:0);xx<W+tw;xx+=tw) tile(xx,y,tw,th,false,true); } }
+  return c;
 }
-function bwScene(st,uid){
-  const pid=s=>uid+s, P=BW_SURF.map(([s])=>{ const d=st[s]; return bwPat(pid(s),BW_MAT.find(m=>m.id===d.m)||BW_MAT[0],d.l,d.s,d.g,d.w); }).join('');
-  const lab=(s,x,y,t)=>'<g data-s="'+s+'" style="cursor:pointer"><rect x="'+x+'" y="'+y+'" width="'+(t.length*10.5+22)+'" height="30" rx="3" fill="#10222B" opacity=".88"/><text x="'+(x+11)+'" y="'+(y+20)+'" font-size="16" font-weight="700" fill="#fff" font-family="Manrope,sans-serif">'+t+'</text></g>';
-  const sel=(s,x,y,w,hh)=>st.cur===s?'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+hh+'" fill="none" stroke="#C25B33" stroke-width="3" stroke-dasharray="9 6" pointer-events="none"/>':'';
-  return '<defs>'+P+'<linearGradient id="'+uid+'fs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".5" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".1"/></linearGradient>'
-    +'<linearGradient id="'+uid+'ws" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".2"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".1"/></linearGradient>'
-    +'<linearGradient id="'+uid+'gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".4" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient></defs>'
-    +'<rect width="720" height="460" fill="#E3E8EA"/><rect x="330" y="0" width="390" height="338" fill="#D6DEE2"/>'
-    /* shower wall */
-    +'<g data-s="wall" style="cursor:pointer"><rect x="40" y="34" width="250" height="298" fill="url(#'+pid('wall')+')"/><rect x="40" y="34" width="250" height="298" fill="url(#'+uid+'ws)"/>'
-    +'<rect x="104" y="128" width="96" height="66" fill="#000" opacity=".2"/><rect x="108" y="132" width="88" height="58" fill="#000" opacity=".12"/><rect x="104" y="192" width="96" height="4" fill="#fff" opacity=".5"/><rect x="104" y="126" width="96" height="3" fill="#000" opacity=".25"/></g>'
-    +'<path d="M96 34v36q0 10 12 10h14" stroke="#C5CDD2" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="136" cy="84" rx="24" ry="6" fill="#D5DCE0"/><ellipse cx="136" cy="82" rx="24" ry="5" fill="#EEF2F4"/>'
-    +'<g opacity=".7" stroke="#fff" stroke-width="1.4" stroke-linecap="round"><path d="M122 92v18M136 92v22M150 92v18"/></g>'
-    +'<rect x="290" y="34" width="46" height="298" fill="url(#'+uid+'gl)"/><rect x="288" y="34" width="4" height="298" fill="#AEB8BE"/><rect x="334" y="34" width="4" height="298" fill="#AEB8BE"/><rect x="326" y="170" width="5" height="60" rx="2" fill="#98A3AA"/>'
-    /* vanity wall */
-    +'<rect x="400" y="40" width="220" height="92" fill="#F4F8F9" stroke="#AEB8BE" stroke-width="5"/><path d="M430 128l56-84M470 128l70-84" stroke="#fff" stroke-width="10" opacity=".55"/>'
-    +'<g data-s="back" style="cursor:pointer"><rect x="360" y="150" width="320" height="98" fill="url(#'+pid('back')+')"/><rect x="360" y="150" width="320" height="98" fill="#000" opacity=".05"/></g>'
-    +'<rect x="350" y="246" width="340" height="14" fill="#F8F9F9"/><rect x="350" y="260" width="340" height="6" fill="#000" opacity=".16"/>'
-    +'<path d="M508 246h42v-6q-21-7-42 0z" fill="#EEF1F2" stroke="#C5CDD2"/><rect x="524" y="196" width="10" height="46" fill="#C9D1D5"/><path d="M529 200h30q6 0 6 6v4" stroke="#C9D1D5" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="508" cy="214" r="5" fill="#B7C0C6"/><circle cx="550" cy="214" r="5" fill="#B7C0C6"/>'
-    +'<rect x="358" y="266" width="324" height="68" fill="#3C5560"/><rect x="368" y="274" width="146" height="52" fill="none" stroke="#6C8792" stroke-width="2"/><rect x="526" y="274" width="146" height="52" fill="none" stroke="#6C8792" stroke-width="2"/><circle cx="500" cy="300" r="4" fill="#DDE4E7"/><circle cx="540" cy="300" r="4" fill="#DDE4E7"/>'
-    /* floor */
-    +'<g data-s="floor" style="cursor:pointer"><g transform="translate(0 338) scale(1 .46)"><rect width="720" height="266" fill="url(#'+pid('floor')+')"/></g><rect x="0" y="338" width="720" height="122" fill="url(#'+uid+'fs)"/></g>'
-    +'<rect x="0" y="330" width="720" height="9" fill="#F8F9F9"/><rect x="0" y="339" width="720" height="3" fill="#000" opacity=".18"/>'
-    +sel('wall',40,34,250,298)+sel('back',360,150,320,98)+sel('floor',0,342,720,118)
-    +lab('wall',50,44,'Shower wall')+lab('back',370,160,'Backsplash')+lab('floor',12,420,'Floor');
+const BW_TEXC={};
+function bwTex(kind,d,Wm,Hm,ppm){ const key=kind+JSON.stringify(d)+ppm; if(BW_TEXC[key]) return BW_TEXC[key]; const keys=Object.keys(BW_TEXC); if(keys.length>14) delete BW_TEXC[keys[0]];
+  return (BW_TEXC[key]=bwBuildTex(bwMat(d.m),d.l,d.s,d.g,d.w,Wm,Hm,ppm,kind.length)); }
+const BW_G={ch:1.35,RW:1.5,RH:2.4,Zb:4,Zn:1.6,f:520,cx:480,cy:276};
+function bwGeo(k){ const g=BW_G, f=g.f*k, cx=g.cx*k, cy=g.cy*k, P=(X,Y,Z)=>[cx+f*X/Z,cy-f*(Y-g.ch)/Z]; return {k,f,cx,cy,P,g}; }
+let BW_NOISE=null;
+function bwNoise(){ if(BW_NOISE) return BW_NOISE; const c=bwCv(160,160), x=c.getContext('2d'), im=x.createImageData(160,160), r=bwRng(4242); for(let i=0;i<160*160;i++){ const v=Math.round(r()*255); im.data[i*4]=im.data[i*4+1]=im.data[i*4+2]=v; im.data[i*4+3]=255; } x.putImageData(im,0,0); return (BW_NOISE=c); }
+function bwPoly(ctx,pts){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath(); }
+function bwIn(pts,x,y){ let o=false; for(let i=0,j=pts.length-1;i<pts.length;j=i++){ if(((pts[i][1]>y)!==(pts[j][1]>y))&&(x<(pts[j][0]-pts[i][0])*(y-pts[i][1])/(pts[j][1]-pts[i][1])+pts[i][0])) o=!o; } return o; }
+function bwZones(){ const G=bwGeo(1), P=G.P, g=G.g, Zn=1.3;
+  return {wall:[[P(-g.RW,g.RH,g.Zb),P(-g.RW,0,g.Zb),P(-g.RW,0,Zn),P(-g.RW,g.RH,Zn)],[P(-g.RW,g.RH,g.Zb),P(-.55,g.RH,g.Zb),P(-.55,0,g.Zb),P(-g.RW,0,g.Zb)]],
+    back:[[P(-.4,1.5,g.Zb),P(1.4,1.5,g.Zb),P(1.4,.92,g.Zb),P(-.4,.92,g.Zb)]],
+    floor:[[P(-g.RW,0,g.Zb),P(g.RW,0,g.Zb),P(g.RW,0,Zn),P(-g.RW,0,Zn)]]}; }
+function bwRoom(cv,D,light,T){
+  const k=cv.width/960, W=cv.width, H=cv.height, ctx=cv.getContext('2d'), G=bwGeo(k), P=G.P, f=G.f, cx=G.cx, cy=G.cy, g=G.g, ch=g.ch, RW=g.RW, RH=g.RH, Zb=g.Zb, Zn=g.Zn;
+  const fm=bwMat(D.floor.m), wm=bwMat(D.wall.m), bm=bwMat(D.back.m), warm=light==='warm';
+  ctx.setTransform(1,0,0,1,0,0); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high'; ctx.clearRect(0,0,W,H);
+  const B0=P(-RW,RH,Zb), B1=P(RW,0,Zb), bx0=B0[0], by0=B0[1], bx1=B1[0], by1=B1[1], Z1=1.3;
+  const lin=(x0,y0,x1,y1,stops)=>{ const gr=ctx.createLinearGradient(x0,y0,x1,y1); stops.forEach(s=>gr.addColorStop(s[0],s[1])); return gr; };
+  const rad=(x0,y0,r0,x1,y1,r1,stops)=>{ const gr=ctx.createRadialGradient(x0,y0,r0,x1,y1,r1); stops.forEach(s=>gr.addColorStop(s[0],s[1])); return gr; };
+  const paint=warm?['#D8D2CC','#E4DED8']:['#D3DBDF','#E1E8EB'];
+  /* ceiling */
+  bwPoly(ctx,[P(-RW,RH,Zb),P(RW,RH,Zb),P(RW,RH,Z1),P(-RW,RH,Z1)]); ctx.fillStyle=lin(0,0,0,by0,[[0,'#C9D1D5'],[1,'#EEF2F4']]); ctx.fill();
+  [[-.7,2.5],[.7,2.5],[-.7,3.4],[.7,3.4]].forEach(a=>{ const c=P(a[0],RH,a[1]), rx=.09*f/a[1], gl=ctx.createRadialGradient(c[0],c[1],0,c[0],c[1],rx*5); gl.addColorStop(0,warm?'rgba(255,225,170,.55)':'rgba(255,255,255,.4)'); gl.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=gl; ctx.fillRect(c[0]-rx*5,c[1]-rx*5,rx*10,rx*10); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.ellipse(c[0],c[1],rx,rx*.3,0,0,7); ctx.fill(); });
+  /* right wall (paint, window) */
+  bwPoly(ctx,[P(RW,RH,Zb),P(RW,RH,Z1),P(RW,0,Z1),P(RW,0,Zb)]); ctx.fillStyle=lin(W,0,bx1,0,[[0,paint[0]],[1,paint[1]]]); ctx.fill();
+  const win=[P(RW,2.15,3.5),P(RW,2.15,2.6),P(RW,1.2,2.6),P(RW,1.2,3.5)];
+  bwPoly(ctx,win); ctx.fillStyle='#F8FBFC'; ctx.fill(); bwPoly(ctx,win); ctx.fillStyle=lin(win[0][0],win[0][1],win[2][0],win[2][1],[[0,warm?'#2B3A52':'#EAF6FD'],[1,warm?'#1B2538':'#BFE0F2']]); ctx.fill();
+  ctx.strokeStyle='#F4F6F7'; ctx.lineWidth=5*k; bwPoly(ctx,win); ctx.stroke(); ctx.lineWidth=2.5*k; ctx.beginPath(); const mp=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2], t1=mp(win[0],win[1]), t2=mp(win[3],win[2]); ctx.moveTo(t1[0],t1[1]); ctx.lineTo(t2[0],t2[1]); ctx.stroke();
+  bwPoly(ctx,[P(RW,.12,Zb),P(RW,.12,Z1),P(RW,0,Z1),P(RW,0,Zb)]); ctx.fillStyle='#F2F4F5'; ctx.fill();
+  /* back wall paint */
+  ctx.fillStyle=lin(0,by0,0,by1,[[0,paint[1]],[1,paint[0]]]); ctx.fillRect(bx0,by0,bx1-bx0,by1-by0);
+  /* shower wall: left wall columns */
+  const wt=T.wall, ppmW=wt.width/3.35, thW=wt.height;
+  for(let x=0;x<bx0;x++){ const Z=f*RW/(cx-x-.5), top=cy-f*(RH-ch)/Z, bot=cy+f*ch/Z, s=Math.max(0,Z-Zn), dz=Z*Z/(f*RW), sw=Math.max(1,dz*ppmW), sx=Math.min(Math.max(0,s*ppmW-sw/2),wt.width-sw); ctx.drawImage(wt,sx,0,sw,thW,x,top,1.4,bot-top); }
+  const xs=P(-.55,0,Zb)[0]; ctx.drawImage(wt,2.4*ppmW,0,.95*ppmW,thW,bx0,by0,xs-bx0,by1-by0);
+  /* backsplash */
+  const bt=T.back, bp0=P(-.4,1.5,Zb), bp1=P(1.4,.92,Zb); ctx.drawImage(bt,0,0,bt.width,bt.height,bp0[0],bp0[1],bp1[0]-bp0[0],bp1[1]-bp0[1]);
+  ctx.fillStyle='rgba(0,0,0,.12)'; ctx.fillRect(bp0[0],bp0[1],bp1[0]-bp0[0],2.5*k);
+  /* floor scanlines */
+  const ft=T.floor, ppmF=ft.width/3, y0=Math.ceil(by1);
+  for(let y=y0;y<H;y++){ const Z=f*ch/(y+.5-cy), xl=Math.max(0,cx-f*RW/Z), xr=Math.min(W,cx+f*RW/Z), dz=Z*Z/(f*ch), sh=Math.max(1,dz*ppmF), v=Math.min(Math.max(0,(Zb-Z)*ppmF-sh/2),ft.height-sh);
+    const u0=Math.max(0,((xl-cx)*Z/f+RW)*ppmF), u1=Math.min(ft.width,((xr-cx)*Z/f+RW)*ppmF); if(u1>u0&&xr>xl) ctx.drawImage(ft,u0,v,u1-u0,sh,xl,y,xr-xl,1.4); }
+  /* niche + shower fittings (frontal at back wall) */
+  { const n0=P(-1.4,1.72,Zb), n1=P(-1.08,1.22,Zb), nw=n1[0]-n0[0], nh=n1[1]-n0[1];
+    ctx.save(); ctx.beginPath(); ctx.rect(n0[0],n0[1],nw,nh); ctx.clip(); ctx.drawImage(wt,(2.4+.1)*ppmW,0,.32*ppmW,thW*.2,n0[0],n0[1],nw,nh); ctx.fillStyle='rgba(0,0,0,.4)'; ctx.fillRect(n0[0],n0[1],nw,nh);
+    ctx.fillStyle=lin(0,n0[1],0,n0[1]+nh*.45,[[0,'rgba(0,0,0,.6)'],[1,'rgba(0,0,0,0)']]); ctx.fillRect(n0[0],n0[1],nw,nh); ctx.fillStyle=lin(n0[0],0,n0[0]+nw*.3,0,[[0,'rgba(0,0,0,.5)'],[1,'rgba(0,0,0,0)']]); ctx.fillRect(n0[0],n0[1],nw,nh); ctx.restore();
+    ctx.fillStyle='rgba(255,255,255,.6)'; ctx.fillRect(n0[0]-1*k,n1[1]-1*k,nw+2*k,2.5*k); ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=1.2*k; ctx.strokeRect(n0[0],n0[1],nw,nh);
+    [[.22,.1,'#F4F6F7'],[.6,.075,'#5FA5AC']].forEach(b=>{ const bw=nw*.2, bh=nh*(.4+b[1]*3), bx=n0[0]+nw*b[0], by=n1[1]-bh-1.5*k; ctx.fillStyle=b[2]; ctx.beginPath(); ctx.roundRect?ctx.roundRect(bx,by,bw,bh,3*k):ctx.rect(bx,by,bw,bh); ctx.fill(); ctx.fillStyle='#8B969C'; ctx.fillRect(bx+bw*.3,by-5*k,bw*.4,5*k); ctx.fillStyle='rgba(255,255,255,.4)'; ctx.fillRect(bx+bw*.15,by+3*k,bw*.15,bh*.6); }); }
+  { const v=P(-1,1.12,Zb), r=.05*f/Zb, gr=rad(v[0]-r*.3,v[1]-r*.3,r*.1,v[0],v[1],r,[[0,'#fff'],[.6,'#C5CED3'],[1,'#8F9BA1']]); ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(v[0],v[1],r,0,7); ctx.fill(); ctx.fillStyle='#98A4AA'; ctx.fillRect(v[0]-r*.15,v[1]-r*1.5,r*.3,r*3); }
+  { const a=P(-1,2.08,3.98), b=P(-1,2.08,3.62), hd=P(-1,2.04,3.6), rx=.1*f/3.6; ctx.strokeStyle='#C7D0D5'; ctx.lineWidth=.028*f/3.8; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); ctx.lineCap='butt';
+    ctx.fillStyle=rad(hd[0]-rx*.3,hd[1]-rx*.1,rx*.1,hd[0],hd[1],rx,[[0,'#fff'],[1,'#9BA7AD']]); ctx.beginPath(); ctx.ellipse(hd[0],hd[1],rx,rx*.28,0,0,7); ctx.fill(); }
+  /* mirror and light bar */
+  { const m0=P(0,2.18,Zb), m1=P(1,1.58,Zb), mw=m1[0]-m0[0], mh=m1[1]-m0[1]; ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(m0[0]-2*k,m0[1]+3*k,mw+4*k,mh+4*k);
+    ctx.fillStyle=lin(m0[0],m0[1],m1[0],m1[1],[[0,warm?'#E8DFD3':'#E9F3F7'],[.55,warm?'#CFC6BC':'#C6D6DD'],[1,warm?'#B9B0A7':'#AFC2CB']]); ctx.fillRect(m0[0],m0[1],mw,mh);
+    ctx.fillStyle='rgba(255,255,255,.38)'; bwPoly(ctx,[[m0[0]+mw*.12,m0[1]],[m0[0]+mw*.3,m0[1]],[m0[0]+mw*.1,m1[1]],[m0[0]-mw*.08,m1[1]]]); ctx.fill(); bwPoly(ctx,[[m0[0]+mw*.4,m0[1]],[m0[0]+mw*.46,m0[1]],[m0[0]+mw*.26,m1[1]],[m0[0]+mw*.2,m1[1]]]); ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.75)'; ctx.lineWidth=1.6*k; ctx.strokeRect(m0[0]+.8*k,m0[1]+.8*k,mw-1.6*k,mh-1.6*k);
+    const l0=P(.12,2.3,Zb), l1=P(.88,2.25,Zb); ctx.fillStyle=lin(0,l1[1],0,l1[1]+60*k,[[0,warm?'rgba(255,214,150,.55)':'rgba(255,255,255,.4)'],[1,'rgba(255,255,255,0)']]); ctx.fillRect(l0[0],l1[1],l1[0]-l0[0],60*k); ctx.fillStyle='#D5DCE0'; ctx.fillRect(l0[0],l0[1],l1[0]-l0[0],l1[1]-l0[1]); ctx.fillStyle='#FFF7E0'; ctx.fillRect(l0[0]+2*k,l1[1]-3*k,l1[0]-l0[0]-4*k,3*k); }
+  /* reflections on floor: back wall + shower wall */
+  const gloss=fm.gl?.3:(fm.k==='wood'?.12:.06);
+  const reflect=(sx,sy,sw,sh,axis,alpha,fade)=>{ if(sh<2||sw<2) return; const rc=bwCv(sw,sh), rx=rc.getContext('2d'); rx.translate(0,sh); rx.scale(1,-1); rx.drawImage(cv,sx,sy,sw,sh,0,0,sw,sh); rx.setTransform(1,0,0,1,0,0); rx.globalCompositeOperation='destination-in'; const gr=rx.createLinearGradient(0,0,0,sh); gr.addColorStop(0,'rgba(0,0,0,1)'); gr.addColorStop(Math.min(1,fade/sh),'rgba(0,0,0,0)'); gr.addColorStop(1,'rgba(0,0,0,0)'); rx.fillStyle=gr; rx.fillRect(0,0,sw,sh);
+    ctx.save(); bwPoly(ctx,[P(-RW,0,Zb),P(RW,0,Zb),P(RW,0,Z1),P(-RW,0,Z1)]); ctx.clip(); ctx.globalAlpha=alpha; ctx.drawImage(rc,sx,axis); ctx.restore(); };
+  reflect(Math.round(bx0),Math.round(by0),Math.round(bx1-bx0),Math.round(by1-by0),by1,gloss,150*k);
+  /* vanity cabinet and counter */
+  { const Zf=3.45, c0=P(-.4,.88,Zf), c1=P(1.4,.1,Zf), kk=P(1.4,0,3.55), tk0=P(-.4,.1,3.55);
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=16*k; ctx.shadowOffsetY=9*k; ctx.fillStyle='#2B424C'; ctx.fillRect(c0[0],c0[1],c1[0]-c0[0],c1[1]-c0[1]); ctx.restore();
+    ctx.fillStyle='#1B2A31'; ctx.fillRect(c0[0]+3*k,c1[1],c1[0]-c0[0]-6*k,kk[1]-c1[1]);
+    ctx.fillStyle=lin(0,c0[1],0,c1[1],[[0,'#41606C'],[1,'#2F4852']]); ctx.fillRect(c0[0],c0[1],c1[0]-c0[0],c1[1]-c0[1]);
+    const cw=c1[0]-c0[0], ch2=c1[1]-c0[1], dw=cw/2; for(let i=0;i<2;i++){ const dx=c0[0]+i*dw; ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.lineWidth=1.6*k; ctx.strokeRect(dx+1*k,c0[1]+1*k,dw-2*k,ch2-2*k); ctx.strokeStyle='rgba(255,255,255,.14)'; ctx.lineWidth=1.2*k; ctx.strokeRect(dx+dw*.08,c0[1]+ch2*.1,dw*.84,ch2*.8);
+      ctx.fillStyle='#D9E0E4'; const hx=i?dx+dw*.12:dx+dw*.88; ctx.fillRect(hx-1.5*k,c0[1]+ch2*.12,3*k,ch2*.22); }
+    ctx.fillStyle=lin(c0[0],0,c1[0],0,[[0,'rgba(0,0,0,.25)'],[.5,'rgba(0,0,0,0)'],[1,'rgba(0,0,0,.3)']]); ctx.fillRect(c0[0],c0[1],cw,ch2);
+    const ct=[P(-.42,.92,Zb),P(1.42,.92,Zb),P(1.42,.92,3.4),P(-.42,.92,3.4)]; bwPoly(ctx,ct); ctx.fillStyle=lin(0,ct[0][1],0,ct[2][1],[[0,'#E9EDEF'],[1,'#FAFBFB']]); ctx.fill();
+    const ce=P(-.42,.92,3.4), cf=P(1.42,.88,3.4); ctx.fillStyle='#DDE3E6'; ctx.fillRect(ce[0],ce[1],cf[0]-ce[0],cf[1]-ce[1]); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillRect(ce[0],ce[1],cf[0]-ce[0],1.2*k);
+    const sp=[]; for(let t=0;t<40;t++){ const a=t/40*6.2832; sp.push(P(.5+.36*Math.cos(a),.92,3.74+.2*Math.sin(a))); } bwPoly(ctx,sp); ctx.fillStyle=lin(0,sp[10][1],0,sp[30][1],[[0,'#B9C3C8'],[1,'#EDF1F2']]); ctx.fill(); ctx.strokeStyle='rgba(0,0,0,.25)'; ctx.lineWidth=1.4*k; ctx.stroke();
+    const dn=P(.5,.92,3.78); ctx.fillStyle='#8F9BA1'; ctx.beginPath(); ctx.ellipse(dn[0],dn[1],4*k,1.6*k,0,0,7); ctx.fill();
+    const fb=P(.5,.92,3.93), ft2=P(.5,1.14,3.93), fs=P(.5,1.12,3.72); ctx.strokeStyle='#BAC4C9'; ctx.lineCap='round'; ctx.lineWidth=.03*f/3.9; ctx.beginPath(); ctx.moveTo(fb[0],fb[1]); ctx.lineTo(ft2[0],ft2[1]); ctx.lineTo(fs[0],fs[1]); ctx.stroke(); ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=1.2*k; ctx.beginPath(); ctx.moveTo(fb[0]-1.5*k,fb[1]); ctx.lineTo(ft2[0]-1.5*k,ft2[1]); ctx.stroke(); ctx.lineCap='butt';
+    [.38,.62].forEach(X=>{ const h0=P(X,.92,3.9), h1=P(X,1.0,3.9); ctx.fillStyle='#C9D2D7'; ctx.fillRect(h0[0]-3*k,h1[1],6*k,h0[1]-h1[1]); });
+    { const so=P(1.17,.92,3.8), so2=P(1.17,1.1,3.8), r=.035*f/3.8; ctx.fillStyle='#F4F6F6'; ctx.beginPath(); ctx.roundRect?ctx.roundRect(so[0]-r,so2[1],r*2,so[1]-so2[1],r*.6):ctx.rect(so[0]-r,so2[1],r*2,so[1]-so2[1]); ctx.fill(); ctx.fillStyle='#98A4AA'; ctx.fillRect(so[0]-r*.3,so2[1]-6*k,r*.6,6*k); }
+    { const pl=P(-.22,.92,3.8), pr=.05*f/3.8; ctx.fillStyle='#C25B33'; ctx.fillRect(pl[0]-pr,pl[1]-pr*1.2,pr*2,pr*1.2); ['#3F7A4A','#4F9158','#2E6A3C'].forEach((c,i)=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.ellipse(pl[0]+(i-1)*pr*.6,pl[1]-pr*(2+i*.3),pr*.55,pr*1.1,(i-1)*.5,0,7); ctx.fill(); }); }
+    reflect(Math.round(c0[0]-8*k),Math.round(c0[1]-70*k),Math.round(cw+16*k),Math.round(c1[1]-c0[1]+70*k),c1[1],gloss*.8,110*k); }
+  /* shower glass */
+  { const gl=[P(-.55,2.05,Zb),P(-.55,2.05,2.5),P(-.55,0,2.5),P(-.55,0,Zb)]; bwPoly(ctx,gl); ctx.fillStyle=lin(gl[0][0],0,gl[1][0],0,[[0,'rgba(225,240,246,.16)'],[1,'rgba(225,240,246,.07)']]); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.2)'; bwPoly(ctx,[P(-.55,1.9,3.3),P(-.55,1.9,3.0),P(-.55,.4,3.0),P(-.55,.4,3.3)]); ctx.fill(); bwPoly(ctx,[P(-.55,1.9,2.85),P(-.55,1.9,2.78),P(-.55,.4,2.78),P(-.55,.4,2.85)]); ctx.fill();
+    ctx.strokeStyle='#C4CED3'; ctx.lineWidth=3.2*k; ctx.beginPath(); ctx.moveTo(gl[1][0],gl[1][1]); ctx.lineTo(gl[2][0],gl[2][1]); ctx.moveTo(gl[0][0],gl[0][1]); ctx.lineTo(gl[1][0],gl[1][1]); ctx.stroke(); ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=1*k; ctx.beginPath(); ctx.moveTo(gl[1][0]+1.5*k,gl[1][1]); ctx.lineTo(gl[2][0]+1.5*k,gl[2][1]); ctx.stroke();
+    const h0=P(-.55,1.5,2.62), h1=P(-.55,.95,2.62); ctx.strokeStyle='#DCE3E6'; ctx.lineWidth=4*k; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(h0[0],h0[1]); ctx.lineTo(h1[0],h1[1]); ctx.stroke(); ctx.lineCap='butt'; }
+  /* lighting: shading on tile walls, corners, floor */
+  ctx.save(); bwPoly(ctx,[P(-RW,RH,Zb),P(-RW,0,Zb),P(-RW,0,Z1),P(-RW,RH,Z1)]); ctx.clip(); ctx.fillStyle=lin(0,0,bx0,0,[[0,'rgba(0,0,0,.22)'],[1,'rgba(0,0,0,.03)']]); ctx.fillRect(0,0,bx0+2,H); ctx.fillStyle=lin(0,by0-120*k,0,by0+40*k,[[0,'rgba(0,0,0,.2)'],[1,'rgba(0,0,0,0)']]); ctx.fillRect(0,0,bx0+2,by0+40*k); ctx.restore();
+  ctx.fillStyle=lin(bx0-2*k,0,bx0+26*k,0,[[0,'rgba(0,0,0,.22)'],[1,'rgba(0,0,0,0)']]); ctx.fillRect(bx0,by0,30*k,by1-by0);
+  ctx.fillStyle=lin(0,by0,0,by0+40*k,[[0,'rgba(0,0,0,.2)'],[1,'rgba(0,0,0,0)']]); ctx.fillRect(bx0,by0,bx1-bx0,40*k);
+  ctx.save(); bwPoly(ctx,[P(RW,RH,Zb),P(RW,RH,Z1),P(RW,0,Z1),P(RW,0,Zb)]); ctx.clip(); ctx.fillStyle=lin(bx1,0,W,0,[[0,'rgba(0,0,0,.05)'],[1,'rgba(0,0,0,.26)']]); ctx.fillRect(bx1,0,W-bx1,H); ctx.restore();
+  ctx.save(); bwPoly(ctx,[P(-RW,0,Zb),P(RW,0,Zb),P(RW,0,Z1),P(-RW,0,Z1)]); ctx.clip();
+  ctx.fillStyle=lin(0,by1,0,H,[[0,'rgba(0,0,0,.28)'],[.35,'rgba(0,0,0,.05)'],[1,'rgba(0,0,0,0)']]); ctx.fillRect(0,by1,W,H-by1);
+  ctx.fillStyle=lin(0,0,bx0+(0-bx0)*0,0,[[0,'rgba(0,0,0,0)'],[1,'rgba(0,0,0,0)']]);
+  ctx.fillStyle=rad(cx,by1+(H-by1)*.55,0,cx,by1+(H-by1)*.55,W*.62,[[0,warm?'rgba(255,232,190,.22)':'rgba(255,255,255,.2)'],[1,'rgba(255,255,255,0)']]); ctx.globalCompositeOperation='screen'; ctx.fillRect(0,by1,W,H-by1); ctx.globalCompositeOperation='source-over';
+  if(!warm){ ctx.globalCompositeOperation='screen'; const wp=[P(RW,0,2.5),P(RW,0,3.5),P(.1,0,3.95),P(.1,0,3.0)]; bwPoly(ctx,wp); ctx.fillStyle=rad(P(RW,0,3)[0],P(RW,0,3)[1],0,P(RW,0,3)[0],P(RW,0,3)[1],f*1.2/3,[[0,'rgba(255,255,255,.3)'],[1,'rgba(255,255,255,0)']]); ctx.fill(); ctx.globalCompositeOperation='source-over'; }
+  ctx.restore();
+  /* light colour, vignette, grain */
+  if(warm){ ctx.globalCompositeOperation='multiply'; ctx.fillStyle='rgba(255,208,150,.5)'; ctx.fillRect(0,0,W,H); ctx.globalCompositeOperation='source-over'; }
+  else { ctx.globalCompositeOperation='screen'; ctx.fillStyle='rgba(215,232,255,.07)'; ctx.fillRect(0,0,W,H); ctx.globalCompositeOperation='source-over'; }
+  ctx.fillStyle=rad(cx,cy*.9,H*.35,cx,cy*.9,W*.78,[[0,'rgba(0,0,0,0)'],[1,'rgba(0,0,0,.3)']]); ctx.fillRect(0,0,W,H);
+  ctx.globalCompositeOperation='overlay'; ctx.globalAlpha=.06; ctx.fillStyle=ctx.createPattern(bwNoise(),'repeat'); ctx.fillRect(0,0,W,H); ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over';
 }
+function bwClose(cv,tex,light){ const ctx=cv.getContext('2d'), W=cv.width, H=cv.height; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,W,H); ctx.imageSmoothingQuality='high'; ctx.drawImage(tex,0,0,tex.width,tex.height,0,0,W,H);
+  const g=ctx.createRadialGradient(W*.5,H*.45,H*.25,W*.5,H*.5,W*.75); g.addColorStop(0,'rgba(255,255,255,.08)'); g.addColorStop(1,'rgba(0,0,0,.3)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  if(light==='warm'){ ctx.globalCompositeOperation='multiply'; ctx.fillStyle='rgba(255,208,150,.5)'; ctx.fillRect(0,0,W,H); ctx.globalCompositeOperation='source-over'; } }
+
 const BW_PRESETS=[
   ['Spa',{wall:{m:'carrara',l:'brick',s:'m',g:'light',w:'fine'},back:{m:'carrara',l:'brick',s:'s',g:'light',w:'fine'},floor:{m:'slate',l:'grid',s:'m',g:'char',w:'fine'}}],
   ['Modern dark',{wall:{m:'black',l:'stack',s:'m',g:'char',w:'fine'},back:{m:'slate',l:'stack',s:'m',g:'char',w:'fine'},floor:{m:'concrete',l:'grid',s:'l',g:'light',w:'fine'}}],
@@ -7450,9 +7569,10 @@ function becwar(C){
 
   /* hero swatch board */
   const boardCells=[['carrara','herring','m'],['navy','brick','m'],['terra','grid','m'],['oak','herring','m'],['sage','brick','s'],['slate','diag','m'],['white','stack','m'],['mist','grid','s'],['black','brick','m']];
-  const board=h('div',{class:'bw-board','aria-hidden':'true'});
-  { let defs='', cells=''; boardCells.forEach((c,i)=>{ const m=bwMat(c[0]), cx=(i%3)*200, cy=Math.floor(i/3)*150; defs+=bwPat('hb'+i,m,c[1],c[2],i%2?'light':'char','fine'); cells+='<g class="bw-bc" style="animation-delay:'+(i*70)+'ms"><rect x="'+(cx+4)+'" y="'+(cy+4)+'" width="192" height="142" fill="url(#hb'+i+')"/><rect x="'+(cx+4)+'" y="'+(cy+120)+'" width="192" height="26" fill="#10222B" opacity=".82"/><text x="'+(cx+12)+'" y="'+(cy+137)+'" font-size="11" font-weight="700" fill="#fff" font-family="Manrope,sans-serif">'+m.n+' / '+bwLay(c[1])+'</text></g>'; });
-    board.innerHTML='<svg viewBox="0 0 600 450" role="img" aria-label="Tile swatch board with nine sample finishes and layouts"><defs>'+defs+'</defs>'+cells+'</svg>'; }
+  const bcv=h('canvas',{role:'img','aria-label':'Tile swatch board with nine sample finishes and layouts'}), board=h('div',{class:'bw-board'},bcv);
+  setTimeout(()=>{ const dpr=Math.min(window.devicePixelRatio||1,2); bcv.width=600*dpr; bcv.height=450*dpr; const bx=bcv.getContext('2d'); bx.scale(dpr,dpr); bx.fillStyle='#E7ECEE'; bx.fillRect(0,0,600,450);
+    boardCells.forEach((c,i)=>setTimeout(()=>{ if(!bcv.isConnected) return; const m=bwMat(c[0]), X=(i%3)*200, Y=Math.floor(i/3)*150, tx=bwBuildTex(m,c[1],c[2],i%2?'light':'char','fine',.6,.45,560,i+1);
+      bx.save(); bx.beginPath(); bx.rect(X+4,Y+4,192,142); bx.clip(); bx.drawImage(tx,0,0,tx.width,tx.height,X+4,Y+4,192,142); bx.fillStyle='rgba(16,34,43,.86)'; bx.fillRect(X+4,Y+120,192,26); bx.fillStyle='#fff'; bx.font='700 11px Manrope,sans-serif'; bx.fillText(m.n+' / '+bwLay(c[1]),X+12,Y+137); bx.restore(); },i*110)); },80);
   const hero=h('section',{class:'bw-hero',id:'w-top'},h('div',{class:'bw-wrap bw-hero-g'},
     h('div',{class:'bw-hero-t'},
       h('span',{class:'bw-kick'},C.cat||'Tile store and installation'),
@@ -7464,30 +7584,48 @@ function becwar(C){
 
   /* ---------- visualizer ---------- */
   const D={cur:'wall',wall:{m:'carrara',l:'brick',s:'m',g:'light',w:'fine'},back:{m:'white',l:'brick',s:'s',g:'light',w:'fine'},floor:{m:'slate',l:'grid',s:'m',g:'char',w:'fine'},touched:false};
-  const sceneBox=h('div',{class:'bw-scene'}), controls=h('div',{class:'bw-ctl'}), sumEl=h('p',{class:'bw-sum'});
+  const V={mode:'room',light:'day',ready:false,pulse:false}, thumbs={};
+  const cvs=h('canvas',{class:'bw-cv',role:'img','aria-label':'Bathroom with a tiled shower wall, vanity backsplash and tiled floor, shown in perspective'});
+  const ZONE_TAG=[['wall','Shower wall',4,14],['back','Backsplash',50,41],['floor','Floor',44,90]];
+  const tagBtns=ZONE_TAG.map(([s,l,x,y])=>h('button',{type:'button',class:'bw-tagb',style:'left:'+x+'%;top:'+y+'%',onclick:()=>select(s)},l));
+  const loadEl=h('div',{class:'bw-load'},'Building your room...');
+  const sceneBox=h('div',{class:'bw-scene'},cvs,...tagBtns,loadEl), controls=h('div',{class:'bw-ctl'}), sumEl=h('p',{class:'bw-sum'});
   const designText=()=>BW_SURF.map(([s,l])=>{ const d=D[s], m=bwMat(d.m); return l.toLowerCase()+': '+m.n.toLowerCase()+', '+bwLay(d.l)+' layout, '+(BW_GROUT.find(g=>g[0]===d.g)||BW_GROUT[1])[1].toLowerCase()+' grout'; }).join('; ');
-  let sc=0;
-  const draw=()=>{ sc++; const svg='<svg viewBox="0 0 720 460" role="img" aria-label="Bathroom with a tiled shower wall, vanity backsplash and floor. Tap a surface to choose it.">'+bwScene(D,'v'+sc+'_')+'</svg>'; sceneBox.innerHTML=svg;
-    sumEl.textContent='Your design: '+designText()+'.'; };
-  sceneBox.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-s]'); if(t){ D.cur=t.getAttribute('data-s'); build(); } });
+  const paintTags=()=>tagBtns.forEach((b,i)=>{ b.classList.toggle('on',ZONE_TAG[i][0]===D.cur); b.style.display=V.mode==='close'?'none':''; });
+  const draw=()=>{ sumEl.textContent='Your design: '+designText()+'.'; paintTags(); if(!V.ready) return;
+    const dpr=Math.min(window.devicePixelRatio||1,1.5), w=Math.round(960*dpr), hh=Math.round(600*dpr); if(cvs.width!==w){ cvs.width=w; cvs.height=hh; }
+    const T={wall:bwTex('wall',D.wall,3.35,2.4,330),back:bwTex('back',D.back,1.8,.58,330),floor:bwTex('floor',D.floor,3,1.95,330)};
+    if(V.mode==='close'){ const d=D[D.cur]; bwClose(cvs,bwTex('close'+D.cur,d,1.07,.67,900),V.light); } else bwRoom(cvs,D,V.light,T);
+    if(V.pulse&&V.mode==='room'){ const k=cvs.width/960, x=cvs.getContext('2d'), Z=bwZones()[D.cur]; x.save(); x.setLineDash([10*k,7*k]); x.lineWidth=3*k; x.strokeStyle='#E5703F'; Z.forEach(p=>{ bwPoly(x,p.map(q=>[q[0]*k,q[1]*k])); x.stroke(); }); x.restore(); }
+    loadEl.style.display='none'; };
+  const pulse=()=>{ V.pulse=true; clearTimeout(V.pt); V.pt=setTimeout(()=>{ V.pulse=false; draw(); },1300); };
+  const redraw=()=>{ if(V.raf) cancelAnimationFrame(V.raf); V.raf=requestAnimationFrame(()=>{ V.raf=0; draw(); }); };
+  const select=s=>{ D.cur=s; pulse(); build(); };
+  cvs.addEventListener('click',e=>{ const r=cvs.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*960, y=(e.clientY-r.top)/r.height*600, Z=bwZones(); for(const s of ['back','wall','floor']){ if(Z[s].some(p=>bwIn(p,x,y))){ select(s); return; } } });
   const seg=(items,cur,fn,cls)=>h('div',{class:'bw-seg '+(cls||'')},items.map(([id,l])=>h('button',{type:'button',class:id===cur?'on':null,'aria-pressed':id===cur?'true':'false',onclick:()=>fn(id)},l)));
+  const tools=h('div',{class:'bw-tools'});
+  const paintTools=()=>tools.replaceChildren(seg([['room','Room view'],['close','Close-up']],V.mode,id=>{ V.mode=id; paintTools(); paintTags(); draw(); }),seg([['day','Daylight'],['warm','Warm light']],V.light,id=>{ V.light=id; paintTools(); draw(); }));
+  paintTools();
+  const swBg=m=>thumbs[m.id]?'background:url('+thumbs[m.id]+') center/cover':'background:'+m.c;
   const build=()=>{ const d=D[D.cur];
     controls.replaceChildren(
-      h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'1. Choose a surface'),seg(BW_SURF,D.cur,id=>{ D.cur=id; build(); })),
+      h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'1. Choose a surface'),seg(BW_SURF,D.cur,id=>{ select(id); })),
       h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'2. Tile finish ',h('em',null,bwMat(d.m).n)),
-        h('div',{class:'bw-sw'},BW_MAT.map(m=>h('button',{type:'button',class:m.id===d.m?'on':null,title:m.n,'aria-label':m.n,'aria-pressed':m.id===d.m?'true':'false',style:'background:'+m.c,onclick:()=>{ d.m=m.id; D.touched=true; build(); }})))),
+        h('div',{class:'bw-sw'},BW_MAT.map(m=>h('button',{type:'button',class:m.id===d.m?'on':null,title:m.n,'aria-label':m.n,'aria-pressed':m.id===d.m?'true':'false',style:swBg(m),onclick:()=>{ d.m=m.id; D.touched=true; build(); }})))),
       h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'3. Layout'),seg(BW_LAY,d.l,id=>{ d.l=id; D.touched=true; build(); },'wrap')),
       h('div',{class:'bw-grp bw-two'},h('div',null,h('span',{class:'bw-lbl'},'Tile size'),seg(BW_SIZE,d.s,id=>{ d.s=id; D.touched=true; build(); })),h('div',null,h('span',{class:'bw-lbl'},'Grout lines'),seg([['fine','Fine'],['wide','Wide']],d.w,id=>{ d.w=id; D.touched=true; build(); }))),
       h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'Grout color'),h('div',{class:'bw-gr'},BW_GROUT.map(g=>h('button',{type:'button',class:g[0]===d.g?'on':null,'aria-pressed':g[0]===d.g?'true':'false',onclick:()=>{ d.g=g[0]; D.touched=true; build(); }},h('i',{style:'background:'+(g[2]||bwShade(bwMat(d.m).c,-.22))}),g[1]))))
-    ); draw(); };
+    ); sumEl.textContent='Your design: '+designText()+'.'; paintTags(); if(V.ready){ loadEl.style.display='block'; redraw(); } };
   const applyPreset=p=>{ BW_SURF.forEach(([s])=>{ D[s]=Object.assign({},p[s]); }); D.touched=true; build(); };
   const shuffle=()=>{ const R=a=>a[Math.floor(Math.random()*a.length)]; BW_SURF.forEach(([s])=>{ D[s]={m:R(BW_MAT).id,l:R(BW_LAY)[0],s:R(BW_SIZE)[0],g:R(BW_GROUT)[0],w:'fine'}; }); D.touched=true; build(); };
   const presets=h('div',{class:'bw-pre'},h('span',null,'Start from'),BW_PRESETS.map(p=>h('button',{type:'button',onclick:()=>applyPreset(p[1])},p[0])),h('button',{type:'button',class:'sur',onclick:shuffle},'Surprise me'));
   const design=h('section',{class:'bw-sec',id:'w-design'},h('div',{class:'bw-wrap'},
-    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Room visualizer'),h('h2',null,'Try it on the walls before you buy a box.'),h('p',null,'Pick a surface, then a finish, layout and grout. Tap the room itself to switch surfaces. These are sample finishes to help you decide what you like. Real colors, sizes and styles are in the showroom.')),
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Room visualizer'),h('h2',null,'See the real thing in a real room.'),h('p',null,'Pick a surface, then a finish, layout and grout, and the room redraws with life-like tile. Switch to the close-up to see the grain, shine and grout, or flip the lighting. Finishes shown are samples. Real colors, sizes and styles are in the showroom.')),
     presets,
-    h('div',{class:'bw-lab'},h('div',{class:'bw-stage'},sceneBox,sumEl,h('div',{class:'bw-cta2'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-est')},'Ask about this design'))),controls)));
+    h('div',{class:'bw-lab'},h('div',{class:'bw-stage'},tools,sceneBox,sumEl,h('div',{class:'bw-cta2'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-est')},'Ask about this design'))),controls)));
   build();
+  const startRoom=()=>{ if(V.ready) return; V.ready=true; setTimeout(()=>{ draw(); BW_MAT.forEach((m,i)=>setTimeout(()=>{ const s=bwSlab(m), t=bwCv(72,72); t.getContext('2d').drawImage(s,50,50,170,170,0,0,72,72); thumbs[m.id]=t.toDataURL('image/jpeg',.82); if(i===BW_MAT.length-1) build(); },300+i*70)); },30); };
+  if('IntersectionObserver' in window){ const io=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ io.disconnect(); startRoom(); } },{rootMargin:'500px 0px'}); setTimeout(()=>io.observe(design),0); } else setTimeout(startRoom,300);
 
   /* ---------- calculator ---------- */
   const SIZES=[['3 x 6 inch subway',3,6],['4 x 4 inch',4,4],['6 x 6 inch',6,6],['12 x 12 inch',12,12],['12 x 24 inch',12,24],['24 x 24 inch',24,24]];
