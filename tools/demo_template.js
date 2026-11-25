@@ -111,6 +111,7 @@ function build(d){
   if(/^shade\s?tree\b/i.test(C.name)||C.variant==='shadetree'){ document.body.className='t-st'; const pg=shadeTree(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); stRoll(pg); return; }
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='becwar'){ document.body.className='t-bw'; const pg=becwar(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
   if(C.variant==='osteria'){ document.body.className='t-o2'; const pg=osteria2(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); o2Bar(pg); osIntro(C); return; }
   const page=style==='pub'?pub(C):style==='lounge'?lounge(C):style==='western'?western(C):trade(C);
@@ -2086,6 +2087,229 @@ const ZP_ICO={
 };
 function zpIco(k){ const d=h('span',{class:'zp-ico','aria-hidden':'true'}); d.innerHTML=ZP_ICO[k]||ZP_ICO.win; return d; }
 function zpIcoFor(n){ n=String(n||'').toLowerCase(); return /mirror/.test(n)?'mirror':/glass/.test(n)?'glass':/commercial|store|business/.test(n)?'shop':/door/.test(n)?'door':/home|residential/.test(n)?'home':'win'; }
+/* ===================== BECWAR (tile showroom) ===================== */
+const BW_MAT=[
+  {id:'carrara',n:'White marble look',c:'#EDEFF0',vein:'#8F99A3',gl:1},
+  {id:'slate',n:'Charcoal slate look',c:'#3B4146',tex:1},
+  {id:'concrete',n:'Soft gray concrete look',c:'#A2A7A8',tex:1},
+  {id:'oak',n:'Warm oak wood look',c:'#B58657',wood:1},
+  {id:'white',n:'Glossy white',c:'#F6F7F7',gl:1},
+  {id:'sage',n:'Sage glaze',c:'#8CA48E',gl:1},
+  {id:'navy',n:'Deep blue glaze',c:'#26405E',gl:1},
+  {id:'terra',n:'Terracotta',c:'#B65D39',tex:1},
+  {id:'black',n:'Matte black',c:'#1F2224'},
+  {id:'mist',n:'Blue gray glaze',c:'#7B95A7',gl:1}];
+const BW_LAY=[['grid','Grid'],['brick','Brick'],['stack','Stacked'],['herring','Herringbone'],['diag','Diagonal']];
+const BW_GROUT=[['white','White','#F1F3F3'],['light','Light gray','#B9BFC2'],['char','Charcoal','#454A4E'],['match','Matches tile','']];
+const BW_SIZE=[['s','Small'],['m','Medium'],['l','Large']];
+const BW_SURF=[['wall','Shower wall'],['back','Backsplash'],['floor','Floor']];
+function bwRng(seed){ let s=(seed|0)||1; return ()=>{ s=(Math.imul(s,1664525)+1013904223)|0; return ((s>>>8)&0xffff)/0xffff; }; }
+function bwShade(hex,t){ const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255; const f=t<0?0:255, a=Math.abs(t); const c=v=>Math.max(0,Math.min(255,Math.round(v+(f-v)*a))).toString(16).padStart(2,'0'); return '#'+c(r)+c(g)+c(b); }
+function bwTile(m,x,y,w,hh,g,rng){
+  const X=x+g/2, Y=y+g/2, W=w-g, H=hh-g, f=n=>n.toFixed(2);
+  let o='<rect x="'+f(X)+'" y="'+f(Y)+'" width="'+f(W)+'" height="'+f(H)+'" fill="'+bwShade(m.c,(rng()-.5)*.12)+'"/>';
+  if(m.vein){ for(let i=0;i<2;i++){ o+='<path d="M'+f(X+rng()*W)+' '+f(Y)+'Q'+f(X+rng()*W)+' '+f(Y+H*.5)+' '+f(X+rng()*W)+' '+f(Y+H)+'" stroke="'+m.vein+'" stroke-width="'+f(.5+rng()*.8)+'" opacity="'+f(.2+rng()*.25)+'" fill="none"/>'; } }
+  if(m.wood){ for(let i=1;i<4;i++){ const yy=Y+H*i/4; o+='<path d="M'+f(X)+' '+f(yy)+'H'+f(X+W)+'" stroke="'+bwShade(m.c,-.3)+'" stroke-width=".6" opacity=".35"/>'; } }
+  if(m.tex){ o+='<path d="M'+f(X+W*.15)+' '+f(Y+H*.3)+'l'+f(W*.25)+' '+f(H*.12)+'M'+f(X+W*.5)+' '+f(Y+H*.7)+'l'+f(W*.3)+' -'+f(H*.1)+'" stroke="'+bwShade(m.c,.25)+'" stroke-width=".8" opacity=".3"/>'; }
+  if(m.gl){ o+='<path d="M'+f(X)+' '+f(Y)+'h'+f(W*.55)+'L'+f(X)+' '+f(Y+H*.55)+'z" fill="#fff" opacity=".17"/>'; }
+  return o;
+}
+function bwPat(id,m,lay,sz,groutKey,gw){
+  const k={s:.72,m:1,l:1.6}[sz]||1, u=22*k, gc=(BW_GROUT.find(g=>g[0]===groutKey)||BW_GROUT[1])[2]||bwShade(m.c,-.22);
+  const g=gw==='wide'?4.2:1.8, rng=bwRng(id.length*131+lay.length*17+m.id.length*7+k*10);
+  let W,H,b='',tr='';
+  const T=(x,y,w,hh)=>bwTile(m,x,y,w,hh,g,rng);
+  if(lay==='grid'){ W=H=u*2; b=T(0,0,W,H); }
+  else if(lay==='diag'){ W=H=u*2.2; b=T(0,0,W,H); tr=' patternTransform="rotate(45)"'; }
+  else if(lay==='stack'){ W=u*2; H=u; b=T(0,0,W,H); }
+  else if(lay==='brick'){ W=u*2; H=u*2; b=T(0,0,u*2,u)+T(-u,u,u*2,u)+T(u,u,u*2,u); }
+  else { const q=u*.9; W=H=q*4; for(let i=-6;i<=6;i++){ for(let j=-6;j<=6;j++){ const ox=(-4*i-3*j)*q, oy=j*q;
+      [[ox,oy,2*q,q],[ox-2*q,oy-q,q,2*q]].forEach(t=>{ if(t[0]<W&&t[0]+t[2]>0&&t[1]<H&&t[1]+t[3]>0) b+=T(t[0],t[1],t[2],t[3]); }); } } }
+  return '<pattern id="'+id+'" patternUnits="userSpaceOnUse" width="'+W.toFixed(2)+'" height="'+H.toFixed(2)+'"'+tr+'><rect width="'+W.toFixed(2)+'" height="'+H.toFixed(2)+'" fill="'+gc+'"/>'+b+'</pattern>';
+}
+function bwScene(st,uid){
+  const pid=s=>uid+s, P=BW_SURF.map(([s])=>{ const d=st[s]; return bwPat(pid(s),BW_MAT.find(m=>m.id===d.m)||BW_MAT[0],d.l,d.s,d.g,d.w); }).join('');
+  const lab=(s,x,y,t)=>'<g data-s="'+s+'" style="cursor:pointer"><rect x="'+x+'" y="'+y+'" width="'+(t.length*10.5+22)+'" height="30" rx="3" fill="#10222B" opacity=".88"/><text x="'+(x+11)+'" y="'+(y+20)+'" font-size="16" font-weight="700" fill="#fff" font-family="Manrope,sans-serif">'+t+'</text></g>';
+  const sel=(s,x,y,w,hh)=>st.cur===s?'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+hh+'" fill="none" stroke="#C25B33" stroke-width="3" stroke-dasharray="9 6" pointer-events="none"/>':'';
+  return '<defs>'+P+'<linearGradient id="'+uid+'fs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".5" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".1"/></linearGradient>'
+    +'<linearGradient id="'+uid+'ws" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".2"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".1"/></linearGradient>'
+    +'<linearGradient id="'+uid+'gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".4" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient></defs>'
+    +'<rect width="720" height="460" fill="#E3E8EA"/><rect x="330" y="0" width="390" height="338" fill="#D6DEE2"/>'
+    /* shower wall */
+    +'<g data-s="wall" style="cursor:pointer"><rect x="40" y="34" width="250" height="298" fill="url(#'+pid('wall')+')"/><rect x="40" y="34" width="250" height="298" fill="url(#'+uid+'ws)"/>'
+    +'<rect x="104" y="128" width="96" height="66" fill="#000" opacity=".2"/><rect x="108" y="132" width="88" height="58" fill="#000" opacity=".12"/><rect x="104" y="192" width="96" height="4" fill="#fff" opacity=".5"/><rect x="104" y="126" width="96" height="3" fill="#000" opacity=".25"/></g>'
+    +'<path d="M96 34v36q0 10 12 10h14" stroke="#C5CDD2" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="136" cy="84" rx="24" ry="6" fill="#D5DCE0"/><ellipse cx="136" cy="82" rx="24" ry="5" fill="#EEF2F4"/>'
+    +'<g opacity=".7" stroke="#fff" stroke-width="1.4" stroke-linecap="round"><path d="M122 92v18M136 92v22M150 92v18"/></g>'
+    +'<rect x="290" y="34" width="46" height="298" fill="url(#'+uid+'gl)"/><rect x="288" y="34" width="4" height="298" fill="#AEB8BE"/><rect x="334" y="34" width="4" height="298" fill="#AEB8BE"/><rect x="326" y="170" width="5" height="60" rx="2" fill="#98A3AA"/>'
+    /* vanity wall */
+    +'<rect x="400" y="40" width="220" height="92" fill="#F4F8F9" stroke="#AEB8BE" stroke-width="5"/><path d="M430 128l56-84M470 128l70-84" stroke="#fff" stroke-width="10" opacity=".55"/>'
+    +'<g data-s="back" style="cursor:pointer"><rect x="360" y="150" width="320" height="98" fill="url(#'+pid('back')+')"/><rect x="360" y="150" width="320" height="98" fill="#000" opacity=".05"/></g>'
+    +'<rect x="350" y="246" width="340" height="14" fill="#F8F9F9"/><rect x="350" y="260" width="340" height="6" fill="#000" opacity=".16"/>'
+    +'<path d="M508 246h42v-6q-21-7-42 0z" fill="#EEF1F2" stroke="#C5CDD2"/><rect x="524" y="196" width="10" height="46" fill="#C9D1D5"/><path d="M529 200h30q6 0 6 6v4" stroke="#C9D1D5" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="508" cy="214" r="5" fill="#B7C0C6"/><circle cx="550" cy="214" r="5" fill="#B7C0C6"/>'
+    +'<rect x="358" y="266" width="324" height="68" fill="#3C5560"/><rect x="368" y="274" width="146" height="52" fill="none" stroke="#6C8792" stroke-width="2"/><rect x="526" y="274" width="146" height="52" fill="none" stroke="#6C8792" stroke-width="2"/><circle cx="500" cy="300" r="4" fill="#DDE4E7"/><circle cx="540" cy="300" r="4" fill="#DDE4E7"/>'
+    /* floor */
+    +'<g data-s="floor" style="cursor:pointer"><g transform="translate(0 338) scale(1 .46)"><rect width="720" height="266" fill="url(#'+pid('floor')+')"/></g><rect x="0" y="338" width="720" height="122" fill="url(#'+uid+'fs)"/></g>'
+    +'<rect x="0" y="330" width="720" height="9" fill="#F8F9F9"/><rect x="0" y="339" width="720" height="3" fill="#000" opacity=".18"/>'
+    +sel('wall',40,34,250,298)+sel('back',360,150,320,98)+sel('floor',0,342,720,118)
+    +lab('wall',50,44,'Shower wall')+lab('back',370,160,'Backsplash')+lab('floor',12,420,'Floor');
+}
+const BW_PRESETS=[
+  ['Spa',{wall:{m:'carrara',l:'brick',s:'m',g:'light',w:'fine'},back:{m:'carrara',l:'brick',s:'s',g:'light',w:'fine'},floor:{m:'slate',l:'grid',s:'m',g:'char',w:'fine'}}],
+  ['Modern dark',{wall:{m:'black',l:'stack',s:'m',g:'char',w:'fine'},back:{m:'slate',l:'stack',s:'m',g:'char',w:'fine'},floor:{m:'concrete',l:'grid',s:'l',g:'light',w:'fine'}}],
+  ['Farmhouse',{wall:{m:'white',l:'brick',s:'m',g:'light',w:'fine'},back:{m:'sage',l:'brick',s:'s',g:'white',w:'fine'},floor:{m:'oak',l:'herring',s:'m',g:'match',w:'fine'}}],
+  ['Bold color',{wall:{m:'navy',l:'brick',s:'m',g:'white',w:'fine'},back:{m:'terra',l:'herring',s:'s',g:'char',w:'fine'},floor:{m:'white',l:'diag',s:'m',g:'light',w:'fine'}}]];
+const bwMat=id=>BW_MAT.find(m=>m.id===id)||BW_MAT[0];
+const bwLay=id=>(BW_LAY.find(l=>l[0]===id)||BW_LAY[0])[1].toLowerCase();
+function bwNow(){ const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date()); const g=t=>(p.find(x=>x.type===t)||{}).value; return {wd:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(g('weekday')),min:((+g('hour'))%24)*60+(+g('minute'))}; }
+function bwRange(s){ const m=[...String(s||'').matchAll(/(\d{1,2})(?::(\d\d))?\s*(am|pm)/gi)]; if(m.length<2) return null; const f=a=>{ let hh=(+a[1])%12; if(/pm/i.test(a[3])) hh+=12; return hh*60+(+a[2]||0); }; return [f(m[0]),f(m[1])]; }
+function bwFmt(min){ const hh=Math.floor(min/60), mm=min%60, h12=hh%12||12; return h12+(mm?':'+String(mm).padStart(2,'0'):'')+' '+(hh>=12?'pm':'am'); }
+function bwStatus(C){ if(!C.hasHours) return null; const n=bwNow(), r=bwRange(C.hours[n.wd]);
+  if(r&&n.min>=r[0]&&n.min<r[1]) return {open:true,text:'Open now',sub:'until '+bwFmt(r[1])};
+  for(let k=0;k<=7;k++){ const ix=(n.wd+k)%7, rr=bwRange(C.hours[ix]); if(rr&&(k>0||n.min<rr[0])) return {open:false,text:'Closed now',sub:'opens '+(k===0?'today':k===1?'tomorrow':DAYS[ix])+' at '+bwFmt(rr[0])}; }
+  return null; }
+
+function becwar(C){
+  const name=C.name||'Becwar Tile & Marble', x=C.x, num=v=>{ const n=parseFloat(v); return isFinite(n)&&n>0?n:0; };
+  const digits=C.phone.replace(/\D/g,'').slice(-10);
+  const smsHref=body=>digits.length===10?'sms:+1'+digits+(/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body):'';
+  const heads=String(x.headline||'See your tile|before it’s set.').split('|');
+  const st=bwStatus(C), addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const call=(cls,label)=>C.tel?h('a',{class:'bw-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
+  const links=[['w-design','Design a room'],['w-calc','How much tile'],['w-pick','Tile picker'],['w-care','Care tips'],['w-visit','Visit']];
+  const markSvg=()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 28 28'); s.setAttribute('class','bw-tilemark'); s.innerHTML='<rect x="1" y="1" width="12" height="12" fill="#0F5F66"/><rect x="15" y="1" width="12" height="12" fill="#C25B33"/><rect x="1" y="15" width="12" height="12" fill="#10222B"/><rect x="15" y="15" width="12" height="12" fill="#9AB3BC"/>'; return s; };
+  const brand=h('a',{class:'bw-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('w-top'); },'aria-label':name},markSvg(),h('span',{class:'bw-wm'},h('b',null,'Becwar'),h('i',null,'Tile & Marble')));
+  const nav=h('header',{class:'bw-nav'},h('div',{class:'bw-wrap bw-nav-in'},brand,
+    h('nav',{class:'bw-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),call('ink sm','Call')),
+    h('nav',{class:'bw-mlinks','aria-label':'Sections'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))));
+  const top=h('div',{class:'bw-top'},h('div',{class:'bw-wrap bw-top-in'},h('span',null,String(x.strip||'Tile sales and installation in Dubuque, Iowa')),
+    st?h('span',{class:'bw-st'},h('i',{class:'bw-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null));
+
+  /* hero swatch board */
+  const boardCells=[['carrara','herring','m'],['navy','brick','m'],['terra','grid','m'],['oak','herring','m'],['sage','brick','s'],['slate','diag','m'],['white','stack','m'],['mist','grid','s'],['black','brick','m']];
+  const board=h('div',{class:'bw-board','aria-hidden':'true'});
+  { let defs='', cells=''; boardCells.forEach((c,i)=>{ const m=bwMat(c[0]), cx=(i%3)*200, cy=Math.floor(i/3)*150; defs+=bwPat('hb'+i,m,c[1],c[2],i%2?'light':'char','fine'); cells+='<g class="bw-bc" style="animation-delay:'+(i*70)+'ms"><rect x="'+(cx+4)+'" y="'+(cy+4)+'" width="192" height="142" fill="url(#hb'+i+')"/><rect x="'+(cx+4)+'" y="'+(cy+120)+'" width="192" height="26" fill="#10222B" opacity=".82"/><text x="'+(cx+12)+'" y="'+(cy+137)+'" font-size="11" font-weight="700" fill="#fff" font-family="Manrope,sans-serif">'+m.n+' / '+bwLay(c[1])+'</text></g>'; });
+    board.innerHTML='<svg viewBox="0 0 600 450" role="img" aria-label="Tile swatch board with nine sample finishes and layouts"><defs>'+defs+'</defs>'+cells+'</svg>'; }
+  const hero=h('section',{class:'bw-hero',id:'w-top'},h('div',{class:'bw-wrap bw-hero-g'},
+    h('div',{class:'bw-hero-t'},
+      h('span',{class:'bw-kick'},C.cat||'Tile store and installation'),
+      h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
+      h('p',{class:'bw-lead'},C.tag||'Becwar Tile & Marble sells and installs tile in Dubuque. Try layouts, work out how much you need and ask for an estimate, all from your phone.'),
+      h('div',{class:'bw-cta'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-design')},'Design a room'),call('line')),
+      h('ul',{class:'bw-facts'},h('li',null,'American Olean and Marazzi dealer'),h('li',null,'Showers, floors and backsplashes'),h('li',null,'Right on Central Ave in Dubuque'))),
+    board));
+
+  /* ---------- visualizer ---------- */
+  const D={cur:'wall',wall:{m:'carrara',l:'brick',s:'m',g:'light',w:'fine'},back:{m:'white',l:'brick',s:'s',g:'light',w:'fine'},floor:{m:'slate',l:'grid',s:'m',g:'char',w:'fine'},touched:false};
+  const sceneBox=h('div',{class:'bw-scene'}), controls=h('div',{class:'bw-ctl'}), sumEl=h('p',{class:'bw-sum'});
+  const designText=()=>BW_SURF.map(([s,l])=>{ const d=D[s], m=bwMat(d.m); return l.toLowerCase()+': '+m.n.toLowerCase()+', '+bwLay(d.l)+' layout, '+(BW_GROUT.find(g=>g[0]===d.g)||BW_GROUT[1])[1].toLowerCase()+' grout'; }).join('; ');
+  let sc=0;
+  const draw=()=>{ sc++; const svg='<svg viewBox="0 0 720 460" role="img" aria-label="Bathroom with a tiled shower wall, vanity backsplash and floor. Tap a surface to choose it.">'+bwScene(D,'v'+sc+'_')+'</svg>'; sceneBox.innerHTML=svg;
+    sumEl.textContent='Your design: '+designText()+'.'; };
+  sceneBox.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-s]'); if(t){ D.cur=t.getAttribute('data-s'); build(); } });
+  const seg=(items,cur,fn,cls)=>h('div',{class:'bw-seg '+(cls||'')},items.map(([id,l])=>h('button',{type:'button',class:id===cur?'on':null,'aria-pressed':id===cur?'true':'false',onclick:()=>fn(id)},l)));
+  const build=()=>{ const d=D[D.cur];
+    controls.replaceChildren(
+      h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'1. Choose a surface'),seg(BW_SURF,D.cur,id=>{ D.cur=id; build(); })),
+      h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'2. Tile finish ',h('em',null,bwMat(d.m).n)),
+        h('div',{class:'bw-sw'},BW_MAT.map(m=>h('button',{type:'button',class:m.id===d.m?'on':null,title:m.n,'aria-label':m.n,'aria-pressed':m.id===d.m?'true':'false',style:'background:'+m.c,onclick:()=>{ d.m=m.id; D.touched=true; build(); }})))),
+      h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'3. Layout'),seg(BW_LAY,d.l,id=>{ d.l=id; D.touched=true; build(); },'wrap')),
+      h('div',{class:'bw-grp bw-two'},h('div',null,h('span',{class:'bw-lbl'},'Tile size'),seg(BW_SIZE,d.s,id=>{ d.s=id; D.touched=true; build(); })),h('div',null,h('span',{class:'bw-lbl'},'Grout lines'),seg([['fine','Fine'],['wide','Wide']],d.w,id=>{ d.w=id; D.touched=true; build(); }))),
+      h('div',{class:'bw-grp'},h('span',{class:'bw-lbl'},'Grout color'),h('div',{class:'bw-gr'},BW_GROUT.map(g=>h('button',{type:'button',class:g[0]===d.g?'on':null,'aria-pressed':g[0]===d.g?'true':'false',onclick:()=>{ d.g=g[0]; D.touched=true; build(); }},h('i',{style:'background:'+(g[2]||bwShade(bwMat(d.m).c,-.22))}),g[1]))))
+    ); draw(); };
+  const applyPreset=p=>{ BW_SURF.forEach(([s])=>{ D[s]=Object.assign({},p[s]); }); D.touched=true; build(); };
+  const shuffle=()=>{ const R=a=>a[Math.floor(Math.random()*a.length)]; BW_SURF.forEach(([s])=>{ D[s]={m:R(BW_MAT).id,l:R(BW_LAY)[0],s:R(BW_SIZE)[0],g:R(BW_GROUT)[0],w:'fine'}; }); D.touched=true; build(); };
+  const presets=h('div',{class:'bw-pre'},h('span',null,'Start from'),BW_PRESETS.map(p=>h('button',{type:'button',onclick:()=>applyPreset(p[1])},p[0])),h('button',{type:'button',class:'sur',onclick:shuffle},'Surprise me'));
+  const design=h('section',{class:'bw-sec',id:'w-design'},h('div',{class:'bw-wrap'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Room visualizer'),h('h2',null,'Try it on the walls before you buy a box.'),h('p',null,'Pick a surface, then a finish, layout and grout. Tap the room itself to switch surfaces. These are sample finishes to help you decide what you like. Real colors, sizes and styles are in the showroom.')),
+    presets,
+    h('div',{class:'bw-lab'},h('div',{class:'bw-stage'},sceneBox,sumEl,h('div',{class:'bw-cta2'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-est')},'Ask about this design'))),controls)));
+  build();
+
+  /* ---------- calculator ---------- */
+  const SIZES=[['3 x 6 inch subway',3,6],['4 x 4 inch',4,4],['6 x 6 inch',6,6],['12 x 12 inch',12,12],['12 x 24 inch',12,24],['24 x 24 inch',24,24]];
+  const WASTE=[['Straight or grid',10],['Brick or offset',10],['Diagonal',15],['Herringbone',15]];
+  const CAL={used:false,text:''};
+  const inL=h('input',{type:'number',inputmode:'decimal',min:'0',step:'0.5',value:'8','aria-label':'Length in feet'}), inW=h('input',{type:'number',inputmode:'decimal',min:'0',step:'0.5',value:'5','aria-label':'Width or height in feet'}), inO=h('input',{type:'number',inputmode:'decimal',min:'0',step:'1',value:'0','aria-label':'Openings in square feet'});
+  const selS=h('select',{'aria-label':'Tile size'},SIZES.map((s,i)=>h('option',{value:String(i),selected:i===3?'':null},s[0]))), selW=h('select',{'aria-label':'Layout'},WASTE.map((s,i)=>h('option',{value:String(i)},s[0]+' ('+s[1]+'% extra)')));
+  const out=h('div',{class:'bw-out'});
+  const calc=()=>{ const area=Math.max(0,num(inL.value)*num(inW.value)-(parseFloat(inO.value)||0)), sz=SIZES[+selS.value], wp=WASTE[+selW.value], order=Math.ceil(area*(1+wp[1]/100)), tiles=Math.ceil(order*144/(sz[1]*sz[2]));
+    CAL.used=area>0; CAL.text=area>0?'I measured about '+area.toFixed(1).replace(/\.0$/,'')+' sq ft and figure on ordering about '+order+' sq ft ('+tiles+' tiles of '+sz[0]+', '+wp[0].toLowerCase()+' layout).':'';
+    out.replaceChildren(h('div',{class:'bw-big'},h('b',null,String(order)),h('span',null,'sq ft to order')),
+      h('dl',null,h('div',null,h('dt',null,'Area to tile'),h('dd',null,area.toFixed(1).replace(/\.0$/,'')+' sq ft')),h('div',null,h('dt',null,'Extra for cuts'),h('dd',null,wp[1]+'%')),h('div',null,h('dt',null,'About this many tiles'),h('dd',null,String(tiles))))); };
+  [inL,inW,inO,selS,selW].forEach(e=>{ e.addEventListener('input',calc); e.addEventListener('change',calc); });
+  const ex=h('div',{class:'bw-ex'},h('span',null,'Example sizes'),[['Bathroom floor',8,5],['Kitchen backsplash',12,1.5],['Shower wall',7,5],['Entry floor',6,4]].map(([l,a,b])=>h('button',{type:'button',onclick:()=>{ inL.value=a; inW.value=b; calc(); }},l+' '+a+' x '+b)));
+  const calcSec=h('section',{class:'bw-sec bw-alt',id:'w-calc'},h('div',{class:'bw-wrap bw-2c'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Tile calculator'),h('h2',null,'How much tile do I need?'),h('p',null,'Measure length and width in feet, subtract any tub, window or door openings, and add extra for cuts and breakage. Most jobs need 10 to 15 percent more than the exact area.'),ex,
+      h('p',{class:'bw-note'},'Tile is sold in boxes with a set coverage. Bring this number to the store and we can match it to the box.')),
+    h('div',{class:'bw-card'},h('div',{class:'bw-fl'},h('label',null,h('span',null,'Length (ft)'),inL),h('label',null,h('span',null,'Width or height (ft)'),inW),h('label',null,h('span',null,'Openings to subtract (sq ft)'),inO),h('label',null,h('span',null,'Tile size'),selS),h('label',{class:'full'},h('span',null,'Layout'),selW)),out)));
+  calc();
+
+  /* ---------- picker ---------- */
+  const Q1=[['shower','Shower or tub wall'],['bathfloor','Bathroom floor'],['kitchenfloor','Kitchen floor'],['backsplash','Backsplash'],['entry','Entry or mudroom floor']];
+  const Q2=[['easy','Easy to keep clean'],['stone','A natural stone look'],['budget','Keeping cost down'],['bold','A bold, standout look']];
+  const PK={a:'',b:''};
+  const REC={
+    shower:['Glazed ceramic or porcelain wall tile','Both stand up to constant water. Ceramic is easy to cut and often costs less. Porcelain is denser and tougher. For the shower floor itself, small tiles have more grout lines, which gives your feet more grip.',['Ask which tile is made for wet areas and which grout and sealer to use.','Ask about a shower floor tile with a good slip rating.']],
+    bathfloor:['Porcelain floor tile with a textured finish','Porcelain absorbs very little water and wears well, and a matte or textured surface is less slippery when wet.',['Ask for the slip rating (called DCOF) on any bathroom floor tile.','Ask about heated floor options that work under tile.']],
+    kitchenfloor:['Porcelain floor tile, large format or wood look','Porcelain handles heavy foot traffic, spills and dropped pans. Large tiles mean fewer grout lines to clean.',['Ask how flat your subfloor needs to be for large tiles.','Ask about darker grout that hides everyday dirt.']],
+    backsplash:['Glazed ceramic tile, often a subway or small format','A glazed surface wipes clean after splatter, and the walls are not walked on, so softer wall tile works well here.',['Ask how many sq ft you need: most backsplashes are small, so extra tile is cheap insurance.','Ask about grout color: it changes the look as much as the tile does.']],
+    entry:['Porcelain tile rated for heavy traffic','Entries get grit, salt and wet boots. Porcelain resists scratches and water, and a textured finish helps with traction.',['Ask about slip rating, especially for winter months.','Ask about a darker or patterned tile that hides tracked-in dirt.']]};
+  const MOD={easy:'Because easy cleaning matters most: choose a glazed or sealed surface and a grout color a little darker than white. Natural stone and light cement grout need more upkeep.',stone:'For a natural stone look: you can choose real marble or stone, which needs sealing and gentle cleaners, or porcelain that looks like stone with far less upkeep. Ask to see both side by side.',budget:'To keep cost down: ceramic is usually the lower-cost choice, and a simple straight layout takes less labor and wastes less tile than herringbone or diagonal.',bold:'For a bold look: color and pattern do the work. A herringbone or diagonal layout, or a deep glaze color, changes a room more than the price of the tile suggests. Plan for about 15 percent extra for those layouts.'};
+  const res=h('div',{class:'bw-res','aria-live':'polite'});
+  const showRes=()=>{ if(!PK.a||!PK.b){ res.replaceChildren(h('p',{class:'bw-hint'},'Choose one answer in each row to see a suggestion.')); return; } const r=REC[PK.a];
+    res.replaceChildren(h('span',{class:'bw-lbl'},'A good place to start'),h('h3',null,r[0]),h('p',null,r[1]),h('p',null,MOD[PK.b]),h('ul',null,r[2].map(t=>h('li',null,ico('check',14,''),t))),h('p',{class:'bw-note'},'This is general guidance, not a product recommendation. Stop in to see what is on the shelf and ask about your room.')); };
+  const qrow=(items,key)=>{ const wrap=h('div',{class:'bw-seg wrap'}); const paint=()=>wrap.replaceChildren(...items.map(([id,l])=>h('button',{type:'button',class:PK[key]===id?'on':null,'aria-pressed':PK[key]===id?'true':'false',onclick:()=>{ PK[key]=id; paint(); showRes(); }},l))); paint(); return wrap; };
+  showRes();
+  const pick=h('section',{class:'bw-sec',id:'w-pick'},h('div',{class:'bw-wrap bw-2c'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Tile picker'),h('h2',null,'Not sure what kind of tile?'),h('p',null,'Answer two quick questions and get a starting point, plus what to ask when you come in.')),
+    h('div',{class:'bw-card'},h('span',{class:'bw-lbl'},'Where is the tile going?'),qrow(Q1,'a'),h('span',{class:'bw-lbl',style:'margin-top:18px'},'What matters most?'),qrow(Q2,'b'),res)));
+
+  /* ---------- services + brands ---------- */
+  const SV=[['Custom showers','Walls, floors and niches planned and tiled for a shower that fits your space.'],['Kitchen and bathroom floors','Ceramic and porcelain floor tile, sold and installed.'],['Backsplashes','Tile for behind the stove, sink or bar.'],['Natural stone','Marble and stone floors, listed in directories, with care that fits the material. Ask what is in stock.'],['Tile removal','Old tile taken out before new tile goes down.'],['Grout repair','Cracked or stained grout repaired, so tile you already have looks fresh.']];
+  const svc=h('section',{class:'bw-sec bw-alt',id:'w-svc'},h('div',{class:'bw-wrap'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'What we do'),h('h2',null,'Tile sales and installation.')),
+    h('div',{class:'bw-svc'},SV.map((s,i)=>h('article',{class:'bw-sc'},h('b',null,String(i+1).padStart(2,'0')),h('h3',null,s[0]),h('p',null,s[1])))),
+    h('div',{class:'bw-brands'},h('span',null,'Brands we carry'),h('ul',null,['American Olean','Marazzi','Florida Tile'].map(t=>h('li',null,t))),h('p',null,'American Olean and Marazzi per the Marazzi dealer page. Ask which lines are in stock.'))));
+
+  /* ---------- care ---------- */
+  const CARE=[['Grout',['Cement grout is porous. Seal it after it cures and again every year or two, depending on the traffic.','Clean with a pH-neutral cleaner and a soft brush. Harsh scrubbing wears grout down.','Cracked or crumbling grout lets water behind the tile. Have it repaired early.']],
+    ['Marble and stone',['Seal natural stone and keep it sealed. Spills such as wine, coffee and oil can stain it.','Use a stone-safe, pH-neutral cleaner. Vinegar, lemon and many bathroom sprays can dull marble.','Put mats at doors to catch grit, which scratches stone.']],
+    ['Shower tile',['Squeegee or wipe walls after use to slow soap scum and mildew.','Run the fan or crack a window to dry the room.','Watch the caulk at corners and where the tile meets the tub. Replace it when it cracks or peels.']],
+    ['Floors',['Sweep or vacuum first. Grit does more damage than foot traffic.','Mop with a neutral cleaner. Too much soap leaves a film that dulls the surface and holds dirt.','Felt pads under furniture keep chairs from scratching the tile.']]];
+  const careBody=h('div',{class:'bw-cb'}), careTabs=h('div',{class:'bw-seg wrap'});
+  let careIx=0; const paintCare=()=>{ careTabs.replaceChildren(...CARE.map((c,i)=>h('button',{type:'button',class:i===careIx?'on':null,'aria-pressed':i===careIx?'true':'false',onclick:()=>{ careIx=i; paintCare(); }},c[0]))); careBody.replaceChildren(h('ul',null,CARE[careIx][1].map(t=>h('li',null,ico('check',14,''),t)))); }; paintCare();
+  const care=h('section',{class:'bw-sec',id:'w-care'},h('div',{class:'bw-wrap bw-2c'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Care tips'),h('h2',null,'Keep it looking new.'),h('p',null,'Short, general tips for common tile. Different tile and sealers have their own rules, so ask us about yours.')),
+    h('div',{class:'bw-card'},careTabs,careBody)));
+
+  /* ---------- estimate ---------- */
+  const PJ=['Shower','Floor','Backsplash','Tile removal','Grout repair','Something else'], pj={}, ES={size:'',when:''};
+  const nameIn=h('input',{type:'text',placeholder:'Your name','aria-label':'Your name',autocomplete:'name'}), noteIn=h('textarea',{rows:'3',placeholder:'Anything else we should know','aria-label':'Notes'});
+  const msgEl=h('pre',{class:'bw-msg'}), actions=h('div',{class:'bw-act'}), cpOk=h('span',{class:'bw-ok',role:'status'});
+  const buildMsg=()=>{ const sel=PJ.filter(p=>pj[p]).map(p=>p.toLowerCase()); let t='Hi, I’d like to ask about an estimate for '+(sel.length?sel.join(', '):'a tile project')+(ES.size?', about '+ES.size:'')+(ES.when?'. Timing: '+ES.when.toLowerCase():'')+'.';
+    if(D.touched) t+=' I tried a design on your website. '+designText().replace(/^./,c=>c.toUpperCase())+'.'; if(CAL.used) t+=' '+CAL.text; if(noteIn.value.trim()) t+=' '+noteIn.value.trim(); t+=' '+(nameIn.value.trim()?'My name is '+nameIn.value.trim()+'.':'Thanks!'); return t; };
+  const paintEst=()=>{ const t=buildMsg(); msgEl.textContent=t; const s=smsHref(t);
+    actions.replaceChildren(...[call('ink'),s?h('a',{class:'bw-btn line',href:s},'Text this message'):null,h('button',{type:'button',class:'bw-btn line',onclick:()=>{ const done=()=>{ cpOk.textContent='Copied. Paste it into a text or email.'; }; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(buildMsg()).then(done,()=>{ cpOk.textContent='Select the message above to copy it.'; }); else cpOk.textContent='Select the message above to copy it.'; }},'Copy message'),C.email?h('a',{class:'bw-btn line',href:'mailto:'+C.email+'?subject='+encodeURIComponent('Estimate request')+'&body='+encodeURIComponent(t)},'Email it'):null].filter(Boolean)); };
+  const chips=h('div',{class:'bw-seg wrap'}), paintChips=()=>chips.replaceChildren(...PJ.map(p=>h('button',{type:'button',class:pj[p]?'on':null,'aria-pressed':pj[p]?'true':'false',onclick:()=>{ pj[p]=!pj[p]; paintChips(); paintEst(); }},p)));
+  const sizeSel=h('select',{'aria-label':'Project size',onchange:e=>{ ES.size=e.target.value; paintEst(); }},h('option',{value:''},'Not sure yet'),['under 50 sq ft','50 to 150 sq ft','over 150 sq ft'].map(o=>h('option',{value:o},o)));
+  const whenSel=h('select',{'aria-label':'Timing',onchange:e=>{ ES.when=e.target.value; paintEst(); }},h('option',{value:''},'Not sure yet'),['As soon as possible','In the next 1 to 3 months','Just planning'].map(o=>h('option',{value:o},o)));
+  [nameIn,noteIn].forEach(e=>e.addEventListener('input',paintEst)); paintChips(); paintEst();
+  const est=h('section',{class:'bw-sec bw-dark',id:'w-est'},h('div',{class:'bw-wrap bw-2c'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Ask for an estimate'),h('h2',null,'Send us the details in one tap.'),h('p',null,'Tell us about the job. If you tried a design or ran the calculator above, those choices go into the message too. Then call, text or copy it.')),
+    h('div',{class:'bw-card'},h('span',{class:'bw-lbl'},'What is the project?'),chips,h('div',{class:'bw-fl'},h('label',null,h('span',null,'About how big?'),sizeSel),h('label',null,h('span',null,'When?'),whenSel),h('label',null,h('span',null,'Name'),nameIn),h('label',{class:'full'},h('span',null,'Notes'),noteIn)),
+      h('span',{class:'bw-lbl'},'Your message'),msgEl,actions,cpOk,h('p',{class:'bw-note'},'This preview does not send anything by itself. Your phone opens the call or text for you to review and send.'))));
+
+  /* ---------- visit ---------- */
+  const visit=h('section',{class:'bw-sec',id:'w-visit'},h('div',{class:'bw-wrap bw-2c'},
+    h('div',{class:'bw-head'},h('span',{class:'bw-kick'},'Visit the store'),h('h2',null,'Come see it in person.'),
+      addrTxt?h('p',{class:'bw-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bw-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+      h('div',{class:'bw-cta'},call('ink'),C.maps?h('a',{class:'bw-btn line',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),
+      h('p',{class:'bw-note'},'Bring photos and measurements of your space, and a sample of any tile you want to match.')),
+    h('div',{class:'bw-card bw-hrs'},h('span',{class:'bw-lbl'},'Store hours'),hoursRows(C),h('p',{class:'bw-note'},'Hours are as listed online. Call to confirm before you drive over.'))));
+  const foot=h('footer',{class:'bw-foot'},h('div',{class:'bw-wrap bw-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'demo bw on'},top,nav,hero,design,calcSec,pick,svc,care,est,visit,foot);
+}
+
 function zephyr(C){
   const x=C.x, name=C.name, ok=u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)?u:'';
   const Z=id=>'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=1600&q=72';
