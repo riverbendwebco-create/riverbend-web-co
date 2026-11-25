@@ -9,9 +9,9 @@ const jobs=[
  ['rest-desk',D+'sample-restaurant',1440,900],['rest-mob',D+'sample-restaurant',390,844],
  ['trade-desk',D+'sample-trade',1440,900],['trade-mob',D+'sample-trade',390,844],
  ['auto-desk',D+'sample-auto',1440,900],['auto-mob',D+'sample-auto',390,844],
- ['realty-mob',D+'sample-realtor',390,844],
+ ['realty-mob',D+'sample-realtor',390,844],['realty-desk',D+'sample-realtor',1440,900],
  ['cypher','https://cypher-llc.com/',1440,900],['ghost','https://ghostplatform.ai/',1440,900],
- ['chefnerd','https://chefnerdai.com/',1440,900],['tinyapp','https://tinyappcode.com/',1440,900],
+ ['chefnerd','https://chefnerdai.com/',1440,900],['chefnerd-mob','https://chefnerdai.com/',390,844],['cypher-mob','https://cypher-llc.com/',390,844],['ghost-mob','https://ghostplatform.ai/',390,844],['tinyapp','https://tinyappcode.com/',1440,900],
 ];
 const hide=`.rb-bar,#rbChat,#rba,.rba-panel,.rba-teaser,.rba-fab,[class*="cookie"]{display:none!important}.rv,.reveal,[data-reveal]{opacity:1!important;transform:none!important}`;
 const browser=await chromium.launch();
