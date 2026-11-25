@@ -34,7 +34,7 @@
 .h3-badge .dot{width:3px;height:3px;background:#60A5FA;border-radius:50%}
 .h3 h1{font-size:clamp(2.5rem,3.85vw,3.85rem);font-weight:700;letter-spacing:-.035em;line-height:1.03;margin:26px 0 22px}
 .h3 h1 .l1{display:block;color:#fff}
-.h3 h1 .l2{display:block;margin-top:.12em;background:linear-gradient(92deg,#3B82F6 0%,#60A5FA 45%,#BFDBFE 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h3 h1 .l2{display:block;margin-top:.12em;padding-bottom:.16em;margin-bottom:-.16em;background:linear-gradient(92deg,#3B82F6 0%,#60A5FA 45%,#BFDBFE 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .h3-lead{font-size:clamp(1.04rem,1.25vw,1.16rem);line-height:1.62;color:#B6C2D4;max-width:540px}
 .h3-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
 .h3-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 26px;border-radius:10px;font-weight:700;font-size:1.02rem;letter-spacing:-.005em;overflow:hidden;
