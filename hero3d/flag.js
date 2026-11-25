@@ -1,26 +1,44 @@
-/* Riverbend hero: 3D waving U.S. flag with a bald eagle circling it.
-   Plain WebGL, no libraries. Decorative only (aria-hidden); hides itself if WebGL is unavailable. */
+/* Riverbend hero: realistic 3D U.S. flag with a real bald eagle soaring around it.
+   Flag: high-resolution cloth mesh, layered travelling waves with a fluttering fly end, woven-fabric
+   texture with mipmaps, cloth sheen, fold occlusion and light passing through the fabric.
+   Eagle: a real photograph (Mathew Schwartz, Unsplash License) cut out and placed in the 3D scene,
+   depth-tested against the flag, banking, turning and flexing its wings as it soars.
+   Plain WebGL, no libraries. Decorative (aria-hidden); hides itself if WebGL is unavailable. */
 (function(){
   'use strict';
   var box=document.querySelector('.h3-flag'); if(!box) return;
   var canvas=box.querySelector('canvas');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine=matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var small=matchMedia('(max-width: 980px)').matches;
   var gl;
   try{ gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true,depth:true}); }catch(e){}
   if(!gl){ box.classList.add('no-gl'); return; }
   var dpr=Math.min(window.devicePixelRatio||1,2);
+  var aniso=gl.getExtension('EXT_texture_filter_anisotropic')||gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
 
-  /* ---------- flag texture (official proportions: 13 stripes, canton 7/13 tall and 0.76 of hoist wide, 50 stars) ---------- */
+  /* ---------- flag texture: official layout at 2048x1024 (power of two for mipmaps) ---------- */
   function flagTexture(){
-    var H=540, W=Math.round(H*1.9), c=document.createElement('canvas'); c.width=W; c.height=H;
-    var x=c.getContext('2d'), sh=H/13;
-    for(var i=0;i<13;i++){ x.fillStyle=i%2?'#FFFFFF':'#B22234'; x.fillRect(0,Math.round(i*sh),W,Math.ceil(sh)+1); }
-    var cw=H*.76, ch=sh*7; x.fillStyle='#3C3B6E'; x.fillRect(0,0,cw,ch);
-    var r=H*.0616/2; x.fillStyle='#FFFFFF';
-    function star(cx,cy){ x.beginPath(); for(var k=0;k<10;k++){ var a=-Math.PI/2+k*Math.PI/5, rr=k%2?r*.382:r; x.lineTo(cx+rr*Math.cos(a),cy+rr*Math.sin(a)); } x.closePath(); x.fill(); }
-    for(var row=0;row<9;row++){ var n=row%2?5:6; for(var j=0;j<n;j++){ star(cw*(row%2?(2*j+2):(2*j+1))/12, ch*(row+1)/10); } }
+    var W=2048,H=1024,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');
+    var sh=H/13,i;
+    for(i=0;i<13;i++){x.fillStyle=i%2?'#F4F1EA':'#B0213A';x.fillRect(0,Math.round(i*sh),W,Math.ceil(sh)+1);}
+    x.globalAlpha=.18;x.fillStyle='#3a0a12';for(i=1;i<13;i++)x.fillRect(0,Math.round(i*sh)-1,W,2);x.globalAlpha=1;   // seams
+    var cw=W*.4,ch=sh*7;                                    // canton: 0.76 of the hoist on a 1.9:1 flag = 40% of the width
+    x.fillStyle='#2E2D5E';x.fillRect(0,0,cw,ch);
+    x.globalAlpha=.25;x.fillStyle='#000';x.fillRect(0,ch-2,cw,3);x.fillRect(cw-2,0,3,ch);x.globalAlpha=1;
+    var ry=H*.0616/2,rx=ry*(W/(H*1.9));
+    function star(cx,cy){
+      for(var pass=0;pass<2;pass++){              // soft shadow, then the embroidered star
+        x.beginPath();for(var k=0;k<10;k++){var a=-Math.PI/2+k*Math.PI/5,f=k%2?.382:1;x.lineTo(cx+rx*f*Math.cos(a)+(pass?0:1.5),cy+ry*f*Math.sin(a)+(pass?0:2));}
+        x.closePath();x.fillStyle=pass?'#F7F5EF':'rgba(0,0,0,.35)';x.fill();
+      }
+    }
+    for(var row=0;row<9;row++){var n=row%2?5:6;for(var j=0;j<n;j++)star(cw*(row%2?(2*j+2):(2*j+1))/12,ch*(row+1)/10);}
+    // woven fabric: a small tiled pattern overlaid on the whole flag (cheap, no per-pixel loop)
+    var pc=document.createElement('canvas');pc.width=pc.height=8;var px=pc.getContext('2d'),seed=11;
+    function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647;}
+    for(var yy=0;yy<8;yy++)for(var xx=0;xx<8;xx++){var v=((xx&2)^(yy&2))?150:105;v+=(rnd()-.5)*30;px.fillStyle='rgb('+v+','+v+','+v+')';px.fillRect(xx,yy,1,1);}
+    x.globalCompositeOperation='overlay';x.globalAlpha=.22;x.fillStyle=x.createPattern(pc,'repeat');x.fillRect(0,0,W,H);
+    x.globalAlpha=1;x.globalCompositeOperation='source-over';
     return c;
   }
 
@@ -28,179 +46,170 @@
   function prog(v,f){var p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,v));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error('link');return p;}
   var P='#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n';
 
-  /* cloth: travelling waves pinned at the pole, analytic normals */
-  var FVS='attribute vec2 aG;uniform mat4 uPV;uniform float uT;uniform float uWind;varying vec2 vUV;varying vec3 vN;varying vec3 vW;varying float vFold;'+
-    'void main(){float u=aG.x,v=aG.y;float W=1.9,H=1.;'+
-    'float A=(.05+.09*uWind)*u;float s=4.+2.5*uWind;'+
-    'float p1=u*W*3.2-uT*s+v*.9,p2=u*W*5.9-uT*s*1.55+v*2.3;'+
-    'float z=A*(sin(p1)+.32*sin(p2));'+
-    'float dA=(.05+.09*uWind)/W;'+
-    'float dzx=A*(3.2*cos(p1)+.32*5.9*cos(p2))+dA*(sin(p1)+.32*sin(p2));'+
-    'float dzy=A*(.9*cos(p1)+.32*2.3*cos(p2))/H;'+
-    'vec3 p=vec3(u*W-.035*u*(1.+uWind)*(1.-cos(p1)),v*H-.05*u*u*(1.-.6*uWind),z);'+
-    'vN=normalize(vec3(-dzx,-dzy,1.));vUV=vec2(u,1.-v);vW=p;vFold=sin(p1);gl_Position=uPV*vec4(p,1.);}';
-  var FFS=P+'varying vec2 vUV;varying vec3 vN;varying vec3 vW;varying float vFold;uniform sampler2D uTex;uniform vec3 uL;uniform vec3 uCam;'+
-    'void main(){vec3 N=normalize(vN);if(!gl_FrontFacing)N=-N;vec3 L=normalize(uL),V=normalize(uCam-vW);'+
-    'vec3 c=texture2D(uTex,vUV).rgb;float d=max(dot(N,L),0.);'+
-    'vec3 col=c*(.42+.62*d)+vec3(1.)*pow(max(dot(reflect(-L,N),V),0.),22.)*.22;'+
-    'col+=vec3(.25,.45,1.)*pow(1.-max(dot(N,V),0.),3.)*.18;'+
+  /* ---------- cloth: height field with layered waves; normals by finite differences ---------- */
+  var FVS='attribute vec2 aG;uniform mat4 uPV;uniform float uT;uniform float uWind;varying vec2 vUV;varying vec3 vN;varying vec3 vW;varying float vZ;'+
+    'float hz(vec2 g){float u=g.x,v=g.y,t=uT,w=uWind;'+
+    'float A=(.1+.08*w)*pow(u,.95);float s=3.2+2.4*w;'+
+    'float z=A*sin(u*6.2-t*s+v*.8+.3*sin(t*.7));'+
+    'z+=A*.45*sin(u*10.5-t*s*1.4+v*2.6+1.7);'+
+    'z+=A*.22*sin(u*17.-t*s*2.+v*-3.4+.4);'+
+    'z+=(.012+.02*w)*pow(u,3.)*sin(u*30.-t*13.+v*7.);'+
+    'z+=A*.14*sin(v*4.+t*1.3+u*3.)*u;'+
+    'return z;}'+
+    'vec3 pos(vec2 g){float u=g.x,v=g.y;'+
+    'float pull=.04*(1.+uWind)*u*(.6+.4*sin(u*6.2-uT*(3.6+2.4*uWind)+v*.8));'+
+    'return vec3(u*1.9-pull,v-.06*u*u*(1.-.55*uWind)+.012*sin(u*9.-uT*4.)*u,hz(g));}'+
+    'void main(){vec2 e=vec2(.004,0.);vec3 p=pos(aG);'+
+    'vec3 du=pos(aG+e.xy)-pos(aG-e.xy),dv=pos(aG+e.yx)-pos(aG-e.yx);'+
+    'vN=normalize(cross(du,dv));vUV=vec2(aG.x,1.-aG.y);vW=p;vZ=p.z;gl_Position=uPV*vec4(p,1.);}';
+  var FFS=P+'varying vec2 vUV;varying vec3 vN;varying vec3 vW;varying float vZ;uniform sampler2D uTex;uniform vec3 uL;uniform vec3 uCam;uniform float uAmp;'+
+    'void main(){vec3 N=normalize(vN);if(!gl_FrontFacing)N=-N;'+
+    'vec3 L=normalize(uL),V=normalize(uCam-vW),H=normalize(L+V);'+
+    'vec3 c=pow(texture2D(uTex,vUV).rgb,vec3(2.2));'+
+    'float nl=dot(N,L),nv=max(dot(N,V),0.);'+
+    'float ao=.76+.24*smoothstep(-uAmp,uAmp*.8,vZ);'+
+    'vec3 sky=mix(vec3(.12,.16,.26),vec3(.32,.4,.58),N.y*.5+.5);'+
+    'vec3 col=c*(sky*.42*ao+vec3(1.,.96,.9)*max(nl,0.)*1.3*mix(.7,1.,ao));'+
+    'col+=c*vec3(1.,.92,.85)*max(-nl,0.)*.32;'+
+    'float wv=sin(vUV.x*2600.)*sin(vUV.y*1400.);'+
+    'col+=vec3(.9,.92,1.)*pow(max(dot(N,H),0.),36.)*(.10+.05*wv);'+
+    'col+=vec3(.55,.62,.8)*pow(1.-nv,4.)*.18;'+
+    'col=col/(col+vec3(.85))*1.55;col=pow(col,vec3(1./2.2));'+
     'gl_FragColor=vec4(col,1.);}';
-  /* faceted lit meshes: pole, finial, eagle */
+
+  /* ---------- smooth-shaded pole, gold ball, halyard ---------- */
   var MVS='attribute vec3 aP;attribute vec3 aN;attribute vec4 aC;uniform mat4 uPV;varying vec3 vN;varying vec4 vC;varying vec3 vW;'+
     'void main(){vN=aN;vC=aC;vW=aP;gl_Position=uPV*vec4(aP,1.);}';
   var MFS=P+'varying vec3 vN;varying vec4 vC;varying vec3 vW;uniform vec3 uL;uniform vec3 uCam;'+
-    'void main(){vec3 N=normalize(vN);if(!gl_FrontFacing)N=-N;vec3 L=normalize(uL),V=normalize(uCam-vW);'+
-    'float d=max(dot(N,L),0.);vec3 col=vC.rgb*(.36+.7*d);'+
-    'col+=vec3(1.)*pow(max(dot(reflect(-L,N),V),0.),mix(12.,60.,vC.a))*(.12+vC.a*.9);'+
-    'col+=vec3(.2,.4,1.)*pow(1.-max(dot(N,V),0.),2.5)*.25;'+
-    'gl_FragColor=vec4(col,1.);}';
+    'void main(){vec3 N=normalize(vN);vec3 L=normalize(uL),V=normalize(uCam-vW),H=normalize(L+V);'+
+    'float d=max(dot(N,L),0.);vec3 base=pow(vC.rgb,vec3(2.2));'+
+    'vec3 env=mix(vec3(.05,.07,.12),vec3(.5,.58,.75),smoothstep(-.3,.8,reflect(-V,N).y));'+
+    'vec3 col=base*(.18+.9*d)+mix(vec3(.04),base,vC.a)*env*vC.a*1.2+vec3(1.)*pow(max(dot(N,H),0.),mix(20.,120.,vC.a))*(.1+vC.a*1.4);'+
+    'col=col/(col+vec3(.85))*1.55;gl_FragColor=vec4(pow(col,vec3(1./2.2)),1.);}';
 
-  var fp,mp,F={},M={},tex,flagIdx,flagN,meshBuf;
+  /* ---------- the eagle: real photo on a flexible card, depth-tested in the scene ---------- */
+  var EVS='attribute vec2 aQ;uniform mat4 uPV;uniform vec3 uC;uniform vec3 uR;uniform vec3 uU;uniform float uFlex;varying vec2 vQ;'+
+    'void main(){float lx=aQ.x-.5,ly=.5-aQ.y;float tip=pow(1.-aQ.y,2.)*(.35+.65*abs(lx)*2.);ly+=uFlex*tip*.11;'+
+    'vQ=aQ;gl_Position=uPV*vec4(uC+uR*lx+uU*ly,1.);}';
+  var EFS=P+'varying vec2 vQ;uniform sampler2D uTex;uniform float uLit;'+
+    'void main(){vec4 t=texture2D(uTex,vQ);if(t.a<.03)discard;gl_FragColor=vec4(t.rgb*uLit,t.a);}';
+
+  var fp,mp,ep,F={},M={},E={},tex,etex=null,flagIdx,flagN,meshBuf,eB,eI,eN,poleCount;
   try{
-    fp=prog(FVS,FFS); mp=prog(MVS,MFS);
-    F.aG=gl.getAttribLocation(fp,'aG'); ['uPV','uT','uWind','uTex','uL','uCam'].forEach(function(n){F[n]=gl.getUniformLocation(fp,n);});
-    M.aP=gl.getAttribLocation(mp,'aP');M.aN=gl.getAttribLocation(mp,'aN');M.aC=gl.getAttribLocation(mp,'aC');
-    ['uPV','uL','uCam'].forEach(function(n){M[n]=gl.getUniformLocation(mp,n);});
-    // flag grid
-    var GX=48,GY=26,g=[],ix=[];
-    for(var j=0;j<=GY;j++)for(var i=0;i<=GX;i++)g.push(i/GX,j/GY);
-    for(j=0;j<GY;j++)for(i=0;i<GX;i++){var a=j*(GX+1)+i;ix.push(a,a+1,a+GX+1,a+1,a+GX+2,a+GX+1);}
+    fp=prog(FVS,FFS);mp=prog(MVS,MFS);ep=prog(EVS,EFS);
+    F.aG=gl.getAttribLocation(fp,'aG');['uPV','uT','uWind','uTex','uL','uCam','uAmp'].forEach(function(n){F[n]=gl.getUniformLocation(fp,n);});
+    M.aP=gl.getAttribLocation(mp,'aP');M.aN=gl.getAttribLocation(mp,'aN');M.aC=gl.getAttribLocation(mp,'aC');['uPV','uL','uCam'].forEach(function(n){M[n]=gl.getUniformLocation(mp,n);});
+    E.aQ=gl.getAttribLocation(ep,'aQ');['uPV','uC','uR','uU','uFlex','uTex','uLit'].forEach(function(n){E[n]=gl.getUniformLocation(ep,n);});
+    var GX=110,GY=58,g=[],ix=[],i,j,a;
+    for(j=0;j<=GY;j++)for(i=0;i<=GX;i++)g.push(i/GX,j/GY);
+    for(j=0;j<GY;j++)for(i=0;i<GX;i++){a=j*(GX+1)+i;ix.push(a,a+1,a+GX+1,a+1,a+GX+2,a+GX+1);}
     F.vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,F.vb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(g),gl.STATIC_DRAW);
     flagIdx=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,flagIdx);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(ix),gl.STATIC_DRAW);flagN=ix.length;
     tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,flagTexture());
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,flagTexture());gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-    meshBuf=gl.createBuffer();
+    if(aniso)gl.texParameterf(gl.TEXTURE_2D,aniso.TEXTURE_MAX_ANISOTROPY_EXT,8);
+    var q=[],qi=[],QX=14,QY=10;for(j=0;j<=QY;j++)for(i=0;i<=QX;i++)q.push(i/QX,j/QY);
+    for(j=0;j<QY;j++)for(i=0;i<QX;i++){a=j*(QX+1)+i;qi.push(a,a+1,a+QX+1,a+1,a+QX+2,a+QX+1);}
+    eB=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,eB);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(q),gl.STATIC_DRAW);
+    eI=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,eI);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(qi),gl.STATIC_DRAW);eN=qi.length;
+    meshBuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,meshBuf);var pd=poleMesh();gl.bufferData(gl.ARRAY_BUFFER,pd,gl.STATIC_DRAW);poleCount=pd.length/10;
   }catch(e){ box.classList.add('no-gl'); return; }
 
-  /* ---------- mesh helpers (flat-shaded triangles: pos3 nor3 col4) ---------- */
-  var out=[];
-  function tri(a,b,c,col){
-    var ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];
-    var nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;nx/=l;ny/=l;nz/=l;
-    [a,b,c].forEach(function(p){out.push(p[0],p[1],p[2],nx,ny,nz,col[0],col[1],col[2],col[3]);});
-  }
-  function quad(a,b,c,d,col){tri(a,b,c,col);tri(a,c,d,col);}
-
-  function pole(){
-    var X=-.035,R=.022,Y0=-1.2,Y1=1.1,n=10,SIL=[.78,.82,.88,.85];
-    for(var i=0;i<n;i++){var a0=i/n*Math.PI*2,a1=(i+1)/n*Math.PI*2;
-      var p0=[X+R*Math.cos(a0),Y0,R*Math.sin(a0)],p1=[X+R*Math.cos(a1),Y0,R*Math.sin(a1)];
-      quad(p0,p1,[p1[0],Y1,p1[2]],[p0[0],Y1,p0[2]],SIL);}
-    // gold finial: low-poly sphere
-    var C=[X,Y1+.055,0],r=.05,GOLD=[.96,.74,.24,.9],la=6,lo=10;
-    function sp(t,p){return [C[0]+r*Math.sin(t)*Math.cos(p),C[1]+r*Math.cos(t),C[2]+r*Math.sin(t)*Math.sin(p)];}
+  function poleMesh(){
+    var out=[];function v(p,n,c){out.push(p[0],p[1],p[2],n[0],n[1],n[2],c[0],c[1],c[2],c[3]);}
+    function cyl(X,Z,R,Y0,Y1,n,col){for(var i=0;i<n;i++){var a0=i/n*Math.PI*2,a1=(i+1)/n*Math.PI*2,c0=Math.cos(a0),s0=Math.sin(a0),c1=Math.cos(a1),s1=Math.sin(a1);
+      var A=[X+R*c0,Y0,Z+R*s0],B=[X+R*c1,Y0,Z+R*s1],C=[X+R*c1,Y1,Z+R*s1],D=[X+R*c0,Y1,Z+R*s0],nA=[c0,0,s0],nB=[c1,0,s1];
+      v(A,nA,col);v(B,nB,col);v(C,nB,col);v(A,nA,col);v(C,nB,col);v(D,nA,col);}}
+    var X=-.038,Y1=1.1;
+    cyl(X,0,.021,-1.3,Y1,24,[.82,.84,.88,.85]);          // brushed aluminium pole
+    cyl(X,0,.026,Y1-.01,Y1+.012,24,[.7,.72,.76,.85]);    // truck
+    cyl(X+.03,.012,.0045,-1.3,Y1-.02,8,[.62,.6,.56,.05]); // halyard rope
+    var Cn=[X,Y1+.058,0],r=.052,GOLD=[.93,.72,.3,1],la=14,lo=24;
+    function sp(t,p){var nn=[Math.sin(t)*Math.cos(p),Math.cos(t),Math.sin(t)*Math.sin(p)];return [[Cn[0]+r*nn[0],Cn[1]+r*nn[1],Cn[2]+r*nn[2]],nn];}
     for(var a=0;a<la;a++)for(var b=0;b<lo;b++){var t0=a/la*Math.PI,t1=(a+1)/la*Math.PI,q0=b/lo*Math.PI*2,q1=(b+1)/lo*Math.PI*2;
-      quad(sp(t0,q0),sp(t1,q0),sp(t1,q1),sp(t0,q1),GOLD);}
+      var p00=sp(t0,q0),p10=sp(t1,q0),p11=sp(t1,q1),p01=sp(t0,q1);
+      v(p00[0],p00[1],GOLD);v(p10[0],p10[1],GOLD);v(p11[0],p11[1],GOLD);v(p00[0],p00[1],GOLD);v(p11[0],p11[1],GOLD);v(p01[0],p01[1],GOLD);}
+    return new Float32Array(out);
   }
 
-  /* bald eagle, local frame: x forward, y up, z to the right wing. a1/a2 = shoulder/wrist flap angles */
-  var BROWN=[.27,.17,.09,.15],DARK=[.16,.1,.06,.12],WING=[.22,.14,.08,.12],WHITE=[.96,.96,.93,.25],GOLD=[.98,.72,.16,.5];
-  function eagleLocal(a1,a2){
-    var parts=[];
-    function T(a,b,c,col){parts.push([a,b,c,col]);}
-    // body rings: x, half-height, half-width, y-offset, colour
-    var rings=[[.30,.024,.02,.004,GOLD],[.25,.045,.04,.012,WHITE],[.19,.052,.05,.008,WHITE],[.12,.062,.066,.002,WHITE],
-               [.05,.076,.08,-.004,BROWN],[-.06,.07,.075,-.01,BROWN],[-.16,.044,.05,0,BROWN],[-.22,.02,.03,.006,WHITE]];
-    var K=6, ringPts=rings.map(function(r){var pts=[];for(var k=0;k<K;k++){var a=k/K*Math.PI*2;pts.push([r[0],r[3]+r[1]*Math.sin(a),r[2]*Math.cos(a)]);}return pts;});
-    var tip=[.37,-.006,0];
-    for(var k=0;k<K;k++)T(tip,ringPts[0][(k+1)%K],ringPts[0][k],GOLD);
-    for(var i=0;i<rings.length-1;i++)for(k=0;k<K;k++){var A=ringPts[i][k],B=ringPts[i][(k+1)%K],C=ringPts[i+1][(k+1)%K],D=ringPts[i+1][k];
-      var col=rings[i+1][4];T(A,B,C,col);T(A,C,D,col);}
-    var last=ringPts[rings.length-1],tc=[-.22,.006,0];for(k=0;k<K;k++)T(tc,last[k],last[(k+1)%K],WHITE);
-    // tail fan
-    T([-.2,.012,.03],[-.42,0,.12],[-.45,.002,0],WHITE);T([-.2,.012,-.03],[-.45,.002,0],[-.42,0,-.12],WHITE);T([-.2,.012,.03],[-.45,.002,0],[-.2,.012,-.03],WHITE);
-    // feet tucked under the tail
-    T([-.14,-.04,.025],[-.24,-.03,.03],[-.2,-.05,.01],GOLD);T([-.14,-.04,-.025],[-.2,-.05,-.01],[-.24,-.03,-.03],GOLD);
-    // wings
-    [1,-1].forEach(function(sd){
-      var Y0=.045,Z0=.07,ci=Math.cos(a1),si=Math.sin(a1),co=Math.cos(a1+a2),so=Math.sin(a1+a2);
-      function inner(x,z){var s=z-Z0;return [x,Y0+s*si,sd*(Z0+s*ci)];}
-      var E=[0,Y0+.23*si,Z0+.23*ci];
-      function outer(x,z){var s=z-.30;return [x,E[1]+s*so,sd*(E[2]+s*co)];}
-      var sL=inner(.1,.07),sT=inner(-.07,.07),eL=inner(.09,.30),eT=inner(-.13,.30);
-      var oL=outer(.09,.30),oT=outer(-.13,.30),tL=outer(.04,.53),tT=outer(-.12,.5);
-      T(sL,eL,eT,WING);T(sL,eT,sT,WING);
-      T(oL,tL,tT,DARK);T(oL,tT,oT,DARK);
-      // covert stripe for depth
-      var mL=inner(.095,.2),mT=inner(.0,.2);T(sL,mL,mT,BROWN);
-      // primary feathers (fingers)
-      var tips=[[.03,.66],[0,.69],[-.035,.69],[-.07,.66],[-.1,.61]];
-      for(var f=0;f<5;f++){var b0=outer(.04-(.16*f/5),.53-.03*f/5),b1=outer(.04-(.16*(f+1)/5),.53-.03*(f+1)/5),tp=outer(tips[f][0],tips[f][1]);T(b0,tp,b1,DARK);}
-      // secondary feather trailing edge
-      T(sT,eT,inner(-.17,.22),DARK);T(oT,tT,outer(-.17,.42),DARK);
-    });
-    return parts;
-  }
+  var eimg=new Image();eimg.decoding='async';
+  eimg.onload=function(){try{etex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,etex);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,eimg);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);kick();}catch(e){etex=null;}};
+  eimg.src='/hero3d/img/eagle.webp';
 
-  /* ---------- camera / matrices ---------- */
+  /* ---------- matrices ---------- */
   function persp(f,a,n,fa){var t=1/Math.tan(f/2);return [t/a,0,0,0, 0,t,0,0, 0,0,(fa+n)/(n-fa),-1, 0,0,2*fa*n/(n-fa),0];}
   function lookAt(e,t){var fx=t[0]-e[0],fy=t[1]-e[1],fz=t[2]-e[2],fl=Math.hypot(fx,fy,fz);fx/=fl;fy/=fl;fz/=fl;
-    var rx=-fz,ry=0,rz=fx,rl=Math.hypot(rx,rz);rx/=rl;rz/=rl;var ux=ry*fz-rz*fy,uy=rz*fx-rx*fz,uz=rx*fy-ry*fx;
-    return [rx,ux,-fx,0, ry,uy,-fy,0, rz,uz,-fz,0, -(rx*e[0]+ry*e[1]+rz*e[2]),-(ux*e[0]+uy*e[1]+uz*e[2]),(fx*e[0]+fy*e[1]+fz*e[2]),1];}
+    var rx=-fz,rz=fx,rl=Math.hypot(rx,rz);rx/=rl;rz/=rl;var ux=-rz*fy,uy=rz*fx-rx*fz,uz=rx*fy;
+    return {m:[rx,ux,-fx,0, 0,uy,-fy,0, rz,uz,-fz,0, -(rx*e[0]+rz*e[2]),-(ux*e[0]+uy*e[1]+uz*e[2]),(fx*e[0]+fy*e[1]+fz*e[2]),1],r:[rx,0,rz],u:[ux,uy,uz]};}
   function mul(a,b){var o=new Array(16);for(var c=0;c<4;c++)for(var r=0;r<4;r++){o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];}return o;}
 
-  /* ---------- eagle flight: an orbit around the flag that passes behind and in front of it ---------- */
-  var CX=.95,CY=.52,RX=1.5,RZ=1.05;
-  function flightPos(th){return [CX+RX*Math.cos(th),CY+.2*Math.sin(2*th+.6)+.06*Math.sin(th*3.),RZ*Math.sin(th)];}
-  function eagleWorld(th,t){
-    var p=flightPos(th),q=flightPos(th+.01),dx=q[0]-p[0],dy=q[1]-p[1],dz=q[2]-p[2],dl=Math.hypot(dx,dy,dz);dx/=dl;dy/=dl;dz/=dl;
-    // right = forward x up, then bank into the turn
-    var rx=dy*0-dz*1,ry=dz*0-dx*0,rz=dx*1-dy*0,rl=Math.hypot(rx,ry,rz);rx/=rl;ry/=rl;rz/=rl;
-    var ux=ry*dz-rz*dy,uy=rz*dx-rx*dz,uz=rx*dy-ry*dx;
-    var bank=.42,cb=Math.cos(bank),sb=Math.sin(bank);
-    var Ux=ux*cb+rx*sb,Uy=uy*cb+ry*sb,Uz=uz*cb+rz*sb, Rx=rx*cb-ux*sb,Ry=ry*cb-uy*sb,Rz=rz*cb-uz*sb;
-    // flap while climbing, glide while descending
-    var climb=Math.max(0,Math.min(1,dy*6+.5)), ph=t*2*Math.PI*2.1;
-    var a1=.14*(1-climb)+climb*(.55*Math.sin(ph)+.08), a2=-.06*(1-climb)+climb*(.38*Math.sin(ph-.8));
-    var S=.62, parts=eagleLocal(a1,a2);
-    function W(v){return [p[0]+S*(v[0]*dx+v[1]*Ux+v[2]*Rx),p[1]+S*(v[0]*dy+v[1]*Uy+v[2]*Ry),p[2]+S*(v[0]*dz+v[1]*Uz+v[2]*Rz)];}
-    parts.forEach(function(t3){tri(W(t3[0]),W(t3[1]),W(t3[2]),t3[3]);});
-  }
+  /* ---------- eagle flight: a wide soaring loop that passes behind and in front of the flag ---------- */
+  var CX=.95,CY=.5,RX=1.55,RZ=1.15;
+  function fpos(th){return [CX+RX*Math.cos(th),CY+.16*Math.sin(2*th+.6)+.05*Math.sin(th*3.1),RZ*Math.sin(th)];}
 
   /* ---------- interaction ---------- */
-  var wind=.35,windT=.35,gust=0,mx=0,my=0,tmx=0,tmy=0;
+  var wind=.4,windT=.4,gust=0,mx=0,my=0,tmx=0,tmy=0;
   if(fine && !reduce){
     box.addEventListener('pointerenter',function(){windT=1;});
-    box.addEventListener('pointerleave',function(){windT=.35;tmx=0;tmy=0;});
+    box.addEventListener('pointerleave',function(){windT=.4;tmx=0;tmy=0;});
     box.addEventListener('pointermove',function(e){var r=box.getBoundingClientRect();tmx=((e.clientX-r.left)/r.width-.5)*2;tmy=((e.clientY-r.top)/r.height-.5)*2;});
   }
-  box.addEventListener('pointerdown',function(){gust=1.4;kick();});
+  box.addEventListener('pointerdown',function(){gust=1.3;kick();});
 
-  /* ---------- render loop ---------- */
-  var vis=true,raf=0,t0=performance.now(),T=reduce?2.2:0,th=reduce?-.7:-.9;
+  /* ---------- render ---------- */
+  var vis=true,raf=0,t0=performance.now(),T=reduce?2.2:0,th=reduce?-.6:-.9,flapT=0;
   if('IntersectionObserver' in window) new IntersectionObserver(function(es){vis=es[0].isIntersecting;if(vis)kick();}).observe(box);
   document.addEventListener('visibilitychange',function(){if(!document.hidden)kick();});
   function kick(){if(!raf)raf=requestAnimationFrame(frame);}
   function frame(now){
-    raf=0; var dt=Math.min(.05,(now-t0)/1000); t0=now;
-    if(document.hidden||!vis) return;
-    if(!reduce){T+=dt;th+=dt*.5;}
-    gust*=Math.pow(.25,dt); wind+=(windT-wind)*Math.min(1,dt*2.5); mx+=(tmx-mx)*.06; my+=(tmy-my)*.06;
+    raf=0;var dt=Math.min(.05,(now-t0)/1000);t0=now;
+    if(document.hidden||!vis)return;
+    if(!reduce){T+=dt;th+=dt*.42;}
+    gust*=Math.pow(.3,dt);wind+=(windT-wind)*Math.min(1,dt*2.2);mx+=(tmx-mx)*.06;my+=(tmy-my)*.06;
     var w=Math.round(canvas.clientWidth*dpr),h=Math.round(canvas.clientHeight*dpr);
     if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
-    gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);
-    var eye=[CX+mx*.9,.7-my*.35,3.3],PV=mul(persp(31*Math.PI/180,w/h,.1,30),lookAt(eye,[CX,.42,0]));
-    var L=[.6,.9,.8];
+    gl.viewport(0,0,w,h);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.disable(gl.BLEND);
+    var eye=[CX-.55+mx*.9,.66-my*.35,3.25],cam=lookAt(eye,[CX,.42,0]),PV=mul(persp(31*Math.PI/180,w/h,.1,30),cam.m);
+    var L=[-.95,.6,.5],WIND=Math.min(2,wind+gust);
     // flag
-    gl.useProgram(fp);gl.uniformMatrix4fv(F.uPV,false,PV);gl.uniform1f(F.uT,T);gl.uniform1f(F.uWind,Math.min(2,wind+gust));
+    gl.useProgram(fp);gl.uniformMatrix4fv(F.uPV,false,PV);gl.uniform1f(F.uT,T);gl.uniform1f(F.uWind,WIND);gl.uniform1f(F.uAmp,.1+.08*WIND);
     gl.uniform3fv(F.uL,L);gl.uniform3fv(F.uCam,eye);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(F.uTex,0);
     gl.bindBuffer(gl.ARRAY_BUFFER,F.vb);gl.enableVertexAttribArray(F.aG);gl.vertexAttribPointer(F.aG,2,gl.FLOAT,false,8,0);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,flagIdx);gl.drawElements(gl.TRIANGLES,flagN,gl.UNSIGNED_SHORT,0);
-    gl.disableVertexAttribArray(F.aG);
-    // pole + eagle
-    out=[];pole();eagleWorld(th,T);
-    var data=new Float32Array(out);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,flagIdx);gl.drawElements(gl.TRIANGLES,flagN,gl.UNSIGNED_SHORT,0);gl.disableVertexAttribArray(F.aG);
+    // pole
     gl.useProgram(mp);gl.uniformMatrix4fv(M.uPV,false,PV);gl.uniform3fv(M.uL,L);gl.uniform3fv(M.uCam,eye);
-    gl.bindBuffer(gl.ARRAY_BUFFER,meshBuf);gl.bufferData(gl.ARRAY_BUFFER,data,gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER,meshBuf);
     gl.enableVertexAttribArray(M.aP);gl.vertexAttribPointer(M.aP,3,gl.FLOAT,false,40,0);
     gl.enableVertexAttribArray(M.aN);gl.vertexAttribPointer(M.aN,3,gl.FLOAT,false,40,12);
     gl.enableVertexAttribArray(M.aC);gl.vertexAttribPointer(M.aC,4,gl.FLOAT,false,40,24);
-    gl.drawArrays(gl.TRIANGLES,0,data.length/10);
-    gl.disableVertexAttribArray(M.aN);gl.disableVertexAttribArray(M.aC);
+    gl.drawArrays(gl.TRIANGLES,0,poleCount);gl.disableVertexAttribArray(M.aN);gl.disableVertexAttribArray(M.aC);gl.disableVertexAttribArray(M.aP);
+    // eagle
+    if(etex){
+      var p=fpos(th),q=fpos(th+.02),vx=q[0]-p[0],vy=q[1]-p[1],vz=q[2]-p[2],vl=Math.hypot(vx,vy,vz);
+      var sr=(vx*cam.r[0]+vz*cam.r[2])/vl, su=(vx*cam.u[0]+vy*cam.u[1]+vz*cam.u[2])/vl;   // heading on screen
+      var face=sr>=0?1:-1, turn=Math.max(.42,Math.min(1,Math.abs(sr)*1.5));           // narrows as it turns toward or away
+      var ang=Math.atan2(su,Math.abs(sr))*.55-.12;                                     // nose follows the climb, slight bank
+      var ca=Math.cos(ang),sa=Math.sin(ang),size=.7,Wd=size*turn,Hd=size*912/1024;
+      // image x axis: horizontal part follows the heading (mirrored when flying left), vertical part follows the climb
+      var R=[(face*ca*cam.r[0]+sa*cam.u[0])*Wd,(sa*cam.u[1])*Wd,(face*ca*cam.r[2]+sa*cam.u[2])*Wd];
+      var U=[(-face*sa*cam.r[0]+ca*cam.u[0])*Hd,(ca*cam.u[1])*Hd,(-face*sa*cam.r[2]+ca*cam.u[2])*Hd];
+      flapT+=dt*(1.1+.9*Math.max(0,su));
+      gl.useProgram(ep);gl.uniformMatrix4fv(E.uPV,false,PV);gl.uniform3fv(E.uC,p);gl.uniform3fv(E.uR,R);gl.uniform3fv(E.uU,U);
+      gl.uniform1f(E.uFlex,reduce?0:Math.sin(flapT*2.4)*(.35+.65*Math.max(0,Math.min(1,su*3))));
+      gl.uniform1f(E.uLit,p[2]<0?.86:1.);
+      gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,etex);gl.uniform1i(E.uTex,0);
+      gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+      gl.bindBuffer(gl.ARRAY_BUFFER,eB);gl.enableVertexAttribArray(E.aQ);gl.vertexAttribPointer(E.aQ,2,gl.FLOAT,false,8,0);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,eI);gl.drawElements(gl.TRIANGLES,eN,gl.UNSIGNED_SHORT,0);gl.disableVertexAttribArray(E.aQ);
+      gl.disable(gl.BLEND);
+    }
     box.classList.add('on');
-    if(!reduce || gust>.01) raf=requestAnimationFrame(frame);
+    if(!reduce||gust>.01||!etex)raf=requestAnimationFrame(frame);
   }
-  if(document.readyState==='complete') kick(); else window.addEventListener('load',kick);
+  if(document.readyState==='complete')kick();else window.addEventListener('load',kick);
 })();
