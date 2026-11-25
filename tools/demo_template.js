@@ -4328,7 +4328,7 @@ function rdPortal(C){
         h('div',{class:'pt-card-bot'},h('div',null,h('small',null,'MEMBER'),h('b',null,'Alex Sample'),h('em',null,'Renews '+renew)),h('div',{class:'pt-st'},h('small',null,'STATUS'),h('b',null,h('i'),'Active'))),
         h('span',{class:'pt-flip-hint'},rdI('qr',14),'Tap for member pass')),
       h('div',{class:'pt-card-b'},h('div',{class:'pt-qr'},qr()),h('div',null,h('small',null,'MEMBER PASS'),h('b',null,'Show at partner shops'),h('p',null,'Your discount applies at all '+perks.length+' partners.'),h('em',null,'Sample pass'))));
-    const el=h('div',{class:'pt-card',tabindex:'0',role:'button','aria-label':'Membership card, tap to flip',onclick:()=>el.classList.toggle('flip'),onkeydown:e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.classList.toggle('flip'); } },
+    const el=h('div',{class:'pt-card',tabindex:'0',role:'button','aria-label':'Membership card, tap to flip',onclick:()=>{ if(matchMedia('(max-width:820px)').matches) return; el.classList.toggle('flip'); },onkeydown:e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.classList.toggle('flip'); } },
       onmousemove:e=>{ const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5; el.style.setProperty('--rx',(-y*10)+'deg'); el.style.setProperty('--ry',(x*14)+'deg'); el.style.setProperty('--gx',(x*100+50)+'%'); },
       onmouseleave:()=>{ el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); }},inner);
     return el;

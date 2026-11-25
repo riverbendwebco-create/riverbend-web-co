@@ -4845,6 +4845,7 @@ body.t-pt{margin:0;background:#060B16;color:#E8EEF9;font-family:"DM Sans",Inter,
  .pt-view{padding-bottom:calc(110px + env(safe-area-inset-bottom))}
  .pt-head{margin-bottom:18px}.pt-head-r .pt-icbtn,.pt-head-r .pt-av{width:40px;height:40px}
  .pt-review{gap:8px}.pt-perk-hero{padding:14px}.pt-ref{padding:26px 18px}.pt-ref b{font-size:2.4rem}}
+@media (max-width:820px){.pt-card{cursor:default}.pt-card .pt-card-b,.pt-flip-hint{display:none}.pt-card.flip .pt-card-in{transform:none}.pt-card-in{transform:none!important}.pt-card-f .pt-card-bot{margin-bottom:10px}}
 @media (max-width:420px){.pt-rings{gap:6px}.pt-ring-g{width:62px;height:62px}.pt-tiles{gap:6px}}
 @media (prefers-reduced-motion:reduce){.pt *{animation:none!important;transition:none!important}}
 '''
