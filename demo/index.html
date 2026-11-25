@@ -909,96 +909,99 @@ body.t-bw{background:#fff}
 .bw-needg button:hover,.bw-needg button:focus-visible{background:var(--tl);border-color:var(--tl);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}.bw-needg button:hover small,.bw-needg button:focus-visible small{color:#e3eef0}
 @media (max-width:900px){.bw .bw-need{padding:22px 14px 16px;box-shadow:8px 8px 0 var(--tl)}.bw .bw-needhd{font-size:2rem}.bw .bw-needg button{min-height:104px;padding:14px 44px 14px 14px}.bw .bw-needg button b{font-size:1.08rem}.bw .bw-needg{gap:10px}.bw .bw-arr{right:9px}}
 /* ===== Bloom Tattoo ===== */
-body.t-bl{background:#0c0c0d}
-.bl{--bl-bg:#0c0c0d;--in:#0c0c0d;--in2:#16171a;--in3:#1f2126;--ln:#2a2d33;--wh:#F3F4F6;--mu:#9aa1ab;--rd:#E0364F;--rd2:#B8243A;--bf:'Manrope',system-ui,sans-serif;--hf:'Instrument Serif','Times New Roman',serif;font-family:var(--bf);color:var(--wh);background:var(--in);line-height:1.6;font-weight:500;overflow-x:hidden}
+body.t-bl{background:#0a0a0a}
+.bl{--k:#0a0a0a;--k2:#151515;--ln:#2b2b2b;--w:#fff;--g:#e8e8e8;--mu:#9b9b9b;--hot:#FF4B1F;--hot2:#d93a12;--bf:'Work Sans',system-ui,sans-serif;--df:'Bebas Neue','Arial Narrow',Impact,sans-serif;font-family:var(--bf);color:var(--w);background:var(--k);line-height:1.55;font-weight:500;overflow-x:hidden}
 .bl *{box-sizing:border-box}.bl h1,.bl h2,.bl h3{margin:0;font-weight:400}.bl button{font-family:inherit}
-.bl-wrap{max-width:1180px;margin:0 auto;padding:0 22px}
-.bl-top{background:#000;border-bottom:1px solid var(--ln);font-size:.82rem;color:#c9ced6}.bl-top-in{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:7px;padding-bottom:7px}
-.bl-st{display:flex;align-items:center;gap:7px}.bl-dot{width:8px;height:8px;border-radius:50%;background:#7b818b}.bl-dot.on{background:#3ddc84}.bl-age{font:800 .7rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--rd)}
-.bl-nav{position:sticky;top:0;z-index:30;background:rgba(12,12,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}.bl-nav-in{display:flex;align-items:center;gap:18px;padding-top:11px;padding-bottom:11px}
-.bl-brand{display:flex;align-items:center;gap:10px;color:var(--wh);text-decoration:none}.bl-brand span{display:flex;flex-direction:column;line-height:1}.bl-brand b{font:400 1.7rem var(--hf)}.bl-brand i{font:800 .62rem var(--bf);letter-spacing:.3em;text-transform:uppercase;color:var(--rd);font-style:normal;margin-top:3px}
-.bl .bl-mk{width:34px;height:34px;flex:none;color:var(--rd)}
-.bl-links{display:flex;gap:2px;margin-left:auto}.bl-links button{background:none;border:0;color:#d6dae0;font:700 .86rem var(--bf);padding:9px 12px;cursor:pointer;border-radius:4px}.bl-links button:hover{background:var(--in3)}
+.bl-wrap{max-width:1200px;margin:0 auto;padding:0 22px}
+.bl-top{background:var(--hot);color:#000;font:700 .8rem var(--bf)}.bl-top-in{display:flex;justify-content:space-between;align-items:center;padding-top:6px;padding-bottom:6px}
+.bl-st{display:flex;align-items:center;gap:7px}.bl-dot{width:8px;height:8px;border-radius:50%;background:#000;opacity:.4}.bl-dot.on{opacity:1}.bl-age{font:800 .7rem var(--bf);letter-spacing:.16em;text-transform:uppercase}
+.bl-nav{position:sticky;top:0;z-index:30;background:#000;border-bottom:3px solid var(--w)}.bl-nav-in{display:flex;align-items:center;gap:18px;padding-top:9px;padding-bottom:9px}
+.bl-brand{display:flex;align-items:baseline;gap:7px;color:var(--w);text-decoration:none}.bl-brand b{font:400 2rem/1 var(--df);letter-spacing:.04em}.bl-brand i{font:400 1.2rem/1 var(--df);letter-spacing:.2em;color:var(--hot);font-style:normal}
+.bl .bl-mk{width:30px;height:30px;flex:none;color:var(--hot);align-self:center}
+.bl-links{display:flex;gap:2px;margin-left:auto}.bl-links button{background:none;border:0;color:var(--w);font:400 1.25rem var(--df);letter-spacing:.06em;padding:6px 12px;cursor:pointer}.bl-links button:hover{color:var(--hot)}
 .bl-nav-r{display:flex;gap:8px;align-items:center}
-.bl-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:5px;padding:13px 20px;font:800 .95rem var(--bf);text-decoration:none;cursor:pointer;border:2px solid transparent;transition:transform .15s,background .15s,box-shadow .15s}
-.bl-btn.red{background:var(--rd);color:#fff;border-color:var(--rd)}.bl-btn.red:hover{background:var(--rd2);border-color:var(--rd2);transform:translateY(-2px)}
-.bl-btn.ghost{background:transparent;color:var(--wh);border-color:#4a4f58}.bl-btn.ghost:hover{border-color:var(--wh);transform:translateY(-2px)}
-.bl-btn.sm{padding:9px 14px;font-size:.84rem}.bl-btn svg{width:16px;height:16px}
+.bl-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:0;padding:14px 22px;font:400 1.25rem/1 var(--df);letter-spacing:.07em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:3px solid var(--w);transition:transform .12s,background .12s,color .12s}
+.bl-btn.hot{background:var(--hot);border-color:var(--hot);color:#000}.bl-btn.hot:hover{background:var(--w);border-color:var(--w)}
+.bl-btn.ghost{background:transparent;color:var(--w)}.bl-btn.ghost:hover{background:var(--w);color:#000}
+.bl-btn.blk{background:#000;border-color:#000;color:var(--w)}.bl-btn.blk:hover{background:var(--w);color:#000;border-color:var(--w)}
+.bl-btn.sm{padding:9px 14px;font-size:1.05rem}.bl-btn svg{width:16px;height:16px}
 .bl-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
 .bl-art{width:100%;height:100%;display:block}.bl-art *{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.bl-art .f{fill:currentColor;stroke:none}
-.bl-hero{padding:56px 0 44px;background:radial-gradient(ellipse at 80% 20%,rgba(224,54,79,.16),transparent 55%),var(--in)}
-.bl-hero-g{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
-.bl-kick{display:block;font:800 .74rem var(--bf);letter-spacing:.2em;text-transform:uppercase;color:var(--rd);margin-bottom:12px}
-.bl-hero h1{font:400 clamp(3.2rem,7.4vw,6.2rem)/.95 var(--hf)}.bl-hero h1 em{color:var(--rd)}
-.bl-lead{font-size:1.12rem;color:#c3c8d0;max-width:520px;margin:18px 0 22px}
-.bl-facts{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:9px}.bl-facts li{display:flex;gap:11px;align-items:center;font-weight:700;font-size:.95rem}.bl-facts li:before{content:'';width:9px;height:9px;background:var(--rd);flex:none;transform:rotate(45deg)}
-.bl-hero-a{color:var(--wh);max-width:460px;justify-self:center;width:100%;aspect-ratio:1}
-.bl-draw *{stroke-dasharray:1;stroke-dashoffset:1}
-.bl-draw path,.bl-draw ellipse{stroke-width:1.5}
-.bl-draw path{pathLength:1}
-.bl-hero-a .bl-draw path{stroke-dasharray:420;stroke-dashoffset:420;animation:bld 2.6s ease forwards}
-.bl-hero-a .bl-draw path:nth-child(2n){animation-delay:.25s}.bl-hero-a .bl-draw path:nth-child(3n){animation-delay:.5s}
-.bl-hero-a .bl-draw circle{stroke-dasharray:80;stroke-dashoffset:80;animation:bld 1.4s 1.6s ease forwards}
-@keyframes bld{to{stroke-dashoffset:0}}
-.bl-hero-a{animation:blspin 90s linear infinite}@keyframes blspin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.bl-hero-a,.bl-hero-a .bl-draw path,.bl-hero-a .bl-draw circle{animation:none!important;stroke-dashoffset:0!important}}
-.bl-need{margin-top:34px;background:var(--in2);border:1px solid var(--ln);border-top:4px solid var(--rd);border-radius:6px;padding:22px}
-.bl-needhd{display:block;font:400 1.9rem/1.1 var(--hf);margin-bottom:14px}
-.bl-needg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.bl-needg button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:var(--in);border:2px solid #3a3e46;border-radius:5px;padding:16px 46px 16px 16px;min-height:84px;color:var(--wh);cursor:pointer;transition:transform .15s,border-color .15s,background .15s}
-.bl-needg button b{font:800 1.08rem var(--bf)}.bl-needg button small{font:500 .84rem var(--bf);color:var(--mu)}
-.bl-arr{position:absolute;right:12px;top:50%;margin-top:-14px;width:28px;height:28px;display:grid;place-items:center;background:var(--rd);color:#fff;border-radius:4px}.bl-arr svg{width:16px;height:16px}
-.bl-needg button:hover,.bl-needg button:focus-visible{border-color:var(--rd);transform:translateY(-3px);background:#15161a}
-.bl-sec{padding:84px 0}.bl-alt{background:var(--in2);border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
-.bl-head{max-width:640px;margin-bottom:34px}.bl-head h2,.bl-2c h2{font:400 clamp(2.2rem,4.6vw,3.4rem)/1.02 var(--hf)}.bl-head p{color:#b4bac3;margin:12px 0 0}
-.bl-card{background:var(--in2);border:1px solid var(--ln);border-radius:6px;padding:26px}.bl-alt .bl-card{background:var(--in)}
-.bl-lbl{display:block;font:800 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--rd);margin:0 0 8px}
-.bl-note{color:var(--mu);font-size:.86rem;margin:14px 0 0}.bl-sm{color:var(--mu);font-size:.9rem;margin:6px 0 14px}
-.bl-2c{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}.bl-tools{align-items:start}.bl-card h3{font:400 1.7rem var(--hf)}
+/* cover */
+.bl-hero{position:relative;overflow:hidden;min-height:620px;display:grid;align-items:end;background:#000}
+.bl-coll{position:absolute;inset:0}.bl-fl{position:absolute;opacity:.9;animation:blfl 7s ease-in-out infinite alternate}.bl-fl.w{color:#fff;opacity:.55}.bl-fl.o{color:var(--hot);opacity:.9}.bl-fl .bl-art *{stroke-width:2.4}
+@keyframes blfl{from{translate:0 0}to{translate:0 -14px}}
+.bl-hero-in{position:relative;padding-top:70px;padding-bottom:56px;z-index:2}
+.bl-kick{display:inline-block;font:700 .78rem var(--bf);letter-spacing:.22em;text-transform:uppercase;background:#000;color:var(--hot);padding:6px 10px;margin-bottom:10px;border:2px solid var(--hot)}
+.bl-hero h1{font:400 clamp(4.6rem,15vw,12.5rem)/.82 var(--df);text-transform:uppercase;text-shadow:0 0 30px #000}.bl-hero h1 span{display:block}.bl-hero h1 .ol{color:transparent;-webkit-text-stroke:3px var(--w);text-shadow:none}
+.bl-lead{font-size:1.12rem;color:#e2e2e2;max-width:540px;margin:20px 0 22px;background:rgba(0,0,0,.78);padding:12px 14px;border-left:5px solid var(--hot)}
+.bl-mq{background:var(--hot);color:#000;overflow:hidden;border-top:3px solid #000;border-bottom:3px solid #000}.bl-mq-in{display:flex;width:max-content;animation:blmq 38s linear infinite}.bl-mq span{font:400 1.7rem var(--df);letter-spacing:.06em;text-transform:uppercase;padding:9px 0;white-space:nowrap}.bl-mq span:after{content:'';display:inline-block;width:10px;height:10px;background:#000;transform:rotate(45deg);margin:0 26px}
+@keyframes blmq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.bl-mq-in,.bl-fl{animation:none}}
+/* sections */
+.bl-sec{padding:88px 0}.bl-dk{background:var(--k);color:var(--w)}.bl-lt{background:var(--g);color:#000}.bl-hot{background:var(--hot);color:#000}
+.bl-head{max-width:680px;margin-bottom:34px;position:relative}.bl-num{display:block;font:400 1.4rem var(--df);letter-spacing:.14em;color:var(--hot);margin-bottom:2px}.bl-lt .bl-num{color:var(--hot2)}.bl-hot .bl-num{color:#000}
+.bl-head h2,.bl-2c h2{font:400 clamp(3rem,7vw,5.6rem)/.9 var(--df);text-transform:uppercase}.bl-head p{margin:14px 0 0;opacity:.85;max-width:560px}
+.bl-card{background:var(--k2);border:3px solid var(--w);padding:26px}.bl-card.inv{background:#000;color:var(--w);border-color:#000}.bl-card h3{font:400 2rem var(--df);letter-spacing:.03em;text-transform:uppercase}
+.bl-lbl{display:block;font:700 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--hot);margin:0 0 8px}.bl-lt .bl-lbl{color:var(--hot2)}
+.bl-note{opacity:.7;font-size:.86rem;margin:14px 0 0}.bl-sm{opacity:.75;font-size:.9rem;margin:6px 0 14px}
+.bl-2c{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}.bl-2c p{margin:14px 0 20px;max-width:520px}.bl-tools{align-items:start}
 /* gallery */
-.bl-gal{max-width:900px;margin:0 auto}
-.bl-stage{position:relative;aspect-ratio:16/10;border:1px solid var(--ln);border-radius:6px;overflow:hidden;background:#000;outline-offset:3px}
-.bl-slide{position:absolute;inset:0;margin:0;opacity:0;transform:scale(1.03);transition:opacity .7s ease,transform 1.2s ease;display:grid;place-items:center}.bl-slide.on{opacity:1;transform:none}
-.bl-slide img{width:100%;height:100%;object-fit:cover}.bl-slart{position:absolute;inset:8% 0 14%;margin:auto;height:78%!important;width:auto!important;aspect-ratio:1;color:var(--wh)}
-.bl-slide figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 22px 16px;background:linear-gradient(transparent,rgba(0,0,0,.82));display:flex;flex-direction:column;gap:2px}.bl-slide figcaption b{font:400 1.7rem var(--hf)}.bl-slide figcaption span{font:800 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--rd)}
-.bl-gbar{display:flex;align-items:center;gap:14px;margin-top:14px}.bl-dots{display:flex;gap:8px;flex:1;justify-content:center;flex-wrap:wrap}
-.bl-dot2{width:26px;height:6px;border:0;border-radius:2px;background:#3a3e46;cursor:pointer;padding:0}.bl-dot2.on{background:var(--rd)}
-.bl-count{font:800 .8rem var(--bf);color:var(--mu);min-width:44px;text-align:right}
-.bl-nb{width:40px;height:40px;border:2px solid #4a4f58;border-radius:5px;background:transparent;color:var(--wh);display:grid;place-items:center;cursor:pointer}.bl-nb:hover{border-color:var(--rd)}.bl-nb:not(.nxt) svg{transform:rotate(180deg)}
-.bl-track{display:block;height:3px;background:#2a2d33;margin-top:12px;overflow:hidden}.bl-bar{display:block;height:100%;width:100%;background:var(--rd);transform-origin:left;animation:blbar 4.6s linear infinite}
-.bl-stage.paused~.bl-gbar,.bl-gal:has(.bl-stage.paused) .bl-bar{animation-play-state:paused}
+.bl-gal{max-width:980px}
+.bl-stage{position:relative;aspect-ratio:16/9;border:3px solid var(--w);overflow:hidden;background:#000;outline-offset:4px}
+.bl-slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .6s ease;display:grid;place-items:center}.bl-slide.on{opacity:1}
+.bl-slide img{width:100%;height:100%;object-fit:cover}.bl-slart{position:absolute;top:6%;bottom:6%;right:8%;height:88%!important;width:auto!important;aspect-ratio:1;color:var(--w)}.bl-slide:nth-child(even) .bl-slart{color:var(--hot);right:auto;left:8%}
+.bl-slide figcaption{position:absolute;left:0;bottom:0;padding:18px 22px;background:#000;border-top:3px solid var(--hot);border-right:3px solid var(--hot);display:flex;flex-direction:column}.bl-slide figcaption b{font:400 2.6rem/1 var(--df);text-transform:uppercase}.bl-slide figcaption span{font:700 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--hot)}
+.bl-gbar{display:flex;align-items:center;gap:14px;margin-top:14px}.bl-dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+.bl-dot2{width:34px;height:8px;border:0;border-radius:0;background:#3a3a3a;cursor:pointer;padding:0}.bl-dot2.on{background:var(--hot)}
+.bl-count{font:400 1.5rem var(--df);letter-spacing:.06em;min-width:74px;text-align:right}
+.bl-nb{width:44px;height:44px;border:3px solid var(--w);border-radius:0;background:transparent;color:var(--w);display:grid;place-items:center;cursor:pointer}.bl-nb:hover{background:var(--hot);border-color:var(--hot);color:#000}.bl-nb:not(.nxt) svg{transform:rotate(180deg)}
+.bl-track{display:block;height:4px;background:#2b2b2b;margin-top:12px;overflow:hidden}.bl-bar{display:block;height:100%;width:100%;background:var(--hot);transform-origin:left;animation:blbar 4.6s linear infinite}.bl-gal.paused .bl-bar{animation-play-state:paused}
 @keyframes blbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 /* styles */
-.bl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.bl-tabs button{background:transparent;border:2px solid #3a3e46;color:var(--wh);border-radius:5px;padding:10px 16px;font:800 .88rem var(--bf);cursor:pointer}.bl-tabs button.on{background:var(--rd);border-color:var(--rd)}
-.bl-sbody{display:grid;grid-template-columns:260px 1fr;gap:34px;align-items:center}.bl-sart{aspect-ratio:1;color:var(--wh);background:#000;border:1px solid var(--ln);border-radius:6px;padding:16px}
+.bl-sty{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.bl-sc{background:#fff;border:3px solid #000;padding:18px;position:relative;transition:transform .15s,box-shadow .15s}.bl-sc:hover{transform:translate(-4px,-4px);box-shadow:8px 8px 0 #000}
+.bl-n{position:absolute;top:12px;right:14px;font:400 1.4rem var(--df);color:var(--hot2)}.bl-sa{aspect-ratio:1;background:#000;color:#fff;padding:14px;margin-bottom:14px}.bl-sc:nth-child(even) .bl-sa{color:var(--hot)}
+.bl-sc h3{font:400 1.9rem/1 var(--df);text-transform:uppercase}.bl-sc p{margin:8px 0 0;font-size:.92rem;color:#333}
 .bl-draw2 path,.bl-draw2 ellipse,.bl-draw2 rect{stroke-dasharray:500;stroke-dashoffset:500;animation:bld 1.8s ease forwards}.bl-draw2 circle:not(.f){stroke-dasharray:500;stroke-dashoffset:500;animation:bld 1.8s ease forwards}
-.bl-stxt h3{font:400 2.2rem var(--hf);margin-bottom:8px}.bl-stxt p{color:#c3c8d0;margin:0 0 16px}.bl-stxt ul{margin:0 0 20px;padding-left:18px;color:#d6dae0}.bl-stxt li{margin:3px 0}
+@keyframes bld{to{stroke-dashoffset:0}}
 /* artist */
-.bl-ph{aspect-ratio:4/5;max-width:420px;width:100%;justify-self:center;background:#000;border:1px solid var(--ln);border-radius:6px;position:relative;display:grid;place-items:center;color:#2f3238;overflow:hidden}.bl-ph-art{position:absolute;inset:8%;width:84%;height:84%}.bl-ph span{position:relative;font:400 9rem var(--hf);color:var(--rd);line-height:1}
-.bl-2c p{color:#c3c8d0;margin:12px 0 0}.bl-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.bl-stats div{border:1px solid var(--ln);border-radius:5px;padding:14px;background:var(--in)}.bl-stats b{display:block;font:400 2.2rem/1 var(--hf);color:var(--rd)}.bl-stats span{font-size:.84rem;color:var(--mu)}
-/* plan */
-.bl-plan{display:grid;grid-template-columns:1.1fr .9fr;gap:34px}.bl-fld{margin-bottom:18px}
-.bl-chips{display:flex;flex-wrap:wrap;gap:8px}.bl-chips button{background:var(--in);border:2px solid #3a3e46;color:var(--wh);border-radius:5px;padding:9px 13px;font:700 .86rem var(--bf);cursor:pointer}.bl-chips button.on{background:var(--rd);border-color:var(--rd)}.bl-chips button:hover{border-color:var(--rd)}
-.bl textarea,.bl input[type=text],.bl input[type=datetime-local]{width:100%;background:var(--in);border:2px solid #3a3e46;border-radius:5px;color:var(--wh);padding:12px;font:500 .95rem var(--bf);color-scheme:dark}.bl textarea:focus,.bl input:focus{outline:0;border-color:var(--rd)}
-.bl-msg{white-space:pre-wrap;background:#000;border:1px solid var(--ln);border-radius:5px;padding:16px;font:500 .92rem/1.5 var(--bf);color:#e3e6ea;margin:0 0 16px;min-height:150px}
-/* placement */
-.bl-areas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.bl-area{background:var(--in);border:1px solid var(--ln);border-radius:5px;padding:16px;display:grid;gap:5px}.bl-area b{font:800 1rem var(--bf)}.bl-area small{color:var(--mu);font-size:.84rem;line-height:1.4}.bl-area em{font:800 .7rem var(--bf);letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-style:normal}
-.bl-meter{display:flex;gap:4px}.bl-meter i{width:30px;height:6px;background:#2f3238;border-radius:2px}.bl-area.l1 .bl-meter i:nth-child(1),.bl-area.l2 .bl-meter i:nth-child(-n+2),.bl-area.l3 .bl-meter i{background:var(--rd)}
+.bl-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.bl-stats div{background:#000;color:#fff;padding:20px}.bl-stats b{display:block;font:400 3.6rem/1 var(--df);color:var(--hot)}.bl-stats span{font-size:.86rem;opacity:.85}
+/* try it on */
+.bl-lab{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:34px;align-items:start}
+.bl-stage2{background:#fff;border:3px solid #fff;padding:14px 10px 8px;position:sticky;top:76px;color:#000}.bl-fig{width:100%}.bl-body{width:100%;height:auto;max-height:78vh;display:block;touch-action:none;overflow:visible}
+.bl-hint{margin:6px 0 0;font:700 .76rem var(--bf);letter-spacing:.12em;text-transform:uppercase;text-align:center;color:#000}
+.bl-zd{fill:var(--hot);stroke:#000;stroke-width:1.2;cursor:pointer;opacity:.9}.bl-zd:hover{r:6}
+.bl-tat{touch-action:none;cursor:grab}.bl-tat.drag{cursor:grabbing}.bl-tat .bl-art,.bl-tat *{vector-effect:non-scaling-stroke}.bl-tat path,.bl-tat ellipse,.bl-tat rect:not([fill=transparent]),.bl-tat circle:not(.f){fill:none;stroke:var(--ink);stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:round}.bl-tat .f{fill:var(--ink)}
+.bl-panel{display:grid;gap:18px}.bl-ctl{display:grid;gap:6px}.bl-two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.bl-des{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.bl-des button{aspect-ratio:1;background:#000;border:3px solid #3a3a3a;border-radius:0;color:#fff;padding:6px;cursor:pointer}.bl-des button.on{border-color:var(--hot);color:var(--hot)}.bl-des button:hover{border-color:var(--w)}
+.bl-sw{display:flex;gap:8px;flex-wrap:wrap}.bl-sw button{width:38px;height:38px;border:3px solid #3a3a3a;border-radius:0;background:var(--c);cursor:pointer;padding:0}.bl-sw button.on{border-color:var(--w);box-shadow:0 0 0 3px var(--hot)}
+.bl-seg{display:flex}.bl-seg button{flex:1;background:transparent;border:3px solid var(--w);color:var(--w);padding:9px;font:400 1.25rem var(--df);letter-spacing:.06em;cursor:pointer}.bl-seg button+button{border-left:0}.bl-seg button.on{background:var(--hot);border-color:var(--hot);color:#000}
+.bl input[type=range]{width:100%;accent-color:var(--hot);height:28px}.bl-ro{font-size:.86rem;opacity:.85}.bl-ro b{font:400 1.5rem var(--df);color:var(--hot);letter-spacing:.04em}
+.bl-read{background:#000;border:3px solid var(--hot);padding:14px 16px;display:grid;gap:4px}.bl-read b{font:400 1.9rem/1.05 var(--df);text-transform:uppercase}.bl-read span{font-size:.9rem;opacity:.85}
+.bl-meter{display:flex;gap:4px;margin-top:4px}.bl-meter i{width:44px;height:8px;background:#333}.bl-meter.l1 i:nth-child(1),.bl-meter.l2 i:nth-child(-n+2),.bl-meter.l3 i{background:var(--hot)}
+.bl-msg{white-space:pre-wrap;background:#000;border:2px solid var(--ln);padding:14px;font:500 .9rem/1.5 var(--bf);color:#eee;margin:0;min-height:110px}
+.bl input[type=datetime-local]{width:100%;background:#000;border:3px solid #3a3a3a;border-radius:0;color:var(--w);padding:12px;font:500 .95rem var(--bf);color-scheme:dark}.bl input:focus{outline:2px solid var(--hot)}
+/* healing */
+.bl-heal{display:grid;grid-template-columns:minmax(240px,340px) 1fr;gap:40px;align-items:center}
+.bl-skin{position:relative;aspect-ratio:1;border:3px solid #000;overflow:hidden}.bl-skin-art{position:absolute;inset:14%;transition:opacity .2s,filter .2s}.bl-hart{color:#000}.bl-hart *{stroke:var(--ink,#000)!important;stroke-width:2.2}
+.bl-red{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(220,40,40,.9),rgba(220,40,40,.25) 70%,transparent);mix-blend-mode:multiply;pointer-events:none}
+.bl-flk{position:absolute;inset:0;pointer-events:none}.bl-flk i{position:absolute;background:rgba(255,255,255,.55);display:block}
+.bl-day b{font:400 6rem/1 var(--df);color:var(--hot2)}.bl-hr h3{font:400 2.6rem/1 var(--df);text-transform:uppercase;margin-top:6px}.bl-hr p{margin:8px 0 0;max-width:520px}.bl-tip{padding:12px 14px;background:#000;color:#fff;border-left:5px solid var(--hot)}
+.bl-ticks{display:flex;justify-content:space-between;font:700 .72rem var(--bf);letter-spacing:.1em;text-transform:uppercase;color:#555;margin-top:-4px}
 /* prep */
-.bl-out{margin:14px 0 0;padding:14px;border:1px dashed #4a4f58;border-radius:5px;color:var(--mu);display:grid;gap:3px}.bl-out b{font:400 1.7rem/1.1 var(--hf);color:var(--wh)}.bl-out small{font-size:.84rem}
-.bl-chk{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--ln);cursor:pointer}.bl-chk input{width:22px;height:22px;accent-color:var(--rd);flex:none}
-.bl-ptrack{display:block;height:6px;background:#2a2d33;margin:16px 0 8px;border-radius:2px;overflow:hidden}.bl-pfill{display:block;height:100%;width:0;background:var(--rd);transition:width .3s}.bl-prog{font:800 .86rem var(--bf);color:var(--wh)}
-/* aftercare */
-.bl-tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:s}.bl-tl li{background:var(--in);border:1px solid var(--ln);border-top:4px solid var(--rd);border-radius:5px;padding:20px;display:grid;gap:8px;align-content:start}.bl-tl b{font:400 1.7rem var(--hf)}.bl-tl span{color:#c3c8d0;font-size:.92rem}
+.bl-out{margin-top:14px;padding:14px;border:2px dashed #555;color:var(--mu);display:grid;gap:6px}.bl-out b{font:400 2rem/1.05 var(--df);color:var(--w);text-transform:uppercase}.bl-out small{font-size:.84rem}
+.bl-tbar{display:block;position:relative;height:10px;background:#2b2b2b;margin:6px 0}.bl-tbar i{position:absolute;left:0;top:0;bottom:0;background:var(--hot)}.bl-tbar em{position:absolute;top:-5px;width:4px;height:20px;background:#fff;margin-left:-2px}
+.bl-chk{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--ln);cursor:pointer}.bl-chk input{width:22px;height:22px;accent-color:var(--hot);flex:none}
+.bl-ptrack{display:block;height:8px;background:#2b2b2b;margin:16px 0 8px}.bl-pfill{display:block;height:100%;width:0;background:var(--hot);transition:width .3s}.bl-prog{font:400 1.4rem var(--df);letter-spacing:.05em}
 /* faq */
-.bl-faq{max-width:820px}.bl-faq details{border-bottom:1px solid var(--ln)}.bl-faq summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font:700 1.05rem var(--bf);position:relative}.bl-faq summary::-webkit-details-marker{display:none}.bl-faq summary:after{content:'+';position:absolute;right:4px;top:14px;font:400 1.9rem var(--hf);color:var(--rd)}.bl-faq details[open] summary:after{content:'\2212'}.bl-faq p{margin:0 0 20px;color:#c3c8d0;max-width:680px}
+.bl-faq{max-width:840px}.bl-faq details{border-bottom:3px solid #000}.bl-faq summary{cursor:pointer;list-style:none;padding:20px 44px 20px 0;font:400 1.8rem/1.1 var(--df);text-transform:uppercase;position:relative}.bl-faq summary::-webkit-details-marker{display:none}.bl-faq summary:after{content:'+';position:absolute;right:4px;top:10px;font:400 2.4rem var(--df);color:var(--hot2)}.bl-faq details[open] summary:after{content:'\2212'}.bl-faq p{margin:0 0 20px;max-width:680px;color:#222}
 /* visit */
-.bl-addr{display:flex;gap:10px;align-items:center;margin:8px 0;font-weight:700}.bl-addr svg{width:18px;height:18px;color:var(--rd);flex:none}.bl-addr a{color:var(--wh)}
-.bl-hrs div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--ln)}.bl-hrs .today{color:var(--rd);font-weight:800}
-.bl-foot{background:#000;border-top:1px solid var(--ln);padding:26px 0;color:#9aa1ab;font-size:.88rem}.bl-foot-in{display:flex;gap:18px;flex-wrap:wrap;align-items:center}.bl-foot b{color:var(--wh);font:400 1.3rem var(--hf)}.bl-foot a{color:var(--wh)}.bl-foot em{margin-left:auto;font-style:normal}
-.bl .rv.rv-in{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}.bl .rv.rv-on{opacity:1;transform:none}
-@media (max-width:900px){.bl-links{display:none}.bl-nav-r{margin-left:auto}.bl-hero-g,.bl-2c,.bl-plan,.bl-sbody{grid-template-columns:1fr}.bl-hero{padding:34px 0 30px}.bl-hero-a{max-width:280px;order:-1;margin:0 auto -12px}.bl-needg{grid-template-columns:repeat(2,minmax(0,1fr))}.bl-tl{grid-template-columns:1fr 1fr}.bl-areas{grid-template-columns:1fr 1fr}.bl-sec{padding:56px 0}.bl-sart{max-width:240px}.bl-ph{max-width:300px}.bl-foot em{margin-left:0}}
-@media (max-width:560px){.bl-wrap{padding:0 16px}.bl-tl,.bl-areas{grid-template-columns:1fr}.bl-needg button{min-height:78px;padding:14px 42px 14px 14px}.bl-need{padding:16px}.bl-needhd{font-size:1.6rem}.bl-btn.sm{padding:9px 11px}.bl-brand b{font-size:1.45rem}.bl-stage{aspect-ratio:4/5}.bl-slart{height:62%!important;inset:6% 0 20%}.bl-stats b{font-size:1.9rem}}
+.bl-addr{display:flex;gap:10px;align-items:center;margin:8px 0;font-weight:700}.bl-addr svg{width:18px;height:18px;color:var(--hot);flex:none}.bl-addr a{color:var(--w)}
+.bl-hrs div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #333}.bl-hrs .today{color:var(--hot);font-weight:800}
+.bl-foot{background:#000;border-top:3px solid #fff;padding:26px 0;color:#aaa;font-size:.88rem}.bl-foot-in{display:flex;gap:18px;flex-wrap:wrap;align-items:center}.bl-foot b{color:#fff;font:400 1.6rem var(--df);letter-spacing:.06em}.bl-foot a{color:#fff}.bl-foot em{margin-left:auto;font-style:normal}
+.bl .rv.rv-in{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}.bl .rv.rv-on{opacity:1;transform:none}
+@media (max-width:900px){.bl-links{display:none}.bl-nav-r{margin-left:auto}.bl-2c,.bl-lab,.bl-heal{grid-template-columns:1fr}.bl-sty{grid-template-columns:1fr 1fr}.bl-sec{padding:58px 0}.bl-stage2{position:static;max-width:340px;margin:0 auto}.bl-hero{min-height:560px}.bl-foot em{margin-left:0}.bl-slart{height:70%!important;top:6%}.bl-slide figcaption b{font-size:1.9rem}}
+@media (max-width:560px){.bl-wrap{padding:0 16px}.bl-sty{grid-template-columns:1fr}.bl-des{grid-template-columns:repeat(4,minmax(0,1fr))}.bl-two{grid-template-columns:1fr}.bl-btn.sm{padding:8px 10px}.bl-brand b{font-size:1.6rem}.bl-brand i{font-size:1rem}.bl-stage{aspect-ratio:4/5}.bl-slart{height:62%!important;top:8%;right:auto;left:50%;translate:-50% 0}.bl-slide:nth-child(even) .bl-slart{left:50%}.bl-fl{opacity:.5!important}.bl-day b{font-size:4.5rem}.bl-hero h1{font-size:4.6rem}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
@@ -7995,125 +7998,172 @@ function bloomTattoo(C){
   const bookBtn=(cls,label)=>book?h('a',{class:'bl-btn '+cls,href:book,target:'_blank',rel:'noopener'},label||'Book on Vagaro',ico('arrow',16,'')):null;
   const callBtn=(cls,label)=>C.tel?h('a',{class:'bl-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
   const go=id=>()=>scrollTo(id);
-  const hd=(k,t,p)=>h('div',{class:'bl-head rv'},h('span',{class:'bl-kick'},k),h('h2',null,t),p?h('p',null,p):null);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hd=(n,t,p)=>h('div',{class:'bl-head rv'},h('span',{class:'bl-num'},n),h('h2',null,t),p?h('p',null,p):null);
   const sec=(id,cls,...kids)=>h('section',{class:'bl-sec '+(cls||''),id},h('div',{class:'bl-wrap'},kids));
-  const stopFns=[]; const live=()=>stopFns.every(f=>f!==false);
+  const ART=[['rose','Rose','Illustrative color'],['flower','Bloom','Ornamental'],['rosebud','Rosebud','Illustrative color'],['moth','Butterfly','Neo-traditional'],['dagger','Dagger','Neo-traditional'],['snake','Snake','Neo-traditional'],['orn','Sun ornament','Ornamental']];
+  const artM=k=>k==='flower'?BLA.flower(7,76,30):BLA[k]();
 
   /* ---- top, nav ---- */
-  const top=h('div',{class:'bl-top'},h('div',{class:'bl-wrap bl-top-in'},st?h('span',{class:'bl-st'},h('i',{class:'bl-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,h('span',{class:'bl-age'},'18+ studio')));
-  const mark=()=>blSvg(BLA.flower(6,44,22),'bl-mk');
+  const top=h('div',{class:'bl-top'},h('div',{class:'bl-wrap bl-top-in'},st?h('span',{class:'bl-st'},h('i',{class:'bl-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,h('span',{class:'bl-age'},'18+ only')));
   const nav=h('header',{class:'bl-nav'},h('div',{class:'bl-wrap bl-nav-in'},
-    h('a',{class:'bl-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('b-top'); }},mark(),h('span',null,h('b',null,'Bloom'),h('i',null,'Tattoo'))),
-    h('nav',{class:'bl-links'},[['b-gal','Gallery'],['b-styles','Styles'],['b-plan','Plan'],['b-care','Aftercare'],['b-visit','Visit']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
-    h('div',{class:'bl-nav-r'},callBtn('ghost sm','Call'),bookBtn('red sm','Book'))));
+    h('a',{class:'bl-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('b-top'); }},blSvg(BLA.flower(6,44,22),'bl-mk'),h('b',null,'BLOOM'),h('i',null,'TATTOO')),
+    h('nav',{class:'bl-links'},[['b-gal','Gallery'],['b-try','Try it on'],['b-care','Healing'],['b-faq','FAQ'],['b-visit','Visit']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('div',{class:'bl-nav-r'},callBtn('ghost sm','Call'),bookBtn('hot sm','Book'))));
 
-  /* ---- hero ---- */
-  const picks=[['b-gal','Gallery','Work that changes'],['b-styles','Styles','What Josh does'],['b-plan','Plan a tattoo','Build your request'],['b-body','Placement guide','Where it goes'],['b-care','Aftercare','Heal it right'],['b-visit','Visit','Hours and map']];
-  const hero=h('section',{class:'bl-hero',id:'b-top'},h('div',{class:'bl-wrap bl-hero-g'},
-    h('div',{class:'bl-hero-t'},
-      h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' · ')),
-      h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
-      h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
-      h('div',{class:'bl-cta'},bookBtn('red'),callBtn('ghost')),
-      h('ul',{class:'bl-facts'},h('li',null,'Large-scale black and grey realism'),h('li',null,'Neo-traditional, illustrative color and ornamental'),h('li',null,'On Central Ave in Dubuque'))),
-    h('div',{class:'bl-hero-a','aria-hidden':'true'},blSvg(BLA.flower(8,84,34)+BLA.flower(8,52,18).replace(/<circle[^>]*>/g,''),'bl-draw'))),
-    h('div',{class:'bl-wrap'},h('div',{class:'bl-need'},h('span',{class:'bl-needhd'},'What are you looking for?'),h('div',{class:'bl-needg'},picks.map(([id,l,s])=>h('button',{type:'button',onclick:go(id)},h('b',null,l),h('small',null,s),h('i',{class:'bl-arr','aria-hidden':'true'},ico('arrow')))))))); 
+  /* ---- cover: flash wall ---- */
+  const wall=[['rose',4,8,150,-12,'w'],['dagger',66,2,120,9,'o'],['moth',78,40,150,-8,'w'],['snake',40,52,110,14,'o'],['flower',2,54,130,10,'o'],['orn',86,76,100,-14,'w']];
+  const coll=h('div',{class:'bl-coll','aria-hidden':'true'},wall.map(([k,l,t,w,r,c],i)=>h('div',{class:'bl-fl '+c,style:'left:'+l+'%;top:'+t+'%;width:'+w+'px;transform:rotate('+r+'deg);animation-delay:'+(i*.35)+'s'},blSvg(artM(k)))));
+  const hero=h('section',{class:'bl-hero',id:'b-top'},coll,h('div',{class:'bl-wrap bl-hero-in'},
+    h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' / ')),
+    h('h1',null,h('span',null,heads[0]),heads[1]?h('span',{class:'ol'},heads[1]):null),
+    h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
+    h('div',{class:'bl-cta'},bookBtn('hot'),callBtn('ghost'))));
+  const MQ=['Black and grey realism','Neo-traditional','Illustrative color','Ornamental','Custom designs','Dubuque, Iowa'];
+  const mqItems=()=>MQ.map(t=>h('span',null,t));
+  const marquee=h('div',{class:'bl-mq','aria-hidden':'true'},h('div',{class:'bl-mq-in'},mqItems(),mqItems(),mqItems(),mqItems()));
 
   /* ---- gallery slideshow (auto-advancing) ---- */
   const real=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
-  const SAMPLE=[['rose','Illustrative color','Rose study','#7a1d2b'],['moth','Neo-traditional','Butterfly study','#1d2a33'],['dagger','Neo-traditional','Dagger','#2a1b1f'],['sphere','Black and grey realism','Soft shading','#16181b'],['orn','Ornamental','Sun ornament','#1d1a2a'],['snake','Illustrative color','Coiled snake','#16241f']];
-  const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)+' of '+real.length})):SAMPLE.map(([k,sty,t,bgc])=>({art:k,cap:t,sub:sty,bg:bgc}));
+  const SAMPLE=[['rose','Illustrative color','Rose study','#1b1b1d'],['moth','Neo-traditional','Butterfly study','#241108'],['dagger','Neo-traditional','Dagger','#1b1b1d'],['sphere','Black and grey realism','Soft shading','#101112'],['orn','Ornamental','Sun ornament','#241108'],['snake','Illustrative color','Coiled snake','#1b1b1d']];
+  const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)})):SAMPLE.map(([k,sty,t,bgc])=>({art:k,cap:t,sub:sty,bg:bgc}));
   const stage=h('div',{class:'bl-stage',tabindex:'0','aria-roledescription':'carousel','aria-label':'Tattoo gallery'});
   const slEls=slides.map((s,i)=>{ const el=h('figure',{class:'bl-slide'+(i===0?' on':''),'aria-hidden':i===0?'false':'true',style:s.bg?'background:'+s.bg:null},
       s.img?h('img',{src:s.img,alt:'Tattoo by Josh Clicquennoi, photo '+(i+1),loading:i?'lazy':'eager'}):blSvg(BLA[s.art](),'bl-slart'),
       h('figcaption',null,h('b',null,s.cap),h('span',null,s.sub))); stage.append(el); return el; });
-  const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'1 / '+slides.length);
-  let cur=0, paused=false, tick=null, ms=4600;
+  const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'01 / '+String(slides.length).padStart(2,'0'));
+  let cur=0, paused=false, tick=null, inView=true; const ms=4600;
   const dots=slides.map((s,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show slide '+(i+1),onclick:()=>{ show(i); restart(); }}));
-  function show(i){ cur=(i+slides.length)%slides.length; slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=(cur+1)+' / '+slides.length; }
+  function show(i){ cur=(i+slides.length)%slides.length; slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0'); }
   function restart(){ bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; clearTimeout(tick); if(!paused&&!reduce&&inView) tick=setTimeout(next,ms); }
   function next(){ if(!stage.isConnected) return; show(cur+1); restart(); }
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; let inView=true;
-  const pause=v=>{ paused=v; stage.classList.toggle('paused',v||reduce); if(v) clearTimeout(tick); else restart(); };
+  const pause=v=>{ paused=v; stage.parentNode&&stage.parentNode.classList.toggle('paused',v||reduce); if(v) clearTimeout(tick); else restart(); };
   stage.addEventListener('mouseenter',()=>pause(true)); stage.addEventListener('mouseleave',()=>pause(false)); stage.addEventListener('focusin',()=>pause(true)); stage.addEventListener('focusout',()=>pause(false));
   stage.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){ show(cur+1); restart(); } if(e.key==='ArrowLeft'){ show(cur-1); restart(); } });
   let sx=null; stage.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true}); stage.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40){ show(cur+(dx<0?1:-1)); restart(); } sx=null; },{passive:true});
-  if(reduce) stage.classList.add('paused');
   setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ inView=e.isIntersecting; if(inView) restart(); else clearTimeout(tick); })).observe(stage); } restart(); },200);
-  const gal=sec('b-gal','bl-alt',hd('Gallery','Work, rolling.','The gallery moves on its own. Hover, tap or use the arrows to hold a slide.'),
-    h('div',{class:'bl-gal rv'},stage,h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous slide',onclick:()=>{ show(cur-1); restart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},dots),count,h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next slide',onclick:()=>{ show(cur+1); restart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},bar)),
-    real.length?null:h('p',{class:'bl-note'},'Sample flash art for the preview. These are not Bloom Tattoo’s tattoos. Josh’s real photos replace them once the shop sends them.'));
+  const galBox=h('div',{class:'bl-gal rv'+(reduce?' paused':'')},stage,h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous slide',onclick:()=>{ show(cur-1); restart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},dots),count,h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next slide',onclick:()=>{ show(cur+1); restart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},bar));
+  const gal=sec('b-gal','bl-dk',hd('01','The work, rolling.','Moves on its own. Hover or tap to hold a slide.'),galBox,
+    real.length?null:h('p',{class:'bl-note'},'Sample flash art for the preview, not Bloom Tattoo’s tattoos. Josh’s real photos replace these once the shop sends them.'));
 
-  /* ---- styles ---- */
+  /* ---- styles: four panels ---- */
   const STY=[
-    {k:'Black and grey realism',a:'sphere',d:'Smooth shading, soft gradients and fine detail in black and grey ink. This is Josh’s main emphasis, and he does it on a large scale.',g:['Portraits and animals','Florals with depth','Large pieces, like sleeves and back work']},
-    {k:'Neo-traditional',a:'dagger',d:'Bold outlines and rich color with more dimension and detail than old-school flash.',g:['Daggers, snakes and roses','Eye-catching color','Pieces that read from across the room']},
-    {k:'Illustrative color',a:'rose',d:'Line work and color that look like an illustration, with more freedom than strict traditional rules.',g:['Botanical and nature scenes','Story-style pieces','Custom ideas with a lot of color']},
-    {k:'Ornamental',a:'orn',d:'Patterns, symmetry and decorative detail like filigree and mandala work.',g:['Bands, cuffs and chest pieces','Pieces that follow the body','Clean, balanced designs']}
-  ];
-  let sI=0; const sTabs=h('div',{class:'bl-tabs',role:'tablist'}), sBody=h('div',{class:'bl-sbody'});
-  const paintS=()=>{ const s=STY[sI]; sTabs.querySelectorAll('button').forEach((b,i)=>{ b.classList.toggle('on',i===sI); b.setAttribute('aria-selected',i===sI?'true':'false'); }); sBody.replaceChildren(h('div',{class:'bl-sart'},blSvg(BLA[s.a](),'bl-draw2')),h('div',{class:'bl-stxt'},h('h3',null,s.k),h('p',null,s.d),h('span',{class:'bl-lbl'},'Often chosen for'),h('ul',null,s.g.map(t=>h('li',null,t))),bookBtn('red sm','Ask Josh about '+s.k.toLowerCase()))); };
-  STY.forEach((s,i)=>sTabs.append(h('button',{type:'button',role:'tab',onclick:()=>{ sI=i; paintS(); }},s.k))); paintS();
-  const styles=sec('b-styles','',hd('Styles','Four ways Josh works.','Tap a style to see what it means. Illustrations here are simple samples, not finished tattoos.'),h('div',{class:'bl-card rv'},sTabs,sBody));
+    {k:'Black and grey realism',a:'sphere',d:'Smooth shading and fine detail in black and grey ink. Josh’s main emphasis, done large.'},
+    {k:'Neo-traditional',a:'dagger',d:'Bold outlines and rich color with more depth and detail than old-school flash.'},
+    {k:'Illustrative color',a:'rose',d:'Line and color that read like an illustration, with room for custom ideas.'},
+    {k:'Ornamental',a:'orn',d:'Patterns, symmetry and decorative detail that follow the body.'}];
+  const styles=sec('b-styles','bl-lt',hd('02','Four ways Josh works.','Simple sample drawings, not finished tattoos.'),
+    h('div',{class:'bl-sty'},STY.map((s,i)=>h('div',{class:'bl-sc rv'},h('span',{class:'bl-n'},'0'+(i+1)),h('div',{class:'bl-sa'},blSvg(BLA[s.a](),'bl-draw2')),h('h3',null,s.k),h('p',null,s.d)))));
 
   /* ---- artist ---- */
   const stats=Array.isArray(x.stats)&&x.stats.length?x.stats:[['11+','years tattooing'],['5.0','on Google, about 120 reviews'],['18+','studio, no children'],['1:1','design work with you']];
-  const artist=sec('b-artist','bl-alt',h('div',{class:'bl-2c'},
-    h('div',{class:'bl-ph rv','aria-hidden':'true'},blSvg(BLA.flower(6,64,30),'bl-ph-art'),h('span',null,'J')),
-    h('div',{class:'rv'},h('span',{class:'bl-kick'},'The artist'),h('h2',null,'Josh Clicquennoi'),
+  const artist=sec('b-artist','bl-hot',h('div',{class:'bl-2c'},
+    h('div',{class:'rv'},h('span',{class:'bl-num'},'03'),h('h2',null,'Josh Clicquennoi'),
       h('p',null,'Josh has been tattooing for over eleven years, most of them in Dubuque. He believes in a collaborative approach: he works with you on the creative side so the tattoo ends up as good as it can be.'),
-      h('p',null,'His main emphasis is large-scale black and grey realism. He also does neo-traditional, illustrative color and ornamental work.'),
-      h('div',{class:'bl-stats'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l)))))));
+      h('p',null,'His main emphasis is large-scale black and grey realism, along with neo-traditional, illustrative color and ornamental work.'),bookBtn('blk')),
+    h('div',{class:'bl-stats rv'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l))))));
 
-  /* ---- plan a tattoo ---- */
-  const P={style:'',spot:'',size:'',first:'',idea:'',name:''};
-  const SIZES=['Small (under 3 in)','Medium (3 to 6 in)','Large (6 in or more)','Sleeve or back piece','Not sure yet'];
-  const SPOTS=['Forearm','Upper arm','Shoulder','Chest','Back','Ribs','Thigh','Calf','Ankle or foot','Hand or fingers','Neck','Not sure yet'];
-  const msgEl=h('pre',{class:'bl-msg'}), mActs=h('div',{class:'bl-cta'});
-  const buildMsg=()=>{ const l=['Hi Josh, I’d like to book a tattoo at Bloom Tattoo.']; if(P.style) l.push('Style: '+P.style); if(P.spot) l.push('Placement: '+P.spot); if(P.size) l.push('Size: '+P.size); if(P.first) l.push('First tattoo: '+P.first); if(P.idea.trim()) l.push('Idea: '+P.idea.trim()); l.push('I am 18 or older.'); if(P.name.trim()) l.push('Thanks, '+P.name.trim()); return l.join('\n'); };
-  const paintM=()=>{ const m=buildMsg(); msgEl.textContent=m; const sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn red',href:sms},'Text this to the shop'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(m):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy message',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgEl); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='Selected, press copy'; }); }},'Copy message'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); };
-  const chipRow=(label,opts,key)=>{ const row=h('div',{class:'bl-chips',role:'group','aria-label':label}); opts.forEach(o=>row.append(h('button',{type:'button',onclick:e=>{ P[key]=P[key]===o?'':o; row.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===P[key])); paintM(); }},o))); return h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},label),row); };
-  const idea=h('textarea',{rows:'3',maxlength:'400',placeholder:'Subject, mood, anything you have in mind. You can send reference photos to Josh after.',oninput:e=>{ P.idea=e.target.value; paintM(); }});
-  const nm=h('input',{type:'text',maxlength:'40',placeholder:'Your first name',oninput:e=>{ P.name=e.target.value; paintM(); }});
-  paintM();
-  const plan=sec('b-plan','',hd('Plan a tattoo','Build your request in a minute.','Pick what you know. We write the message, you send it or book through Vagaro. A deposit is part of booking.'),
-    h('div',{class:'bl-card bl-plan rv'},h('div',null,chipRow('Style',STY.map(s=>s.k).concat(['Not sure yet']),'style'),chipRow('Placement',SPOTS,'spot'),chipRow('Size',SIZES,'size'),chipRow('First tattoo?',['Yes','No'],'first'),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Your idea'),idea),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Name'),nm)),
-      h('div',null,h('span',{class:'bl-lbl'},'Your message'),msgEl,mActs)));
-
-  /* ---- placement guide ---- */
-  const AREAS=[['Outer upper arm',1,'A common first spot. Easy to see and to care for.'],['Forearm',1,'Outer forearm is usually easier than the inner side.'],['Thigh',1,'Lots of room for larger pieces.'],['Calf',1,'Fleshy and usually tolerable. Large pieces often fit well.'],['Shoulder and upper back',1,'Good canvas for large designs.'],['Inner bicep and elbow',2,'Thinner skin. More sensitive near the elbow.'],['Ribs and sides',3,'Often one of the more intense spots.'],['Chest and sternum',3,'Bony in the middle, so it can be intense.'],['Spine',3,'Runs over bone. Can be sharp.'],['Neck',2,'Visible and sensitive. Plan around work and clothing.'],['Hands and fingers',3,'Thin skin, heavy use, can fade faster.'],['Ankle, shin and foot',3,'Little padding over bone.']];
+  /* ---- TRY IT ON: body visualizer ---- */
+  const SKIN=['#F3D9C6','#E2B089','#B98760','#8B5D3F','#5A3A29'], INK=[['Black','#0b0b0c'],['Red','#C0182C'],['Teal','#0B7F86'],['Purple','#6B2D91']];
   const LV=['','Usually milder','Moderate','Often intense'];
-  const body=sec('b-body','bl-alt',hd('Placement guide','Where will it go?','A general guide to how different spots usually feel. Everyone is different, and Josh will talk it through with you.'),
-    h('div',{class:'bl-areas rv'},AREAS.map(([a,l,t])=>h('div',{class:'bl-area l'+l},h('b',null,a),h('span',{class:'bl-meter','aria-hidden':'true'},h('i'),h('i'),h('i')),h('em',null,LV[l]),h('small',null,t)))));
+  const UPI=6.06;
+  const ZF=[['Neck',100,60,1.6,0,2],['Chest',100,98,5.5,0,3],['Shoulder',72,84,3.6,-25,1,1],['Upper arm',53,116,4.6,15,1,1],['Ribs',77,150,4.4,90,3,1],['Forearm',41,186,5.2,10,1,1],['Hand',34,236,2.2,0,3,1],['Thigh',81,262,8,0,1,1],['Calf',79,356,6,0,1,1],['Ankle and foot',78,404,2.6,0,3,1]];
+  const ZB=[['Neck',100,60,1.6,0,2],['Upper back',100,108,7,0,1],['Shoulder blade',77,100,4,-15,1,1],['Spine',100,158,8,0,3],['Lower back',100,200,5,0,2],['Back of upper arm',53,116,4.6,15,1,1],['Back of forearm',41,186,5.2,10,2,1],['Back of thigh',81,262,8,0,2,1],['Calf',79,356,6,0,1,1],['Ankle and foot',78,404,2.6,0,3,1]];
+  const expand=Z=>{ const o=[]; Z.forEach(([n,px,py,s,r,l,m])=>{ o.push({n,x:px,y:py,s,r,l}); if(m) o.push({n,x:200-px,y:py,s,r:-r,l}); }); return o; };
+  const ZS={front:expand(ZF),back:expand(ZB)};
+  const T={view:'front',art:'rose',ink:0,skin:1,size:ZS.front[3].s,rot:ZS.front[3].r,x:ZS.front[3].x,y:ZS.front[3].y};
+  const NS='http://www.w3.org/2000/svg';
+  const bodySvg=h('div',{class:'bl-fig'}); const svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 200 440'); svg.setAttribute('class','bl-body'); svg.setAttribute('role','img'); svg.setAttribute('aria-label','Body outline. Drag the design to place it.'); bodySvg.append(svg);
+  const limbs=[[62,80,46,150,20],[46,150,36,222,17],[82,218,80,308,34],[80,308,79,400,24],[100,56,100,72,16]];
+  const bodyMarkup=skin=>{ const mir=([a,b,c,d,w])=>[[a,b,c,d,w],[200-a,b,200-c,d,w]]; const L=limbs.flatMap(mir); const torso='M64 74Q100 63 136 74L132 130Q128 160 131 190L137 222Q100 237 63 222L69 190Q72 160 68 130Z';
+    const ell=[[100,34,17,21],[34,236,8,12],[166,236,8,12],[76,418,14,7],[124,418,14,7]];
+    let e='<g stroke="rgba(0,0,0,.45)" stroke-linecap="round" fill="rgba(0,0,0,.45)">'+L.map(([a,b,c,d,w])=>'<path d="M'+a+' '+b+'L'+c+' '+d+'" stroke-width="'+(w+3)+'" fill="none"/>').join('')+'<path d="'+torso+'" stroke-width="3" stroke-linejoin="round"/>'+ell.map(([cx,cy,rx,ry])=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(rx+1.5)+'" ry="'+(ry+1.5)+'" stroke="none"/>').join('')+'</g>';
+    let s='<g stroke="'+skin+'" stroke-linecap="round" fill="'+skin+'">'+L.map(([a,b,c,d,w])=>'<path d="M'+a+' '+b+'L'+c+' '+d+'" stroke-width="'+w+'" fill="none"/>').join('')+'<path d="'+torso+'" stroke-width="1" stroke-linejoin="round"/>'+ell.map(([cx,cy,rx,ry])=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" stroke="none"/>').join('')+'</g>';
+    return e+s; };
+  const bodyG=document.createElementNS(NS,'g'), detG=document.createElementNS(NS,'g'), dotG=document.createElementNS(NS,'g'), tatG=document.createElementNS(NS,'g');
+  svg.append(bodyG,detG,dotG,tatG);
+  const detail=()=>{ detG.innerHTML=T.view==='back'?'<path d="M100 76L100 214" stroke="rgba(0,0,0,.28)" stroke-width="1.4" stroke-dasharray="2 4" fill="none"/><path d="M78 88Q92 112 98 100M122 88Q108 112 102 100" stroke="rgba(0,0,0,.22)" fill="none"/>':'<circle cx="100" cy="190" r="1.8" fill="rgba(0,0,0,.35)"/><path d="M84 112Q100 124 116 112" stroke="rgba(0,0,0,.2)" fill="none"/>'; };
+  const readName=h('b',null,''), readMeta=h('span',null,''), meter=h('span',{class:'bl-meter'},h('i'),h('i'),h('i'));
+  const nearest=()=>{ let b=null,d=1e9; ZS[T.view].forEach(z=>{ const q=Math.hypot(z.x-T.x,z.y-T.y); if(q<d){ d=q; b=z; } }); return {z:b,d}; };
+  const side=()=>(T.x<100)===(T.view==='front')?'right':'left';
+  const placeText=()=>{ const n=nearest(); if(n.d>34) return 'Between spots'; const zn=n.z.n, lat=/^(Neck|Chest|Spine|Upper back|Lower back)$/.test(zn)?'':(side()+' '); return (lat+zn).replace(/^./,c=>c.toUpperCase()); };
+  const artName=()=>(ART.find(a=>a[0]===T.art)||ART[0])[1];
+  const sizeTxt=()=>{ const v=T.size; return (Math.round(v*2)/2).toString()+' in'; };
+  const drawTat=()=>{ const sc=T.size*UPI/160, k=T.art, ink=INK[T.ink][1]; tatG.setAttribute('class','bl-tat'); tatG.style.setProperty('--ink',ink);
+    tatG.innerHTML='<g transform="translate('+T.x.toFixed(1)+' '+T.y.toFixed(1)+') rotate('+T.rot+') scale('+sc.toFixed(4)+') translate(-100 -100)"><rect x="0" y="0" width="200" height="200" fill="transparent" style="cursor:grab"/>'+artM(k)+'</g>'; };
+  const paintRead=()=>{ const n=nearest(); readName.textContent=artName()+' on '+placeText().toLowerCase(); readMeta.textContent='About '+sizeTxt()+' tall'+(n.d<=34?'. '+LV[n.z.l]+' area for most people':''); meter.className='bl-meter l'+(n.d<=34?n.z.l:0); msgPre.textContent=msg(); };
+  const msg=()=>{ const n=nearest(), where=n.d<=34?placeText().toLowerCase():'(not sure yet)'; return 'Hi Josh, I’d like to book a tattoo at Bloom Tattoo.\nIdea: '+artName().toLowerCase()+' design, about '+sizeTxt()+', '+INK[T.ink][0].toLowerCase()+' ink\nPlacement: '+where+'\nI am 18 or older.'; };
+  const msgPre=h('pre',{class:'bl-msg'}), mActs=h('div',{class:'bl-cta'});
+  const drawDots=()=>{ dotG.innerHTML=ZS[T.view].map((z,i)=>'<circle class="bl-zd" cx="'+z.x+'" cy="'+z.y+'" r="4.2" data-i="'+i+'"/>').join(''); };
+  dotG.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('circle'); if(!t) return; const z=ZS[T.view][+t.getAttribute('data-i')]; T.x=z.x; T.y=z.y; T.rot=z.r; T.size=z.s; syncCtl(); full(); });
+  function pt(ev){ const p=svg.createSVGPoint(); p.x=ev.clientX; p.y=ev.clientY; const m=svg.getScreenCTM(); return m?p.matrixTransform(m.inverse()):{x:T.x,y:T.y}; }
+  let drag=null;
+  tatG.addEventListener('pointerdown',e=>{ const q=pt(e); drag={dx:T.x-q.x,dy:T.y-q.y}; try{ tatG.setPointerCapture(e.pointerId); }catch(_){} tatG.classList.add('drag'); e.preventDefault(); });
+  tatG.addEventListener('pointermove',e=>{ if(!drag) return; const q=pt(e); T.x=Math.max(8,Math.min(192,q.x+drag.dx)); T.y=Math.max(14,Math.min(430,q.y+drag.dy)); drawTat(); paintRead(); });
+  const endDrag=()=>{ drag=null; tatG.classList.remove('drag'); }; tatG.addEventListener('pointerup',endDrag); tatG.addEventListener('pointercancel',endDrag);
+  function full(){ bodyG.innerHTML=bodyMarkup(SKIN[T.skin]); detail(); drawDots(); drawTat(); paintRead(); paintActs(); paintHeal(); }
+  function paintActs(){ const m=msg(), sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn hot',href:sms},'Text this idea'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(msg()):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgPre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }); }},'Copy'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); }
+  const syncCtl=()=>{ sizeIn.value=T.size; rotIn.value=T.rot; sizeOut.textContent=sizeTxt(); };
+  const sizeOut=h('b',null,''), rotOut=h('b',null,'');
+  const sizeIn=h('input',{type:'range',min:'1',max:'16',step:'0.5',value:String(T.size),'aria-label':'Size in inches',oninput:e=>{ T.size=+e.target.value; sizeOut.textContent=sizeTxt(); drawTat(); paintRead(); paintActs(); }});
+  const rotIn=h('input',{type:'range',min:'-180',max:'180',step:'5',value:String(T.rot),'aria-label':'Rotation',oninput:e=>{ T.rot=+e.target.value; drawTat(); }});
+  const designs=h('div',{class:'bl-des'},ART.map(([k,n])=>h('button',{type:'button',class:k===T.art?'on':'','aria-label':n,title:n,onclick:e=>{ T.art=k; designs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); drawTat(); paintRead(); paintActs(); }},blSvg(artM(k)))));
+  const inkRow=h('div',{class:'bl-sw'},INK.map(([n,c],i)=>h('button',{type:'button',class:i===T.ink?'on':'','aria-label':n+' ink',style:'--c:'+c,onclick:e=>{ T.ink=i; inkRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); drawTat(); paintRead(); paintActs(); }})));
+  const skinRow=h('div',{class:'bl-sw'},SKIN.map((c,i)=>h('button',{type:'button',class:i===T.skin?'on':'','aria-label':'Skin tone '+(i+1),style:'--c:'+c,onclick:e=>{ T.skin=i; skinRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); bodyG.innerHTML=bodyMarkup(SKIN[i]); paintHeal(); }})));
+  const viewRow=h('div',{class:'bl-seg'},['front','back'].map(v=>h('button',{type:'button',class:v===T.view?'on':'',onclick:e=>{ T.view=v; const z=ZS[v][v==='front'?3:5]; T.x=z.x; T.y=z.y; T.rot=z.r; T.size=z.s; viewRow.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); syncCtl(); full(); }},v==='front'?'Front':'Back')));
+  const ctl=(l,...k)=>h('div',{class:'bl-ctl'},h('span',{class:'bl-lbl'},l),k);
+  const tryIt=sec('b-try','bl-dk',hd('04','Try it on.','Pick a design, then drag it onto the body or tap a dot. Resize it, turn it and see roughly how big it will sit. Sample art only.'),
+    h('div',{class:'bl-lab rv'},
+      h('div',{class:'bl-stage2'},bodySvg,h('p',{class:'bl-hint'},'Drag the design. Tap a dot to jump to a spot.')),
+      h('div',{class:'bl-panel'},
+        ctl('Design',designs),
+        h('div',{class:'bl-two'},ctl('Size',sizeIn,h('span',{class:'bl-ro'},sizeOut,' tall')),ctl('Turn',rotIn)),
+        h('div',{class:'bl-two'},ctl('Ink',inkRow),ctl('Skin tone',skinRow)),
+        ctl('View',viewRow),
+        h('div',{class:'bl-read'},readName,readMeta,meter),
+        h('span',{class:'bl-lbl'},'Send it to Josh'),msgPre,mActs,
+        h('p',{class:'bl-note'},'Sizes are approximate, based on an average adult. How a spot feels is a general guide, and everyone is different.'))));
 
-  /* ---- before your appointment ---- */
-  const pdate=h('input',{type:'datetime-local',id:'bl-dt','aria-label':'Appointment date and time'}), pout=h('p',{class:'bl-out'},'Pick your appointment date to see your deadline.');
-  pdate.addEventListener('input',()=>{ const v=pdate.value; if(!v){ pout.textContent='Pick your appointment date to see your deadline.'; return; } const d=new Date(v); if(isNaN(d)){ return; } const dl=new Date(d.getTime()-72*3600*1000), f=o=>o.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); const left=dl.getTime()-Date.now(); pout.replaceChildren(h('span',{class:'bl-lbl'},'Last chance to keep your deposit'),h('b',null,f(dl)),h('small',null,left<0?'That time has passed. Changes now would forfeit the deposit, so call the shop.':'Rescheduling or canceling after this time forfeits the deposit (72 hours before your appointment).')); });
+  /* ---- healing slider ---- */
+  const HS=[[0,2,'Fresh','Covered the way your artist tells you. The skin is red and tender, like a sunburn.','Wash gently with mild, fragrance-free soap and pat dry.'],[3,6,'Settling in','Redness fades. It may start to feel tight.','Wash a couple of times a day and use a thin layer of unscented moisturizer. Do not scrub.'],[7,14,'Flaking','Light flaking and itching. The art can look cloudy under the peel.','Do not pick or scratch. Keep moisturizing lightly.'],[15,28,'Settled','The surface looks smooth and the lines sharpen up. Deeper healing keeps going.','Skip soaking in pools, baths and hot tubs until fully healed. Keep it out of direct sun.']];
+  const healBox=h('div',{class:'bl-skin'},h('div',{class:'bl-skin-art'}),h('div',{class:'bl-red'}),h('div',{class:'bl-flk'}));
+  const healArt=blSvg(BLA.rosebud(),'bl-hart'); healBox.querySelector('.bl-skin-art').append(healArt);
+  const dayOut=h('b',null,'Day 0'), stOut=h('h3',null,''), whatOut=h('p',null,''), tipOut=h('p',{class:'bl-tip'},'');
+  const flk=healBox.querySelector('.bl-flk'); flk.innerHTML=Array.from({length:26},(_,i)=>'<i style="left:'+((i*37)%92+3)+'%;top:'+((i*53)%86+6)+'%;width:'+(4+(i*7)%9)+'px;height:'+(3+(i*5)%6)+'px;transform:rotate('+(i*41%90)+'deg)"></i>').join('');
+  function paintHeal(){ const d=+dayIn.value, s=HS.find(a=>d>=a[0]&&d<=a[1])||HS[3]; dayOut.textContent='Day '+d; stOut.textContent=s[2]; whatOut.textContent=s[3]; tipOut.textContent=s[4];
+    healBox.style.background=SKIN[T.skin]; healBox.style.setProperty('--ink',INK[T.ink][1]);
+    const red=Math.max(0,1-d/7)*.55, flake=d<4?0:d<=14?Math.min(1,(d-3)/4)*(d>10?Math.max(0,(15-d)/5):1):0, cloud=d<3?1:d<=14?1-.5*Math.min(1,(d-2)/5)*(d>10?Math.max(0,(15-d)/5):1):1;
+    healBox.querySelector('.bl-red').style.opacity=red; flk.style.opacity=flake; healBox.querySelector('.bl-skin-art').style.opacity=cloud.toFixed(2); healBox.querySelector('.bl-skin-art').style.filter=d>=3&&d<=14?'blur('+(1.2*(d>10?Math.max(0,(15-d)/5):1)).toFixed(1)+'px)':'none'; }
+  const dayIn=h('input',{type:'range',min:'0',max:'28',step:'1',value:'0','aria-label':'Days since your appointment',oninput:paintHeal});
+  const care=sec('b-care','bl-lt',hd('05','Watch it heal.','Slide through the first four weeks. General guidance for most tattoos. Always follow the instructions Josh gives you, since they come first.'),
+    h('div',{class:'bl-heal rv'},healBox,h('div',{class:'bl-hr'},h('div',{class:'bl-day'},dayOut),dayIn,h('div',{class:'bl-ticks'},h('span',null,'Day 0'),h('span',null,'Week 1'),h('span',null,'Week 2'),h('span',null,'Week 4')),stOut,whatOut,tipOut)));
+
+  /* ---- before you go ---- */
+  const pdate=h('input',{type:'datetime-local',id:'bl-dt','aria-label':'Appointment date and time'}), pout=h('div',{class:'bl-out'},'Pick your appointment time to see your deadline.');
+  pdate.addEventListener('input',()=>{ const v=pdate.value; if(!v){ pout.textContent='Pick your appointment time to see your deadline.'; return; } const d=new Date(v); if(isNaN(d)) return; const dl=new Date(d.getTime()-72*3600*1000), f=o=>o.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); const left=dl.getTime()-Date.now(), tot=d.getTime()-Date.now(); const pct=tot>0?Math.max(0,Math.min(100,(left/tot)*100)):0;
+    pout.replaceChildren(h('span',{class:'bl-lbl'},'Last chance to keep your deposit'),h('b',null,f(dl)),h('span',{class:'bl-tbar'},h('i',{style:'width:'+(100-pct)+'%'}),h('em',{style:'left:'+(100-pct)+'%'})),h('small',null,left<0?'That time has passed. Changes now would forfeit the deposit, so call the shop.':'Rescheduling or canceling after this time forfeits the deposit (72 hours before your appointment).')); });
   const PREP=['Moisturize your skin before and after','Arrive well rested','Eat a meal beforehand','Wear comfortable clothing that gives access to the spot'];
   const prog=h('b',{class:'bl-prog'},'0 of '+PREP.length+' ready'), pbar=h('i',{class:'bl-pfill'});
   const checks=PREP.map(t=>h('label',{class:'bl-chk'},h('input',{type:'checkbox',onchange:()=>{ const n=checks.filter(c=>c.querySelector('input').checked).length; prog.textContent=n+' of '+PREP.length+' ready'+(n===PREP.length?'. You’re set.':''); pbar.style.width=(n/PREP.length*100)+'%'; }}),h('span',null,t)));
-  const prep=sec('b-prep','',hd('Before you go','Get ready for your appointment.'),
+  const prep=sec('b-prep','bl-dk',hd('06','Before you go.'),
     h('div',{class:'bl-2c bl-tools'},
       h('div',{class:'bl-card rv'},h('h3',null,'Deposit deadline'),h('p',{class:'bl-sm'},'Changes need 3 days’ notice to keep your deposit.'),h('label',{class:'bl-lbl',for:'bl-dt'},'Appointment date and time'),pdate,pout),
       h('div',{class:'bl-card rv'},h('h3',null,'Prep checklist'),h('p',{class:'bl-sm'},'From the shop’s own tips.'),checks,h('span',{class:'bl-ptrack'},pbar),prog)));
 
-  /* ---- aftercare ---- */
-  const AC=[['Day 1','Keep it covered the way your artist tells you. Then wash gently with mild, fragrance-free soap and pat dry.'],['Days 2 to 5','Wash a couple of times a day. Use a thin layer of unscented moisturizer. Do not scrub.'],['Days 5 to 14','It may flake and itch. Do not pick or scratch. Keep moisturizing lightly.'],['Weeks 2 to 4','The surface settles. Skip soaking in pools, baths and hot tubs until it is fully healed, and keep it out of direct sun.']];
-  const care=sec('b-care','bl-alt',hd('Aftercare','Healing, day by day.','General guidance for most tattoos. Always follow the instructions Josh gives you, since they come first.'),
-    h('ol',{class:'bl-tl rv'},AC.map(([a,b],i)=>h('li',null,h('b',null,a),h('span',null,b)))));
-
   /* ---- faq ---- */
   const FAQ=[['Can I reschedule my appointment?','Changes need 3 days’ notice to keep your deposit. If you cancel or reschedule within 72 hours of your appointment, the deposit is forfeited.'],['What payment options are there?','Cash is accepted, along with debit and credit cards from Visa, MasterCard, Discover and American Express.'],['Can I bring someone for support?','Yes. You’re welcome to bring a guest or two, and there is seating for them.'],['Is Bloom Tattoo LGBTQIA+ friendly?','Yes. The studio is an inclusive, nonjudgmental space.'],['Are children allowed in the studio?','No. Clients must be 18 to get tattooed, and everyone who enters the studio must be an adult.'],['How can I prepare for my appointment?','Moisturize before and after, arrive well rested, eat a meal beforehand and wear comfortable clothing that gives access to the area.']];
-  const faq=sec('b-faq','',hd('Good to know','Quick answers.'),h('div',{class:'bl-faq rv'},FAQ.map(([q,a],i)=>h('details',null,h('summary',null,q),h('p',null,a)))));
+  const faq=sec('b-faq','bl-lt',hd('07','Good to know.'),h('div',{class:'bl-faq rv'},FAQ.map(([q,a])=>h('details',null,h('summary',null,q),h('p',null,a)))));
 
   /* ---- visit ---- */
-  const visit=sec('b-visit','bl-alt',hd('Visit','Come meet Josh.'),
+  const visit=sec('b-visit','bl-hot',hd('08','Come meet Josh.'),
     h('div',{class:'bl-2c'},
-      h('div',{class:'bl-card rv'},h('span',{class:'bl-lbl'},'Bloom Tattoo'),addrTxt?h('p',{class:'bl-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bl-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
-        h('div',{class:'bl-cta'},bookBtn('red'),C.maps?h('a',{class:'bl-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),h('p',{class:'bl-note'},'18 and over only. Bring a photo ID.')),
-      h('div',{class:'bl-card bl-hrs rv'},h('span',{class:'bl-lbl'},'Studio hours'),hoursRows(C),h('p',{class:'bl-note'},'Hours are as listed online. Work is by appointment, so call to confirm.'))));
-  const foot=h('footer',{class:'bl-foot'},h('div',{class:'bl-wrap bl-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
-  return h('div',{class:'demo bl on'},top,nav,hero,gal,styles,artist,plan,body,prep,care,faq,visit,foot);
+      h('div',{class:'bl-card inv rv'},h('span',{class:'bl-lbl'},'Bloom Tattoo'),addrTxt?h('p',{class:'bl-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bl-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+        h('div',{class:'bl-cta'},bookBtn('hot'),C.maps?h('a',{class:'bl-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),h('p',{class:'bl-note'},'18 and over only. Bring a photo ID.')),
+      h('div',{class:'bl-card inv bl-hrs rv'},h('span',{class:'bl-lbl'},'Studio hours'),hoursRows(C),h('p',{class:'bl-note'},'Hours are as listed online. Work is by appointment, so call to confirm.'))));
+  const foot=h('footer',{class:'bl-foot'},h('div',{class:'bl-wrap bl-foot-in'},h('b',null,'BLOOM TATTOO'),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  const pg=h('div',{class:'demo bl on'},top,nav,hero,marquee,gal,styles,artist,tryIt,care,prep,faq,visit,foot);
+  full(); syncCtl(); paintHeal();
+  return pg;
 }
 
 function zephyr(C){

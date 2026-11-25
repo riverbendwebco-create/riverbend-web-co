@@ -2471,125 +2471,172 @@ function bloomTattoo(C){
   const bookBtn=(cls,label)=>book?h('a',{class:'bl-btn '+cls,href:book,target:'_blank',rel:'noopener'},label||'Book on Vagaro',ico('arrow',16,'')):null;
   const callBtn=(cls,label)=>C.tel?h('a',{class:'bl-btn '+cls,href:C.tel},ico('phone',16,''),label||('Call '+C.phoneTxt)):null;
   const go=id=>()=>scrollTo(id);
-  const hd=(k,t,p)=>h('div',{class:'bl-head rv'},h('span',{class:'bl-kick'},k),h('h2',null,t),p?h('p',null,p):null);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hd=(n,t,p)=>h('div',{class:'bl-head rv'},h('span',{class:'bl-num'},n),h('h2',null,t),p?h('p',null,p):null);
   const sec=(id,cls,...kids)=>h('section',{class:'bl-sec '+(cls||''),id},h('div',{class:'bl-wrap'},kids));
-  const stopFns=[]; const live=()=>stopFns.every(f=>f!==false);
+  const ART=[['rose','Rose','Illustrative color'],['flower','Bloom','Ornamental'],['rosebud','Rosebud','Illustrative color'],['moth','Butterfly','Neo-traditional'],['dagger','Dagger','Neo-traditional'],['snake','Snake','Neo-traditional'],['orn','Sun ornament','Ornamental']];
+  const artM=k=>k==='flower'?BLA.flower(7,76,30):BLA[k]();
 
   /* ---- top, nav ---- */
-  const top=h('div',{class:'bl-top'},h('div',{class:'bl-wrap bl-top-in'},st?h('span',{class:'bl-st'},h('i',{class:'bl-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,h('span',{class:'bl-age'},'18+ studio')));
-  const mark=()=>blSvg(BLA.flower(6,44,22),'bl-mk');
+  const top=h('div',{class:'bl-top'},h('div',{class:'bl-wrap bl-top-in'},st?h('span',{class:'bl-st'},h('i',{class:'bl-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null,h('span',{class:'bl-age'},'18+ only')));
   const nav=h('header',{class:'bl-nav'},h('div',{class:'bl-wrap bl-nav-in'},
-    h('a',{class:'bl-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('b-top'); }},mark(),h('span',null,h('b',null,'Bloom'),h('i',null,'Tattoo'))),
-    h('nav',{class:'bl-links'},[['b-gal','Gallery'],['b-styles','Styles'],['b-plan','Plan'],['b-care','Aftercare'],['b-visit','Visit']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
-    h('div',{class:'bl-nav-r'},callBtn('ghost sm','Call'),bookBtn('red sm','Book'))));
+    h('a',{class:'bl-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('b-top'); }},blSvg(BLA.flower(6,44,22),'bl-mk'),h('b',null,'BLOOM'),h('i',null,'TATTOO')),
+    h('nav',{class:'bl-links'},[['b-gal','Gallery'],['b-try','Try it on'],['b-care','Healing'],['b-faq','FAQ'],['b-visit','Visit']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('div',{class:'bl-nav-r'},callBtn('ghost sm','Call'),bookBtn('hot sm','Book'))));
 
-  /* ---- hero ---- */
-  const picks=[['b-gal','Gallery','Work that changes'],['b-styles','Styles','What Josh does'],['b-plan','Plan a tattoo','Build your request'],['b-body','Placement guide','Where it goes'],['b-care','Aftercare','Heal it right'],['b-visit','Visit','Hours and map']];
-  const hero=h('section',{class:'bl-hero',id:'b-top'},h('div',{class:'bl-wrap bl-hero-g'},
-    h('div',{class:'bl-hero-t'},
-      h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' · ')),
-      h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
-      h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
-      h('div',{class:'bl-cta'},bookBtn('red'),callBtn('ghost')),
-      h('ul',{class:'bl-facts'},h('li',null,'Large-scale black and grey realism'),h('li',null,'Neo-traditional, illustrative color and ornamental'),h('li',null,'On Central Ave in Dubuque'))),
-    h('div',{class:'bl-hero-a','aria-hidden':'true'},blSvg(BLA.flower(8,84,34)+BLA.flower(8,52,18).replace(/<circle[^>]*>/g,''),'bl-draw'))),
-    h('div',{class:'bl-wrap'},h('div',{class:'bl-need'},h('span',{class:'bl-needhd'},'What are you looking for?'),h('div',{class:'bl-needg'},picks.map(([id,l,s])=>h('button',{type:'button',onclick:go(id)},h('b',null,l),h('small',null,s),h('i',{class:'bl-arr','aria-hidden':'true'},ico('arrow')))))))); 
+  /* ---- cover: flash wall ---- */
+  const wall=[['rose',4,8,150,-12,'w'],['dagger',66,2,120,9,'o'],['moth',78,40,150,-8,'w'],['snake',40,52,110,14,'o'],['flower',2,54,130,10,'o'],['orn',86,76,100,-14,'w']];
+  const coll=h('div',{class:'bl-coll','aria-hidden':'true'},wall.map(([k,l,t,w,r,c],i)=>h('div',{class:'bl-fl '+c,style:'left:'+l+'%;top:'+t+'%;width:'+w+'px;transform:rotate('+r+'deg);animation-delay:'+(i*.35)+'s'},blSvg(artM(k)))));
+  const hero=h('section',{class:'bl-hero',id:'b-top'},coll,h('div',{class:'bl-wrap bl-hero-in'},
+    h('span',{class:'bl-kick'},[C.cat||'Tattoo studio',(C.city||'Dubuque, IA')].join(' / ')),
+    h('h1',null,h('span',null,heads[0]),heads[1]?h('span',{class:'ol'},heads[1]):null),
+    h('p',{class:'bl-lead'},C.tag||'Josh Clicquennoi works with you on the design, from first idea to finished piece.'),
+    h('div',{class:'bl-cta'},bookBtn('hot'),callBtn('ghost'))));
+  const MQ=['Black and grey realism','Neo-traditional','Illustrative color','Ornamental','Custom designs','Dubuque, Iowa'];
+  const mqItems=()=>MQ.map(t=>h('span',null,t));
+  const marquee=h('div',{class:'bl-mq','aria-hidden':'true'},h('div',{class:'bl-mq-in'},mqItems(),mqItems(),mqItems(),mqItems()));
 
   /* ---- gallery slideshow (auto-advancing) ---- */
   const real=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
-  const SAMPLE=[['rose','Illustrative color','Rose study','#7a1d2b'],['moth','Neo-traditional','Butterfly study','#1d2a33'],['dagger','Neo-traditional','Dagger','#2a1b1f'],['sphere','Black and grey realism','Soft shading','#16181b'],['orn','Ornamental','Sun ornament','#1d1a2a'],['snake','Illustrative color','Coiled snake','#16241f']];
-  const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)+' of '+real.length})):SAMPLE.map(([k,sty,t,bgc])=>({art:k,cap:t,sub:sty,bg:bgc}));
+  const SAMPLE=[['rose','Illustrative color','Rose study','#1b1b1d'],['moth','Neo-traditional','Butterfly study','#241108'],['dagger','Neo-traditional','Dagger','#1b1b1d'],['sphere','Black and grey realism','Soft shading','#101112'],['orn','Ornamental','Sun ornament','#241108'],['snake','Illustrative color','Coiled snake','#1b1b1d']];
+  const slides=real.length?real.map((u,i)=>({img:u,cap:'Work by Josh Clicquennoi',sub:'Photo '+(i+1)})):SAMPLE.map(([k,sty,t,bgc])=>({art:k,cap:t,sub:sty,bg:bgc}));
   const stage=h('div',{class:'bl-stage',tabindex:'0','aria-roledescription':'carousel','aria-label':'Tattoo gallery'});
   const slEls=slides.map((s,i)=>{ const el=h('figure',{class:'bl-slide'+(i===0?' on':''),'aria-hidden':i===0?'false':'true',style:s.bg?'background:'+s.bg:null},
       s.img?h('img',{src:s.img,alt:'Tattoo by Josh Clicquennoi, photo '+(i+1),loading:i?'lazy':'eager'}):blSvg(BLA[s.art](),'bl-slart'),
       h('figcaption',null,h('b',null,s.cap),h('span',null,s.sub))); stage.append(el); return el; });
-  const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'1 / '+slides.length);
-  let cur=0, paused=false, tick=null, ms=4600;
+  const bar=h('i',{class:'bl-bar'}), count=h('span',{class:'bl-count'},'01 / '+String(slides.length).padStart(2,'0'));
+  let cur=0, paused=false, tick=null, inView=true; const ms=4600;
   const dots=slides.map((s,i)=>h('button',{type:'button',class:'bl-dot2'+(i===0?' on':''),'aria-label':'Show slide '+(i+1),onclick:()=>{ show(i); restart(); }}));
-  function show(i){ cur=(i+slides.length)%slides.length; slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=(cur+1)+' / '+slides.length; }
+  function show(i){ cur=(i+slides.length)%slides.length; slEls.forEach((e,k)=>{ e.classList.toggle('on',k===cur); e.setAttribute('aria-hidden',k===cur?'false':'true'); }); dots.forEach((d,k)=>d.classList.toggle('on',k===cur)); count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0'); }
   function restart(){ bar.style.animation='none'; void bar.offsetWidth; bar.style.animation=''; clearTimeout(tick); if(!paused&&!reduce&&inView) tick=setTimeout(next,ms); }
   function next(){ if(!stage.isConnected) return; show(cur+1); restart(); }
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; let inView=true;
-  const pause=v=>{ paused=v; stage.classList.toggle('paused',v||reduce); if(v) clearTimeout(tick); else restart(); };
+  const pause=v=>{ paused=v; stage.parentNode&&stage.parentNode.classList.toggle('paused',v||reduce); if(v) clearTimeout(tick); else restart(); };
   stage.addEventListener('mouseenter',()=>pause(true)); stage.addEventListener('mouseleave',()=>pause(false)); stage.addEventListener('focusin',()=>pause(true)); stage.addEventListener('focusout',()=>pause(false));
   stage.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){ show(cur+1); restart(); } if(e.key==='ArrowLeft'){ show(cur-1); restart(); } });
   let sx=null; stage.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{passive:true}); stage.addEventListener('touchend',e=>{ if(sx==null) return; const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40){ show(cur+(dx<0?1:-1)); restart(); } sx=null; },{passive:true});
-  if(reduce) stage.classList.add('paused');
   setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ inView=e.isIntersecting; if(inView) restart(); else clearTimeout(tick); })).observe(stage); } restart(); },200);
-  const gal=sec('b-gal','bl-alt',hd('Gallery','Work, rolling.','The gallery moves on its own. Hover, tap or use the arrows to hold a slide.'),
-    h('div',{class:'bl-gal rv'},stage,h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous slide',onclick:()=>{ show(cur-1); restart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},dots),count,h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next slide',onclick:()=>{ show(cur+1); restart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},bar)),
-    real.length?null:h('p',{class:'bl-note'},'Sample flash art for the preview. These are not Bloom Tattoo’s tattoos. Josh’s real photos replace them once the shop sends them.'));
+  const galBox=h('div',{class:'bl-gal rv'+(reduce?' paused':'')},stage,h('div',{class:'bl-gbar'},h('button',{type:'button',class:'bl-nb','aria-label':'Previous slide',onclick:()=>{ show(cur-1); restart(); }},ico('arrow',18,'')),h('div',{class:'bl-dots'},dots),count,h('button',{type:'button',class:'bl-nb nxt','aria-label':'Next slide',onclick:()=>{ show(cur+1); restart(); }},ico('arrow',18,''))),h('span',{class:'bl-track'},bar));
+  const gal=sec('b-gal','bl-dk',hd('01','The work, rolling.','Moves on its own. Hover or tap to hold a slide.'),galBox,
+    real.length?null:h('p',{class:'bl-note'},'Sample flash art for the preview, not Bloom Tattoo’s tattoos. Josh’s real photos replace these once the shop sends them.'));
 
-  /* ---- styles ---- */
+  /* ---- styles: four panels ---- */
   const STY=[
-    {k:'Black and grey realism',a:'sphere',d:'Smooth shading, soft gradients and fine detail in black and grey ink. This is Josh’s main emphasis, and he does it on a large scale.',g:['Portraits and animals','Florals with depth','Large pieces, like sleeves and back work']},
-    {k:'Neo-traditional',a:'dagger',d:'Bold outlines and rich color with more dimension and detail than old-school flash.',g:['Daggers, snakes and roses','Eye-catching color','Pieces that read from across the room']},
-    {k:'Illustrative color',a:'rose',d:'Line work and color that look like an illustration, with more freedom than strict traditional rules.',g:['Botanical and nature scenes','Story-style pieces','Custom ideas with a lot of color']},
-    {k:'Ornamental',a:'orn',d:'Patterns, symmetry and decorative detail like filigree and mandala work.',g:['Bands, cuffs and chest pieces','Pieces that follow the body','Clean, balanced designs']}
-  ];
-  let sI=0; const sTabs=h('div',{class:'bl-tabs',role:'tablist'}), sBody=h('div',{class:'bl-sbody'});
-  const paintS=()=>{ const s=STY[sI]; sTabs.querySelectorAll('button').forEach((b,i)=>{ b.classList.toggle('on',i===sI); b.setAttribute('aria-selected',i===sI?'true':'false'); }); sBody.replaceChildren(h('div',{class:'bl-sart'},blSvg(BLA[s.a](),'bl-draw2')),h('div',{class:'bl-stxt'},h('h3',null,s.k),h('p',null,s.d),h('span',{class:'bl-lbl'},'Often chosen for'),h('ul',null,s.g.map(t=>h('li',null,t))),bookBtn('red sm','Ask Josh about '+s.k.toLowerCase()))); };
-  STY.forEach((s,i)=>sTabs.append(h('button',{type:'button',role:'tab',onclick:()=>{ sI=i; paintS(); }},s.k))); paintS();
-  const styles=sec('b-styles','',hd('Styles','Four ways Josh works.','Tap a style to see what it means. Illustrations here are simple samples, not finished tattoos.'),h('div',{class:'bl-card rv'},sTabs,sBody));
+    {k:'Black and grey realism',a:'sphere',d:'Smooth shading and fine detail in black and grey ink. Josh’s main emphasis, done large.'},
+    {k:'Neo-traditional',a:'dagger',d:'Bold outlines and rich color with more depth and detail than old-school flash.'},
+    {k:'Illustrative color',a:'rose',d:'Line and color that read like an illustration, with room for custom ideas.'},
+    {k:'Ornamental',a:'orn',d:'Patterns, symmetry and decorative detail that follow the body.'}];
+  const styles=sec('b-styles','bl-lt',hd('02','Four ways Josh works.','Simple sample drawings, not finished tattoos.'),
+    h('div',{class:'bl-sty'},STY.map((s,i)=>h('div',{class:'bl-sc rv'},h('span',{class:'bl-n'},'0'+(i+1)),h('div',{class:'bl-sa'},blSvg(BLA[s.a](),'bl-draw2')),h('h3',null,s.k),h('p',null,s.d)))));
 
   /* ---- artist ---- */
   const stats=Array.isArray(x.stats)&&x.stats.length?x.stats:[['11+','years tattooing'],['5.0','on Google, about 120 reviews'],['18+','studio, no children'],['1:1','design work with you']];
-  const artist=sec('b-artist','bl-alt',h('div',{class:'bl-2c'},
-    h('div',{class:'bl-ph rv','aria-hidden':'true'},blSvg(BLA.flower(6,64,30),'bl-ph-art'),h('span',null,'J')),
-    h('div',{class:'rv'},h('span',{class:'bl-kick'},'The artist'),h('h2',null,'Josh Clicquennoi'),
+  const artist=sec('b-artist','bl-hot',h('div',{class:'bl-2c'},
+    h('div',{class:'rv'},h('span',{class:'bl-num'},'03'),h('h2',null,'Josh Clicquennoi'),
       h('p',null,'Josh has been tattooing for over eleven years, most of them in Dubuque. He believes in a collaborative approach: he works with you on the creative side so the tattoo ends up as good as it can be.'),
-      h('p',null,'His main emphasis is large-scale black and grey realism. He also does neo-traditional, illustrative color and ornamental work.'),
-      h('div',{class:'bl-stats'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l)))))));
+      h('p',null,'His main emphasis is large-scale black and grey realism, along with neo-traditional, illustrative color and ornamental work.'),bookBtn('blk')),
+    h('div',{class:'bl-stats rv'},stats.slice(0,4).map(([n,l])=>h('div',null,h('b',null,n),h('span',null,l))))));
 
-  /* ---- plan a tattoo ---- */
-  const P={style:'',spot:'',size:'',first:'',idea:'',name:''};
-  const SIZES=['Small (under 3 in)','Medium (3 to 6 in)','Large (6 in or more)','Sleeve or back piece','Not sure yet'];
-  const SPOTS=['Forearm','Upper arm','Shoulder','Chest','Back','Ribs','Thigh','Calf','Ankle or foot','Hand or fingers','Neck','Not sure yet'];
-  const msgEl=h('pre',{class:'bl-msg'}), mActs=h('div',{class:'bl-cta'});
-  const buildMsg=()=>{ const l=['Hi Josh, I’d like to book a tattoo at Bloom Tattoo.']; if(P.style) l.push('Style: '+P.style); if(P.spot) l.push('Placement: '+P.spot); if(P.size) l.push('Size: '+P.size); if(P.first) l.push('First tattoo: '+P.first); if(P.idea.trim()) l.push('Idea: '+P.idea.trim()); l.push('I am 18 or older.'); if(P.name.trim()) l.push('Thanks, '+P.name.trim()); return l.join('\n'); };
-  const paintM=()=>{ const m=buildMsg(); msgEl.textContent=m; const sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn red',href:sms},'Text this to the shop'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(m):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy message',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgEl); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='Selected, press copy'; }); }},'Copy message'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); };
-  const chipRow=(label,opts,key)=>{ const row=h('div',{class:'bl-chips',role:'group','aria-label':label}); opts.forEach(o=>row.append(h('button',{type:'button',onclick:e=>{ P[key]=P[key]===o?'':o; row.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===P[key])); paintM(); }},o))); return h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},label),row); };
-  const idea=h('textarea',{rows:'3',maxlength:'400',placeholder:'Subject, mood, anything you have in mind. You can send reference photos to Josh after.',oninput:e=>{ P.idea=e.target.value; paintM(); }});
-  const nm=h('input',{type:'text',maxlength:'40',placeholder:'Your first name',oninput:e=>{ P.name=e.target.value; paintM(); }});
-  paintM();
-  const plan=sec('b-plan','',hd('Plan a tattoo','Build your request in a minute.','Pick what you know. We write the message, you send it or book through Vagaro. A deposit is part of booking.'),
-    h('div',{class:'bl-card bl-plan rv'},h('div',null,chipRow('Style',STY.map(s=>s.k).concat(['Not sure yet']),'style'),chipRow('Placement',SPOTS,'spot'),chipRow('Size',SIZES,'size'),chipRow('First tattoo?',['Yes','No'],'first'),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Your idea'),idea),h('div',{class:'bl-fld'},h('span',{class:'bl-lbl'},'Name'),nm)),
-      h('div',null,h('span',{class:'bl-lbl'},'Your message'),msgEl,mActs)));
-
-  /* ---- placement guide ---- */
-  const AREAS=[['Outer upper arm',1,'A common first spot. Easy to see and to care for.'],['Forearm',1,'Outer forearm is usually easier than the inner side.'],['Thigh',1,'Lots of room for larger pieces.'],['Calf',1,'Fleshy and usually tolerable. Large pieces often fit well.'],['Shoulder and upper back',1,'Good canvas for large designs.'],['Inner bicep and elbow',2,'Thinner skin. More sensitive near the elbow.'],['Ribs and sides',3,'Often one of the more intense spots.'],['Chest and sternum',3,'Bony in the middle, so it can be intense.'],['Spine',3,'Runs over bone. Can be sharp.'],['Neck',2,'Visible and sensitive. Plan around work and clothing.'],['Hands and fingers',3,'Thin skin, heavy use, can fade faster.'],['Ankle, shin and foot',3,'Little padding over bone.']];
+  /* ---- TRY IT ON: body visualizer ---- */
+  const SKIN=['#F3D9C6','#E2B089','#B98760','#8B5D3F','#5A3A29'], INK=[['Black','#0b0b0c'],['Red','#C0182C'],['Teal','#0B7F86'],['Purple','#6B2D91']];
   const LV=['','Usually milder','Moderate','Often intense'];
-  const body=sec('b-body','bl-alt',hd('Placement guide','Where will it go?','A general guide to how different spots usually feel. Everyone is different, and Josh will talk it through with you.'),
-    h('div',{class:'bl-areas rv'},AREAS.map(([a,l,t])=>h('div',{class:'bl-area l'+l},h('b',null,a),h('span',{class:'bl-meter','aria-hidden':'true'},h('i'),h('i'),h('i')),h('em',null,LV[l]),h('small',null,t)))));
+  const UPI=6.06;
+  const ZF=[['Neck',100,60,1.6,0,2],['Chest',100,98,5.5,0,3],['Shoulder',72,84,3.6,-25,1,1],['Upper arm',53,116,4.6,15,1,1],['Ribs',77,150,4.4,90,3,1],['Forearm',41,186,5.2,10,1,1],['Hand',34,236,2.2,0,3,1],['Thigh',81,262,8,0,1,1],['Calf',79,356,6,0,1,1],['Ankle and foot',78,404,2.6,0,3,1]];
+  const ZB=[['Neck',100,60,1.6,0,2],['Upper back',100,108,7,0,1],['Shoulder blade',77,100,4,-15,1,1],['Spine',100,158,8,0,3],['Lower back',100,200,5,0,2],['Back of upper arm',53,116,4.6,15,1,1],['Back of forearm',41,186,5.2,10,2,1],['Back of thigh',81,262,8,0,2,1],['Calf',79,356,6,0,1,1],['Ankle and foot',78,404,2.6,0,3,1]];
+  const expand=Z=>{ const o=[]; Z.forEach(([n,px,py,s,r,l,m])=>{ o.push({n,x:px,y:py,s,r,l}); if(m) o.push({n,x:200-px,y:py,s,r:-r,l}); }); return o; };
+  const ZS={front:expand(ZF),back:expand(ZB)};
+  const T={view:'front',art:'rose',ink:0,skin:1,size:ZS.front[3].s,rot:ZS.front[3].r,x:ZS.front[3].x,y:ZS.front[3].y};
+  const NS='http://www.w3.org/2000/svg';
+  const bodySvg=h('div',{class:'bl-fig'}); const svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 200 440'); svg.setAttribute('class','bl-body'); svg.setAttribute('role','img'); svg.setAttribute('aria-label','Body outline. Drag the design to place it.'); bodySvg.append(svg);
+  const limbs=[[62,80,46,150,20],[46,150,36,222,17],[82,218,80,308,34],[80,308,79,400,24],[100,56,100,72,16]];
+  const bodyMarkup=skin=>{ const mir=([a,b,c,d,w])=>[[a,b,c,d,w],[200-a,b,200-c,d,w]]; const L=limbs.flatMap(mir); const torso='M64 74Q100 63 136 74L132 130Q128 160 131 190L137 222Q100 237 63 222L69 190Q72 160 68 130Z';
+    const ell=[[100,34,17,21],[34,236,8,12],[166,236,8,12],[76,418,14,7],[124,418,14,7]];
+    let e='<g stroke="rgba(0,0,0,.45)" stroke-linecap="round" fill="rgba(0,0,0,.45)">'+L.map(([a,b,c,d,w])=>'<path d="M'+a+' '+b+'L'+c+' '+d+'" stroke-width="'+(w+3)+'" fill="none"/>').join('')+'<path d="'+torso+'" stroke-width="3" stroke-linejoin="round"/>'+ell.map(([cx,cy,rx,ry])=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(rx+1.5)+'" ry="'+(ry+1.5)+'" stroke="none"/>').join('')+'</g>';
+    let s='<g stroke="'+skin+'" stroke-linecap="round" fill="'+skin+'">'+L.map(([a,b,c,d,w])=>'<path d="M'+a+' '+b+'L'+c+' '+d+'" stroke-width="'+w+'" fill="none"/>').join('')+'<path d="'+torso+'" stroke-width="1" stroke-linejoin="round"/>'+ell.map(([cx,cy,rx,ry])=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" stroke="none"/>').join('')+'</g>';
+    return e+s; };
+  const bodyG=document.createElementNS(NS,'g'), detG=document.createElementNS(NS,'g'), dotG=document.createElementNS(NS,'g'), tatG=document.createElementNS(NS,'g');
+  svg.append(bodyG,detG,dotG,tatG);
+  const detail=()=>{ detG.innerHTML=T.view==='back'?'<path d="M100 76L100 214" stroke="rgba(0,0,0,.28)" stroke-width="1.4" stroke-dasharray="2 4" fill="none"/><path d="M78 88Q92 112 98 100M122 88Q108 112 102 100" stroke="rgba(0,0,0,.22)" fill="none"/>':'<circle cx="100" cy="190" r="1.8" fill="rgba(0,0,0,.35)"/><path d="M84 112Q100 124 116 112" stroke="rgba(0,0,0,.2)" fill="none"/>'; };
+  const readName=h('b',null,''), readMeta=h('span',null,''), meter=h('span',{class:'bl-meter'},h('i'),h('i'),h('i'));
+  const nearest=()=>{ let b=null,d=1e9; ZS[T.view].forEach(z=>{ const q=Math.hypot(z.x-T.x,z.y-T.y); if(q<d){ d=q; b=z; } }); return {z:b,d}; };
+  const side=()=>(T.x<100)===(T.view==='front')?'right':'left';
+  const placeText=()=>{ const n=nearest(); if(n.d>34) return 'Between spots'; const zn=n.z.n, lat=/^(Neck|Chest|Spine|Upper back|Lower back)$/.test(zn)?'':(side()+' '); return (lat+zn).replace(/^./,c=>c.toUpperCase()); };
+  const artName=()=>(ART.find(a=>a[0]===T.art)||ART[0])[1];
+  const sizeTxt=()=>{ const v=T.size; return (Math.round(v*2)/2).toString()+' in'; };
+  const drawTat=()=>{ const sc=T.size*UPI/160, k=T.art, ink=INK[T.ink][1]; tatG.setAttribute('class','bl-tat'); tatG.style.setProperty('--ink',ink);
+    tatG.innerHTML='<g transform="translate('+T.x.toFixed(1)+' '+T.y.toFixed(1)+') rotate('+T.rot+') scale('+sc.toFixed(4)+') translate(-100 -100)"><rect x="0" y="0" width="200" height="200" fill="transparent" style="cursor:grab"/>'+artM(k)+'</g>'; };
+  const paintRead=()=>{ const n=nearest(); readName.textContent=artName()+' on '+placeText().toLowerCase(); readMeta.textContent='About '+sizeTxt()+' tall'+(n.d<=34?'. '+LV[n.z.l]+' area for most people':''); meter.className='bl-meter l'+(n.d<=34?n.z.l:0); msgPre.textContent=msg(); };
+  const msg=()=>{ const n=nearest(), where=n.d<=34?placeText().toLowerCase():'(not sure yet)'; return 'Hi Josh, I’d like to book a tattoo at Bloom Tattoo.\nIdea: '+artName().toLowerCase()+' design, about '+sizeTxt()+', '+INK[T.ink][0].toLowerCase()+' ink\nPlacement: '+where+'\nI am 18 or older.'; };
+  const msgPre=h('pre',{class:'bl-msg'}), mActs=h('div',{class:'bl-cta'});
+  const drawDots=()=>{ dotG.innerHTML=ZS[T.view].map((z,i)=>'<circle class="bl-zd" cx="'+z.x+'" cy="'+z.y+'" r="4.2" data-i="'+i+'"/>').join(''); };
+  dotG.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('circle'); if(!t) return; const z=ZS[T.view][+t.getAttribute('data-i')]; T.x=z.x; T.y=z.y; T.rot=z.r; T.size=z.s; syncCtl(); full(); });
+  function pt(ev){ const p=svg.createSVGPoint(); p.x=ev.clientX; p.y=ev.clientY; const m=svg.getScreenCTM(); return m?p.matrixTransform(m.inverse()):{x:T.x,y:T.y}; }
+  let drag=null;
+  tatG.addEventListener('pointerdown',e=>{ const q=pt(e); drag={dx:T.x-q.x,dy:T.y-q.y}; try{ tatG.setPointerCapture(e.pointerId); }catch(_){} tatG.classList.add('drag'); e.preventDefault(); });
+  tatG.addEventListener('pointermove',e=>{ if(!drag) return; const q=pt(e); T.x=Math.max(8,Math.min(192,q.x+drag.dx)); T.y=Math.max(14,Math.min(430,q.y+drag.dy)); drawTat(); paintRead(); });
+  const endDrag=()=>{ drag=null; tatG.classList.remove('drag'); }; tatG.addEventListener('pointerup',endDrag); tatG.addEventListener('pointercancel',endDrag);
+  function full(){ bodyG.innerHTML=bodyMarkup(SKIN[T.skin]); detail(); drawDots(); drawTat(); paintRead(); paintActs(); paintHeal(); }
+  function paintActs(){ const m=msg(), sms=smsHref(m); mActs.replaceChildren(...[sms?h('a',{class:'bl-btn hot',href:sms},'Text this idea'):null,h('button',{type:'button',class:'bl-btn ghost',onclick:e=>{ const b=e.currentTarget; (navigator.clipboard?navigator.clipboard.writeText(msg()):Promise.reject()).then(()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',1600); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents(msgPre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }); }},'Copy'),bookBtn('ghost','Book on Vagaro')].filter(Boolean)); }
+  const syncCtl=()=>{ sizeIn.value=T.size; rotIn.value=T.rot; sizeOut.textContent=sizeTxt(); };
+  const sizeOut=h('b',null,''), rotOut=h('b',null,'');
+  const sizeIn=h('input',{type:'range',min:'1',max:'16',step:'0.5',value:String(T.size),'aria-label':'Size in inches',oninput:e=>{ T.size=+e.target.value; sizeOut.textContent=sizeTxt(); drawTat(); paintRead(); paintActs(); }});
+  const rotIn=h('input',{type:'range',min:'-180',max:'180',step:'5',value:String(T.rot),'aria-label':'Rotation',oninput:e=>{ T.rot=+e.target.value; drawTat(); }});
+  const designs=h('div',{class:'bl-des'},ART.map(([k,n])=>h('button',{type:'button',class:k===T.art?'on':'','aria-label':n,title:n,onclick:e=>{ T.art=k; designs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); drawTat(); paintRead(); paintActs(); }},blSvg(artM(k)))));
+  const inkRow=h('div',{class:'bl-sw'},INK.map(([n,c],i)=>h('button',{type:'button',class:i===T.ink?'on':'','aria-label':n+' ink',style:'--c:'+c,onclick:e=>{ T.ink=i; inkRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); drawTat(); paintRead(); paintActs(); }})));
+  const skinRow=h('div',{class:'bl-sw'},SKIN.map((c,i)=>h('button',{type:'button',class:i===T.skin?'on':'','aria-label':'Skin tone '+(i+1),style:'--c:'+c,onclick:e=>{ T.skin=i; skinRow.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===i)); bodyG.innerHTML=bodyMarkup(SKIN[i]); paintHeal(); }})));
+  const viewRow=h('div',{class:'bl-seg'},['front','back'].map(v=>h('button',{type:'button',class:v===T.view?'on':'',onclick:e=>{ T.view=v; const z=ZS[v][v==='front'?3:5]; T.x=z.x; T.y=z.y; T.rot=z.r; T.size=z.s; viewRow.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===e.currentTarget)); syncCtl(); full(); }},v==='front'?'Front':'Back')));
+  const ctl=(l,...k)=>h('div',{class:'bl-ctl'},h('span',{class:'bl-lbl'},l),k);
+  const tryIt=sec('b-try','bl-dk',hd('04','Try it on.','Pick a design, then drag it onto the body or tap a dot. Resize it, turn it and see roughly how big it will sit. Sample art only.'),
+    h('div',{class:'bl-lab rv'},
+      h('div',{class:'bl-stage2'},bodySvg,h('p',{class:'bl-hint'},'Drag the design. Tap a dot to jump to a spot.')),
+      h('div',{class:'bl-panel'},
+        ctl('Design',designs),
+        h('div',{class:'bl-two'},ctl('Size',sizeIn,h('span',{class:'bl-ro'},sizeOut,' tall')),ctl('Turn',rotIn)),
+        h('div',{class:'bl-two'},ctl('Ink',inkRow),ctl('Skin tone',skinRow)),
+        ctl('View',viewRow),
+        h('div',{class:'bl-read'},readName,readMeta,meter),
+        h('span',{class:'bl-lbl'},'Send it to Josh'),msgPre,mActs,
+        h('p',{class:'bl-note'},'Sizes are approximate, based on an average adult. How a spot feels is a general guide, and everyone is different.'))));
 
-  /* ---- before your appointment ---- */
-  const pdate=h('input',{type:'datetime-local',id:'bl-dt','aria-label':'Appointment date and time'}), pout=h('p',{class:'bl-out'},'Pick your appointment date to see your deadline.');
-  pdate.addEventListener('input',()=>{ const v=pdate.value; if(!v){ pout.textContent='Pick your appointment date to see your deadline.'; return; } const d=new Date(v); if(isNaN(d)){ return; } const dl=new Date(d.getTime()-72*3600*1000), f=o=>o.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); const left=dl.getTime()-Date.now(); pout.replaceChildren(h('span',{class:'bl-lbl'},'Last chance to keep your deposit'),h('b',null,f(dl)),h('small',null,left<0?'That time has passed. Changes now would forfeit the deposit, so call the shop.':'Rescheduling or canceling after this time forfeits the deposit (72 hours before your appointment).')); });
+  /* ---- healing slider ---- */
+  const HS=[[0,2,'Fresh','Covered the way your artist tells you. The skin is red and tender, like a sunburn.','Wash gently with mild, fragrance-free soap and pat dry.'],[3,6,'Settling in','Redness fades. It may start to feel tight.','Wash a couple of times a day and use a thin layer of unscented moisturizer. Do not scrub.'],[7,14,'Flaking','Light flaking and itching. The art can look cloudy under the peel.','Do not pick or scratch. Keep moisturizing lightly.'],[15,28,'Settled','The surface looks smooth and the lines sharpen up. Deeper healing keeps going.','Skip soaking in pools, baths and hot tubs until fully healed. Keep it out of direct sun.']];
+  const healBox=h('div',{class:'bl-skin'},h('div',{class:'bl-skin-art'}),h('div',{class:'bl-red'}),h('div',{class:'bl-flk'}));
+  const healArt=blSvg(BLA.rosebud(),'bl-hart'); healBox.querySelector('.bl-skin-art').append(healArt);
+  const dayOut=h('b',null,'Day 0'), stOut=h('h3',null,''), whatOut=h('p',null,''), tipOut=h('p',{class:'bl-tip'},'');
+  const flk=healBox.querySelector('.bl-flk'); flk.innerHTML=Array.from({length:26},(_,i)=>'<i style="left:'+((i*37)%92+3)+'%;top:'+((i*53)%86+6)+'%;width:'+(4+(i*7)%9)+'px;height:'+(3+(i*5)%6)+'px;transform:rotate('+(i*41%90)+'deg)"></i>').join('');
+  function paintHeal(){ const d=+dayIn.value, s=HS.find(a=>d>=a[0]&&d<=a[1])||HS[3]; dayOut.textContent='Day '+d; stOut.textContent=s[2]; whatOut.textContent=s[3]; tipOut.textContent=s[4];
+    healBox.style.background=SKIN[T.skin]; healBox.style.setProperty('--ink',INK[T.ink][1]);
+    const red=Math.max(0,1-d/7)*.55, flake=d<4?0:d<=14?Math.min(1,(d-3)/4)*(d>10?Math.max(0,(15-d)/5):1):0, cloud=d<3?1:d<=14?1-.5*Math.min(1,(d-2)/5)*(d>10?Math.max(0,(15-d)/5):1):1;
+    healBox.querySelector('.bl-red').style.opacity=red; flk.style.opacity=flake; healBox.querySelector('.bl-skin-art').style.opacity=cloud.toFixed(2); healBox.querySelector('.bl-skin-art').style.filter=d>=3&&d<=14?'blur('+(1.2*(d>10?Math.max(0,(15-d)/5):1)).toFixed(1)+'px)':'none'; }
+  const dayIn=h('input',{type:'range',min:'0',max:'28',step:'1',value:'0','aria-label':'Days since your appointment',oninput:paintHeal});
+  const care=sec('b-care','bl-lt',hd('05','Watch it heal.','Slide through the first four weeks. General guidance for most tattoos. Always follow the instructions Josh gives you, since they come first.'),
+    h('div',{class:'bl-heal rv'},healBox,h('div',{class:'bl-hr'},h('div',{class:'bl-day'},dayOut),dayIn,h('div',{class:'bl-ticks'},h('span',null,'Day 0'),h('span',null,'Week 1'),h('span',null,'Week 2'),h('span',null,'Week 4')),stOut,whatOut,tipOut)));
+
+  /* ---- before you go ---- */
+  const pdate=h('input',{type:'datetime-local',id:'bl-dt','aria-label':'Appointment date and time'}), pout=h('div',{class:'bl-out'},'Pick your appointment time to see your deadline.');
+  pdate.addEventListener('input',()=>{ const v=pdate.value; if(!v){ pout.textContent='Pick your appointment time to see your deadline.'; return; } const d=new Date(v); if(isNaN(d)) return; const dl=new Date(d.getTime()-72*3600*1000), f=o=>o.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); const left=dl.getTime()-Date.now(), tot=d.getTime()-Date.now(); const pct=tot>0?Math.max(0,Math.min(100,(left/tot)*100)):0;
+    pout.replaceChildren(h('span',{class:'bl-lbl'},'Last chance to keep your deposit'),h('b',null,f(dl)),h('span',{class:'bl-tbar'},h('i',{style:'width:'+(100-pct)+'%'}),h('em',{style:'left:'+(100-pct)+'%'})),h('small',null,left<0?'That time has passed. Changes now would forfeit the deposit, so call the shop.':'Rescheduling or canceling after this time forfeits the deposit (72 hours before your appointment).')); });
   const PREP=['Moisturize your skin before and after','Arrive well rested','Eat a meal beforehand','Wear comfortable clothing that gives access to the spot'];
   const prog=h('b',{class:'bl-prog'},'0 of '+PREP.length+' ready'), pbar=h('i',{class:'bl-pfill'});
   const checks=PREP.map(t=>h('label',{class:'bl-chk'},h('input',{type:'checkbox',onchange:()=>{ const n=checks.filter(c=>c.querySelector('input').checked).length; prog.textContent=n+' of '+PREP.length+' ready'+(n===PREP.length?'. You’re set.':''); pbar.style.width=(n/PREP.length*100)+'%'; }}),h('span',null,t)));
-  const prep=sec('b-prep','',hd('Before you go','Get ready for your appointment.'),
+  const prep=sec('b-prep','bl-dk',hd('06','Before you go.'),
     h('div',{class:'bl-2c bl-tools'},
       h('div',{class:'bl-card rv'},h('h3',null,'Deposit deadline'),h('p',{class:'bl-sm'},'Changes need 3 days’ notice to keep your deposit.'),h('label',{class:'bl-lbl',for:'bl-dt'},'Appointment date and time'),pdate,pout),
       h('div',{class:'bl-card rv'},h('h3',null,'Prep checklist'),h('p',{class:'bl-sm'},'From the shop’s own tips.'),checks,h('span',{class:'bl-ptrack'},pbar),prog)));
 
-  /* ---- aftercare ---- */
-  const AC=[['Day 1','Keep it covered the way your artist tells you. Then wash gently with mild, fragrance-free soap and pat dry.'],['Days 2 to 5','Wash a couple of times a day. Use a thin layer of unscented moisturizer. Do not scrub.'],['Days 5 to 14','It may flake and itch. Do not pick or scratch. Keep moisturizing lightly.'],['Weeks 2 to 4','The surface settles. Skip soaking in pools, baths and hot tubs until it is fully healed, and keep it out of direct sun.']];
-  const care=sec('b-care','bl-alt',hd('Aftercare','Healing, day by day.','General guidance for most tattoos. Always follow the instructions Josh gives you, since they come first.'),
-    h('ol',{class:'bl-tl rv'},AC.map(([a,b],i)=>h('li',null,h('b',null,a),h('span',null,b)))));
-
   /* ---- faq ---- */
   const FAQ=[['Can I reschedule my appointment?','Changes need 3 days’ notice to keep your deposit. If you cancel or reschedule within 72 hours of your appointment, the deposit is forfeited.'],['What payment options are there?','Cash is accepted, along with debit and credit cards from Visa, MasterCard, Discover and American Express.'],['Can I bring someone for support?','Yes. You’re welcome to bring a guest or two, and there is seating for them.'],['Is Bloom Tattoo LGBTQIA+ friendly?','Yes. The studio is an inclusive, nonjudgmental space.'],['Are children allowed in the studio?','No. Clients must be 18 to get tattooed, and everyone who enters the studio must be an adult.'],['How can I prepare for my appointment?','Moisturize before and after, arrive well rested, eat a meal beforehand and wear comfortable clothing that gives access to the area.']];
-  const faq=sec('b-faq','',hd('Good to know','Quick answers.'),h('div',{class:'bl-faq rv'},FAQ.map(([q,a],i)=>h('details',null,h('summary',null,q),h('p',null,a)))));
+  const faq=sec('b-faq','bl-lt',hd('07','Good to know.'),h('div',{class:'bl-faq rv'},FAQ.map(([q,a])=>h('details',null,h('summary',null,q),h('p',null,a)))));
 
   /* ---- visit ---- */
-  const visit=sec('b-visit','bl-alt',hd('Visit','Come meet Josh.'),
+  const visit=sec('b-visit','bl-hot',hd('08','Come meet Josh.'),
     h('div',{class:'bl-2c'},
-      h('div',{class:'bl-card rv'},h('span',{class:'bl-lbl'},'Bloom Tattoo'),addrTxt?h('p',{class:'bl-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bl-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
-        h('div',{class:'bl-cta'},bookBtn('red'),C.maps?h('a',{class:'bl-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),h('p',{class:'bl-note'},'18 and over only. Bring a photo ID.')),
-      h('div',{class:'bl-card bl-hrs rv'},h('span',{class:'bl-lbl'},'Studio hours'),hoursRows(C),h('p',{class:'bl-note'},'Hours are as listed online. Work is by appointment, so call to confirm.'))));
-  const foot=h('footer',{class:'bl-foot'},h('div',{class:'bl-wrap bl-foot-in'},h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
-  return h('div',{class:'demo bl on'},top,nav,hero,gal,styles,artist,plan,body,prep,care,faq,visit,foot);
+      h('div',{class:'bl-card inv rv'},h('span',{class:'bl-lbl'},'Bloom Tattoo'),addrTxt?h('p',{class:'bl-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'bl-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+        h('div',{class:'bl-cta'},bookBtn('hot'),C.maps?h('a',{class:'bl-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Get directions'):null),h('p',{class:'bl-note'},'18 and over only. Bring a photo ID.')),
+      h('div',{class:'bl-card inv bl-hrs rv'},h('span',{class:'bl-lbl'},'Studio hours'),hoursRows(C),h('p',{class:'bl-note'},'Hours are as listed online. Work is by appointment, so call to confirm.'))));
+  const foot=h('footer',{class:'bl-foot'},h('div',{class:'bl-wrap bl-foot-in'},h('b',null,'BLOOM TATTOO'),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  const pg=h('div',{class:'demo bl on'},top,nav,hero,marquee,gal,styles,artist,tryIt,care,prep,faq,visit,foot);
+  full(); syncCtl(); paintHeal();
+  return pg;
 }
 
 function zephyr(C){
