@@ -23,7 +23,7 @@ def once(a, b):
 once('</head>', '<link rel="preload" as="image" href="/hero3d/img/bar-l.webp" fetchpriority="high" media="(min-width:981px)">\n'
                 '<link rel="preload" as="image" href="/hero3d/img/bar-s.webp" fetchpriority="high" media="(max-width:980px)">\n'
                 '<link rel="stylesheet" href="/hero3d/hero.css">\n</head>')
-once('\n</body>', '\n<script src="/hero3d/hero.js" defer></script>\n</body>')
+once('\n</body>', '\n<script src="/hero3d/hero.js" defer></script>\n<script src="/hero3d/flag.js" defer></script>\n</body>')
 once("hero=$('.hero')", "hero=$('.hero,.h3')")
 
 if '--apply' in sys.argv:
