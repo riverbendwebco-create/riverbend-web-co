@@ -99,6 +99,7 @@ function build(d){
   if(style==='western'){ C.navy=hexOnLight(p)||'#1D2B53'; C.red=hexOnLight(a)||'#B22234'; }
   if(new URLSearchParams(location.search).get('view')==='marketing'){ document.title='Marketing plan for '+(C.name||'your business')+' | Riverbend Web Co.'; document.body.className='t-mk'; root.replaceChildren(marketing(C)); return; }
   if(C.variant==='sunshine'){ document.body.className='t-sn'; const pg=sunshine(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='rollin'){ document.body.className='t-ri'; const pg=rollin(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='roadside'&&new URLSearchParams(location.search).get('view')==='portal'){ document.body.className='t-pt'; document.title=(C.name||'')+' | Member portal concept'; root.replaceChildren(rdPortal(C)); return; }
   if(C.variant==='roadside'){ document.body.className='t-rd'; const pg=roadside(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); rdNav(pg); return; }
   if(C.variant==='realty'){ document.body.className='t-rt'; const pg=realty(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
@@ -4776,6 +4777,74 @@ function rdPortal(C){
   go('home'); return app;
 }
 function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
+/* ---------- Rollin' Icecream: factory-tour style (inspired by the Haagen-Dazs Factory Tour) ---------- */
+function rollin(C){
+  const X=C.x||{}, P=X.pics||{};
+  const u=(id,w)=>/^[0-9]{10,13}-[0-9a-f]{12}$/.test(id||'')?'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||900)+'&q=75':'';
+  const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
+  if(!document.getElementById('riFonts')) document.head.append(h('link',{id:'riFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=DM+Sans:wght@400;500;700&display=swap'}));
+  const steps=(X.steps||[]).filter(s=>Array.isArray(s)&&s[0]);
+  const why=(X.why||[]).filter(s=>Array.isArray(s)&&s[0]);
+  const go=id=>scrollTo(id);
+  const sprink=n=>{ const cols=['#F6A6C1','#C8B6F0','#9EE3CF','#FFE08A','#FFF1E0']; return Array.from({length:n},(_,i)=>h('i',{class:'ri-sp',style:'left:'+((i*37)%100)+'%;top:'+((i*53+11)%100)+'%;background:'+cols[i%5]+';--d:'+(6+i%5)+'s;--r:'+(i*47%180)+'deg'})); };
+
+  const nav=h('header',{class:'ri-nav'},h('div',{class:'ri-w ri-nav-in'},
+    h('a',{class:'ri-brand',href:'#top',onclick:e=>{e.preventDefault();go('top');}},logo?h('img',{src:logo,alt:"Rollin' Icecream logo"}):null,h('b',null,"Rollin' Icecream")),
+    h('nav',{class:'ri-links'},[['ri-tour','The roll tour'],['ri-why','Why rolled'],['ri-gal','Fresh off the plate']].map(([id,t])=>h('button',{type:'button',onclick:()=>go(id)},t))),
+    h('button',{type:'button',class:'ri-btn',onclick:()=>go('ri-end')},'Come roll with us')));
+
+  // hero: logo in a spinning ring, giant outlined title, floating cups
+  const ringTxt='FRESH ROLLED ICE CREAM · MADE TO ORDER · '+(C.city||'MARYLAND').toUpperCase()+' · ';
+  const ring=h('div',{class:'ri-ring','aria-hidden':'true'},ringTxt.repeat(2).split('').map((ch,i,a)=>h('span',{style:'transform:rotate('+(i*360/a.length)+'deg)'},ch)));
+  const floats=['hero1','hero2','hero3','hero4','hero5'].map((k,i)=>u(P[k],500)?h('div',{class:'ri-fl f'+i,'data-depth':String([.6,.35,.5,.25,.45][i])},h('img',{src:u(P[k],500),alt:'',loading:'eager'})):null);
+  const hero=h('section',{class:'ri-hero',id:'top'},h('div',{class:'ri-sprinkles'},sprink(26)),
+    h('h1',{class:'ri-outline','aria-label':"Rollin' Icecream"},h('span',null,"ROLLIN'"),h('span',null,'ICECREAM')),
+    h('div',{class:'ri-stage'},floats,h('div',{class:'ri-center'},ring,logo?h('img',{class:'ri-logo',src:logo,alt:"Rollin' Icecream"}):null)),
+    h('div',{class:'ri-hero-t'},h('p',{class:'ri-script'},'rolled right in front of you'),h('p',{class:'ri-lead'},'Sweet cream poured on an ice-cold plate, chopped, spread thin and rolled up fresh, one cup at a time.'),
+      h('div',{class:'ri-hero-b'},h('button',{type:'button',class:'ri-btn lg',onclick:()=>go('ri-tour')},'Take the roll tour'),h('button',{type:'button',class:'ri-btn ghost lg',onclick:()=>go('ri-gal')},'See the rolls'))),
+    h('button',{type:'button',class:'ri-scroll',onclick:()=>go('ri-tour'),'aria-label':'Scroll down'},h('i')));
+  const marq=h('div',{class:'ri-marq','aria-hidden':'true'},h('div',null,Array.from({length:2},()=>h('span',null,['Rolled fresh','Made to order','Watch it happen','One cup at a time','Mix-ins in every bite'].map(t=>h('b',null,t,h('i'))))))); 
+
+  // roll tour: sticky steps with a big circular photo
+  const imgs=steps.map((s,i)=>u(P['s'+(i+1)],900));
+  const big=h('div',{class:'ri-disc'},imgs.map((src,i)=>src?h('img',{src,alt:steps[i][0],class:i?null:'on',loading:'lazy'}):h('span')),h('svg',{}));
+  const prog=document.createElementNS('http://www.w3.org/2000/svg','svg'); prog.setAttribute('viewBox','0 0 100 100'); prog.setAttribute('class','ri-prog');
+  const pc=document.createElementNS('http://www.w3.org/2000/svg','circle'); [['cx',50],['cy',50],['r',48]].forEach(a=>pc.setAttribute(...a)); prog.append(pc); big.lastChild.replaceWith(prog);
+  const num=h('b',{class:'ri-num'},'01');
+  const rows=steps.map((s,i)=>h('li',{class:'ri-step'+(i?'':' on')},h('em',null,String(i+1).padStart(2,'0')),h('div',null,h('h3',null,s[0]),h('p',null,s[1]))));
+  const tour=h('section',{class:'ri-tour',id:'ri-tour',style:'--n:'+steps.length},h('div',{class:'ri-tour-pin'},h('div',{class:'ri-w ri-tour-in'},
+    h('div',{class:'ri-tour-l'},h('p',{class:'ri-kick'},'The roll tour'),h('h2',{class:'ri-h2'},'From pour to cup in five steps'),h('ol',{class:'ri-steps'},rows)),
+    h('div',{class:'ri-tour-r'},big,num))));
+  let curStep=-1;
+  const tourTick=()=>{ const r=tour.getBoundingClientRect(); const tot=tour.offsetHeight-innerHeight; const p=Math.min(1,Math.max(0,-r.top/Math.max(1,tot))); const k=Math.min(steps.length-1,Math.floor(p*steps.length*0.999));
+    pc.style.strokeDashoffset=String(302*(1-p));
+    if(k!==curStep){ curStep=k; rows.forEach((el,j)=>{ el.classList.toggle('on',j===k); el.classList.toggle('done',j<k); }); [...big.querySelectorAll('img')].forEach((m,j)=>m.classList.toggle('on',j===k)); num.textContent=String(k+1).padStart(2,'0'); } };
+
+  const whySec=h('section',{class:'ri-why',id:'ri-why'},h('div',{class:'ri-w'},h('div',{class:'ri-center-h rv'},h('p',{class:'ri-kick'},'Why rolled'),h('h2',{class:'ri-h2'},'Not scooped. Rolled.')),
+    h('div',{class:'ri-cards'},why.map((w,i)=>h('div',{class:'ri-card rv'+(i?' d'+i:'')},h('span',null,String(i+1).padStart(2,'0')),h('h3',null,w[0]),h('p',null,w[1]))))));
+
+  const gal=(P.g||[]).map(id=>u(id,700)).filter(Boolean);
+  const track=h('div',{class:'ri-track'},gal.map((src,i)=>h('figure',{class:'ri-shot',style:'--t:'+((i%2)?'3deg':'-3deg')},h('img',{src,alt:'Rolled ice cream',loading:'lazy',draggable:'false'}))));
+  let dn=false,sx=0,sl=0; track.addEventListener('pointerdown',e=>{ dn=true; sx=e.clientX; sl=track.scrollLeft; track.classList.add('drag'); });
+  addEventListener('pointerup',()=>{ dn=false; track.classList.remove('drag'); }); track.addEventListener('pointermove',e=>{ if(dn) track.scrollLeft=sl-(e.clientX-sx); });
+  const galSec=h('section',{class:'ri-gal',id:'ri-gal'},h('div',{class:'ri-w ri-gal-h rv'},h('div',null,h('p',{class:'ri-kick'},'Fresh off the plate'),h('h2',{class:'ri-h2'},'Every cup is a little different')),h('p',{class:'ri-small'},'Drag to look around')),track);
+
+  const end=h('section',{class:'ri-end',id:'ri-end'},h('div',{class:'ri-sprinkles'},sprink(18)),
+    h('h2',{class:'ri-outline sm'},h('span',null,'SEE YOU AT'),h('span',null,'THE PLATE')),
+    h('div',{class:'ri-end-c rv'},logo?h('img',{src:logo,alt:''}):null,h('p',{class:'ri-script'},"come roll with us"),h('p',null,"Rollin' Icecream · "+(C.city||'Maryland')),
+      C.tel?h('a',{class:'ri-btn lg',href:C.tel},'Call '+C.phoneTxt):h('button',{type:'button',class:'ri-btn lg',onclick:()=>go('top')},'Back to the top')));
+  const foot=h('footer',{class:'ri-foot'},h('div',{class:'ri-w ri-foot-in'},h('span',null,"© "+new Date().getFullYear()+" Rollin' Icecream"),h('span',null,C.city||'')));
+
+  const root2=h('div',{class:'ri'},nav,h('main',null,hero,marq,tour,whySec,galSec,end),foot);
+  // mouse parallax for floating cups + scroll effects
+  const fl=()=>[...root2.querySelectorAll('.ri-fl')];
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    addEventListener('pointermove',e=>{ const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5; fl().forEach(f=>{ const d=+f.dataset.depth; f.style.setProperty('--mx',(x*60*d)+'px'); f.style.setProperty('--my',(y*60*d)+'px'); }); },{passive:true});
+  }
+  let tk=false; const onS=()=>{ tk=false; tourTick(); const y=scrollY; root2.querySelector('.ri-nav').classList.toggle('sc',y>30); const o=root2.querySelector('.ri-hero .ri-outline'); if(o) o.style.transform='translateY('+(y*.25)+'px)'; fl().forEach(f=>f.style.setProperty('--sy',(-y*(+f.dataset.depth)*.5)+'px')); };
+  addEventListener('scroll',()=>{ if(!tk){ tk=true; requestAnimationFrame(onS); } },{passive:true}); requestAnimationFrame(onS);
+  return root2;
+}
 function rbBar(C){
   if(C.x&&C.x.sample) return h('div',{class:'rb-bar'},h('div',{class:'rb-in'},
     h('div',{class:'t'},h('b',null,'Sample website'),h('em',{class:'rb-tag'},'Made-up business'),h('br'),h('span',null,'Every Riverbend site is custom-built around your business: your name, photos, colors, services and features.')),
