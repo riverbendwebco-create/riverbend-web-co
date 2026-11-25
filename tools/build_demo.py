@@ -703,7 +703,7 @@ body.t-bl{background:#0a0a0a}
 .bl-gal{max-width:980px}
 .bl-stage{position:relative;aspect-ratio:16/9;border:3px solid var(--w);overflow:hidden;background:#000;outline-offset:4px}
 .bl-slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .6s ease;display:grid;place-items:center}.bl-slide.on{opacity:1}
-.bl-slide img{width:100%;height:100%;object-fit:cover}.bl-slart{position:absolute;top:6%;bottom:6%;right:8%;height:88%!important;width:auto!important;aspect-ratio:1;color:var(--w)}.bl-slide:nth-child(even) .bl-slart{color:var(--hot);right:auto;left:8%}
+.bl-slcv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.bl-slide:nth-child(even) figcaption{left:auto;right:0;border-right:0;border-left:3px solid var(--hot);align-items:flex-end;text-align:right}.bl-slide img{width:100%;height:100%;object-fit:cover}.bl-slart{position:absolute;top:6%;bottom:6%;right:8%;height:88%!important;width:auto!important;aspect-ratio:1;color:var(--w)}.bl-slide:nth-child(even) .bl-slart{color:var(--hot);right:auto;left:8%}
 .bl-slide figcaption{position:absolute;left:0;bottom:0;padding:18px 22px;background:#000;border-top:3px solid var(--hot);border-right:3px solid var(--hot);display:flex;flex-direction:column}.bl-slide figcaption b{font:400 2.6rem/1 var(--df);text-transform:uppercase}.bl-slide figcaption span{font:700 .72rem var(--bf);letter-spacing:.16em;text-transform:uppercase;color:var(--hot)}
 .bl-gbar{display:flex;align-items:center;gap:14px;margin-top:14px}.bl-dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
 .bl-dot2{width:34px;height:8px;border:0;border-radius:0;background:#3a3a3a;cursor:pointer;padding:0}.bl-dot2.on{background:var(--hot)}
@@ -721,10 +721,10 @@ body.t-bl{background:#0a0a0a}
 .bl-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.bl-stats div{background:#000;color:#fff;padding:20px}.bl-stats b{display:block;font:400 3.6rem/1 var(--df);color:var(--hot)}.bl-stats span{font-size:.86rem;opacity:.85}
 /* try it on */
 .bl-lab{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:34px;align-items:start}
-.bl-stage2{background:#fff;border:3px solid #fff;padding:14px 10px 8px;position:sticky;top:76px;color:#000}.bl-fig{width:100%}.bl-body{width:100%;height:auto;max-height:78vh;display:block;touch-action:none;overflow:visible}
+.bl-stage2{background:radial-gradient(circle at 50% 38%,#fff,#e6e6e6);border:3px solid #fff;padding:14px 10px 12px;position:sticky;top:76px;color:#000}.bl-cl{margin-top:12px;border-top:3px solid #000;padding-top:12px}.bl-cl .bl-lbl{color:var(--hot2)}.bl-close{width:100%;height:auto;display:block;border:3px solid #000}.bl-fig{width:100%}.bl-body{width:100%;height:auto;max-height:70vh;display:block;touch-action:none;overflow:visible}
 .bl-hint{margin:6px 0 0;font:700 .76rem var(--bf);letter-spacing:.12em;text-transform:uppercase;text-align:center;color:#000}
 .bl-zd{fill:var(--hot);stroke:#000;stroke-width:1.2;cursor:pointer;opacity:.9}.bl-zd:hover{r:6}
-.bl-tat{touch-action:none;cursor:grab}.bl-tat.drag{cursor:grabbing}.bl-tat .bl-art,.bl-tat *{vector-effect:non-scaling-stroke}.bl-tat path,.bl-tat ellipse,.bl-tat rect:not([fill=transparent]),.bl-tat circle:not(.f){fill:none;stroke:var(--ink);stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:round}.bl-tat .f{fill:var(--ink)}
+.bl-tat{touch-action:none;cursor:grab;mix-blend-mode:multiply;opacity:.92;filter:blur(.18px)}.bl-tat.drag{cursor:grabbing}.bl-tat .bl-art,.bl-tat *{vector-effect:non-scaling-stroke}.bl-tat path,.bl-tat ellipse,.bl-tat rect:not([fill=transparent]),.bl-tat circle:not(.f){fill:none;stroke:var(--ink);stroke-width:1.5px;stroke-linecap:round;stroke-linejoin:round}.bl-tat .f{fill:var(--ink)}
 .bl-panel{display:grid;gap:18px}.bl-ctl{display:grid;gap:6px}.bl-two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .bl-des{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.bl-des button{aspect-ratio:1;background:#000;border:3px solid #3a3a3a;border-radius:0;color:#fff;padding:6px;cursor:pointer}.bl-des button.on{border-color:var(--hot);color:var(--hot)}.bl-des button:hover{border-color:var(--w)}
 .bl-sw{display:flex;gap:8px;flex-wrap:wrap}.bl-sw button{width:38px;height:38px;border:3px solid #3a3a3a;border-radius:0;background:var(--c);cursor:pointer;padding:0}.bl-sw button.on{border-color:var(--w);box-shadow:0 0 0 3px var(--hot)}
