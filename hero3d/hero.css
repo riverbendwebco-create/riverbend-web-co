@@ -185,7 +185,7 @@ a.h3-ti:hover .go{transform:translateX(3px);opacity:1}
   .h3-card i svg{width:15px;height:15px}
   .h3-card b{font-size:.76rem}.h3-card span{display:none}
   .h3-card{max-width:64%}.h3-card.c1{left:0;top:0}.h3-card.c2{right:0;top:auto;bottom:12%}.h3-card.c3{display:none}
-  .h3-cap{left:0;right:0;bottom:-4%;flex-wrap:wrap;justify-content:center;row-gap:10px;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0}.h3-label{flex-basis:100%;text-align:center}
+  .h3-cap{left:3%;right:3%;bottom:-6%;flex-wrap:wrap;justify-content:center;row-gap:8px;padding:10px 12px}.h3-label{flex-basis:100%;text-align:center}
   .h3-nav{display:none}
   .h3-ti{flex-direction:column;align-items:flex-start;gap:10px;padding:18px 16px}
   .h3-ti .go{display:none}
