@@ -4823,7 +4823,7 @@ function rollin(C){
   const whySec=h('section',{class:'ri-why',id:'ri-why'},h('div',{class:'ri-w'},h('div',{class:'ri-center-h rv'},h('p',{class:'ri-kick'},'Why rolled'),h('h2',{class:'ri-h2'},'Not scooped. Rolled.')),
     h('div',{class:'ri-cards'},why.map((w,i)=>h('div',{class:'ri-card rv'+(i?' d'+i:'')},h('span',null,String(i+1).padStart(2,'0')),h('h3',null,w[0]),h('p',null,w[1]))))));
 
-  const gal=(P.g||[]).map(id=>u(id,700)).filter(Boolean);
+  const gal=(P.g||[]).map(id=>u(id,1000)).filter(Boolean);
   const shot=(src,i,dup)=>h('figure',{class:'ri-shot',style:'--t:'+((i%2)?'3deg':'-3deg'),'aria-hidden':dup?'true':null},h('img',{src,alt:dup?'':'Rolled ice cream',draggable:'false'}));
   const track=h('div',{class:'ri-track'},gal.map((src,i)=>shot(src,i,false)),gal.map((src,i)=>shot(src,i,true)));
   // endless auto-scroll; pauses on hover, drag or touch
@@ -4863,7 +4863,7 @@ function rollin(C){
 function rollinCatering(C){
   const X=C.x||{}, P=X.pics||{};
   const dq='?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'');
-  const u=id=>/^img\/[a-z0-9._-]+$/.test(id||'')?id:/^[0-9]{10,13}-[0-9a-f]{12}$/.test(id||'')?'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=600&q=80':'';
+  const u=id=>/^img\/[a-z0-9._-]+$/.test(id||'')?id:/^[0-9]{10,13}-[0-9a-f]{12}$/.test(id||'')?'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w=900&q=82':'';
   const logo=/^img\/[a-z0-9._-]+$/.test(X.logo||'')?X.logo:'';
   if(!document.getElementById('riFonts')) document.head.append(h('link',{id:'riFonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=DM+Sans:wght@400;500;700&display=swap'}));
   const nav=h('header',{class:'ri-nav sc'},h('div',{class:'ri-w ri-nav-in'},
