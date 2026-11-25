@@ -4777,6 +4777,20 @@ function rdPortal(C){
   go('home'); return app;
 }
 function rdNav(pg){ const n=pg.querySelector('.rd-nav'); const f=()=>n.classList.toggle('sc',scrollY>20); addEventListener('scroll',f,{passive:true}); f(); }
+
+/* Rollin' contact links (from their sign: Instagram, TikTok, phone, email, hashtag) */
+const RI_ICO={ig:['M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z','M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z','M17.5 6.5h.01'],tt:['M14 3v11.5a3.5 3.5 0 1 1-3-3.46','M14 3c.5 2.6 2.4 4.4 5 4.6'],ph:['M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z'],em:['M3 5h18v14H3z','m3 6 9 7 9-7'],hs:['M5 9h14M5 15h14M10 3 8 21M16 3l-2 18']};
+function riIco(k){ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('aria-hidden','true'); s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor'); s.setAttribute('stroke-width','1.9'); s.setAttribute('stroke-linecap','round'); s.setAttribute('stroke-linejoin','round'); (RI_ICO[k]||[]).forEach(d=>{ const p=document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d',d); s.append(p); }); return s; }
+function riFoot(C){ const K=(C.x||{}).contact||{}; const links=[C.tel?['ph',C.tel,C.phoneTxt]:null,C.email?['em','mailto:'+C.email,'Email']:null,Array.isArray(K.instagram)?['ig',okUrl(K.instagram[1]),'Instagram']:null,Array.isArray(K.tiktok)?['tt',okUrl(K.tiktok[1]),'TikTok']:null].filter(l=>l&&l[1]);
+  return h('footer',{class:'ri-foot'},h('div',{class:'ri-w ri-foot-in'},h('span',null,"© "+new Date().getFullYear()+" Rollin' Icecream"+(K.hashtag?' · '+K.hashtag:'')),h('div',{class:'ri-foot-l'},links.map(l=>h('a',Object.assign({href:l[1],'aria-label':l[2]},/^https?:/.test(l[1])?{target:'_blank',rel:'noopener'}:{}),riIco(l[0]),h('span',null,l[2])))))); }
+function riContact(C,cls){ const K=(C.x||{}).contact||{}; const em=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(C.email||'')?C.email:'';
+  const row=(k,label,val,href,ext)=>h('a',Object.assign({class:'ri-ct',href},ext?{target:'_blank',rel:'noopener'}:{}),h('i',null,riIco(k)),h('span',null,h('small',null,label),h('b',null,val)));
+  return h('div',{class:'ri-contact '+(cls||'')},
+    C.tel?row('ph','Call or text',C.phoneTxt,C.tel):null,
+    em?row('em','Email',em,'mailto:'+em):null,
+    Array.isArray(K.instagram)&&okUrl(K.instagram[1])?row('ig','Instagram',K.instagram[0],okUrl(K.instagram[1]),true):null,
+    Array.isArray(K.tiktok)&&okUrl(K.tiktok[1])?row('tt','TikTok',K.tiktok[0],okUrl(K.tiktok[1]),true):null,
+    K.hashtag?h('div',{class:'ri-ct'},h('i',null,riIco('hs')),h('span',null,h('small',null,'Tag your rolls'),h('b',null,K.hashtag))):null); }
 /* ---------- Rollin' Icecream: factory-tour style (inspired by the Haagen-Dazs Factory Tour) ---------- */
 function rollin(C){
   const X=C.x||{}, P=X.pics||{};
@@ -4845,9 +4859,10 @@ function rollin(C){
 
   const end=h('section',{class:'ri-end',id:'ri-end'},h('div',{class:'ri-sprinkles'},sprink(18)),
     h('h2',{class:'ri-outline sm'},h('span',null,'SEE YOU AT'),h('span',null,'THE PLATE')),
-    h('div',{class:'ri-end-c rv'},logo?h('img',{src:logo,alt:''}):null,h('p',{class:'ri-script'},"come roll with us"),h('p',null,"Rollin' Icecream · "+(C.city||'Maryland')),
-      C.tel?h('a',{class:'ri-btn lg',href:C.tel},'Call '+C.phoneTxt):h('button',{type:'button',class:'ri-btn lg',onclick:()=>go('top')},'Back to the top')));
-  const foot=h('footer',{class:'ri-foot'},h('div',{class:'ri-w ri-foot-in'},h('span',null,"© "+new Date().getFullYear()+" Rollin' Icecream"),h('span',null,C.city||'')));
+    h('div',{class:'ri-end-c rv'},logo?h('img',{src:logo,alt:''}):null,h('p',{class:'ri-script'},"come roll with us"),h('h3',{class:'ri-book'},((X.contact||{}).book)||'Book us for your next event!'),
+      h('div',{class:'ri-end-b'},h('a',{class:'ri-btn lg',href:'?d='+encodeURIComponent(new URLSearchParams(location.search).get('d')||'')+'&view=catering'},'Plan your event'),C.tel?h('a',{class:'ri-btn ghost lg',href:C.tel},'Call '+C.phoneTxt):null),
+      riContact(C,'dark')));
+  const foot=riFoot(C);
 
   const root2=h('div',{class:'ri'},nav,h('main',null,hero,marq,tour,whySec,galSec,end),foot);
   // mouse parallax for floating cups + scroll effects
@@ -4873,7 +4888,7 @@ function rollinCatering(C){
   const floats=['hero1','hero2','hero3','hero4'].map((k,i)=>u(P[k])?h('div',{class:'ri-fl c'+i},h('img',{src:u(P[k]),alt:''})):null);
   const hero=h('section',{class:'ri-chero'},floats,h('h1',{class:'ri-outline ri-cout','aria-hidden':'true'},h('span',null,'CATERING')),
     h('div',{class:'ri-chero-t'},h('p',{class:'ri-script'},'bring the roll to your event'),h('h2',{class:'ri-h2'},'Rolled ice cream, made right in front of your guests'),
-      h('p',{class:'ri-lead'},'Birthdays, weddings, school events, office parties and festivals. Tell us about your event and we will follow up with options and a quote.'),
+      h('p',{class:'ri-lead'},'Birthdays, weddings, school events, office parties and festivals. Tell us about your event and we will follow up with options and a quote.'),(C.x&&C.x.contact&&C.x.contact.book)?h('p',{class:'ri-script sm'},C.x.contact.book):null,
       h('a',{class:'ri-btn lg',href:'#ri-form',onclick:e=>{ e.preventDefault(); scrollTo('ri-form'); }},'Start your inquiry')));
   const how=h('div',{class:'ri-chow'},[['Tell us about it','Date, place, guest count and the kind of event.'],['We follow up','We reach out with options, flavors and a quote.'],['We roll it fresh','Every cup is rolled to order for your guests.']].map((s,i)=>h('div',{class:'ri-chow-i rv'+(i?' d'+i:'')},h('span',null,String(i+1).padStart(2,'0')),h('div',null,h('h3',null,s[0]),h('p',null,s[1])))));
   // form
@@ -4900,8 +4915,9 @@ function rollinCatering(C){
   const done=()=>h('div',{class:'ri-done'},logo?h('img',{src:logo,alt:''}):null,h('h3',null,'Thanks, we got it!'),h('p',null,"In the live site, your inquiry goes straight to Rollin' Icecream and they reach out to plan your event."),h('p',{class:'ri-fnote'},'Demo: nothing was sent.'),h('a',{class:'ri-btn lg',href:dq},'Back to home'));
   const card=h('div',{class:'ri-fcard rv',id:'ri-form'},h('h2',null,'Catering inquiry'),h('p',{class:'ri-fsub'},'Takes about a minute.'),form);
   const body=h('section',{class:'ri-cbody'},h('div',{class:'ri-w ri-cgrid'},h('div',{class:'ri-cleft'},h('p',{class:'ri-kick'},'How it works'),h('h2',{class:'ri-h2'},'Three easy steps'),how,
+      h('div',{class:'ri-cdirect rv'},h('h3',null,'Rather talk it through?'),h('p',null,'Call, text or message us anytime.'),riContact(C,'light')),
       h('div',{class:'ri-cphotos'},['hero2','hero3'].map(k=>u(P[k])?h('div',{class:'rv'},h('img',{src:u(P[k]),alt:'Rolled ice cream',loading:'lazy'})):null))),card));
-  const foot=h('footer',{class:'ri-foot'},h('div',{class:'ri-w ri-foot-in'},h('span',null,"© "+new Date().getFullYear()+" Rollin' Icecream"),h('span',null,C.city||'')));
+  const foot=riFoot(C);
   return h('div',{class:'ri ri-catpage'},nav,h('main',null,hero,body),foot);
 }
 function rbBar(C){

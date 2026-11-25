@@ -72,6 +72,20 @@
     "One cup at a time",
     "Each order starts fresh on a frozen plate, made to order."
    ]
-  ]
- }
+  ],
+  "contact": {
+   "instagram": [
+    "@RollinIcecreamOfficial",
+    "https://www.instagram.com/rollinicecreamofficial/"
+   ],
+   "tiktok": [
+    "@RollinIcecream",
+    "https://www.tiktok.com/@rollinicecream"
+   ],
+   "hashtag": "#RollinIcecreamDMV",
+   "book": "Book us for your next event!"
+  }
+ },
+ "phone": "2403941244",
+ "email": "RollinIcecream@gmail.com"
 }
