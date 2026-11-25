@@ -4742,7 +4742,7 @@ body.t-pt{margin:0;background:#060B16;color:#E8EEF9;font-family:"DM Sans",Inter,
 .pt-sel{display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;background:var(--n2);border:1px solid var(--ln);margin-bottom:14px}.pt-sel>span{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
 .pt-sel b{display:block}.pt-sel button{background:none;border:0;padding:0;color:var(--b2);font-size:.84rem;font-weight:700;text-decoration:underline}.pt-sel small{color:var(--mut)}
 .pt-map,.pt-tmap{position:relative;height:190px;border-radius:16px;overflow:hidden;background:radial-gradient(circle at 30% 30%,#13284F,#0A1430);border:1px solid var(--ln);margin-bottom:16px}
-.pt-map svg,.pt-tmap svg{position:absolute;inset:0;width:100%;height:100%}
+.pt-map>svg,.pt-tmap>svg{position:absolute;inset:0;width:100%;height:100%}.pt-pin svg{display:block}.pt-pin{z-index:2}
 .pt-map path,.pt-tmap path{fill:none;stroke-linecap:round}.pt-map .rd1,.pt-tmap .rd1{stroke:#5B9BFF;stroke-width:7;opacity:.55}.pt-map .rd2,.pt-tmap .rd2{stroke:rgba(201,214,242,.18);stroke-width:4}.pt-map .rv1,.pt-tmap .rv1{stroke:#1E3F7A;stroke-width:26}
 .pt-pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);color:#FF5A6E;opacity:.35;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}.pt-pin.drop{opacity:1;animation:ptDrop .6s cubic-bezier(.3,1.6,.5,1)}
 @keyframes ptDrop{from{transform:translate(-50%,-260%)}to{transform:translate(-50%,-100%)}}
