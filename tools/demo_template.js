@@ -2294,14 +2294,8 @@ function becwar(C){
   const links=[['w-design','Design a room'],['w-calc','How much tile'],['w-pick','Tile picker'],['w-care','Care tips'],['w-visit','Visit']];
   const markSvg=()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 28 28'); s.setAttribute('class','bw-tilemark'); s.innerHTML='<rect x="1" y="1" width="12" height="12" fill="#0F5F66"/><rect x="15" y="1" width="12" height="12" fill="#C25B33"/><rect x="1" y="15" width="12" height="12" fill="#10222B"/><rect x="15" y="15" width="12" height="12" fill="#9AB3BC"/>'; return s; };
   const brand=h('a',{class:'bw-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('w-top'); },'aria-label':name},markSvg(),h('span',{class:'bw-wm'},h('b',null,'Becwar'),h('i',null,'Tile & Marble')));
-  const allLinks=[['w-design','Design a room'],['w-calc','How much tile do I need?'],['w-pick','Tile picker'],['w-svc','What we do'],['w-care','Care tips'],['w-est','Ask for an estimate'],['w-visit','Visit the store']];
-  const mpanel=h('nav',{class:'bw-mpanel',id:'bw-mpanel','aria-label':'Sections',hidden:''}), menuBtn=h('button',{type:'button',class:'bw-menubtn','aria-expanded':'false','aria-controls':'bw-mpanel'},h('span',{class:'bw-bars','aria-hidden':'true'}),h('span',null,'Menu'));
-  const setMenu=open=>{ if(open) mpanel.removeAttribute('hidden'); else mpanel.setAttribute('hidden',''); menuBtn.setAttribute('aria-expanded',open?'true':'false'); menuBtn.classList.toggle('open',open); };
-  mpanel.append(h('span',{class:'bw-mhd'},'Jump to'),...allLinks.map(([id,l],i)=>h('button',{type:'button',onclick:()=>{ setMenu(false); setTimeout(()=>scrollTo(id),60); }},h('b',null,String(i+1).padStart(2,'0')),l)),call('ink','Call '+(C.phoneTxt||'')));
-  menuBtn.addEventListener('click',()=>setMenu(mpanel.hasAttribute('hidden')));
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape') setMenu(false); });
   const nav=h('header',{class:'bw-nav'},h('div',{class:'bw-wrap bw-nav-in'},brand,
-    h('nav',{class:'bw-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),h('div',{class:'bw-nav-r'},call('ink sm','Call'),menuBtn)),mpanel);
+    h('nav',{class:'bw-links'},links.map(([id,l])=>h('button',{type:'button',onclick:()=>scrollTo(id)},l))),call('ink sm','Call')));
   const top=h('div',{class:'bw-top'},h('div',{class:'bw-wrap bw-top-in'},
     st?h('span',{class:'bw-st'},h('i',{class:'bw-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null));
 
@@ -2317,6 +2311,8 @@ function becwar(C){
       h('h1',null,heads[0],heads[1]?[h('br'),h('em',null,heads[1])]:null),
       h('p',{class:'bw-lead'},C.tag||'Becwar Tile & Marble sells and installs tile in Dubuque. Try layouts, work out how much you need and ask for an estimate, all from your phone.'),
       h('div',{class:'bw-cta'},h('button',{type:'button',class:'bw-btn ink',onclick:()=>scrollTo('w-design')},'Design a room'),call('line')),
+      h('div',{class:'bw-need'},h('span',{class:'bw-needhd'},'What are you looking for?'),h('div',{class:'bw-needg'},
+        [['w-design','Design a room','See tile in a room'],['w-calc','How much tile','Work out the amount'],['w-pick','Tile picker','Find a starting point'],['w-care','Care tips','Grout, stone, floors'],['w-est','Get an estimate','Send us the details'],['w-visit','Visit the store','Hours and directions']].map(([id,l,s])=>h('button',{type:'button',onclick:()=>scrollTo(id)},h('b',null,l),h('small',null,s))))),
       h('ul',{class:'bw-facts'},h('li',null,'American Olean and Marazzi dealer'),h('li',null,'Showers, floors and backsplashes'),h('li',null,'Right on Central Ave in Dubuque'))),
     board));
 
