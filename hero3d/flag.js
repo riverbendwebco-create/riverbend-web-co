@@ -1,8 +1,9 @@
 /* Riverbend hero: realistic 3D U.S. flag with a real bald eagle soaring around it.
    Flag: high-resolution cloth mesh, layered travelling waves with a fluttering fly end, woven-fabric
    texture with mipmaps, cloth sheen, fold occlusion and light passing through the fabric.
-   Eagle: a real photograph (Mathew Schwartz, Unsplash License) cut out and placed in the 3D scene,
-   depth-tested against the flag, banking, turning and flexing its wings as it soars.
+   Eagle: a full wingbeat cycle (22 frames) keyed from a green-screen bald eagle clip on Pixabay
+   (Pixabay Content License), played on a card inside the 3D scene: it flaps, glides on descents,
+   banks, turns and is depth-tested against the flag so it passes behind and in front of it.
    Plain WebGL, no libraries. Decorative (aria-hidden); hides itself if WebGL is unavailable. */
 (function(){
   'use strict';
@@ -88,18 +89,20 @@
     'col=col/(col+vec3(.85))*1.55;gl_FragColor=vec4(pow(col,vec3(1./2.2)),1.);}';
 
   /* ---------- the eagle: real photo on a flexible card, depth-tested in the scene ---------- */
-  var EVS='attribute vec2 aQ;uniform mat4 uPV;uniform vec3 uC;uniform vec3 uR;uniform vec3 uU;uniform float uFlex;varying vec2 vQ;'+
-    'void main(){float lx=aQ.x-.5,ly=.5-aQ.y;float tip=pow(1.-aQ.y,2.)*(.35+.65*abs(lx)*2.);ly+=uFlex*tip*.11;'+
-    'vQ=aQ;gl_Position=uPV*vec4(uC+uR*lx+uU*ly,1.);}';
+  var EVS='attribute vec2 aQ;uniform mat4 uPV;uniform vec3 uC;uniform vec3 uR;uniform vec3 uU;uniform vec4 uCell;varying vec2 vQ;'+
+    'void main(){float lx=aQ.x-.5,ly=.5-aQ.y;vQ=uCell.xy+aQ*uCell.zw;gl_Position=uPV*vec4(uC+uR*lx+uU*ly,1.);}';
   var EFS=P+'varying vec2 vQ;uniform sampler2D uTex;uniform float uLit;'+
-    'void main(){vec4 t=texture2D(uTex,vQ);if(t.a<.03)discard;gl_FragColor=vec4(t.rgb*uLit,t.a);}';
+    'void main(){vec4 t=texture2D(uTex,vQ);if(t.a<.03)discard;'+
+    'vec3 c=t.rgb/max(t.a,.001);c=pow(c,vec3(.8))*uLit;'+
+    'gl_FragColor=vec4(c*t.a,t.a);}';
+  var AT={n:22,cols:6,cw:336,ch:380,pad:8,w:320,h:364,size:2048};
 
   var fp,mp,ep,F={},M={},E={},tex,etex=null,flagIdx,flagN,meshBuf,eB,eI,eN,poleCount;
   try{
     fp=prog(FVS,FFS);mp=prog(MVS,MFS);ep=prog(EVS,EFS);
     F.aG=gl.getAttribLocation(fp,'aG');['uPV','uT','uWind','uTex','uL','uCam','uAmp'].forEach(function(n){F[n]=gl.getUniformLocation(fp,n);});
     M.aP=gl.getAttribLocation(mp,'aP');M.aN=gl.getAttribLocation(mp,'aN');M.aC=gl.getAttribLocation(mp,'aC');['uPV','uL','uCam'].forEach(function(n){M[n]=gl.getUniformLocation(mp,n);});
-    E.aQ=gl.getAttribLocation(ep,'aQ');['uPV','uC','uR','uU','uFlex','uTex','uLit'].forEach(function(n){E[n]=gl.getUniformLocation(ep,n);});
+    E.aQ=gl.getAttribLocation(ep,'aQ');['uPV','uC','uR','uU','uCell','uTex','uLit'].forEach(function(n){E[n]=gl.getUniformLocation(ep,n);});
     var GX=110,GY=58,g=[],ix=[],i,j,a;
     for(j=0;j<=GY;j++)for(i=0;i<=GX;i++)g.push(i/GX,j/GY);
     for(j=0;j<GY;j++)for(i=0;i<GX;i++){a=j*(GX+1)+i;ix.push(a,a+1,a+GX+1,a+1,a+GX+2,a+GX+1);}
@@ -110,7 +113,7 @@
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
     if(aniso)gl.texParameterf(gl.TEXTURE_2D,aniso.TEXTURE_MAX_ANISOTROPY_EXT,8);
-    var q=[],qi=[],QX=14,QY=10;for(j=0;j<=QY;j++)for(i=0;i<=QX;i++)q.push(i/QX,j/QY);
+    var q=[],qi=[],QX=1,QY=1;for(j=0;j<=QY;j++)for(i=0;i<=QX;i++)q.push(i/QX,j/QY);
     for(j=0;j<QY;j++)for(i=0;i<QX;i++){a=j*(QX+1)+i;qi.push(a,a+1,a+QX+1,a+1,a+QX+2,a+QX+1);}
     eB=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,eB);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(q),gl.STATIC_DRAW);
     eI=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,eI);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(qi),gl.STATIC_DRAW);eN=qi.length;
@@ -139,7 +142,7 @@
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,eimg);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);kick();}catch(e){etex=null;}};
-  eimg.src='/hero3d/img/eagle.webp';
+  eimg.src='/hero3d/img/eagle-flap.webp';
 
   /* ---------- matrices ---------- */
   function persp(f,a,n,fa){var t=1/Math.tan(f/2);return [t/a,0,0,0, 0,t,0,0, 0,0,(fa+n)/(n-fa),-1, 0,0,2*fa*n/(n-fa),0];}
@@ -162,7 +165,7 @@
   box.addEventListener('pointerdown',function(){gust=1.3;kick();});
 
   /* ---------- render ---------- */
-  var vis=true,raf=0,t0=performance.now(),T=reduce?2.2:0,th=reduce?-.6:-.9,flapT=0;
+  var vis=true,raf=0,t0=performance.now(),T=reduce?2.2:0,th=reduce?-.6:-.9,flapT=8,frameI=8;
   if('IntersectionObserver' in window) new IntersectionObserver(function(es){vis=es[0].isIntersecting;if(vis)kick();}).observe(box);
   document.addEventListener('visibilitychange',function(){if(!document.hidden)kick();});
   function kick(){if(!raf)raf=requestAnimationFrame(frame);}
@@ -192,16 +195,20 @@
     if(etex){
       var p=fpos(th),q=fpos(th+.02),vx=q[0]-p[0],vy=q[1]-p[1],vz=q[2]-p[2],vl=Math.hypot(vx,vy,vz);
       var sr=(vx*cam.r[0]+vz*cam.r[2])/vl, su=(vx*cam.u[0]+vy*cam.u[1]+vz*cam.u[2])/vl;   // heading on screen
-      var face=sr>=0?1:-1, turn=Math.max(.42,Math.min(1,Math.abs(sr)*1.5));           // narrows as it turns toward or away
-      var ang=Math.atan2(su,Math.abs(sr))*.55-.12;                                     // nose follows the climb, slight bank
-      var ca=Math.cos(ang),sa=Math.sin(ang),size=.7,Wd=size*turn,Hd=size*912/1024;
-      // image x axis: horizontal part follows the heading (mirrored when flying left), vertical part follows the climb
-      var R=[(face*ca*cam.r[0]+sa*cam.u[0])*Wd,(sa*cam.u[1])*Wd,(face*ca*cam.r[2]+sa*cam.u[2])*Wd];
-      var U=[(-face*sa*cam.r[0]+ca*cam.u[0])*Hd,(ca*cam.u[1])*Hd,(-face*sa*cam.r[2]+ca*cam.u[2])*Hd];
-      flapT+=dt*(1.1+.9*Math.max(0,su));
+      var hs=sr>=0?1:-1, turn=Math.max(.5,Math.min(1,Math.abs(sr)*1.5));            // narrows as it turns toward or away
+      var ang=Math.atan2(su,Math.abs(sr))*.45, ca=Math.cos(ang), sa=Math.sin(ang);     // nose follows the climb
+      var size=.66,Wd=size*turn,Hd=size*AT.h/AT.w;
+      // the clip's eagle faces left: image +x points away from the heading; mirrored when heading right
+      var R=[(-hs*ca*cam.r[0]-sa*cam.u[0])*Wd,(-sa*cam.u[1])*Wd,(-hs*ca*cam.r[2]-sa*cam.u[2])*Wd];
+      var U=[(-hs*sa*cam.r[0]+ca*cam.u[0])*Hd,(ca*cam.u[1])*Hd,(-hs*sa*cam.r[2]+ca*cam.u[2])*Hd];
+      // wingbeat: 22 frames at 30 fps; on descents finish the stroke, then hold the level-wing frame and glide
+      var glide=su<-.18;
+      if(!(glide&&frameI===8)&&!reduce)flapT+=dt*30;
+      frameI=Math.floor(flapT)%AT.n;
+      var col=frameI%AT.cols,row=Math.floor(frameI/AT.cols);
       gl.useProgram(ep);gl.uniformMatrix4fv(E.uPV,false,PV);gl.uniform3fv(E.uC,p);gl.uniform3fv(E.uR,R);gl.uniform3fv(E.uU,U);
-      gl.uniform1f(E.uFlex,reduce?0:Math.sin(flapT*2.4)*(.35+.65*Math.max(0,Math.min(1,su*3))));
-      gl.uniform1f(E.uLit,p[2]<0?.86:1.);
+      gl.uniform4f(E.uCell,(col*AT.cw+AT.pad)/AT.size,(row*AT.ch+AT.pad)/AT.size,AT.w/AT.size,AT.h/AT.size);
+      gl.uniform1f(E.uLit,p[2]<0?1.05:1.22);
       gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,etex);gl.uniform1i(E.uTex,0);
       gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
       gl.bindBuffer(gl.ARRAY_BUFFER,eB);gl.enableVertexAttribArray(E.aQ);gl.vertexAttribPointer(E.aQ,2,gl.FLOAT,false,8,0);
