@@ -41,11 +41,11 @@ rows=''.join(f'''<div class="prow{' hot' if h else ''}"><div><b>{n}</b><span>{d}
 page(3,'dark',f'''<div class="kicker">Simple pricing</div>
 <h1>Launch your website for <em>$0 down.</em></h1>
 <div class="plist">{rows}</div>
-<p class="note" style="margin-top:26px;position:relative">12-month agreement. Nothing is charged until your website launches.</p>''','See the plans',
-'''.plist{display:flex;flex-direction:column;gap:16px;margin-top:54px;position:relative}
-.prow{display:flex;justify-content:space-between;align-items:center;padding:30px 36px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.2)}
-.prow b{display:block;font-family:Lexend;font-size:38px;font-weight:700}.prow span{display:block;font-size:22px;opacity:.6;margin-top:4px}
-.pr{font-family:Lexend;font-weight:700;font-size:66px;letter-spacing:-.03em}.pr small{font-size:26px;opacity:.6;margin-left:4px;letter-spacing:0}
+<p class="note" style="margin-top:34px;position:relative;font-size:23px">12-month agreement. Nothing is charged until your website launches.</p>''','See the plans',
+'''.plist{display:flex;flex-direction:column;gap:22px;margin-top:70px;position:relative}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:42px 40px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.2)}
+.prow b{display:block;font-family:Lexend;font-size:44px;font-weight:700}.prow span{display:block;font-size:24px;opacity:.6;margin-top:6px}
+.pr{font-family:Lexend;font-weight:700;font-size:78px;letter-spacing:-.03em}.pr small{font-size:26px;opacity:.6;margin-left:4px;letter-spacing:0}
 .prow.hot{background:linear-gradient(120deg,rgba(29,78,216,.55),rgba(0,82,204,.25));border-color:#60A5FA;box-shadow:0 30px 60px -30px rgba(29,78,216,.8)}''')
 
 # 04 pay upfront
@@ -60,7 +60,7 @@ page(4,'light',f'''<div class="kicker">Pay upfront</div>
 
 # 05 security built in
 page(5,'dark',f'''<div class="kicker">Cybersecurity</div>
-<h1>Security isn't an add-on.<br><em>It's how we build.</em></h1>
+<h1>Security isn't an add‑on.<br><em>It's how we build.</em></h1>
 <ul class="chk">
 <li>{CHECK()}<span>Military cybersecurity experience<small>behind every site we build</small></span></li>
 <li>{CHECK()}<span>SSL setup on every website<small>the padlock your customers look for</small></span></li>
@@ -75,11 +75,11 @@ items=''.join(f'<div class="tl"><i>{CHECK("#34D399")}</i><div><b>{a}</b><span>{b
 page(6,'dark',f'''<div class="kicker">How we work</div>
 <h1 class="sm">We lock down our own systems <em>first.</em></h1>
 <div class="term"><div class="tbar"><i></i><i></i><i></i><span>riverbend · security checklist</span></div>{items}</div>
-<p class="sub" style="font-size:27px;margin-top:30px">That's the standard we bring to your website.</p>''','Talk to us',
+<p class="sub" style="font-size:29px;margin-top:40px">That's the standard we bring to your website.</p>''','Talk to us',
 '''.term{position:relative;margin-top:50px;border-radius:22px;background:#0A101C;border:1px solid rgba(148,163,184,.22);overflow:hidden;box-shadow:0 40px 80px -40px rgba(0,0,0,.9)}
 .tbar{display:flex;align-items:center;gap:9px;height:48px;padding:0 20px;background:#111A2B;border-bottom:1px solid rgba(148,163,184,.16)}.tbar i{width:13px;height:13px;border-radius:50%;background:#334155}.tbar span{margin-left:12px;font:500 17px ui-monospace,Menlo,monospace;color:#94A3B8}
-.tl{display:flex;gap:22px;align-items:center;padding:24px 30px;border-bottom:1px solid rgba(148,163,184,.1)}.tl:last-child{border:0}.tl i svg{width:42px;height:42px}
-.tl b{display:block;font-size:29px;font-weight:600}.tl span{display:block;font:400 19px ui-monospace,Menlo,monospace;color:#7DD3FC;margin-top:5px}''')
+.tl{display:flex;gap:24px;align-items:center;padding:34px 34px;border-bottom:1px solid rgba(148,163,184,.1)}.tl:last-child{border:0}.tl i svg{width:42px;height:42px}
+.tl b{display:block;font-size:33px;font-weight:600}.tl span{display:block;font:400 21px ui-monospace,Menlo,monospace;color:#7DD3FC;margin-top:5px}''')
 
 # 07 payments
 page(7,'light',f'''<div class="kicker">Payment integrations</div>
@@ -107,10 +107,10 @@ page(8,'dark',f'''<div class="kicker">Forms that work 24/7</div>
 <h1>Your website should work while you <em>sleep.</em></h1>
 <p class="sub">Booking and quote requests go straight to your phone, even at midnight.</p>
 <div class="nstack">{nn}</div>''','Get a free mockup',
-'''.nstack{position:relative;margin-top:60px;display:flex;flex-direction:column;gap:18px}
-.nt{display:flex;align-items:center;gap:22px;width:760px;padding:26px 30px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(148,163,184,.22);backdrop-filter:blur(8px);box-shadow:0 30px 60px -40px rgba(0,0,0,.9)}
+'''.nstack{position:relative;margin-top:80px;display:flex;flex-direction:column;gap:26px}
+.nt{display:flex;align-items:center;gap:24px;width:820px;padding:36px 36px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(148,163,184,.22);backdrop-filter:blur(8px);box-shadow:0 30px 60px -40px rgba(0,0,0,.9)}
 .nt i{flex:0 0 18px;height:18px;border-radius:50%;background:var(--c);box-shadow:0 0 0 7px color-mix(in srgb,var(--c) 22%,transparent)}
-.nt div{flex:1}.nt b{display:block;font-size:30px;font-weight:700}.nt span{display:block;font-size:23px;opacity:.65;margin-top:3px}.nt em{font-style:normal;font-size:21px;opacity:.55;font-weight:600}''')
+.nt div{flex:1}.nt b{display:block;font-size:34px;font-weight:700}.nt span{display:block;font-size:25px;opacity:.65;margin-top:3px}.nt em{font-style:normal;font-size:21px;opacity:.55;font-weight:600}''')
 
 # 09 automate the busywork
 tiles=[('E-signed agreements','Signed online, PDF copy emailed to both sides'),('Automatic billing','Charged on the 1st, receipts sent for you'),('Website chat assistant','Answers common questions any time'),('Lead tracking','New inquiries organized in one place')]
@@ -152,9 +152,9 @@ page(13,'light',f'''<div class="kicker">You own it</div>
 <p class="sub">You own your domain from day one, and your custom website once it's paid off.</p>
 <div class="addr"><span class="lk">{LOCK}</span><b>yourbusiness</b><em>.com</em></div>
 <div class="own">{''.join(f'<div><b>{a}</b><span>{b}</span></div>' for a,b in [('Day one','Your domain is yours'),('Paid off','The site is yours'),('Always','Your content, your photos')])}</div>''','Get started',
-'''.addr{margin-top:70px;display:flex;align-items:center;gap:20px;height:120px;padding:0 40px;border-radius:26px;background:#fff;border:2px solid #CBD5E1;box-shadow:0 40px 80px -50px rgba(15,23,42,.6);font-family:Lexend;font-size:58px;letter-spacing:-.03em}
-.addr .lk{display:grid;place-items:center;width:64px;height:64px;border-radius:16px;background:#DCFCE7;color:#16A34A}.addr .lk svg{width:34px;height:34px}.addr b{font-weight:700}.addr em{font-style:normal;color:#0052CC;font-weight:700}
-.own{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}.own div{padding:26px;border-radius:20px;background:#fff;border:1px solid #E2E8F0}.own b{display:block;font-family:Lexend;font-size:28px;color:#0052CC}.own span{display:block;font-size:21px;color:#475569;margin-top:6px}''')
+'''.addr{margin-top:96px;display:flex;align-items:center;gap:24px;height:150px;padding:0 46px;border-radius:26px;background:#fff;border:2px solid #CBD5E1;box-shadow:0 40px 80px -50px rgba(15,23,42,.6);font-family:Lexend;font-size:72px;letter-spacing:-.03em}
+.addr .lk{display:grid;place-items:center;width:80px;height:80px;border-radius:16px;background:#DCFCE7;color:#16A34A}.addr .lk svg{width:34px;height:34px}.addr b{font-weight:700}.addr em{font-style:normal;color:#0052CC;font-weight:700}
+.own{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}.own div{padding:36px 30px;border-radius:20px;background:#fff;border:1px solid #E2E8F0}.own b{display:block;font-family:Lexend;font-size:34px;color:#0052CC}.own span{display:block;font-size:24px;color:#475569;margin-top:6px}''')
 
 # 14 local
 page(14,'dark',f'''<div class="kicker">Veteran-owned · Local</div>

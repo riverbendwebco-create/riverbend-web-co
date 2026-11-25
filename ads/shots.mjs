@@ -13,7 +13,7 @@ const jobs=[
  ['cypher','https://cypher-llc.com/',1440,900],['ghost','https://ghostplatform.ai/',1440,900],
  ['chefnerd','https://chefnerdai.com/',1440,900],['tinyapp','https://tinyappcode.com/',1440,900],
 ];
-const hide=`.rb-bar,#rbChat,.rba-fab,[class*="cookie"]{display:none!important}.rv,.reveal,[data-reveal]{opacity:1!important;transform:none!important}`;
+const hide=`.rb-bar,#rbChat,#rba,.rba-panel,.rba-teaser,.rba-fab,[class*="cookie"]{display:none!important}.rv,.reveal,[data-reveal]{opacity:1!important;transform:none!important}`;
 const browser=await chromium.launch();
 for(const [name,url,w,h] of jobs){
   const ctx=await browser.newContext({viewport:{width:w,height:h},deviceScaleFactor:2,isMobile:w<500,hasTouch:w<500,userAgent:w<500?'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1':undefined});
