@@ -64,11 +64,11 @@
 
 /* ---------- stage ---------- */
 .h3-stage{position:relative;z-index:2;height:min(640px,72vh);min-height:520px;transform:translate3d(0,calc(var(--sp)*60px),0);opacity:calc(1 - var(--sp)*.5)}
-.h3-gl,.h3-still{position:absolute;left:-30%;right:-14%;top:-18%;bottom:-16%;width:144%;height:134%;pointer-events:none}
-.h3-gl{opacity:0;transition:opacity 1.2s ease}
-.h3.gl-on .h3-gl{opacity:1}
-.h3-gl-back{z-index:0}.h3-gl-front{z-index:4}
-.h3-still{z-index:0;object-fit:contain;transition:opacity 1.2s ease}
+/* the river: full-width band across the lower hero, behind the copy and the devices */
+.h3-river,.h3-still{position:absolute;left:0;right:0;bottom:0;width:100%;height:66%;z-index:-1;pointer-events:none}
+.h3-river{opacity:0;transition:opacity 1.4s ease}
+.h3.gl-on .h3-river{opacity:1}
+.h3-still{object-fit:cover;object-position:50% 50%;transition:opacity 1.4s ease}
 .h3.gl-on .h3-still{opacity:0}
 /* soft light that follows the cursor */
 .h3-light{position:absolute;inset:-10%;z-index:1;pointer-events:none;
@@ -162,7 +162,7 @@ a.h3-ti:hover .go{transform:translateX(3px);opacity:1}
   .h3-micro{justify-content:center}
   .h3-loc{justify-content:center;margin-left:auto;margin-right:auto}
   .h3-stage{height:auto;min-height:0;aspect-ratio:1/.9;max-width:620px;width:100%;margin:10px auto 0;transform:none;opacity:1}
-  .h3-gl,.h3-still{left:-18%;right:-18%;width:136%;top:-12%;bottom:-10%;height:122%}
+  .h3-river,.h3-still{height:52%}
   .h3-trust ul{grid-template-columns:1fr 1fr;padding:0}
   .h3-trust li:nth-child(3)::before{display:none}
   .h3-trust li:nth-child(n+3){border-top:1px solid rgba(148,163,184,.12)}
