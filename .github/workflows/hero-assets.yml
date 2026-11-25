@@ -1,5 +1,5 @@
 name: Hero assets
-# Runs only on the hero-assets branch: downloads source photos for the hero and commits them.
+# Runs only on the hero-assets branch: downloads source media for the hero and extracts preview frames.
 on:
   push:
     branches: [hero-assets]
@@ -11,12 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - run: |
-          mkdir -p assets-src
-          # Bald eagle in flight by Mathew Schwartz, free under the Unsplash License
-          curl -fsSL "https://images.unsplash.com/photo-1531884070720-875c7622d4c6?w=2400&q=92&fm=jpg" -o assets-src/eagle.jpg
-          ls -la assets-src
+          mkdir -p assets-src/vid assets-src/sheets
+          # Pixabay Content License (free for commercial use)
+          curl -fsSL "https://cdn.pixabay.com/video/2020/06/06/41281-428319228_large.mp4" -o assets-src/vid/eagle-41281.mp4 || echo "41281 failed"
+          curl -fsSL "https://cdn.pixabay.com/video/2023/05/25/164520-830737681_large.mp4" -o assets-src/vid/eagle-164520.mp4 || echo "164520 failed"
+          ls -la assets-src/vid
+          for f in assets-src/vid/*.mp4; do
+            n=$(basename "$f" .mp4)
+            ffprobe -v error -show_entries stream=width,height,r_frame_rate,duration -of csv=p=0 "$f" > "assets-src/sheets/$n.txt" || true
+            # contact sheet: one frame every 0.5 s
+            ffmpeg -v error -i "$f" -vf "fps=2,scale=320:-1,tile=6x10" -frames:v 1 "assets-src/sheets/$n-overview.jpg"
+          done
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
-          git add assets-src && git commit -m "Fetch hero source photos [skip ci]" && git push
+          git add assets-src && git commit -m "Fetch hero source media [skip ci]" && git push
