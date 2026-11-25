@@ -1,0 +1,22 @@
+name: Hero assets
+# Runs only on the hero-assets branch: downloads source photos for the hero and commits them.
+on:
+  push:
+    branches: [hero-assets]
+    paths: ['.github/workflows/hero-assets.yml']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p assets-src
+          # Bald eagle in flight by Mathew Schwartz, free under the Unsplash License
+          curl -fsSL "https://images.unsplash.com/photo-1531884070720-875c7622d4c6?w=2400&q=92&fm=jpg" -o assets-src/eagle.jpg
+          ls -la assets-src
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add assets-src && git commit -m "Fetch hero source photos [skip ci]" && git push
