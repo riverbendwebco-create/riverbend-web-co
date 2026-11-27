@@ -7618,5 +7618,29 @@
         "order"
       ]
     }
+  },
+  {
+    "key": "expertlawns-layout-1",
+    "slug": "expert-lawns-f567e",
+    "patch": true,
+    "data": {
+      "variant": "elawn",
+      "name": "Expert Lawns",
+      "category": "Lawn Care and Snow Removal",
+      "tagline": "Owner-operated lawn care, tree work and snow removal in Dubuque, Iowa.",
+      "phone": "(563) 580-1130",
+      "address": "1564 Central Ave, Ste B",
+      "city": "Dubuque, IA",
+      "colors": {
+        "primary": "#123524",
+        "accent": "#C8F169"
+      },
+      "mkHide": [
+        "order"
+      ],
+      "x": {
+        "headline": "Every season,|handled."
+      }
+    }
   }
 ]

@@ -1225,6 +1225,86 @@ body.t-bl{background:#0a0a0a}
 .mk-bloom .mo-ex p{color:#e8e8e8}
 .mk-bloom .mp-fine{color:#9b9b9b}
 @media (max-width:700px){.mk-bloom .mo-item{padding:22px 18px}.mk-bloom .mp-brand{font-size:1.1rem;white-space:nowrap}.mk-bloom .mp-back{white-space:nowrap;font-size:.9rem}}
+/* ===== Expert Lawns ===== */
+.el{--g:#123524;--g2:#2F8F46;--lime:#C8F169;--ink:#0C1F16;--snow:#F2F7F5;--ice:#BFE3F5;--hf:'Archivo','Work Sans',system-ui,sans-serif;--bf:'Work Sans',system-ui,sans-serif;font-family:var(--bf);color:var(--ink);background:var(--snow);line-height:1.55;font-weight:500;overflow-x:hidden}
+.el *{box-sizing:border-box}.el h1,.el h2,.el h3{font-family:var(--hf);font-weight:800;text-transform:uppercase;line-height:1;letter-spacing:-.01em;margin:0}
+.el-wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.el-top{background:var(--ink);color:var(--lime);font-size:.85rem;font-weight:700;letter-spacing:.04em}.el-top .el-wrap{display:flex;justify-content:space-between;gap:12px;padding-top:8px;padding-bottom:8px}.el-top a{color:#fff;text-decoration:none;white-space:nowrap}
+.el-nav{position:sticky;top:0;z-index:30;background:var(--g);border-bottom:4px solid var(--lime)}.el-nav .el-wrap{display:flex;align-items:center;gap:18px;padding-top:9px;padding-bottom:9px}
+.el-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;white-space:nowrap}.el-brand b{font:800 1.25rem var(--hf);text-transform:uppercase;letter-spacing:.01em}.el-logo{width:36px;height:36px;display:block}.el-logo.sm{width:30px;height:30px}
+.el-links{display:flex;gap:2px;margin-left:auto}.el-links button{background:none;border:0;color:#fff;font:800 .85rem var(--hf);text-transform:uppercase;letter-spacing:.08em;padding:10px 12px;cursor:pointer}.el-links button:hover{color:var(--lime)}
+.el-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:800 1rem/1 var(--hf);text-transform:uppercase;letter-spacing:.06em;padding:15px 22px;border:3px solid var(--lime);background:transparent;color:#fff;text-decoration:none;cursor:pointer;border-radius:0;transition:transform .12s,box-shadow .12s,background .12s,color .12s}
+.el-btn.hot{background:var(--lime);color:var(--ink)}.el-btn.hot:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 #fff}.el-btn.ghost{border-color:#fff}.el-btn.ghost:hover{background:#fff;color:var(--ink)}.el-btn.sm{padding:10px 16px;font-size:.85rem}.el-btn.big{padding:20px 26px;font-size:1.15rem;width:100%}
+.el-btn svg{width:18px;height:18px}
+.el-eye{display:inline-block;font:800 .78rem var(--hf);letter-spacing:.16em;text-transform:uppercase;color:var(--g2);margin-bottom:10px}.el-eye.lt{color:var(--lime)}
+/* stage */
+.el-stage{display:grid;grid-template-rows:auto auto;background:var(--ink);--g1:#2B4A63;--g2c:#8FB0C4;--hl1:#C9D9E2;--hl2:#E6EEF2;--tf:#EEF4F6;--can:#D9E6EC;--trk:#4a3b30;--sunc:#E6F0F6;--sno:1;--str:0;--can-o:.0;--fxc:#fff}
+.el-scenebox{grid-area:1/1;position:relative;min-height:600px}.el-scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.el-stage .g1{stop-color:var(--g1);transition:stop-color .8s}.el-stage .g2{stop-color:var(--g2c);transition:stop-color .8s}
+.el-scene .sun circle{fill:var(--sunc);transition:fill .8s}.el-scene .sun .halo{opacity:.28}.el-scene .sun{transition:transform .8s ease}
+.el-scene .hill1{fill:var(--hl1);transition:fill .8s}.el-scene .hill2{fill:var(--hl2);transition:fill .8s}.el-scene .turf{fill:var(--tf);transition:fill .8s}
+.el-scene .can{fill:var(--can);opacity:var(--can-o);transition:fill .8s,opacity .8s}.el-scene .trunk{fill:var(--trk)}
+.el-scene .snow{fill:#fff;opacity:var(--sno);transition:opacity .8s}.el-scene .stripes path{fill:rgba(255,255,255,.14)}.el-scene .stripes{opacity:var(--str);transition:opacity .8s}
+.el-scene .mower,.el-scene .plow{opacity:0;transition:opacity .5s}
+.el-scene .mower{transform:translate(-160px,442px);animation:elmow 17s linear infinite}.el-scene .plow{transform:translate(-220px,444px);animation:elplow 15s linear infinite}
+.el-scene .beacon{animation:elblink .7s steps(2) infinite}
+@keyframes elmow{to{transform:translate(1380px,442px)}}@keyframes elplow{to{transform:translate(1420px,444px)}}@keyframes elblink{50%{opacity:.15}}
+.s-win{--g1:#2B4A63;--g2c:#8FB0C4;--hl1:#C9D9E2;--hl2:#E6EEF2;--tf:#EEF4F6;--can:#D9E6EC;--can-o:0;--sunc:#E6F0F6;--sno:1;--str:0;--fxc:#fff}.s-win .plow{opacity:1}
+.s-spr{--g1:#4C9AD0;--g2c:#CBEAF6;--hl1:#8CC97E;--hl2:#6DB562;--tf:#4FA24F;--can:#9BD77C;--can-o:1;--sunc:#FFE680;--sno:0;--str:1;--fxc:#FFF6B0}.s-spr .mower{opacity:1}
+.s-sum{--g1:#2F86C9;--g2c:#BFE6F8;--hl1:#5FB052;--hl2:#3F9B3D;--tf:#2F8F46;--can:#2E8A3E;--can-o:1;--sunc:#FFD84A;--sno:0;--str:1;--fxc:#FFF6B0}.s-sum .mower{opacity:1}
+.s-fal{--g1:#7FA6C2;--g2c:#F4D9B0;--hl1:#C9A456;--hl2:#8DA24A;--tf:#4F9444;--can:#E0782B;--can-o:1;--sunc:#FFC857;--sno:0;--str:1;--fxc:#E0782B}.s-fal .mower{opacity:1}
+.el-fx{grid-area:1/1;position:relative;overflow:hidden;pointer-events:none;z-index:1}
+.el-fx i{position:absolute;top:-24px;width:var(--s);height:var(--s);background:var(--fxc);opacity:0;border-radius:50%;animation:elfall var(--t) linear var(--dl) infinite;transition:background .8s}
+.s-win .el-fx i{opacity:.9}.s-fal .el-fx i{opacity:.85;border-radius:0;animation-name:elleaf}.s-spr .el-fx i,.s-sum .el-fx i{opacity:.55;width:5px;height:5px;animation-name:elrise;top:auto;bottom:-10px}
+@keyframes elfall{to{transform:translate(var(--dx),640px)}}@keyframes elleaf{to{transform:translate(var(--dx),640px) rotate(540deg)}}@keyframes elrise{to{transform:translate(var(--dx),-420px)}}
+.el-hero .el-wrap{width:100%}
+.el-hero{grid-area:1/1;position:relative;z-index:2;display:flex;align-items:flex-start;padding:48px 0 0}
+.el-hl{max-width:560px;background:rgba(12,31,22,.86);border-left:8px solid var(--lime);padding:28px 30px;color:#fff}
+.el-hl h1{font-size:clamp(2.6rem,7vw,4.6rem);color:#fff}.el-hl h1 span{color:var(--lime)}.el-hl p{margin:16px 0 0;color:#E4EEE7;font-size:1.08rem;max-width:480px}.el-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.el-panel{background:var(--ink);color:#fff;border-top:4px solid var(--lime);position:relative;z-index:3}
+.el-pin{display:grid;grid-template-columns:1.1fr 1fr;gap:36px;padding:30px 0 34px;align-items:center}.el-pl .el-eye{color:var(--lime)}
+.el-mt{font-size:clamp(1.7rem,3.6vw,2.5rem);color:#fff}.el-ms{margin:10px 0 14px;color:#D4E3D9;max-width:520px;min-height:3em}
+.el-chips{display:flex;flex-wrap:wrap;gap:8px;min-height:36px}.el-chip{display:inline-flex;align-items:center;gap:6px;background:var(--lime);color:var(--ink);font:800 .78rem var(--hf);text-transform:uppercase;letter-spacing:.05em;padding:7px 10px}.el-chip svg{width:16px;height:16px}
+.el-fine{font-size:.8rem;color:#9fb5a8;margin-top:12px}.el-fine.dk{color:#4b6558}
+.el-range{width:100%;height:34px;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;margin:0}
+.el-range::-webkit-slider-runnable-track{height:8px;background:linear-gradient(90deg,#8FB0C4,#6DB562 30%,#2F8F46 60%,#E0782B 85%,#8FB0C4);border:2px solid #fff}
+.el-range::-moz-range-track{height:8px;background:linear-gradient(90deg,#8FB0C4,#6DB562 30%,#2F8F46 60%,#E0782B 85%,#8FB0C4);border:2px solid #fff}
+.el-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:34px;background:var(--lime);border:3px solid var(--ink);box-shadow:0 0 0 3px #fff;margin-top:-15px}
+.el-range::-moz-range-thumb{width:20px;height:28px;background:var(--lime);border:3px solid var(--ink);border-radius:0;box-shadow:0 0 0 3px #fff}
+.el-ticks{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin:10px 0 16px}.el-ticks button{background:transparent;border:2px solid #2f4a3c;color:#B9CCBF;font:800 .7rem var(--hf);text-transform:uppercase;letter-spacing:.04em;padding:8px 0;cursor:pointer}.el-ticks button.on{background:var(--lime);border-color:var(--lime);color:var(--ink)}.el-ticks button:hover{border-color:var(--lime)}
+.el-play{border-color:var(--lime)}
+/* sections */
+.el-sec{padding:72px 0}.el-head{margin-bottom:34px;max-width:680px}.el-head h2{font-size:clamp(2rem,4.6vw,3.2rem)}.el-head p{margin:12px 0 0;color:#3f5a4b;font-size:1.05rem}
+.el-svc .el-head{}.el-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.el-card{position:relative;background:#fff;border:3px solid var(--ink);padding:22px 20px 20px;transition:transform .2s,box-shadow .2s,background .3s}
+.el-card.hot{background:var(--lime);transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--ink)}
+.el-num{position:absolute;top:12px;right:14px;font:800 2.2rem var(--hf);color:transparent;-webkit-text-stroke:2px #b8c9bd}.el-card.hot .el-num{-webkit-text-stroke-color:var(--ink)}
+.el-ib{display:grid;place-items:center;width:54px;height:54px;background:var(--ink);color:var(--lime);margin-bottom:16px}.el-card h3{font-size:1.45rem}.el-card p{margin:10px 0 14px;color:#33503f}.el-card.hot p{color:var(--ink)}
+.el-tag{display:inline-block;border:2px solid var(--ink);font:800 .7rem var(--hf);text-transform:uppercase;letter-spacing:.08em;padding:4px 8px}
+.el-quotesec{background:var(--g);color:#fff;clip-path:polygon(0 28px,100% 0,100% 100%,0 100%);padding-top:96px}.el-quotesec .el-eye{color:var(--lime)}.el-quotesec .el-head p{color:#CFE0D5}
+.el-q{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}.el-qc{background:var(--ink);border:3px solid var(--lime);padding:24px}.el-lbl{display:block;font:800 .8rem var(--hf);letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin:0 0 12px}.el-qc .el-lbl:not(:first-child){margin-top:22px}
+.el-opts{display:flex;flex-wrap:wrap;gap:8px}.el-opt{background:transparent;border:3px solid #3a5a49;color:#fff;font:800 .85rem var(--hf);text-transform:uppercase;letter-spacing:.05em;padding:11px 14px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}.el-opt:hover{border-color:var(--lime)}.el-opt.on{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.el-qr{display:flex;flex-direction:column;gap:14px}.el-msg{background:#fff;color:var(--ink);padding:16px;font-weight:600;min-height:7.5em;border-left:8px solid var(--lime);margin:0}.el-qr .el-btn.ghost{width:100%}
+.el-about{background:#fff}.el-abg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.el-ab{border-top:8px solid var(--g2);background:var(--snow);padding:22px 20px}.el-ab b{display:block;font:800 1.3rem var(--hf);text-transform:uppercase;margin-bottom:8px}.el-ab p{margin:0;color:#33503f}
+.el-visitsec{background:var(--snow)}.el-2c{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}.el-box{background:var(--g);color:#fff;border:3px solid var(--ink);padding:26px}.el-box .el-lbl{color:var(--lime)}
+.el-addr{display:flex;gap:10px;align-items:center;margin:10px 0}.el-addr svg{width:18px;height:18px;color:var(--lime);flex:none}.el-addr a{color:#fff}.el-area{color:#CFE0D5;margin:12px 0 0}
+.el-hrs div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #2f4a3c}.el-hrs div.today{color:var(--lime);font-weight:800}.el-hrs .el-fine{color:#9fb5a8}
+.el-foot{background:var(--ink);color:#C9D9CE;padding:26px 0}.el-foot .el-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}.el-foot b{color:#fff;font-family:var(--hf);text-transform:uppercase}.el-foot a{color:var(--lime)}.el-foot em{margin-left:auto;font-style:normal;font-size:.85rem}
+.el .rv.rv-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease var(--d,0s),transform .5s ease var(--d,0s)}.el .rv.rv-on{opacity:1;transform:none}
+@media (max-width:860px){.el-pin,.el-q,.el-2c{grid-template-columns:1fr}.el-links{display:none}.el-nav .el-btn{margin-left:auto}.el-scenebox{min-height:560px}.el-hero{padding-top:28px}.el-hl{padding:22px 20px}.el-ticks{grid-template-columns:repeat(6,1fr)}.el-sec{padding:56px 0}.el-top .el-wrap span{font-size:.78rem}}
+@media (max-width:480px){.el-top a{display:none}.el-brand b{font-size:1.05rem}.el-btn.sm{padding:9px 12px}}
+@media (prefers-reduced-motion:reduce){.el-scene .mower,.el-scene .plow,.el-fx i,.el-scene .beacon{animation:none!important}.el-scene .mower{transform:translate(520px,442px)}.el-scene .plow{transform:translate(520px,444px)}}
+/* marketing theme */
+.mk-elawn{font-family:'Work Sans',system-ui,sans-serif;background:#F2F7F5;color:#0C1F16}
+.mk-elawn .mp-bar{background:#123524;border-bottom:4px solid #C8F169}.mk-elawn .mp-brand{color:#fff;font-family:'Archivo','Work Sans',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.02em}.mk-elawn .mp-back{color:#C8F169;font-weight:800}
+.mk-elawn .mp-cover{background:#123524;border-bottom:6px solid #C8F169}.mk-elawn .mp-cover h1,.mk-elawn h3,.mk-elawn .mp-label,.mk-elawn .mo-price b{font-family:'Archivo','Work Sans',sans-serif;font-weight:800;text-transform:uppercase}
+.mk-elawn .mp-eyebrow{color:#C8F169;font-weight:800}.mk-elawn .mp-cover p{color:#D4E3D9}.mk-elawn .mp-meta dt{color:#9fb5a8}
+.mk-elawn .mp-label{border-top:4px solid #0C1F16;color:#0C1F16}.mk-elawn .mp-label span,.mk-elawn .mo-num{color:#2F8F46;font-weight:800}
+.mk-elawn .mo-list{border-top:0;display:grid;gap:16px;margin-top:14px}.mk-elawn .mo-item{background:#fff;border:3px solid #0C1F16;border-left:10px solid #C8F169;padding:24px 26px}
+.mk-elawn .mo-more li::before{background:#2F8F46;border-radius:0}.mk-elawn .mo-price b{color:#123524}
+.mk-elawn .mo-alt{background:#C8F169;border:3px solid #0C1F16;border-radius:0}.mk-elawn .mo-alt em{color:#123524}.mk-elawn .mo-alt strong{color:#0C1F16}
+.mk-elawn .mo-ex{background:#EAF4E6;border-left:5px solid #2F8F46;border-radius:0}.mk-elawn .mo-ex span{color:#2F8F46}
+@media (max-width:700px){.mk-elawn .mo-item{padding:20px 16px}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
@@ -5794,7 +5874,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.bl-nav,.kc-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.bl-nav,.kc-nav,.el-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -5863,6 +5943,7 @@ function build(d){
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='kcwash'){ document.body.className='t-kc'; const pg=kcWash(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='elawn'){ document.body.className='t-el'; const pg=elawn(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='bloom'){ document.body.className='t-bl'; const pg=bloomTattoo(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='becwar'){ document.body.className='t-bw'; const pg=becwar(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
@@ -8557,6 +8638,118 @@ function kcWash(C){
   return h('div',{class:'demo kc on'},top,nav,hero,washSec,work,svc,why,visit,foot);
 }
 
+/* ===================== EXPERT LAWNS (season slider + services) ===================== */
+function elawn(C){
+  const x=C.x||{}, name=C.name||'Expert Lawns', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const digits=(C.phone||'').replace(/\D/g,'').slice(-10);
+  const smsHref=body=>digits.length===10?'sms:+1'+digits+(/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body):'';
+  const heads=String(x.headline||'Every season,|handled.').split('|');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const go=id=>()=>scrollTo(id);
+  const callBtn=(cls,label)=>C.tel?h('a',{class:'el-btn '+cls,href:C.tel},ico('phone',18,''),label||('Call '+C.phoneTxt)):null;
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const seasonOf=m=>m===11||m<2?'win':m<5?'spr':m<8?'sum':'fal';
+  const SN={win:'Winter',spr:'Spring',sum:'Summer',fal:'Fall'};
+  const SAY={win:'Snow and ice management. Parking lots and sidewalks stay clear and safe so business keeps moving.',spr:'The lawn wakes up. Fertilizing, weed control and the first mows of the year.',sum:'Mowing, weed control and tree work keep the property looking sharp.',fal:'Fertilizing and pruning get lawns and trees ready, with snow season close behind.'};
+  const SV=[
+    {id:'fert',t:'Fertilizing',d:'Feeding the lawn so it grows thick and green.',m:[3,4,8,9],s:'Spring and fall',p:'M7 8h10l1 12H6L7 8zM9 8V5h6v3M9 13h6'},
+    {id:'weed',t:'Weed control',d:'Treatments that keep weeds from taking over the turf.',m:[3,4,5,6,7,8,9],s:'Spring to fall',p:'M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19L14 10'},
+    {id:'mow',t:'Mowing',d:'Regular mowing to keep the property clean and sharp.',m:[3,4,5,6,7,8,9],s:'Spring to fall',p:'M4 20l2-8 2 8M10 20l2-15 2 15M16 20l2-8 2 8'},
+    {id:'prune',t:'Tree pruning',d:'Trimming for trees that are healthy, safe and good looking.',m:[1,2,9,10],s:'Late fall to early spring',p:'M6 4l12 16M18 4L6 20M4 12h4M16 12h4'},
+    {id:'tree',t:'Tree care and removal',d:'Advice on caring for your trees, and removal when one has to go.',m:[0,1,2,3,4,5,6,7,8,9,10,11],s:'When needed',p:'M12 3l6 8h-3l4 6H5l4-6H6l6-8zM12 17v4'},
+    {id:'snow',t:'Snow removal',d:'Parking lots and sidewalks cleared with the company’s own equipment.',m:[10,11,0,1,2],s:'Winter',p:'M12 2v20M3 7l18 10M21 7L3 17'},
+    {id:'ice',t:'Ice management',d:'Keeping lots and walkways safe when the temperature drops.',m:[10,11,0,1,2],s:'Winter',p:'M12 3l4 4-4 4-4-4 4-4zM12 13l4 4-4 4-4-4 4-4z'}];
+  const svgI=(p,sz)=>{ const d=document.createElement('div'); d.innerHTML='<svg viewBox="0 0 24 24" width="'+(sz||28)+'" height="'+(sz||28)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="'+p+'"/></svg>'; return d.firstChild; };
+  const mark=cls=>{ const d=document.createElement('div'); d.innerHTML='<svg class="'+(cls||'')+'" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#C8F169"/><path d="M8 32C8 18 16 9 32 8c0 15-8 23-24 24z" fill="#123524"/><path d="M9 31L24 16" stroke="#C8F169" stroke-width="2.4"/></svg>'; return d.firstChild; };
+  const wrap=(...k)=>h('div',{class:'el-wrap'},k);
+  const head=(eyebrow,title,sub)=>h('div',{class:'el-head rv'},h('span',{class:'el-eye'},eyebrow),h('h2',null,title),sub?h('p',null,sub):null);
+
+  /* top + nav */
+  const top=h('div',{class:'el-top'},wrap(h('span',null,'Commercial lawn care and snow removal in Dubuque, Iowa'),C.tel?h('a',{href:C.tel},C.phoneTxt):null));
+  const nav=h('header',{class:'el-nav'},wrap(h('a',{class:'el-brand',href:'#',onclick:e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}); }},mark('el-logo'),h('b',null,name)),
+    h('nav',{class:'el-links'},[['Seasons','el-stage'],['Services','el-svc'],['Quote','el-quote'],['Contact','el-visit']].map(([t,id])=>h('button',{type:'button',onclick:go(id)},t))),
+    callBtn('hot sm','Call now')));
+
+  /* scene */
+  const SCENE='<svg class="el-scene" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMax slice" aria-hidden="true">'
+   +'<defs><linearGradient id="elsky" x1="0" y1="0" x2="0" y2="1"><stop class="g1" offset="0"/><stop class="g2" offset="1"/></linearGradient></defs>'
+   +'<rect class="sky" width="1200" height="460" fill="url(#elsky)"/>'
+   +'<g class="sun"><circle r="46" cx="0" cy="0"/><circle class="halo" r="78" cx="0" cy="0"/></g>'
+   +'<path class="hill1" d="M0 300C140 240 280 230 420 270S700 300 860 250 1100 220 1200 260V460H0z"/>'
+   +'<path class="hill2" d="M0 350C180 300 330 310 520 340S860 350 1010 310 1150 300 1200 320V460H0z"/>'
+   +'<g class="trees"><g transform="translate(120 300)"><rect class="trunk" x="-6" y="-10" width="12" height="60"/><circle class="can" cx="0" cy="-34" r="42"/><circle class="can" cx="-26" cy="-12" r="28"/><circle class="can" cx="26" cy="-12" r="28"/></g>'
+   +'<g transform="translate(1040 292) scale(.85)"><rect class="trunk" x="-6" y="-10" width="12" height="60"/><circle class="can" cx="0" cy="-34" r="42"/><circle class="can" cx="-26" cy="-12" r="28"/><circle class="can" cx="26" cy="-12" r="28"/></g>'
+   +'<g transform="translate(940 312) scale(.6)"><rect class="trunk" x="-6" y="-10" width="12" height="60"/><circle class="can" cx="0" cy="-30" r="38"/></g></g>'
+   +'<path class="turf" d="M0 390C200 360 420 372 640 384S1040 372 1200 360V460H0z"/>'
+   +'<g class="stripes"><path d="M0 410C200 380 420 392 640 404S1040 392 1200 380V392C1040 404 860 416 640 416S200 404 0 422z"/><path d="M0 436C200 410 420 420 640 430S1040 420 1200 410V420C1040 430 860 440 640 440S200 432 0 446z"/></g>'
+   +'<path class="snow" d="M0 380C200 350 420 362 640 374S1040 362 1200 350V460H0z"/>'
+   +'<g class="mower"><g transform="translate(0 0)"><rect x="-8" y="-34" width="62" height="10" fill="#0C1F16"/><rect x="-22" y="-24" width="92" height="22" fill="#C8F169"/><rect x="2" y="-52" width="26" height="22" fill="#2F8F46"/><circle cx="2" cy="-2" r="13" fill="#0C1F16"/><circle cx="58" cy="-4" r="9" fill="#0C1F16"/><circle cx="2" cy="-2" r="5" fill="#9aa9a0"/><rect x="-4" y="-40" width="3" height="14" fill="#0C1F16"/></g></g>'
+   +'<g class="plow"><g><rect x="-70" y="-46" width="70" height="30" fill="#0C1F16"/><rect x="-96" y="-30" width="30" height="14" fill="#C8F169"/><rect x="-70" y="-46" width="40" height="30" fill="#2F8F46"/><rect x="-62" y="-42" width="22" height="14" fill="#BFE3F5"/><rect x="-2" y="-30" width="64" height="16" fill="#C8F169"/><path d="M62 -52L100 -20L100 -2L62 -2z" fill="#F5B800"/><circle cx="-64" cy="-14" r="12" fill="#0C1F16"/><circle cx="26" cy="-14" r="12" fill="#0C1F16"/><circle cx="-64" cy="-14" r="5" fill="#9aa9a0"/><circle cx="26" cy="-14" r="5" fill="#9aa9a0"/><circle class="beacon" cx="-50" cy="-52" r="5" fill="#FF7A1A"/></g></g>'
+   +'</svg>';
+  const stage=h('section',{class:'el-stage s-win',id:'el-stage'});
+  const sceneBox=h('div',{class:'el-scenebox'}); sceneBox.innerHTML=SCENE;
+  const fx=h('div',{class:'el-fx','aria-hidden':'true'}); for(let i=0;i<34;i++){ fx.append(h('i',{style:'left:'+(Math.random()*100).toFixed(1)+'%;--s:'+(6+Math.random()*9).toFixed(1)+'px;--t:'+(5+Math.random()*7).toFixed(1)+'s;--dl:-'+(Math.random()*10).toFixed(1)+'s;--dx:'+((Math.random()*80)-40).toFixed(0)+'px'})); }
+  const sun=sceneBox.querySelector('.sun'), mower=sceneBox.querySelector('.mower'), plow=sceneBox.querySelector('.plow');
+  const hero=h('div',{class:'el-hero'},wrap(h('div',{class:'el-hl'},
+    h('span',{class:'el-eye lt'},'Lawn care, trees and snow removal'),
+    h('h1',null,heads[0],heads[1]?[h('br'),h('span',null,heads[1])]:null),
+    h('p',null,'Owner-operated in Dubuque. Fertilizing, weed control and mowing when it is green. Snow and ice management when it is not.'),
+    h('div',{class:'el-cta'},callBtn('hot'),h('button',{type:'button',class:'el-btn ghost',onclick:go('el-quote')},'Get a quote')))));
+
+  /* month slider */
+  let cur=new Date().getMonth(), timer=0, playing=false;
+  const range=h('input',{type:'range',min:'0',max:'11',step:'1',value:String(cur),class:'el-range','aria-label':'Month of the year'});
+  const ticks=h('div',{class:'el-ticks'},MN.map((m,i)=>h('button',{type:'button','aria-label':m,onclick:()=>{ set(i); stop(); }},m.slice(0,3))));
+  const monthTitle=h('h3',{class:'el-mt'}), monthSay=h('p',{class:'el-ms'}), chips=h('div',{class:'el-chips'});
+  const playBtn=h('button',{type:'button',class:'el-btn ghost sm el-play',onclick:()=>{ playing?stop():start(); }},'Play the year');
+  function stop(){ playing=false; clearInterval(timer); playBtn.textContent='Play the year'; }
+  function start(){ playing=true; playBtn.textContent='Pause'; clearInterval(timer); timer=setInterval(()=>set((cur+1)%12),1100); }
+  const cards=[];
+  function set(m){ cur=m; range.value=String(m); const s=seasonOf(m);
+    stage.className='el-stage s-'+s; ticks.childNodes.forEach((b,i)=>b.classList.toggle('on',i===m));
+    const f=m/11; sun.style.transform='translate('+(180+f*840).toFixed(0)+'px,'+(118-Math.sin(f*Math.PI)*58).toFixed(0)+'px)';
+    monthTitle.textContent='In '+MN[m]+': '+SN[s]; monthSay.textContent=SAY[s];
+    const act=SV.filter(v=>v.m.indexOf(m)>=0); chips.replaceChildren(...act.map(v=>h('span',{class:'el-chip'},svgI(v.p,16),v.t)));
+    cards.forEach((c,i)=>c.classList.toggle('hot',SV[i].m.indexOf(m)>=0&&SV[i].id!=='tree')); }
+  range.addEventListener('input',()=>{ stop(); set(+range.value); });
+  const panel=h('div',{class:'el-panel'},wrap(h('div',{class:'el-pin'},
+    h('div',{class:'el-pl'},h('span',{class:'el-eye'},'Drag through the year'),monthTitle,monthSay,chips,h('p',{class:'el-fine'},'Typical Iowa timing. The crew sets the real schedule with you.')),
+    h('div',{class:'el-pr'},range,ticks,playBtn))));
+  stage.append(sceneBox,fx,hero,panel);
+
+  /* services */
+  const grid=h('div',{class:'el-cards'},SV.map((v,i)=>{ const c=h('div',{class:'el-card rv',style:'--d:'+((i%4)*.08)+'s'},h('span',{class:'el-num'},String(i+1).padStart(2,'0')),h('span',{class:'el-ib'},svgI(v.p,30)),h('h3',null,v.t),h('p',null,v.d),h('span',{class:'el-tag'},v.s)); cards.push(c); return c; }));
+  const svc=h('section',{class:'el-sec',id:'el-svc'},wrap(head('Services','Everything the property needs, all year.','Cards light up for the month you pick above.'),grid));
+
+  /* quote builder */
+  const PR=['A business','An HOA or community','A home'], picked=new Set(); let prop='';
+  const prRow=h('div',{class:'el-opts'},PR.map(p=>h('button',{type:'button',class:'el-opt',onclick:e=>{ prop=prop===p?'':p; prRow.childNodes.forEach(b=>b.classList.toggle('on',b.textContent===prop)); upd(); }},p)));
+  const svRow=h('div',{class:'el-opts'},SV.map(v=>h('button',{type:'button',class:'el-opt',onclick:e=>{ const b=e.currentTarget; picked.has(v.t)?picked.delete(v.t):picked.add(v.t); b.classList.toggle('on'); upd(); }},v.t)));
+  const msgEl=h('p',{class:'el-msg'});
+  const smsBtn=h('a',{class:'el-btn hot big',href:smsHref('x')||'#'},'Text my request');
+  const msg=()=>{ const l=[...picked]; const what=l.length?l.join(', ').replace(/, ([^,]*)$/,l.length>1?' and $1':', $1'):'lawn care and snow removal'; return 'Hi '+name+', I manage '+(prop?prop.toLowerCase():'a property')+' in Dubuque and would like a quote for '+what+'. Thank you!'; };
+  function upd(){ msgEl.textContent='“'+msg()+'”'; smsBtn.href=smsHref(msg())||'#'; }
+  const quote=h('section',{class:'el-sec el-quotesec',id:'el-quote'},wrap(head('Quote','Tell us what you manage.','Pick what fits and send it as a text. Nothing is sent until you tap the button.'),
+    h('div',{class:'el-q rv'},h('div',{class:'el-qc'},h('span',{class:'el-lbl'},'1. The property'),prRow,h('span',{class:'el-lbl'},'2. What you need'),svRow),
+      h('div',{class:'el-qc el-qr'},h('span',{class:'el-lbl'},'Your text'),msgEl,smsBtn,callBtn('ghost','Or call '+(C.phoneTxt||''))))));
+  upd();
+
+  /* about */
+  const AB=[['Owner-operated','A local company run by its owner.'],['Turf specialists','Experienced lawn specialists handle the fertilizing and weed control.'],['Its own snow equipment','Snow removal is done with the company’s own fleet.'],['Built for commercial','Businesses and HOAs are the focus, with residential properties served too.']];
+  const about=h('section',{class:'el-sec el-about',id:'el-about'},wrap(head('Why '+name,'One local company, spring through snow.'),
+    h('div',{class:'el-abg'},AB.map(([t,p],i)=>h('div',{class:'el-ab rv',style:'--d:'+(i*.08)+'s'},h('b',null,t),h('p',null,p)))),
+    h('p',{class:'el-fine dk'},'Details come from public business listings. Hours, service area and pricing are to be confirmed with '+name+'.')));
+
+  /* contact */
+  const visit=h('section',{class:'el-sec el-visitsec',id:'el-visit'},wrap(head('Contact','Let’s keep your property in shape.'),
+    h('div',{class:'el-2c'},h('div',{class:'el-box rv'},h('span',{class:'el-lbl'},name),addrTxt?h('p',{class:'el-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'el-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+      h('p',{class:'el-area'},'Based in Dubuque, Iowa.'),h('div',{class:'el-cta'},callBtn('hot'),C.maps?h('a',{class:'el-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
+      C.hasHours?h('div',{class:'el-box el-hrs rv'},h('span',{class:'el-lbl'},'Hours'),hoursRows(C),h('p',{class:'el-fine dk'},'Hours are as listed online. Call to confirm.')):null)));
+  const foot=h('footer',{class:'el-foot'},wrap(mark('el-logo sm'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  set(cur);
+  return h('div',{class:'demo el on'},top,nav,stage,svc,quote,about,visit,foot);
+}
+
 function bloomTattoo(C){
   const x=C.x, name=C.name||'Bloom Tattoo', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const book=/^https:\/\/[^\s"'<>]+$/.test(x.bookUrl||'')?x.bookUrl:'';
@@ -10609,7 +10802,7 @@ function bbMkArt(){
 }
 /* Service businesses (cleaning, tree care, auto, real estate...) get service wording instead of bar/restaurant wording */
 function mkIsService(C){ if(document.body.classList.contains('t-trade')) return true;
-  if(['realty','zephyr','mutual','homy','shadetree','abauto','cloud','kcwash','bloom'].indexOf(C.variant)>=0) return true;
+  if(['realty','zephyr','mutual','homy','shadetree','abauto','cloud','kcwash','bloom','elawn'].indexOf(C.variant)>=0) return true;
   return /clean|maid|tree|lawn|landscap|auto|motor|repair|mechanic|tire|realt|real estate|stone|granite|counter|window|door|glass|wheel|truck|salon|barber|plumb|electric|roof|hvac|heating|construct|contract|paint|pest|pool|moving|storage|vape|smoke|insur|law|dental|clinic|fitness|gym/i.test((C.name||'')+' '+(C.cat||'')); }
 function mkServiceItem(m,C){ const t={
   club:{name:'Email or text list for reminders and deals',what:'Customers sign up on your site, and we send your seasonal reminders, deals and news to them for you.',more:['A sign-up form on your website, plus a QR code for your counter, truck or invoices','We write and send your reminders, deals and news to everyone on the list','Text or email, whichever your customers prefer','Opt-in only, with an easy way to unsubscribe','A monthly count of how many people have joined'],idea:'A reminder text before your busy season, with a link to book or call.'},
