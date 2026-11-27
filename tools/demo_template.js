@@ -2701,16 +2701,16 @@ function kcWash(C){
   const KC_XI={leaf:'M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19L14 10',seal:'M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z',repair:'M14 7a4 4 0 00-5 5L3 18l3 3 6-6a4 4 0 005-5l-3 3-3-3z'};
   const OPT=[...KC_SURF.map(s=>({id:s.id,label:s.label,noun:s.noun,ic:s.ic,surf:1})),...KC_EXTRA.map(([id,l])=>({id,label:l,noun:l.toLowerCase(),ic:KC_XI[id]}))];
   const O=id=>OPT.find(o=>o.id===id);
-  const TIP='Have photos or measurements? Add them when your text opens. They help the crew quote faster, but they are totally optional.';
+  const TIP='Please add photos and measurements if you have them.';
   const cnt=h('b',{class:'kc-cnt'},'0'), listEl=h('div',{class:'kc-list'}), tipT=h('span',null,TIP);
-  const tip=h('p',{class:'kc-tip'},h('span',{class:'kc-cam'},kcIcon('M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 100-7 3.5 3.5 0 000 7z')),tipT);
+  const tip=h('div',{class:'kc-tip'},h('span',{class:'kc-cam'},kcIcon('M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 100-7 3.5 3.5 0 000 7z')),h('div',null,tipT,h('small',null,'Totally optional. They just help the crew quote faster.')));
   let optsEl;
   const estText=h('a',{class:'kc-go',href:'#',onclick:e=>{ if(!sel.length){ e.preventDefault(); tipT.textContent='Tap at least one thing you need washed first.'; tip.classList.add('warn'); optsEl.classList.remove('shake'); void optsEl.offsetWidth; optsEl.classList.add('shake'); } }},'Done: text my request',ico('arrow',20,'')), estCall=callBtn('kc-callw','Or call '+C.phoneTxt);
   const estMsg=()=>{ const a=sel.filter(id=>O(id).surf).map(id=>O(id).noun), e=sel.filter(id=>!O(id).surf).map(id=>O(id).noun); let m='Hi Key City Powerwash, I would like a free estimate'; if(a.length) m+=' for my '+a.join(', ')+(e.length?', plus '+e.join(', '):''); else if(e.length) m+=' for '+e.join(', '); return m+'. (Add photos and measurements here if you have them.) Thank you!'; };
   const opts=OPT.map(o=>h('button',{type:'button',class:'kc-opt','aria-pressed':'false',onclick:()=>{ if(auto) return; toggle(o.id); }},h('span',{class:'kc-oi'},kcIcon(o.ic)),h('span',{class:'kc-ot'},h('b',null,o.label),h('i',null,KC_DESC[o.id])),h('span',{class:'kc-oc','aria-hidden':'true'},kcSvg('0 0 24 24','<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>','kc-ckm'))));
   optsEl=h('div',{class:'kc-opts'},opts);
   const gLabel=h('b',{class:'kc-gl'}), gSvc=h('p',{class:'kc-plan-t'});
-  const req=h('aside',{class:'kc-req'},h('div',{class:'kc-req-h'},h('span',null,'Your request'),cnt),listEl,estText,estCall,tip);
+  const req=h('aside',{class:'kc-req'},h('div',{class:'kc-req-h'},h('span',null,'Your request'),cnt),listEl,tip,estText,estCall);
   function toggle(id){ const on=sel.includes(id); sel=on?sel.filter(v=>v!==id):sel.concat(id); const i=KC_SURF.findIndex(s=>s.id===id); if(!on&&i>=0&&i!==cur){ cur=i; reset(); } sync(); }
   function sync(){
     opts.forEach((b,i)=>{ const on=sel.includes(OPT[i].id); b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); });
