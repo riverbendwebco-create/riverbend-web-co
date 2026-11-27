@@ -2586,29 +2586,10 @@ function kcScene(){
   +'<rect x="430" y="104" width="76" height="86" rx="6" fill="#C9E8F7" stroke="#fff" stroke-width="5"/><path d="M468 104V190M430 147H506" stroke="#fff" stroke-width="4"/><path d="M440 116l22 0-22 26z" fill="#fff" opacity=".5"/>'
   +bands+'</g><rect x="372" y="40" width="176" height="290" rx="8" fill="none" stroke="#B5DAEE" stroke-width="3"/>'
   +'<ellipse class="kc-pud" cx="458" cy="338" rx="82" ry="8" fill="#7CC9EE" opacity=".85"/>'
-  +'<g class="kc-guy">'
-   +'<rect x="8" y="268" width="64" height="50" rx="9" fill="#F0593C"/><rect x="16" y="276" width="30" height="20" rx="4" fill="#FFD6CC"/><circle cx="58" cy="286" r="5" fill="#FFC83D"/><path d="M8 302H72" stroke="#C73F27" stroke-width="3"/><path d="M72 274L86 250" stroke="#26323B" stroke-width="5" stroke-linecap="round"/>'
-   +'<circle cx="24" cy="322" r="10" fill="#26323B"/><circle cx="24" cy="322" r="4" fill="#9FB4C2"/><circle cx="58" cy="322" r="10" fill="#26323B"/><circle cx="58" cy="322" r="4" fill="#9FB4C2"/>'
-   +'<path d="M66 296C60 352 128 356 140 304C150 262 190 240 238 204" stroke="#1D3B52" stroke-width="7" fill="none" stroke-linecap="round"/>'
-   +'<rect x="112" y="246" width="34" height="78" rx="12" fill="#2E6C9B"/><rect x="156" y="246" width="34" height="78" rx="12" fill="#2A628D"/><rect x="100" y="318" width="50" height="20" rx="9" fill="#1F2D38"/><rect x="150" y="318" width="50" height="20" rx="9" fill="#1F2D38"/>'
-   +'<path d="M110 176Q92 200 102 232" stroke="#F2B21F" stroke-width="22" stroke-linecap="round" fill="none"/><circle cx="102" cy="236" r="10" fill="#F4CFAE"/>'
-   +'<path d="M106 176Q106 150 128 148H172Q196 150 196 176V254H106Z" fill="#FFC83D"/><path d="M106 228H196V254H106Z" fill="#F2B21F"/><path d="M151 150V254" stroke="#E0A21A" stroke-width="3"/><rect x="164" y="196" width="24" height="18" rx="4" fill="none" stroke="#E0A21A" stroke-width="3"/>'
-   +'<rect x="138" y="136" width="24" height="18" rx="6" fill="#EBBF99"/><circle cx="118" cy="112" r="7" fill="#EBBF99"/><circle cx="150" cy="108" r="34" fill="#F4CFAE"/>'
-   +'<path d="M114 104Q114 64 150 64Q186 64 186 104Z" fill="#1B78B8"/><path d="M114 104H186" stroke="#14608F" stroke-width="5"/><path d="M172 99Q216 94 216 108Q192 113 172 108Z" fill="#14608F"/><path d="M150 76Q143 88 150 93Q157 88 150 76Z" fill="#fff"/>'
-   +'<rect x="152" y="108" width="40" height="22" rx="9" fill="#BFE6FA" fill-opacity=".5" stroke="#14608F" stroke-width="3"/><circle cx="165" cy="119" r="3.2" fill="#23323C"/><circle cx="181" cy="119" r="3.2" fill="#23323C"/><path d="M163 136Q173 144 185 136" stroke="#8A4A32" stroke-width="3" fill="none" stroke-linecap="round"/>'
-   +'<g class="kc-arm"><path d="M190 176L222 208L250 194" stroke="#FFC83D" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M190 176L222 208L250 194" stroke="#F2B21F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".7"/><circle cx="252" cy="194" r="11" fill="#F4CFAE"/>'
-   +'<path d="M246 196L318 170" stroke="#35505F" stroke-width="9" stroke-linecap="round"/><path d="M262 190L258 210" stroke="#35505F" stroke-width="6" stroke-linecap="round"/><path d="M316 168L330 163" stroke="#9FB4C2" stroke-width="9" stroke-linecap="round"/>'
-   +'<g class="kc-jet"><path d="M334 163Q354 158 376 166" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".9"/><path class="kc-flow" d="M334 163Q354 158 376 166" stroke="#3EB6EA" stroke-width="3.5" fill="none" stroke-dasharray="6 9" stroke-linecap="round"/>'
-   +'<g class="kc-splash"><circle cx="382" cy="160" r="4" fill="#fff"/><circle cx="388" cy="172" r="3" fill="#BFE6FA"/><circle cx="378" cy="178" r="3.4" fill="#fff"/><circle cx="392" cy="164" r="2.4" fill="#9ED8F4"/></g></g></g>'
-  +'</g>';
+  +'<g class="kc-foam"><circle cx="390" cy="336" r="9" fill="#fff" stroke="#9ED8F4" stroke-width="2"/><circle cx="408" cy="340" r="6" fill="#fff" stroke="#9ED8F4" stroke-width="2"/><circle cx="430" cy="334" r="11" fill="#fff" stroke="#9ED8F4" stroke-width="2"/><circle cx="452" cy="341" r="7" fill="#fff" stroke="#9ED8F4" stroke-width="2"/><circle cx="474" cy="336" r="10" fill="#fff" stroke="#9ED8F4" stroke-width="2"/><circle cx="498" cy="340" r="6" fill="#fff" stroke="#9ED8F4" stroke-width="2"/><circle cx="520" cy="335" r="9" fill="#fff" stroke="#9ED8F4" stroke-width="2"/></g><g class="kc-guy"><rect x="8" y="262" width="68" height="56" rx="12" fill="#F0593C" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><rect x="15" y="269" width="36" height="22" rx="6" fill="#FFE3DA" stroke="#0B3A57" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="63" cy="282" r="9" fill="#fff" stroke="#0B3A57" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M63 282l4-5" stroke="#0B3A57" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M10 301H74" stroke="#B93820" stroke-width="3"/><path d="M76 272L92 244" stroke="#0B3A57" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="M76 272L92 244" stroke="#4A5E6B" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="324" r="11" fill="#2B3A45" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="24" cy="324" r="4" fill="#9FB4C2"/><circle cx="60" cy="324" r="11" fill="#2B3A45" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="60" cy="324" r="4" fill="#9FB4C2"/><path d="M70 302C56 358 132 362 146 308C156 264 198 244 242 208" fill="none" stroke="#0B3A57" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/><path d="M70 302C56 358 132 362 146 308C156 264 198 244 242 208" fill="none" stroke="#4E9FD0" stroke-width="5.5" stroke-linecap="round"/><rect x="112" y="246" width="36" height="82" rx="13" fill="#2E6C9B" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><rect x="158" y="246" width="36" height="82" rx="13" fill="#2A628D" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M118 262h24M164 262h24" stroke="#1E4E75" stroke-width="3" stroke-linecap="round"/><rect x="98" y="320" width="56" height="22" rx="10" fill="#FFD35A" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><rect x="150" y="320" width="56" height="22" rx="10" fill="#FFD35A" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M102 337H150M154 337H202" stroke="#26323B" stroke-width="5" stroke-linecap="round"/><path d="M110 180Q88 204 98 236" fill="none" stroke="#0B3A57" stroke-width="28" stroke-linejoin="round" stroke-linecap="round"/><path d="M110 180Q88 204 98 236" fill="none" stroke="#FFC83D" stroke-width="22" stroke-linecap="round"/><circle cx="98" cy="240" r="12" fill="#FF8A3D" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M104 180Q104 150 130 148H176Q200 150 200 180V256H104Z" fill="#FFC83D" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M104 232H200V256H104Z" fill="#F2B21F"/><rect x="105.5" y="214" width="93" height="9" fill="#fff" opacity=".9"/><path d="M104 214H200M104 223H200" stroke="#0B3A57" stroke-width="2" opacity=".5"/><path d="M152 150V256" stroke="#D99A12" stroke-width="3"/><circle cx="132" cy="186" r="11" fill="#fff" stroke="#0B3A57" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M132 178Q127 185 132 189Q137 185 132 178Z" fill="#3EB6EA"/><path d="M122 148Q152 170 182 148L176 132H128Z" fill="#F2B21F" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="116" cy="114" r="9" fill="#EEB98F" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="153" cy="108" r="38" fill="#F6D2B0" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M114 106Q112 60 153 60Q194 60 192 106Z" fill="#1B78B8" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M114 106H192" stroke="#0B3A57" stroke-width="3"/><path d="M174 100Q226 90 226 110Q198 120 174 110Z" fill="#14608F" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M153 72Q145 85 153 91Q161 85 153 72Z" fill="#fff"/><path d="M112 112H150" stroke="#0B3A57" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><rect x="150" y="104" width="48" height="28" rx="12" fill="#CDEEFF" fill-opacity=".65" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M156 110Q166 106 172 110" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="166" cy="119" rx="6" ry="7" fill="#fff"/><ellipse cx="184" cy="119" rx="6" ry="7" fill="#fff"/><circle cx="168" cy="120" r="3.4" fill="#1C2B35"/><circle cx="186" cy="120" r="3.4" fill="#1C2B35"/><path d="M158 102Q166 97 173 101M177 101Q185 97 193 102" fill="none" stroke="#0B3A57" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M199 124Q208 129 199 135" fill="none" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M163 139Q179 158 197 139Z" fill="#8A2F34" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M168 140Q180 147 192 140Z" fill="#fff"/><circle cx="158" cy="134" r="5" fill="#FF9E9E" opacity=".55"/><g class="kc-arm"><path d="M190 180L224 212L254 198" fill="none" stroke="#0B3A57" stroke-width="28" stroke-linejoin="round" stroke-linecap="round"/><path d="M190 180L224 212L254 198" fill="none" stroke="#FFC83D" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/><path d="M200 196L222 214" stroke="#fff" stroke-width="5" opacity=".85" stroke-linecap="round"/><circle cx="256" cy="198" r="12.5" fill="#FF8A3D" stroke="#0B3A57" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M250 200L322 174" stroke="#0B3A57" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/><path d="M250 200L322 174" stroke="#5C7C90" stroke-width="7" stroke-linecap="round"/><path d="M266 194L262 214" stroke="#0B3A57" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/><path d="M266 194L262 214" stroke="#35505F" stroke-width="5" stroke-linecap="round"/><path d="M320 173L338 166" stroke="#0B3A57" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/><path d="M320 173L338 166" stroke="#B7CAD6" stroke-width="6" stroke-linecap="round"/><g class="kc-jet"><path d="M342 165Q360 160 378 167" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" opacity=".92"/><path class="kc-flow" d="M342 165Q360 160 378 167" stroke="#3EB6EA" stroke-width="4" fill="none" stroke-dasharray="6 9" stroke-linecap="round"/><g class="kc-splash"><circle cx="384" cy="160" r="4.5" fill="#fff"/><circle cx="390" cy="173" r="3.4" fill="#BFE6FA"/><circle cx="380" cy="180" r="3.8" fill="#fff"/><circle cx="394" cy="165" r="2.6" fill="#9ED8F4"/></g></g></g></g>'
+  +'';
 }
 
-const KC_SURF=[
- {id:'driveway',label:'Driveway',noun:'driveway',svc:'Pressure washing for driveways, sidewalks, patios and retaining walls.'},
- {id:'deck',label:'Deck',noun:'deck',svc:'Deck cleaning, staining and sealing, plus fences, patios and porches.'},
- {id:'siding',label:'House siding',noun:'house',svc:'Soft wash house cleaning that lifts mold, mildew and algae.'},
- {id:'roof',label:'Roof',noun:'roof',svc:'Roof cleaning to clear moss, algae and streaks.'}
-];
 function kcLeaf(c,R,cols){ const x=R(),y=R(); c.save(); c.translate(x,y); c.rotate(R()*6.28); c.fillStyle=cols[(R()*cols.length)|0]; c.beginPath(); c.ellipse(0,0,14+R()*8,6+R()*3,0,0,6.28); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1.4; c.beginPath(); c.moveTo(-16,0); c.lineTo(16,0); c.stroke(); c.restore(); }
 function kcPaintClean(kind,c,W,H){
   const R=kcRnd(21);
@@ -2627,6 +2608,17 @@ function kcPaintClean(kind,c,W,H){
     for(let i=0;i<10;i++){ const y=i*bh; const g=c.createLinearGradient(0,y,0,y+bh); g.addColorStop(0,'#FFFFFF'); g.addColorStop(.82,'#EAF4FA'); g.addColorStop(1,'#BCD6E5'); c.fillStyle=g; c.fillRect(0,y,W,bh); }
     c.fillStyle='#fff'; c.fillRect(W*.58-10,H*.18-10,W*.3+20,H*.5+20); c.fillStyle='#C6E6F6'; c.fillRect(W*.58,H*.18,W*.3,H*.5); c.strokeStyle='#fff'; c.lineWidth=8; c.beginPath(); c.moveTo(W*.73,H*.18); c.lineTo(W*.73,H*.68); c.moveTo(W*.58,H*.43); c.lineTo(W*.88,H*.43); c.stroke(); c.fillStyle='rgba(255,255,255,.55)'; c.beginPath(); c.moveTo(W*.6,H*.2); c.lineTo(W*.67,H*.2); c.lineTo(W*.6,H*.36); c.fill();
     c.fillStyle='rgba(120,160,185,.35)'; c.fillRect(W*.55,H*.68+10,W*.36,6);
+  } else if(kind==='gutter'){
+    c.fillStyle='#51708A'; c.fillRect(0,0,W,H*.22); c.strokeStyle='rgba(10,30,45,.3)'; c.lineWidth=3; for(let x=0;x<W;x+=88){ c.beginPath(); c.moveTo(x,0); c.lineTo(x,H*.22); c.stroke(); }
+    c.fillStyle='#F7FAFC'; c.fillRect(0,H*.22,W,H*.14); c.fillStyle='#D2E1EA'; c.fillRect(0,H*.36-5,W,5);
+    let g=c.createLinearGradient(0,H*.36,0,H*.55); g.addColorStop(0,'#F1F5F8'); g.addColorStop(.5,'#AEBBC5'); g.addColorStop(1,'#D8E0E6'); c.fillStyle=g; c.fillRect(0,H*.36,W,H*.19); c.fillStyle='rgba(255,255,255,.7)'; c.fillRect(0,H*.39,W,4);
+    c.fillStyle='#E7F1F7'; c.fillRect(0,H*.55,W,H*.45); c.strokeStyle='#C4D9E6'; c.lineWidth=3; for(let y=H*.55+H*.1;y<H;y+=H*.1){ c.beginPath(); c.moveTo(0,y); c.lineTo(W,y); c.stroke(); }
+    g=c.createLinearGradient(W*.76,0,W*.76+50,0); g.addColorStop(0,'#B2BFC8'); g.addColorStop(.5,'#F1F5F8'); g.addColorStop(1,'#A5B3BD'); c.fillStyle=g; c.fillRect(W*.76,H*.5,50,H*.5);
+  } else if(kind==='barn'){
+    const bw=38, pal=['#B5352D','#A92F28','#BE3B33']; for(let x=0,i=0;x<W;x+=bw,i++){ c.fillStyle=pal[i%3]; c.fillRect(x,0,bw,H); c.fillStyle='rgba(60,10,10,.35)'; c.fillRect(x,0,2,H); }
+    c.fillStyle='#FFFFFF'; c.fillRect(W*.3,H*.28,W*.4,H*.66); c.fillStyle='#A22C25'; c.fillRect(W*.3+12,H*.28+12,W*.4-24,H*.66-12); c.strokeStyle='#fff'; c.lineWidth=9; c.beginPath(); c.moveTo(W*.3+12,H*.28+12); c.lineTo(W*.7-12,H*.94); c.moveTo(W*.7-12,H*.28+12); c.lineTo(W*.3+12,H*.94); c.moveTo(W*.5,H*.28+12); c.lineTo(W*.5,H*.94); c.stroke();
+    c.fillStyle='#fff'; c.fillRect(W*.44,H*.05,W*.12,H*.17); c.fillStyle='#2A3A4A'; c.fillRect(W*.44+9,H*.05+9,W*.12-18,H*.17-18);
+    c.fillStyle='#9AA3A8'; c.fillRect(0,H-26,W,26);
   } else {
     const rh=H/11, tw=104;
     for(let r=0;r<11;r++){ const y=r*rh, off=(r%2)*tw/2; for(let x=-tw;x<W+tw;x+=tw){ const t=R(); c.fillStyle=t<.33?'#587A93':t<.66?'#4F7089':'#5F8199'; c.fillRect(x+off,y,tw-3,rh-2); c.fillStyle='rgba(255,255,255,.12)'; c.fillRect(x+off,y,tw-3,4); c.fillStyle='rgba(10,30,45,.28)'; c.fillRect(x+off,y+rh-6,tw-3,4); } }
@@ -2634,15 +2626,27 @@ function kcPaintClean(kind,c,W,H){
 }
 function kcPaintDirty(kind,cv,c,W,H,clean){
   const R=kcRnd(33+kind.length); c.globalCompositeOperation='source-over'; c.clearRect(0,0,W,H); c.drawImage(clean,0,0);
-  const col={driveway:'rgba(84,80,60,.9)',deck:'rgba(118,118,102,.9)',siding:'rgba(102,130,68,.88)',roof:'rgba(56,68,38,.92)'}[kind];
+  const col={driveway:'rgba(84,80,60,.9)',deck:'rgba(118,118,102,.9)',siding:'rgba(102,130,68,.88)',roof:'rgba(56,68,38,.92)',gutter:'rgba(72,64,42,.9)',barn:'rgba(98,106,80,.86)'}[kind];
   c.fillStyle=col; c.fillRect(0,0,W,H);
   const blob=(n,rmin,rmax,fill)=>{ for(let i=0;i<n;i++){ c.fillStyle=fill; c.beginPath(); c.ellipse(R()*W,R()*H,rmin+R()*(rmax-rmin),(rmin+R()*(rmax-rmin))*.7,R()*3,0,6.28); c.fill(); } };
   blob(90,18,70,'rgba(40,40,24,.12)'); blob(60,14,60,kind==='roof'?'rgba(130,170,80,.2)':kind==='deck'?'rgba(90,130,60,.2)':'rgba(170,180,120,.14)');
   if(kind==='driveway'){ for(let i=0;i<4;i++){ c.fillStyle='rgba(20,20,16,.34)'; c.beginPath(); c.ellipse(80+R()*(W-160),40+R()*(H-110),30+R()*34,18+R()*16,R()*3,0,6.28); c.fill(); } }
-  if(kind==='siding'||kind==='roof'){ for(let i=0;i<46;i++){ c.fillStyle=kind==='roof'?'rgba(5,8,5,.26)':'rgba(48,66,32,.24)'; const w=5+R()*14, x=R()*W, y=R()*H*.8; c.fillRect(x,y,w,50+R()*170); } }
+  if(kind==='siding'||kind==='roof'||kind==='barn'||kind==='gutter'){ for(let i=0;i<46;i++){ c.fillStyle=kind==='roof'?'rgba(5,8,5,.26)':'rgba(48,66,32,.24)'; const w=5+R()*14, x=R()*W, y=R()*H*.8; c.fillRect(x,y,w,50+R()*170); } }
   if(kind==='deck'){ for(let i=0;i<30;i++){ c.fillStyle='rgba(50,50,40,.16)'; c.fillRect(R()*W,R()*H,60+R()*180,3+R()*5); } }
-  if(kind!=='siding'){ const lf=kind==='deck'?10:kind==='roof'?8:16; const cols=['#A0522D','#C9822B','#8B5A2B','#B5651D']; for(let i=0;i<lf;i++){ const rr=kcRnd(900+i*13+kind.length); const xs=[rr()*W,rr()*H]; const R2=()=>0; c.save(); c.translate(xs[0],xs[1]); c.rotate(rr()*6.28); c.fillStyle=cols[i%4]; c.beginPath(); c.ellipse(0,0,15+rr()*8,6+rr()*3,0,0,6.28); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1.4; c.beginPath(); c.moveTo(-17,0); c.lineTo(17,0); c.stroke(); c.restore(); } }
+  if(kind!=='siding'&&kind!=='barn'){ const lf=kind==='deck'?10:kind==='roof'?8:kind==='gutter'?28:16; const cols=['#A0522D','#C9822B','#8B5A2B','#B5651D']; for(let i=0;i<lf;i++){ const rr=kcRnd(900+i*13+kind.length); const xs=[rr()*W,rr()*H]; c.save(); c.translate(xs[0],xs[1]); c.rotate(rr()*6.28); c.fillStyle=cols[i%4]; c.beginPath(); c.ellipse(0,0,15+rr()*8,6+rr()*3,0,0,6.28); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1.4; c.beginPath(); c.moveTo(-17,0); c.lineTo(17,0); c.stroke(); c.restore(); } }
 }
+
+const KC_SURF=[
+ {id:'driveway',label:'Driveway & patio',noun:'driveway',ic:'M7 3L4 21M17 3l3 18M12 4v3M12 10v4M12 17v3',plan:'Pressure washing for driveways, sidewalks, patios and retaining walls. Sealing is available for aggregate walks and patios.'},
+ {id:'deck',label:'Deck & fence',noun:'deck',ic:'M3 9h18M3 14h18M6 9v11M18 9v11M4 5h16',plan:'Deck cleaning, staining and sealing, plus fences, patios and porches.'},
+ {id:'siding',label:'House siding',noun:'house',ic:'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6',plan:'Soft wash house cleaning that lifts mold, mildew and algae. The crew also does foundations, chimneys and the underside of decks.'},
+ {id:'roof',label:'Roof',noun:'roof',ic:'M2 12l10-8 10 8M7 16l5-4 5 4M4 20l8-6 8 6',plan:'Roof cleaning to clear moss, algae and dark streaks.'},
+ {id:'gutter',label:'Gutters',noun:'gutters',ic:'M3 8h18v4H3zM7 12v8M17 12v8',plan:'Gutter and downspout cleaning, so water goes where it should.'},
+ {id:'barn',label:'Barn & farm',noun:'barn',ic:'M3 21V10l9-6 9 6v11H3zM9 21v-7h6v7M9 14l6 7M15 14l-6 7',plan:'Washing for barns, outbuildings and other farm buildings.'}
+];
+const KC_EXTRA=[['leaf','Leaf removal'],['seal','Sealing'],['repair','Repairs and upkeep']];
+
+function kcBubs(n,seed){ const R=kcRnd(seed), a=[]; for(let i=0;i<n;i++){ const s=10+R()*30; a.push(h('i',{class:'kc-bub',style:'left:'+(R()*100).toFixed(1)+'%;width:'+s.toFixed(0)+'px;height:'+s.toFixed(0)+'px;animation-duration:'+(12+R()*14).toFixed(1)+'s;animation-delay:-'+(R()*20).toFixed(1)+'s'})); } return h('div',{class:'kc-bubs','aria-hidden':'true'},a); }
 
 function kcWash(C){
   const x=C.x||{}, name=C.name||'Key City Powerwash & Maintenance', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
@@ -2656,13 +2660,15 @@ function kcWash(C){
   const textBtn=(cls,label,msg)=>smsHref('x')?h('a',{class:'kc-btn '+cls,href:smsHref(msg||'Hi Key City Powerwash, I would like a free estimate.')},label||'Text for a free estimate'):null;
   const wrap=(...k)=>h('div',{class:'kc-wrap'},k);
   const head=(kick,t,p)=>h('div',{class:'kc-head rv'},h('span',{class:'kc-kick'},kick),h('h2',null,t),p?h('p',null,p):null);
-  const wave=(fill,flip)=>{ const s=kcSvg('0 0 1200 60','<path d="M0 30C150 0 300 60 450 30S750 0 900 30 1100 55 1200 30V60H0Z" fill="'+fill+'"/>','kc-wave'+(flip?' flip':'')); s.setAttribute('preserveAspectRatio','none'); return s; };
+  const wave=fill=>{ const s=kcSvg('0 0 1200 60','<path d="M0 30C150 0 300 60 450 30S750 0 900 30 1100 55 1200 30V60H0Z" fill="'+fill+'"/>','kc-wave'); s.setAttribute('preserveAspectRatio','none'); return s; };
+  const suds=()=>h('i',{class:'kc-suds','aria-hidden':'true'});
+  function burst(e,host){ if(reduce) return; const r=host.getBoundingClientRect(); for(let i=0;i<9;i++){ const s=8+Math.random()*18, b=h('i',{class:'kc-pop',style:'left:'+(e.clientX-r.left)+'px;top:'+(e.clientY-r.top)+'px;width:'+s.toFixed(0)+'px;height:'+s.toFixed(0)+'px;--dx:'+((Math.random()-.5)*140).toFixed(0)+'px;--dy:'+(-60-Math.random()*140).toFixed(0)+'px'}); host.append(b); setTimeout(()=>b.remove(),1100); } }
 
   /* top + nav */
   const top=h('div',{class:'kc-top'},wrap(st?h('span',{class:'kc-st'},h('i',{class:'kc-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):h('span',null),h('span',{class:'kc-free'},'Free estimates')));
   const nav=h('header',{class:'kc-nav'},h('div',{class:'kc-wrap kc-nav-in'},
     h('a',{class:'kc-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('kc-top'); }},kcDrop('kc-logo'),h('span',null,h('b',null,'Key City'),h('i',null,'Powerwash & Maintenance'))),
-    h('nav',{class:'kc-links'},[['kc-wash','Try it'],['kc-svc','Services'],['kc-why','Why us'],['kc-visit','Contact']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('nav',{class:'kc-links'},[['kc-wash','Get an estimate'],['kc-work','Our work'],['kc-svc','Services'],['kc-why','Why us'],['kc-visit','Contact']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
     h('div',{class:'kc-nav-r'},callBtn('line sm','Call'),textBtn('solid sm','Free estimate'))));
 
   /* hero */
@@ -2676,27 +2682,38 @@ function kcWash(C){
         h('h1',null,h('span',null,heads[0]),heads[1]?h('span',{class:'em'},heads[1]):null),
         h('p',{class:'kc-lead'},C.tag||'Family-owned pressure washing since '+since+'. We clean homes, businesses and farms around Dubuque.'),
         h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line','Text for a free estimate')),
-        h('button',{type:'button',class:'kc-try',onclick:go('kc-wash')},'Or try the power washer yourself',ico('arrow',16,''))),
+        h('button',{type:'button',class:'kc-try',onclick:go('kc-wash')},'Tell us what needs washing',ico('arrow',16,''))),
       h('div',{class:'kc-hero-s'},kcSvg('0 0 560 380',kcScene(),'kc-scene','A cartoon pressure washer operator spraying grime off a wall'))),
     wave('#F3FBFF'));
 
-  /* interactive: power wash game */
-  const W=900,H=506; let cur=0, done=false, pressing=false, pos=null, last=null, raf=0, parts=[], auto=false;
+  /* estimate builder + wash game */
+  const W=900,H=506; let cur=0, done=false, pressing=false, pos=null, last=null, raf=0, parts=[], auto=false, sel=[], extras=[];
+  const S=()=>KC_SURF[cur];
   const clean=h('canvas',{class:'kc-cv',width:W,height:H,'aria-hidden':'true'}), dirty=h('canvas',{class:'kc-cv kc-dirty',width:W,height:H,'aria-hidden':'true'}), spray=h('canvas',{class:'kc-cv kc-spray',width:W,height:H,role:'img','aria-label':'Dirty surface. Press and drag to power wash it clean.'});
   const cc=clean.getContext('2d'), dc=dirty.getContext('2d',{willReadFrequently:true}), sc=spray.getContext('2d');
   const probe=document.createElement('canvas'); probe.width=90; probe.height=51; const pc=probe.getContext('2d',{willReadFrequently:true});
   const brush=document.createElement('canvas'); brush.width=brush.height=96; { const b=brush.getContext('2d'), g=b.createRadialGradient(48,48,0,48,48,48); g.addColorStop(0,'rgba(0,0,0,1)'); g.addColorStop(.62,'rgba(0,0,0,1)'); g.addColorStop(1,'rgba(0,0,0,0)'); b.fillStyle=g; b.fillRect(0,0,96,96); }
   const fill=h('i',{class:'kc-fill'}), pctT=h('b',{class:'kc-pct'},'0%'), msg=h('p',{class:'kc-msg','aria-live':'polite'},'Press and drag to blast the grime away.');
   const meter=h('div',{class:'kc-meter',role:'progressbar','aria-label':'Clean','aria-valuemin':'0','aria-valuemax':'100','aria-valuenow':'0'},fill);
-  const svcT=h('p',{class:'kc-svc-t'}), res=h('div',{class:'kc-res'});
   const stage=h('div',{class:'kc-stage'},clean,dirty,spray,h('span',{class:'kc-hint'},'Press and drag'));
-  const MSGS=[[0,'Press and drag to blast the grime away.'],[1,'That is the stuff. Keep going!'],[30,'Look at that clean line!'],[60,'Over halfway. Satisfying, right?'],[85,'Almost sparkling...'],[100,'Squeaky clean! Imagine this on your place.']];
-  function paint(){ kcPaintClean(KC_SURF[cur].id,cc,W,H); kcPaintDirty(KC_SURF[cur].id,dirty,dc,W,H,clean); }
-  function setPct(p){ const v=Math.min(100,Math.round(p/92*100)); pctT.textContent=v+'%'; fill.style.width=v+'%'; meter.setAttribute('aria-valuenow',v); let m=MSGS[0][1]; MSGS.forEach(([t,s])=>{ if(v>=t&&(t>0||v===0)) m=s; }); if(v===0) m=MSGS[0][1]; msg.textContent=m;
-    if(v>=100&&!done){ done=true; stage.classList.add('done'); dirty.style.opacity='0'; showRes(); } }
+  const MSGS=[[0,'Press and drag to blast the grime away.'],[1,'That is the stuff. Keep going!'],[30,'Look at that clean line!'],[60,'Over halfway. Satisfying, right?'],[85,'Almost sparkling...'],[100,'Squeaky clean! Added to your estimate list.']];
+  const planT=h('p',{class:'kc-plan-t'}), planB=h('button',{type:'button',class:'kc-btn line sm'});
+  const listEl=h('div',{class:'kc-list'}), estText=h('a',{class:'kc-btn line',href:'#'},'Text my request'), estCall=callBtn('solid','Call to book');
+  const estMsg=()=>{ const a=sel.map(id=>KC_SURF.find(s=>s.id===id).noun), e=extras.map(id=>KC_EXTRA.find(z=>z[0]===id)[1].toLowerCase()); let m='Hi Key City Powerwash, I would like a free estimate'; if(a.length) m+=' for my '+a.join(', ')+(e.length?', plus '+e.join(', '):''); else if(e.length) m+=' for '+e.join(', '); return m+'. Thank you!'; };
+  const picks=KC_SURF.map((s,i)=>h('button',{type:'button',class:'kc-pick'+(i===0?' on':''),'aria-pressed':i===0?'true':'false',onclick:()=>{ if(auto) return; cur=i; reset(); sync(); }},h('span',{class:'kc-pi'},kcIcon(s.ic)),h('b',null,s.label),h('i',{class:'kc-ck','aria-hidden':'true'},'✓')));
+  const xBoxes=KC_EXTRA.map(([id,l])=>h('label',{class:'kc-xt'},h('input',{type:'checkbox',onchange:e=>{ extras=e.target.checked?extras.concat(id):extras.filter(v=>v!==id); sync(); }}),h('span',null,l)));
+  function sync(){
+    picks.forEach((b,i)=>{ b.classList.toggle('on',i===cur); b.setAttribute('aria-pressed',i===cur?'true':'false'); b.classList.toggle('in',sel.includes(KC_SURF[i].id)); });
+    planT.textContent=S().plan; const inList=sel.includes(S().id); planB.textContent=inList?'Added to estimate. Remove':'Add '+S().label.toLowerCase()+' to my estimate'; planB.classList.toggle('added',inList);
+    listEl.replaceChildren(...(sel.length||extras.length?[...sel.map(id=>h('span',{class:'kc-tag'},KC_SURF.find(s=>s.id===id).label,h('button',{type:'button','aria-label':'Remove',onclick:()=>{ sel=sel.filter(v=>v!==id); sync(); }},'×'))),...extras.map(id=>h('span',{class:'kc-tag x'},KC_EXTRA.find(z=>z[0]===id)[1],h('button',{type:'button','aria-label':'Remove',onclick:()=>{ extras=extras.filter(v=>v!==id); xBoxes.forEach((l,k)=>{ l.firstChild.checked=extras.includes(KC_EXTRA[k][0]); }); sync(); }},'×')))]:[h('p',{class:'kc-empty'},'Nothing yet. Pick something above to get started.')]));
+    const hr=smsHref(estMsg()); if(hr) estText.setAttribute('href',hr);
+  }
+  planB.addEventListener('click',()=>{ const id=S().id; sel=sel.includes(id)?sel.filter(v=>v!==id):sel.concat(id); sync(); });
+  function paint(){ kcPaintClean(S().id,cc,W,H); kcPaintDirty(S().id,dirty,dc,W,H,clean); }
+  function setPct(p){ const v=Math.min(100,Math.round(p/92*100)); pctT.textContent=v+'%'; fill.style.width=v+'%'; meter.setAttribute('aria-valuenow',v); let m=MSGS[0][1]; MSGS.forEach(([t,s])=>{ if(v>=t&&t>0) m=s; }); msg.textContent=m;
+    if(v>=100&&!done){ done=true; stage.classList.add('done'); dirty.style.opacity='0'; if(!sel.includes(S().id)) sel.push(S().id); sync(); } }
   function calc(){ pc.clearRect(0,0,90,51); pc.drawImage(dirty,0,0,90,51); const d=pc.getImageData(0,0,90,51).data; let n=0; for(let i=3;i<d.length;i+=4) if(d[i]<140) n++; setPct(n/(90*51)*100); }
-  function showRes(){ const s=KC_SURF[cur]; res.replaceChildren(h('b',null,'Nice work. Want your real '+s.noun+' to look like that?'),h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line','Text for a free estimate','Hi Key City Powerwash, I just tried your power washer game and would like a free estimate to clean my '+s.noun+'.'))); res.classList.add('on'); }
-  function reset(){ done=false; stage.classList.remove('done'); dirty.style.opacity='1'; res.classList.remove('on'); paint(); setPct(0); }
+  function reset(){ done=false; stage.classList.remove('done'); dirty.style.opacity='1'; paint(); setPct(0); }
   function brushAt(px,py){ dc.globalCompositeOperation='destination-out'; dc.drawImage(brush,px-48,py-48); dc.globalCompositeOperation='source-over'; }
   function washTo(px,py){ if(!last) last={x:px,y:py}; const dx=px-last.x, dy=py-last.y, n=Math.max(1,Math.ceil(Math.hypot(dx,dy)/10)); for(let i=1;i<=n;i++) brushAt(last.x+dx*i/n,last.y+dy*i/n); last={x:px,y:py}; for(let k=0;k<5;k++){ const a=Math.random()*6.28, sp=1.5+Math.random()*5; parts.push({x:px,y:py,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.5,l:1}); } kick(); }
   function loop(){ raf=0; sc.clearRect(0,0,W,H);
@@ -2709,21 +2726,44 @@ function kcWash(C){
   spray.addEventListener('pointermove',e=>{ if(auto) return; pos=xy(e); if(pressing) washTo(pos.x,pos.y); else kick(); });
   const stop=()=>{ if(pressing) calc(); pressing=false; last=null; };
   spray.addEventListener('pointerup',stop); spray.addEventListener('pointercancel',stop); spray.addEventListener('pointerleave',()=>{ stop(); pos=null; kick(); });
-  const autoBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:()=>{ if(auto) return; auto=true; stage.classList.add('used'); pressing=true; const pts=[]; for(let r=0,y=40;y<H+30;y+=62,r++){ for(let x=0;x<=W;x+=30) pts.push({x:r%2?W-x:x,y:y+Math.sin(x/70)*10}); } let i=0; const step=()=>{ for(let k=0;k<3&&i<pts.length;k++,i++){ pos=pts[i]; washTo(pos.x,pos.y); } if(i<pts.length) requestAnimationFrame(step); else { pressing=false; last=null; pos=null; auto=false; calc(); } }; step(); }},'Auto-wash for me');
+  const autoBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:()=>{ if(auto) return; auto=true; stage.classList.add('used'); pressing=true; const pts=[]; for(let r=0,y=40;y<H+30;y+=62,r++){ for(let xx=0;xx<=W;xx+=30) pts.push({x:r%2?W-xx:xx,y:y+Math.sin(xx/70)*10}); } let i=0; const step=()=>{ for(let k=0;k<3&&i<pts.length;k++,i++){ pos=pts[i]; washTo(pos.x,pos.y); } if(i<pts.length) requestAnimationFrame(step); else { pressing=false; last=null; pos=null; auto=false; calc(); } }; step(); }},'Auto-wash for me');
   const resetBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:reset},'Get it dirty again');
-  const chips=KC_SURF.map((s,i)=>h('button',{type:'button',class:'kc-chip'+(i===0?' on':''),'aria-pressed':i===0?'true':'false',onclick:()=>{ if(auto) return; cur=i; chips.forEach((c,k)=>{ c.classList.toggle('on',k===i); c.setAttribute('aria-pressed',k===i?'true':'false'); }); svcT.textContent=s.svc; reset(); }},s.label));
-  svcT.textContent=KC_SURF[0].svc;
-  paint();
+  paint(); sync();
   const washSec=h('section',{class:'kc-sec kc-washsec',id:'kc-wash'},wrap(
-    head('Try it','Grab the power washer.','Pick something dirty, then press and drag to clean it. It is more fun than it should be.'),
-    h('div',{class:'kc-game rv'},
-      h('div',{class:'kc-chips'},chips),
-      stage,
-      h('div',{class:'kc-bar'},h('div',{class:'kc-bar-l'},h('span',null,'Clean'),pctT),meter,msg),
-      h('div',{class:'kc-game-f'},svcT,h('div',{class:'kc-game-b'},autoBtn,resetBtn)),
-      res)));
+    head('Free estimate builder','What needs washing?','Pick what you need cleaned, give it a power wash to see the difference, and your estimate request writes itself.'),
+    h('div',{class:'kc-bld rv'},
+      h('div',{class:'kc-bld-l'},
+        h('div',{class:'kc-picks'},picks),
+        stage,
+        h('div',{class:'kc-bar'},h('div',{class:'kc-bar-l'},h('span',null,'Clean'),pctT),meter,msg),
+        h('div',{class:'kc-game-b'},autoBtn,resetBtn)),
+      h('aside',{class:'kc-bld-r'},
+        h('div',{class:'kc-plan'},h('span',{class:'kc-lbl2'},'Our plan for this'),planT,planB),
+        h('div',{class:'kc-est'},h('span',{class:'kc-lbl2'},'Your estimate request'),listEl,h('span',{class:'kc-lbl2 sm'},'Extras'),h('div',{class:'kc-xts'},xBoxes),h('div',{class:'kc-cta col'},estCall,estText),h('p',{class:'kc-note'},'Free estimates. No pressure, just water pressure.'))))),
+    wave('#fff'));
 
-  /* services */
+  /* work gallery: before and after */
+  const realG=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
+  const SM=['driveway','deck','siding','roof','gutter','barn'].map(id=>KC_SURF.find(s=>s.id===id));
+  const gcv=SM.map(()=>null);
+  const gSlides=realG.length?realG.map((u,i)=>h('figure',{class:'kc-gs'+(i===0?' on':'')},h('img',{src:u,alt:'Job photo '+(i+1)+' by '+name,loading:i?'lazy':'eager'}))):SM.map((s,i)=>h('figure',{class:'kc-gs'+(i===0?' on':'')},h('div',{class:'kc-ba'},h('canvas',{width:640,height:360,'aria-hidden':'true'}),h('canvas',{class:'kc-wipe',width:640,height:360,'aria-hidden':'true'}),h('i',{class:'kc-wbar','aria-hidden':'true'}),h('span',{class:'kc-tg b'},'Before'),h('span',{class:'kc-tg a'},'After')),h('figcaption',null,h('b',null,s.label),s.plan.split('. ')[0].replace(/\.$/,'')+'.')));
+  const gp=i=>{ if(realG.length||gcv[i]) return; gcv[i]=1; const cs=gSlides[i].querySelectorAll('canvas'), id=SM[i].id, cl=cs[1].getContext('2d'); kcPaintClean(id,cl,640,360); const dd=cs[0].getContext('2d'); kcPaintDirty(id,cs[0],dd,640,360,cs[1]); };
+  let gc=0, gPaused=false, gT=null, gIn=true;
+  const gDots=gSlides.map((_,i)=>h('button',{type:'button',class:'kc-dot2'+(i===0?' on':''),'aria-label':'Show photo '+(i+1),onclick:()=>{ gShow(i); gRestart(); }}));
+  const gBar=h('i',{class:'kc-bar2'});
+  function gShow(i){ gc=(i+gSlides.length)%gSlides.length; gp(gc); gSlides.forEach((e,k)=>e.classList.toggle('on',k===gc)); gDots.forEach((d,k)=>d.classList.toggle('on',k===gc)); }
+  function gRestart(){ gBar.style.animation='none'; void gBar.offsetWidth; gBar.style.animation=''; clearTimeout(gT); if(!gPaused&&!reduce&&gIn) gT=setTimeout(()=>{ if(!gBox.isConnected) return; gShow(gc+1); gRestart(); },6000); }
+  const gBox=h('div',{class:'kc-gal rv',tabindex:'0','aria-roledescription':'carousel','aria-label':'Before and after gallery'},h('div',{class:'kc-gstage'},gSlides),
+    h('div',{class:'kc-gbar'},h('button',{type:'button',class:'kc-nb','aria-label':'Previous',onclick:()=>{ gShow(gc-1); gRestart(); }},ico('arrow',18,'')),h('div',{class:'kc-dots'},gDots),h('button',{type:'button',class:'kc-nb nxt','aria-label':'Next',onclick:()=>{ gShow(gc+1); gRestart(); }},ico('arrow',18,''))),h('span',{class:'kc-track'},gBar));
+  const gPause=v=>{ gPaused=v; if(v) clearTimeout(gT); else gRestart(); };
+  gBox.addEventListener('mouseenter',()=>gPause(true)); gBox.addEventListener('mouseleave',()=>gPause(false)); gBox.addEventListener('focusin',()=>gPause(true)); gBox.addEventListener('focusout',()=>gPause(false));
+  let gx=null; gBox.addEventListener('touchstart',e=>{ gx=e.touches[0].clientX; },{passive:true}); gBox.addEventListener('touchend',e=>{ if(gx==null) return; const dx=e.changedTouches[0].clientX-gx; if(Math.abs(dx)>40){ gShow(gc+(dx<0?1:-1)); gRestart(); } gx=null; },{passive:true});
+  setTimeout(()=>{ gp(0); gp(1); if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ gIn=e.isIntersecting; if(gIn) gRestart(); else clearTimeout(gT); })).observe(gBox); } gRestart(); },200);
+  const work=h('section',{class:'kc-sec kc-worksec',id:'kc-work'},wrap(
+    head('Our work','See the difference.',realG.length?'Photos of recent jobs.':'Real job photos are on the way. These sample illustrations show the kind of difference a wash makes.'),gBox,
+    realG.length?null:h('p',{class:'kc-note'},'Sample illustrations, not Key City Powerwash & Maintenance’s own jobs.')));
+
+  /* services: fun, bubbly */
   const SV=[['House washing','Soft wash cleaning that lifts mold, mildew and algae from siding.','M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6'],
     ['Pressure washing','Driveways, sidewalks, patios, retaining walls and stone.','M12 3C8 9 6 12 6 15a6 6 0 0012 0c0-3-2-6-6-12z'],
     ['Decks and fences','Cleaning, staining and sealing for decks, fences, patios and porches.','M3 9h18M3 14h18M6 9v11M18 9v11M4 5h16'],
@@ -2733,19 +2773,23 @@ function kcWash(C){
     ['Barns and farms','Washing for barns, outbuildings and other farm buildings.','M3 21V10l9-6 9 6v11H3zM9 21v-7h6v7M9 14l6 7M15 14l-6 7'],
     ['Sealing','Sealing for aggregate sidewalks, patios and decks.','M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z'],
     ['Repairs and upkeep','Minor repairs and maintenance work around the property.','M14 7a4 4 0 00-5 5L3 18l3 3 6-6a4 4 0 005-5l-3 3-3-3z']];
-  const svc=h('section',{class:'kc-sec kc-svcsec',id:'kc-svc'},wrap(head('What we wash','Homes, businesses and farms.','If it is outside and it is dirty, ask. Here is what Key City Powerwash & Maintenance does.'),
-    h('div',{class:'kc-cards'},SV.map(([t,p,d],i)=>h('div',{class:'kc-card rv',style:'--d:'+(i%3*.08)+'s'},h('span',{class:'kc-ib'},kcIcon(d)),h('h3',null,t),h('p',null,p),h('i',{class:'kc-drip','aria-hidden':'true'}))))));
+  const svc=h('section',{class:'kc-sec kc-svcsec',id:'kc-svc'},suds(),kcBubs(14,3),wrap(head('What we wash','Homes, businesses and farms.','If it is outside and it is dirty, ask. Pop a bubble while you read.'),
+    h('div',{class:'kc-cards'},SV.map(([t,p,d],i)=>h('div',{class:'kc-card rv',style:'--d:'+((i%3)*.12+Math.floor(i/3)*.1).toFixed(2)+'s'},h('span',{class:'kc-ib'},kcIcon(d)),h('h3',null,t),h('p',null,p),h('i',{class:'kc-drip','aria-hidden':'true'}),h('i',{class:'kc-foamc','aria-hidden':'true'}))))));
+  svc.addEventListener('pointerdown',e=>burst(e,svc));
 
   /* why */
   const TH=[['On time','Reviewers say the crew shows up when they said they would.'],['The whole job','House, foundation, chimney, deck, walks and walls all get done.'],['Friendly crew','Customers call the crew professional, polite and easy to work with.'],['Clean finish','They tidy up afterward and put the patio furniture back.']];
-  const why=h('section',{class:'kc-sec kc-whysec',id:'kc-why'},wrap(
+  const stats=[[String(yrs),'years washing Dubuque since '+since,yrs],['3','kinds of property: homes, businesses, farms',3],[String(x.rating||'4.6'),'stars on Google',parseFloat(x.rating||'4.6')],['Free','estimates',0]];
+  const why=h('section',{class:'kc-sec kc-whysec',id:'kc-why'},suds(),kcBubs(14,8),wrap(
     head('Why Key City','Local, family-owned, and not new at this.'),
-    h('div',{class:'kc-stats'},[[String(yrs),'years washing Dubuque since '+since],['3','kinds of property: homes, businesses, farms'],[x.rating||'4.6','stars on Google'],['Free','estimates']].map(([n,l])=>h('div',{class:'kc-stat rv'},h('b',null,n),h('span',null,l)))),
+    h('div',{class:'kc-stats'},stats.map(([n,l,v],i)=>h('div',{class:'kc-stat rv',style:'--d:'+(i*.1)+'s'},h('b',{'data-to':v||''},n),h('span',null,l)))),
     h('h3',{class:'kc-sub rv'},'What neighbors say'),
-    h('div',{class:'kc-said'},TH.map(([t,p])=>h('div',{class:'kc-say rv'},h('b',null,t),h('p',null,p)))),
+    h('div',{class:'kc-said'},TH.map(([t,p],i)=>h('div',{class:'kc-say rv',style:'--d:'+(i*.1)+'s;--b:'+(i*.7)+'s'},h('b',null,t),h('p',null,p)))),
     h('p',{class:'kc-note'},'Summarized from public Google, Angi and HomeAdvisor reviews.'),
     h('h3',{class:'kc-sub rv'},'How it works'),
-    h('ol',{class:'kc-steps'},[['Tell us what needs washing','Call or text with the job. Photos help.'],['Get a free estimate','We look at the work and tell you the price.'],['We wash, you enjoy','The crew does the work and cleans up when done.']].map(([t,p],i)=>h('li',{class:'rv'},h('span',null,String(i+1)),h('div',null,h('b',null,t),h('p',null,p)))))));
+    h('ol',{class:'kc-steps'},[['Tell us what needs washing','Call or text with the job. Photos help.'],['Get a free estimate','We look at the work and tell you the price.'],['We wash, you enjoy','The crew does the work and cleans up when done.']].map(([t,p],i)=>h('li',{class:'rv',style:'--d:'+(i*.12)+'s'},h('span',null,String(i+1)),h('div',null,h('b',null,t),h('p',null,p)))))));
+  why.addEventListener('pointerdown',e=>burst(e,why));
+  setTimeout(()=>{ if(reduce||!('IntersectionObserver' in window)) return; const io=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; io.unobserve(e.target); const el=e.target, to=parseFloat(el.dataset.to); if(!to) return; const dec=/\./.test(el.textContent)?1:0, t0=performance.now(); const tick=now=>{ const k=Math.min(1,(now-t0)/1000), v=to*(1-Math.pow(1-k,3)); el.textContent=v.toFixed(dec); if(k<1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); }),{threshold:.6}); why.querySelectorAll('.kc-stat b').forEach(b=>io.observe(b)); },300);
 
   /* visit */
   const visit=h('section',{class:'kc-sec kc-visitsec',id:'kc-visit'},wrap(
@@ -2756,7 +2800,7 @@ function kcWash(C){
         h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line'),C.maps?h('a',{class:'kc-btn line',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
       h('div',{class:'kc-box kc-hrs rv'},h('span',{class:'kc-lbl'},'Hours'),hoursRows(C),h('p',{class:'kc-note'},'Hours are as listed on Google. Call to confirm.')))));
   const foot=h('footer',{class:'kc-foot'},wrap(kcDrop('kc-logo'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
-  return h('div',{class:'demo kc on'},top,nav,hero,washSec,svc,why,visit,foot);
+  return h('div',{class:'demo kc on'},top,nav,hero,washSec,work,svc,why,visit,foot);
 }
 
 function bloomTattoo(C){
