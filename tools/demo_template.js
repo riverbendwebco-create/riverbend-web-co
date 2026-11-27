@@ -44,7 +44,7 @@ const todayIx=()=>(new Date().getDay()+6)%7;
 function sentences(t){ return String(t||'').split(/(?<=[.!?])\s+/).filter(Boolean); }
 function short(t,n){ t=String(t||''); if(t.length<=n) return t; const s=sentences(t); let o=''; for(const x of s){ if((o+' '+x).trim().length>n) break; o=(o+' '+x).trim(); } return o||t.slice(0,n).replace(/\s+\S*$/,'')+'…'; }
 function groups(items,fallback){ const g=[],m={}; items.forEach(i=>{ const k=i.group||fallback; if(!m[k]){m[k]=[];g.push(k);} m[k].push(i); }); return {names:g,map:m}; }
-function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.bl-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
+function scrollTo(id){ const t=document.getElementById(id); if(!t) return; const nav=document.querySelector('.sp-head,.m2-nav,.mt-nav,.rt-nav,.mw-nav,.zp-nav,.hc-nav,.st-nav,.ab-nav,.pub-nav,.lg-nav,.tr-nav,.hl-nav,.dn-nav,.by-nav,.bz-nav,.fd-nav,.wb-nav,.bb-nav,.bw-nav,.bl-nav,.kc-nav,.rd-nav'); const y=t.getBoundingClientRect().top+scrollY-((nav?nav.offsetHeight:0)+8); window.scrollTo({top:y,behavior:'smooth'}); }
 const jump=(id,label,cls)=>h('button',{type:'button',class:cls||null,onclick:()=>scrollTo(id)},label);
 
 function fail(t,m){ root.replaceChildren(h('div',{class:'state'},h('div',null,h('h1',{text:t}),h('p',{text:m})))); }
@@ -112,6 +112,7 @@ function build(d){
   if(/^shade\s?tree\b/i.test(C.name)||C.variant==='shadetree'){ document.body.className='t-st'; const pg=shadeTree(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); stRoll(pg); return; }
   if(/^(the\s+)?cleaning\s+mom+a\b/i.test(C.name)||C.variant==='homy'){ document.body.className='t-hc'; const pg=homy(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='mutual'){ document.body.className='t-mw'; const pg=mutual(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
+  if(C.variant==='kcwash'){ document.body.className='t-kc'; const pg=kcWash(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='bloom'){ document.body.className='t-bl'; const pg=bloomTattoo(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='becwar'){ document.body.className='t-bw'; const pg=becwar(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); return; }
   if(C.variant==='zephyr'){ document.body.className='t-zp'; const pg=zephyr(C); root.replaceChildren(pg,rbBar(C)); reveal(pg); zpNav(); return; }
@@ -2563,6 +2564,199 @@ function blFigure(view,skin){
     s+='<path d="M80 36C76 6 124 6 120 36C118 50 112 56 100 57C88 56 82 50 80 36Z" fill="#241b16"/>';
   }
   return s;
+}
+
+/* ===== Key City Powerwash: water-blue demo ===== */
+const KC_NS='http://www.w3.org/2000/svg';
+function kcSvg(vb,html,cls,label){ const s=document.createElementNS(KC_NS,'svg'); s.setAttribute('viewBox',vb); if(cls) s.setAttribute('class',cls); if(label){ s.setAttribute('role','img'); s.setAttribute('aria-label',label); } else s.setAttribute('aria-hidden','true'); s.innerHTML=html; return s; }
+function kcRnd(seed){ let a=seed>>>0; return ()=>{ a=(a*1664525+1013904223)>>>0; return a/4294967296; }; }
+function kcIcon(d){ return kcSvg('0 0 24 24','<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>','kc-ic'); }
+function kcDrop(cls){ return kcSvg('0 0 40 48','<path d="M20 3C12 15 6 22 6 30a14 14 0 0028 0C34 22 28 15 20 3z" fill="#3EB6EA"/><path d="M13 31a7 7 0 007 7" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M31 8l1.6 3.6L36 13l-3.4 1.4L31 18l-1.6-3.6L26 13l3.4-1.4z" fill="#FFC83D"/>',cls||'kc-logo'); }
+
+function kcScene(){
+  const R=kcRnd(11); let sid='', bands='', lines='';
+  for(let i=0;i<13;i++) lines+='<path d="M372 '+(62+i*22)+'H548" stroke="#C6E2F1" stroke-width="2"/>';
+  for(let i=0;i<5;i++){ let b='<rect x="372" y="'+(40+i*58)+'" width="176" height="58" fill="#7F8F4B" opacity=".5"/>';
+    for(let k=0;k<4;k++) b+='<ellipse cx="'+(380+R()*160)+'" cy="'+(48+i*58+R()*42)+'" rx="'+(10+R()*22)+'" ry="'+(5+R()*10)+'" fill="#5E6E34" opacity=".35"/>';
+    b+='<rect x="'+(390+R()*120)+'" y="'+(42+i*58)+'" width="8" height="'+(30+R()*24)+'" fill="#4F5E2C" opacity=".3"/>';
+    bands+='<g class="kc-band kc-b'+i+'">'+b+'</g>'; }
+  return '<defs><linearGradient id="kcWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8FDFF"/><stop offset="1" stop-color="#E1F2FB"/></linearGradient><clipPath id="kcWallClip"><rect x="372" y="40" width="176" height="290" rx="8"/></clipPath></defs>'
+  +'<ellipse cx="290" cy="344" rx="272" ry="16" fill="#8FD0EE" opacity=".55"/>'
+  +'<g clip-path="url(#kcWallClip)"><rect x="372" y="40" width="176" height="290" fill="url(#kcWall)"/>'+lines
+  +'<rect x="430" y="104" width="76" height="86" rx="6" fill="#C9E8F7" stroke="#fff" stroke-width="5"/><path d="M468 104V190M430 147H506" stroke="#fff" stroke-width="4"/><path d="M440 116l22 0-22 26z" fill="#fff" opacity=".5"/>'
+  +bands+'</g><rect x="372" y="40" width="176" height="290" rx="8" fill="none" stroke="#B5DAEE" stroke-width="3"/>'
+  +'<ellipse class="kc-pud" cx="458" cy="338" rx="82" ry="8" fill="#7CC9EE" opacity=".85"/>'
+  +'<g class="kc-guy">'
+   +'<rect x="8" y="268" width="64" height="50" rx="9" fill="#F0593C"/><rect x="16" y="276" width="30" height="20" rx="4" fill="#FFD6CC"/><circle cx="58" cy="286" r="5" fill="#FFC83D"/><path d="M8 302H72" stroke="#C73F27" stroke-width="3"/><path d="M72 274L86 250" stroke="#26323B" stroke-width="5" stroke-linecap="round"/>'
+   +'<circle cx="24" cy="322" r="10" fill="#26323B"/><circle cx="24" cy="322" r="4" fill="#9FB4C2"/><circle cx="58" cy="322" r="10" fill="#26323B"/><circle cx="58" cy="322" r="4" fill="#9FB4C2"/>'
+   +'<path d="M66 296C60 352 128 356 140 304C150 262 190 240 238 204" stroke="#1D3B52" stroke-width="7" fill="none" stroke-linecap="round"/>'
+   +'<rect x="112" y="246" width="34" height="78" rx="12" fill="#2E6C9B"/><rect x="156" y="246" width="34" height="78" rx="12" fill="#2A628D"/><rect x="100" y="318" width="50" height="20" rx="9" fill="#1F2D38"/><rect x="150" y="318" width="50" height="20" rx="9" fill="#1F2D38"/>'
+   +'<path d="M110 176Q92 200 102 232" stroke="#F2B21F" stroke-width="22" stroke-linecap="round" fill="none"/><circle cx="102" cy="236" r="10" fill="#F4CFAE"/>'
+   +'<path d="M106 176Q106 150 128 148H172Q196 150 196 176V254H106Z" fill="#FFC83D"/><path d="M106 228H196V254H106Z" fill="#F2B21F"/><path d="M151 150V254" stroke="#E0A21A" stroke-width="3"/><rect x="164" y="196" width="24" height="18" rx="4" fill="none" stroke="#E0A21A" stroke-width="3"/>'
+   +'<rect x="138" y="136" width="24" height="18" rx="6" fill="#EBBF99"/><circle cx="118" cy="112" r="7" fill="#EBBF99"/><circle cx="150" cy="108" r="34" fill="#F4CFAE"/>'
+   +'<path d="M114 104Q114 64 150 64Q186 64 186 104Z" fill="#1B78B8"/><path d="M114 104H186" stroke="#14608F" stroke-width="5"/><path d="M172 99Q216 94 216 108Q192 113 172 108Z" fill="#14608F"/><path d="M150 76Q143 88 150 93Q157 88 150 76Z" fill="#fff"/>'
+   +'<rect x="152" y="108" width="40" height="22" rx="9" fill="#BFE6FA" fill-opacity=".5" stroke="#14608F" stroke-width="3"/><circle cx="165" cy="119" r="3.2" fill="#23323C"/><circle cx="181" cy="119" r="3.2" fill="#23323C"/><path d="M163 136Q173 144 185 136" stroke="#8A4A32" stroke-width="3" fill="none" stroke-linecap="round"/>'
+   +'<g class="kc-arm"><path d="M190 176L222 208L250 194" stroke="#FFC83D" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M190 176L222 208L250 194" stroke="#F2B21F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".7"/><circle cx="252" cy="194" r="11" fill="#F4CFAE"/>'
+   +'<path d="M246 196L318 170" stroke="#35505F" stroke-width="9" stroke-linecap="round"/><path d="M262 190L258 210" stroke="#35505F" stroke-width="6" stroke-linecap="round"/><path d="M316 168L330 163" stroke="#9FB4C2" stroke-width="9" stroke-linecap="round"/>'
+   +'<g class="kc-jet"><path d="M334 163Q354 158 376 166" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".9"/><path class="kc-flow" d="M334 163Q354 158 376 166" stroke="#3EB6EA" stroke-width="3.5" fill="none" stroke-dasharray="6 9" stroke-linecap="round"/>'
+   +'<g class="kc-splash"><circle cx="382" cy="160" r="4" fill="#fff"/><circle cx="388" cy="172" r="3" fill="#BFE6FA"/><circle cx="378" cy="178" r="3.4" fill="#fff"/><circle cx="392" cy="164" r="2.4" fill="#9ED8F4"/></g></g></g>'
+  +'</g>';
+}
+
+const KC_SURF=[
+ {id:'driveway',label:'Driveway',noun:'driveway',svc:'Pressure washing for driveways, sidewalks, patios and retaining walls.'},
+ {id:'deck',label:'Deck',noun:'deck',svc:'Deck cleaning, staining and sealing, plus fences, patios and porches.'},
+ {id:'siding',label:'House siding',noun:'house',svc:'Soft wash house cleaning that lifts mold, mildew and algae.'},
+ {id:'roof',label:'Roof',noun:'roof',svc:'Roof cleaning to clear moss, algae and streaks.'}
+];
+function kcLeaf(c,R,cols){ const x=R(),y=R(); c.save(); c.translate(x,y); c.rotate(R()*6.28); c.fillStyle=cols[(R()*cols.length)|0]; c.beginPath(); c.ellipse(0,0,14+R()*8,6+R()*3,0,0,6.28); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1.4; c.beginPath(); c.moveTo(-16,0); c.lineTo(16,0); c.stroke(); c.restore(); }
+function kcPaintClean(kind,c,W,H){
+  const R=kcRnd(21);
+  if(kind==='driveway'){
+    c.fillStyle='#DBE0E4'; c.fillRect(0,0,W,H);
+    for(let i=0;i<1800;i++){ c.fillStyle=R()<.5?'rgba(110,120,130,.13)':'rgba(255,255,255,.3)'; c.fillRect(R()*W,R()*H,1+R()*2.4,1+R()*2.4); }
+    c.strokeStyle='#A8B2BA'; c.lineWidth=4; [W*.34,W*.68].forEach(x=>{ c.beginPath(); c.moveTo(x,0); c.lineTo(x,H-36); c.stroke(); }); c.beginPath(); c.moveTo(0,H*.5); c.lineTo(W,H*.5); c.stroke();
+    c.fillStyle='#8DD273'; c.fillRect(0,H-36,W,36); c.strokeStyle='#6DB955'; c.lineWidth=2; for(let i=0;i<120;i++){ const x=R()*W; c.beginPath(); c.moveTo(x,H); c.lineTo(x+(R()-.5)*8,H-36+R()*14); c.stroke(); }
+  } else if(kind==='deck'){
+    const n=9, ph=H/n, pal=['#DDAA6E','#D39F62','#E0B27A','#CC9858'];
+    for(let i=0;i<n;i++){ const y=i*ph; c.fillStyle=pal[i%4]; c.fillRect(0,y,W,ph);
+      for(let k=0;k<6;k++){ c.strokeStyle='rgba(130,78,34,'+(.1+R()*.14)+')'; c.lineWidth=1.3; c.beginPath(); const yy=y+6+R()*(ph-12), o=R()*60; c.moveTo(0,yy); for(let x=0;x<=W;x+=24) c.lineTo(x,yy+Math.sin((x+o)/41)*1.8); c.stroke(); }
+      c.fillStyle='#8C5A2B'; c.fillRect(0,y,W,3); c.fillStyle='#8A5A2C'; [66,W-66].forEach(x=>{ c.beginPath(); c.arc(x,y+ph/2,3.2,0,6.28); c.fill(); }); }
+  } else if(kind==='siding'){
+    const bh=H/10; c.fillStyle='#F4F9FC'; c.fillRect(0,0,W,H);
+    for(let i=0;i<10;i++){ const y=i*bh; const g=c.createLinearGradient(0,y,0,y+bh); g.addColorStop(0,'#FFFFFF'); g.addColorStop(.82,'#EAF4FA'); g.addColorStop(1,'#BCD6E5'); c.fillStyle=g; c.fillRect(0,y,W,bh); }
+    c.fillStyle='#fff'; c.fillRect(W*.58-10,H*.18-10,W*.3+20,H*.5+20); c.fillStyle='#C6E6F6'; c.fillRect(W*.58,H*.18,W*.3,H*.5); c.strokeStyle='#fff'; c.lineWidth=8; c.beginPath(); c.moveTo(W*.73,H*.18); c.lineTo(W*.73,H*.68); c.moveTo(W*.58,H*.43); c.lineTo(W*.88,H*.43); c.stroke(); c.fillStyle='rgba(255,255,255,.55)'; c.beginPath(); c.moveTo(W*.6,H*.2); c.lineTo(W*.67,H*.2); c.lineTo(W*.6,H*.36); c.fill();
+    c.fillStyle='rgba(120,160,185,.35)'; c.fillRect(W*.55,H*.68+10,W*.36,6);
+  } else {
+    const rh=H/11, tw=104;
+    for(let r=0;r<11;r++){ const y=r*rh, off=(r%2)*tw/2; for(let x=-tw;x<W+tw;x+=tw){ const t=R(); c.fillStyle=t<.33?'#587A93':t<.66?'#4F7089':'#5F8199'; c.fillRect(x+off,y,tw-3,rh-2); c.fillStyle='rgba(255,255,255,.12)'; c.fillRect(x+off,y,tw-3,4); c.fillStyle='rgba(10,30,45,.28)'; c.fillRect(x+off,y+rh-6,tw-3,4); } }
+  }
+}
+function kcPaintDirty(kind,cv,c,W,H,clean){
+  const R=kcRnd(33+kind.length); c.globalCompositeOperation='source-over'; c.clearRect(0,0,W,H); c.drawImage(clean,0,0);
+  const col={driveway:'rgba(84,80,60,.9)',deck:'rgba(118,118,102,.9)',siding:'rgba(102,130,68,.88)',roof:'rgba(56,68,38,.92)'}[kind];
+  c.fillStyle=col; c.fillRect(0,0,W,H);
+  const blob=(n,rmin,rmax,fill)=>{ for(let i=0;i<n;i++){ c.fillStyle=fill; c.beginPath(); c.ellipse(R()*W,R()*H,rmin+R()*(rmax-rmin),(rmin+R()*(rmax-rmin))*.7,R()*3,0,6.28); c.fill(); } };
+  blob(90,18,70,'rgba(40,40,24,.12)'); blob(60,14,60,kind==='roof'?'rgba(130,170,80,.2)':kind==='deck'?'rgba(90,130,60,.2)':'rgba(170,180,120,.14)');
+  if(kind==='driveway'){ for(let i=0;i<4;i++){ c.fillStyle='rgba(20,20,16,.34)'; c.beginPath(); c.ellipse(80+R()*(W-160),40+R()*(H-110),30+R()*34,18+R()*16,R()*3,0,6.28); c.fill(); } }
+  if(kind==='siding'||kind==='roof'){ for(let i=0;i<46;i++){ c.fillStyle=kind==='roof'?'rgba(5,8,5,.26)':'rgba(48,66,32,.24)'; const w=5+R()*14, x=R()*W, y=R()*H*.8; c.fillRect(x,y,w,50+R()*170); } }
+  if(kind==='deck'){ for(let i=0;i<30;i++){ c.fillStyle='rgba(50,50,40,.16)'; c.fillRect(R()*W,R()*H,60+R()*180,3+R()*5); } }
+  if(kind!=='siding'){ const lf=kind==='deck'?10:kind==='roof'?8:16; const cols=['#A0522D','#C9822B','#8B5A2B','#B5651D']; for(let i=0;i<lf;i++){ const rr=kcRnd(900+i*13+kind.length); const xs=[rr()*W,rr()*H]; const R2=()=>0; c.save(); c.translate(xs[0],xs[1]); c.rotate(rr()*6.28); c.fillStyle=cols[i%4]; c.beginPath(); c.ellipse(0,0,15+rr()*8,6+rr()*3,0,0,6.28); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1.4; c.beginPath(); c.moveTo(-17,0); c.lineTo(17,0); c.stroke(); c.restore(); } }
+}
+
+function kcWash(C){
+  const x=C.x||{}, name=C.name||'Key City Powerwash & Maintenance', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
+  const digits=(C.phone||'').replace(/\D/g,'').slice(-10);
+  const smsHref=body=>digits.length===10?'sms:+1'+digits+(/iPhone|iPad|iPod/i.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(body):'';
+  const st=bwStatus(C), heads=String(x.headline||'Dirt doesn’t|stand a chance.').split('|');
+  const since=+x.since||1996, yrs=Math.max(1,new Date().getFullYear()-since);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const go=id=>()=>scrollTo(id);
+  const callBtn=(cls,label)=>C.tel?h('a',{class:'kc-btn '+cls,href:C.tel},ico('phone',18,''),label||('Call '+C.phoneTxt)):null;
+  const textBtn=(cls,label,msg)=>smsHref('x')?h('a',{class:'kc-btn '+cls,href:smsHref(msg||'Hi Key City Powerwash, I would like a free estimate.')},label||'Text for a free estimate'):null;
+  const wrap=(...k)=>h('div',{class:'kc-wrap'},k);
+  const head=(kick,t,p)=>h('div',{class:'kc-head rv'},h('span',{class:'kc-kick'},kick),h('h2',null,t),p?h('p',null,p):null);
+  const wave=(fill,flip)=>{ const s=kcSvg('0 0 1200 60','<path d="M0 30C150 0 300 60 450 30S750 0 900 30 1100 55 1200 30V60H0Z" fill="'+fill+'"/>','kc-wave'+(flip?' flip':'')); s.setAttribute('preserveAspectRatio','none'); return s; };
+
+  /* top + nav */
+  const top=h('div',{class:'kc-top'},wrap(st?h('span',{class:'kc-st'},h('i',{class:'kc-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):h('span',null),h('span',{class:'kc-free'},'Free estimates')));
+  const nav=h('header',{class:'kc-nav'},h('div',{class:'kc-wrap kc-nav-in'},
+    h('a',{class:'kc-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('kc-top'); }},kcDrop('kc-logo'),h('span',null,h('b',null,'Key City'),h('i',null,'Powerwash & Maintenance'))),
+    h('nav',{class:'kc-links'},[['kc-wash','Try it'],['kc-svc','Services'],['kc-why','Why us'],['kc-visit','Contact']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
+    h('div',{class:'kc-nav-r'},callBtn('line sm','Call'),textBtn('solid sm','Free estimate'))));
+
+  /* hero */
+  const R=kcRnd(5), bubs=[]; for(let i=0;i<18;i++){ const s=8+R()*26; bubs.push(h('i',{class:'kc-bub',style:'left:'+(R()*100).toFixed(1)+'%;width:'+s.toFixed(0)+'px;height:'+s.toFixed(0)+'px;animation-duration:'+(9+R()*10).toFixed(1)+'s;animation-delay:-'+(R()*16).toFixed(1)+'s'})); }
+  const cloud='<path d="M20 50a18 18 0 0116-26 24 24 0 0146-6 20 20 0 0128 18 14 14 0 01-2 28H34a16 16 0 01-14-14z" fill="#fff"/>';
+  const hero=h('section',{class:'kc-hero',id:'kc-top'},
+    h('div',{class:'kc-sky','aria-hidden':'true'},kcSvg('0 0 160 80',cloud,'kc-cl c1'),kcSvg('0 0 160 80',cloud,'kc-cl c2'),kcSvg('0 0 160 80',cloud,'kc-cl c3'),bubs),
+    h('div',{class:'kc-wrap kc-hero-g'},
+      h('div',{class:'kc-hero-t'},
+        h('span',{class:'kc-badge'},'Pressure washing in '+(C.city||'Dubuque, IA')),
+        h('h1',null,h('span',null,heads[0]),heads[1]?h('span',{class:'em'},heads[1]):null),
+        h('p',{class:'kc-lead'},C.tag||'Family-owned pressure washing since '+since+'. We clean homes, businesses and farms around Dubuque.'),
+        h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line','Text for a free estimate')),
+        h('button',{type:'button',class:'kc-try',onclick:go('kc-wash')},'Or try the power washer yourself',ico('arrow',16,''))),
+      h('div',{class:'kc-hero-s'},kcSvg('0 0 560 380',kcScene(),'kc-scene','A cartoon pressure washer operator spraying grime off a wall'))),
+    wave('#F3FBFF'));
+
+  /* interactive: power wash game */
+  const W=900,H=506; let cur=0, done=false, pressing=false, pos=null, last=null, raf=0, parts=[], auto=false;
+  const clean=h('canvas',{class:'kc-cv',width:W,height:H,'aria-hidden':'true'}), dirty=h('canvas',{class:'kc-cv kc-dirty',width:W,height:H,'aria-hidden':'true'}), spray=h('canvas',{class:'kc-cv kc-spray',width:W,height:H,role:'img','aria-label':'Dirty surface. Press and drag to power wash it clean.'});
+  const cc=clean.getContext('2d'), dc=dirty.getContext('2d',{willReadFrequently:true}), sc=spray.getContext('2d');
+  const probe=document.createElement('canvas'); probe.width=90; probe.height=51; const pc=probe.getContext('2d',{willReadFrequently:true});
+  const brush=document.createElement('canvas'); brush.width=brush.height=96; { const b=brush.getContext('2d'), g=b.createRadialGradient(48,48,0,48,48,48); g.addColorStop(0,'rgba(0,0,0,1)'); g.addColorStop(.62,'rgba(0,0,0,1)'); g.addColorStop(1,'rgba(0,0,0,0)'); b.fillStyle=g; b.fillRect(0,0,96,96); }
+  const fill=h('i',{class:'kc-fill'}), pctT=h('b',{class:'kc-pct'},'0%'), msg=h('p',{class:'kc-msg','aria-live':'polite'},'Press and drag to blast the grime away.');
+  const meter=h('div',{class:'kc-meter',role:'progressbar','aria-label':'Clean','aria-valuemin':'0','aria-valuemax':'100','aria-valuenow':'0'},fill);
+  const svcT=h('p',{class:'kc-svc-t'}), res=h('div',{class:'kc-res'});
+  const stage=h('div',{class:'kc-stage'},clean,dirty,spray,h('span',{class:'kc-hint'},'Press and drag'));
+  const MSGS=[[0,'Press and drag to blast the grime away.'],[1,'That is the stuff. Keep going!'],[30,'Look at that clean line!'],[60,'Over halfway. Satisfying, right?'],[85,'Almost sparkling...'],[100,'Squeaky clean! Imagine this on your place.']];
+  function paint(){ kcPaintClean(KC_SURF[cur].id,cc,W,H); kcPaintDirty(KC_SURF[cur].id,dirty,dc,W,H,clean); }
+  function setPct(p){ const v=Math.min(100,Math.round(p/92*100)); pctT.textContent=v+'%'; fill.style.width=v+'%'; meter.setAttribute('aria-valuenow',v); let m=MSGS[0][1]; MSGS.forEach(([t,s])=>{ if(v>=t&&(t>0||v===0)) m=s; }); if(v===0) m=MSGS[0][1]; msg.textContent=m;
+    if(v>=100&&!done){ done=true; stage.classList.add('done'); dirty.style.opacity='0'; showRes(); } }
+  function calc(){ pc.clearRect(0,0,90,51); pc.drawImage(dirty,0,0,90,51); const d=pc.getImageData(0,0,90,51).data; let n=0; for(let i=3;i<d.length;i+=4) if(d[i]<140) n++; setPct(n/(90*51)*100); }
+  function showRes(){ const s=KC_SURF[cur]; res.replaceChildren(h('b',null,'Nice work. Want your real '+s.noun+' to look like that?'),h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line','Text for a free estimate','Hi Key City Powerwash, I just tried your power washer game and would like a free estimate to clean my '+s.noun+'.'))); res.classList.add('on'); }
+  function reset(){ done=false; stage.classList.remove('done'); dirty.style.opacity='1'; res.classList.remove('on'); paint(); setPct(0); }
+  function brushAt(px,py){ dc.globalCompositeOperation='destination-out'; dc.drawImage(brush,px-48,py-48); dc.globalCompositeOperation='source-over'; }
+  function washTo(px,py){ if(!last) last={x:px,y:py}; const dx=px-last.x, dy=py-last.y, n=Math.max(1,Math.ceil(Math.hypot(dx,dy)/10)); for(let i=1;i<=n;i++) brushAt(last.x+dx*i/n,last.y+dy*i/n); last={x:px,y:py}; for(let k=0;k<5;k++){ const a=Math.random()*6.28, sp=1.5+Math.random()*5; parts.push({x:px,y:py,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.5,l:1}); } kick(); }
+  function loop(){ raf=0; sc.clearRect(0,0,W,H);
+    if(pos){ sc.lineWidth=4; sc.strokeStyle='rgba(14,107,168,.85)'; sc.fillStyle=pressing?'rgba(62,182,234,.28)':'rgba(255,255,255,.18)'; sc.beginPath(); sc.arc(pos.x,pos.y,40,0,6.28); sc.fill(); sc.stroke(); }
+    parts=parts.filter(p=>p.l>0); parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=.28; p.l-=.045; sc.fillStyle='rgba(255,255,255,'+(p.l*.9).toFixed(2)+')'; sc.beginPath(); sc.arc(p.x,p.y,2+p.l*4,0,6.28); sc.fill(); sc.strokeStyle='rgba(62,182,234,'+(p.l*.8).toFixed(2)+')'; sc.lineWidth=1.5; sc.stroke(); });
+    if(pos||parts.length) raf=requestAnimationFrame(loop); }
+  function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
+  const xy=e=>{ const r=spray.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}; };
+  spray.addEventListener('pointerdown',e=>{ if(auto) return; pressing=true; spray.setPointerCapture&&spray.setPointerCapture(e.pointerId); pos=xy(e); last=null; stage.classList.add('used'); washTo(pos.x,pos.y); });
+  spray.addEventListener('pointermove',e=>{ if(auto) return; pos=xy(e); if(pressing) washTo(pos.x,pos.y); else kick(); });
+  const stop=()=>{ if(pressing) calc(); pressing=false; last=null; };
+  spray.addEventListener('pointerup',stop); spray.addEventListener('pointercancel',stop); spray.addEventListener('pointerleave',()=>{ stop(); pos=null; kick(); });
+  const autoBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:()=>{ if(auto) return; auto=true; stage.classList.add('used'); pressing=true; const pts=[]; for(let r=0,y=40;y<H+30;y+=62,r++){ for(let x=0;x<=W;x+=30) pts.push({x:r%2?W-x:x,y:y+Math.sin(x/70)*10}); } let i=0; const step=()=>{ for(let k=0;k<3&&i<pts.length;k++,i++){ pos=pts[i]; washTo(pos.x,pos.y); } if(i<pts.length) requestAnimationFrame(step); else { pressing=false; last=null; pos=null; auto=false; calc(); } }; step(); }},'Auto-wash for me');
+  const resetBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:reset},'Get it dirty again');
+  const chips=KC_SURF.map((s,i)=>h('button',{type:'button',class:'kc-chip'+(i===0?' on':''),'aria-pressed':i===0?'true':'false',onclick:()=>{ if(auto) return; cur=i; chips.forEach((c,k)=>{ c.classList.toggle('on',k===i); c.setAttribute('aria-pressed',k===i?'true':'false'); }); svcT.textContent=s.svc; reset(); }},s.label));
+  svcT.textContent=KC_SURF[0].svc;
+  paint();
+  const washSec=h('section',{class:'kc-sec kc-washsec',id:'kc-wash'},wrap(
+    head('Try it','Grab the power washer.','Pick something dirty, then press and drag to clean it. It is more fun than it should be.'),
+    h('div',{class:'kc-game rv'},
+      h('div',{class:'kc-chips'},chips),
+      stage,
+      h('div',{class:'kc-bar'},h('div',{class:'kc-bar-l'},h('span',null,'Clean'),pctT),meter,msg),
+      h('div',{class:'kc-game-f'},svcT,h('div',{class:'kc-game-b'},autoBtn,resetBtn)),
+      res)));
+
+  /* services */
+  const SV=[['House washing','Soft wash cleaning that lifts mold, mildew and algae from siding.','M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6'],
+    ['Pressure washing','Driveways, sidewalks, patios, retaining walls and stone.','M12 3C8 9 6 12 6 15a6 6 0 0012 0c0-3-2-6-6-12z'],
+    ['Decks and fences','Cleaning, staining and sealing for decks, fences, patios and porches.','M3 9h18M3 14h18M6 9v11M18 9v11M4 5h16'],
+    ['Roof cleaning','Clears moss, algae and dark streaks from shingles.','M2 12l10-8 10 8M7 16l5-4 5 4M4 20l8-6 8 6'],
+    ['Gutters and downspouts','Cleaned out so water goes where it should.','M3 8h18v4H3zM7 12v8M17 12v8'],
+    ['Leaf removal','Fall cleanup so the yard and beds are ready for winter.','M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19L14 10'],
+    ['Barns and farms','Washing for barns, outbuildings and other farm buildings.','M3 21V10l9-6 9 6v11H3zM9 21v-7h6v7M9 14l6 7M15 14l-6 7'],
+    ['Sealing','Sealing for aggregate sidewalks, patios and decks.','M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z'],
+    ['Repairs and upkeep','Minor repairs and maintenance work around the property.','M14 7a4 4 0 00-5 5L3 18l3 3 6-6a4 4 0 005-5l-3 3-3-3z']];
+  const svc=h('section',{class:'kc-sec kc-svcsec',id:'kc-svc'},wrap(head('What we wash','Homes, businesses and farms.','If it is outside and it is dirty, ask. Here is what Key City Powerwash & Maintenance does.'),
+    h('div',{class:'kc-cards'},SV.map(([t,p,d],i)=>h('div',{class:'kc-card rv',style:'--d:'+(i%3*.08)+'s'},h('span',{class:'kc-ib'},kcIcon(d)),h('h3',null,t),h('p',null,p),h('i',{class:'kc-drip','aria-hidden':'true'}))))));
+
+  /* why */
+  const TH=[['On time','Reviewers say the crew shows up when they said they would.'],['The whole job','House, foundation, chimney, deck, walks and walls all get done.'],['Friendly crew','Customers call the crew professional, polite and easy to work with.'],['Clean finish','They tidy up afterward and put the patio furniture back.']];
+  const why=h('section',{class:'kc-sec kc-whysec',id:'kc-why'},wrap(
+    head('Why Key City','Local, family-owned, and not new at this.'),
+    h('div',{class:'kc-stats'},[[String(yrs),'years washing Dubuque since '+since],['3','kinds of property: homes, businesses, farms'],[x.rating||'4.6','stars on Google'],['Free','estimates']].map(([n,l])=>h('div',{class:'kc-stat rv'},h('b',null,n),h('span',null,l)))),
+    h('h3',{class:'kc-sub rv'},'What neighbors say'),
+    h('div',{class:'kc-said'},TH.map(([t,p])=>h('div',{class:'kc-say rv'},h('b',null,t),h('p',null,p)))),
+    h('p',{class:'kc-note'},'Summarized from public Google, Angi and HomeAdvisor reviews.'),
+    h('h3',{class:'kc-sub rv'},'How it works'),
+    h('ol',{class:'kc-steps'},[['Tell us what needs washing','Call or text with the job. Photos help.'],['Get a free estimate','We look at the work and tell you the price.'],['We wash, you enjoy','The crew does the work and cleans up when done.']].map(([t,p],i)=>h('li',{class:'rv'},h('span',null,String(i+1)),h('div',null,h('b',null,t),h('p',null,p)))))));
+
+  /* visit */
+  const visit=h('section',{class:'kc-sec kc-visitsec',id:'kc-visit'},wrap(
+    head('Contact','Ready for a clean place?','Call or text for a free estimate.'),
+    h('div',{class:'kc-2c'},
+      h('div',{class:'kc-box rv'},h('span',{class:'kc-lbl'},name),addrTxt?h('p',{class:'kc-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'kc-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
+        h('p',{class:'kc-area'},'Serving Dubuque and the tri-state area: counties in Iowa, Illinois and Wisconsin.'),
+        h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line'),C.maps?h('a',{class:'kc-btn line',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
+      h('div',{class:'kc-box kc-hrs rv'},h('span',{class:'kc-lbl'},'Hours'),hoursRows(C),h('p',{class:'kc-note'},'Hours are as listed on Google. Call to confirm.')))));
+  const foot=h('footer',{class:'kc-foot'},wrap(kcDrop('kc-logo'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
+  return h('div',{class:'demo kc on'},top,nav,hero,washSec,svc,why,visit,foot);
 }
 
 function bloomTattoo(C){
