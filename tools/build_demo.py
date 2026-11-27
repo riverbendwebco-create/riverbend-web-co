@@ -909,6 +909,11 @@ body.t-bl{background:#0a0a0a}
 .kc-sw{display:flex;align-items:center;gap:10px;margin:8px 0}.kc-sw .kc-nb{width:36px;height:36px;border-radius:11px}.kc-gl{font:600 1.15rem var(--df);color:var(--navy);min-width:130px;text-align:center}
 @media (max-width:900px){.kc-pickrow{grid-template-columns:1fr}.kc-req{position:static}.kc-mini{grid-template-columns:1fr}}
 @media (max-width:600px){.kc-opts{grid-template-columns:repeat(2,minmax(0,1fr))}.kc-opt{min-height:128px}.kc-req{padding:18px;border-radius:22px}.kc-req-h{font-size:1.6rem}}
+.kc-req .kc-tip{margin:18px 0 0;padding:16px;gap:14px;align-items:center;background:#fff;color:var(--navy);border:3px solid var(--sun);border-radius:18px}
+.kc-req .kc-tip span:not(.kc-cam){display:block;font:600 1.5rem/1.15 var(--df);color:var(--navy)}.kc-req .kc-tip small{display:block;margin-top:6px;font-size:.88rem;font-weight:700;color:#4b7490}
+.kc-req .kc-cam{width:50px;height:50px;border-radius:15px;background:var(--deep);color:#fff}.kc-req .kc-cam .kc-ic{width:28px;height:28px}
+.kc-req .kc-tip.warn{background:#FFE3E0;border-color:#E5584C}.kc-req .kc-tip.warn span:not(.kc-cam){color:#8A1C14}
+.kc-req .kc-go{margin-top:14px}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
