@@ -949,6 +949,35 @@ body.t-bl{background:#0a0a0a}
 .mk-kcwash .mo-ex span{color:#0E6BA8}
 .mk-kcwash .mp-fine{color:#2a5670}
 @media (max-width:700px){.mk-kcwash .mo-item{padding:22px 18px}.mk-kcwash .mp-cover::before,.mk-kcwash .mp-cover::after{display:none}}
+/* ===== Marketing: Bloom Tattoo theme ===== */
+.mk-bloom{font-family:'Work Sans',system-ui,sans-serif;background:#0a0a0a;color:#fff;font-weight:500}
+.mk-bloom .mp-bar{background:#000;border-bottom:3px solid #fff}
+.mk-bloom .mp-brand{color:#fff;font-family:'Bebas Neue','Arial Narrow',Impact,sans-serif;font-weight:400;font-size:1.4rem;letter-spacing:.06em;text-transform:uppercase}
+.mk-bloom .mp-back{color:#FF4B1F;font-weight:700}
+.mk-bloom .mp-cover{background:#000;border-bottom:6px solid #FF4B1F}
+.mk-bloom h1,.mk-bloom h3,.mk-bloom .mp-label,.mk-bloom .mo-price b{font-family:'Bebas Neue','Arial Narrow',Impact,sans-serif;font-weight:400;letter-spacing:.03em;text-transform:uppercase}
+.mk-bloom .mp-cover h1{color:#fff;line-height:1}
+.mk-bloom .mp-eyebrow{color:#FF4B1F;font-family:'Work Sans',system-ui,sans-serif;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.mk-bloom .mp-cover p{color:#d8d8d8}
+.mk-bloom .mp-meta dt{color:#9b9b9b}
+.mk-bloom .mp-label{border-top:3px solid #fff;color:#fff;font-size:1.9rem}
+.mk-bloom .mp-label span,.mk-bloom .mo-num{color:#FF4B1F;font-weight:700}
+.mk-bloom .mp-sub{color:#9b9b9b}
+.mk-bloom .mo-list{border-top:0;display:grid;gap:16px;margin-top:14px}
+.mk-bloom .mo-item{background:#151515;border:3px solid #2b2b2b;border-radius:0;padding:26px 28px;border-left:8px solid #FF4B1F}
+.mk-bloom .mo-body h3{color:#fff;font-size:clamp(2rem,4vw,3rem);line-height:1}
+.mk-bloom .mo-what,.mk-bloom .mo-more li{color:#d8d8d8}
+.mk-bloom .mo-more li::before{background:#FF4B1F;border-radius:0}
+.mk-bloom .mo-price b{color:#FF4B1F;font-size:3rem}
+.mk-bloom .mo-price span{color:#e8e8e8}
+.mk-bloom .mo-alt{background:#000;border:3px solid #fff;border-radius:0}
+.mk-bloom .mo-alt em{color:#FF4B1F}
+.mk-bloom .mo-alt strong{color:#fff}
+.mk-bloom .mo-ex{background:#000;border-left:5px solid #FF4B1F;border-radius:0}
+.mk-bloom .mo-ex span{color:#FF4B1F}
+.mk-bloom .mo-ex p{color:#e8e8e8}
+.mk-bloom .mp-fine{color:#9b9b9b}
+@media (max-width:700px){.mk-bloom .mo-item{padding:22px 18px}.mk-bloom .mp-brand{font-size:1.1rem;white-space:nowrap}.mk-bloom .mp-back{white-space:nowrap;font-size:.9rem}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}

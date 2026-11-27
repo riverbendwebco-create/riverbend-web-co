@@ -1196,6 +1196,35 @@ body.t-bl{background:#0a0a0a}
 .mk-kcwash .mo-ex span{color:#0E6BA8}
 .mk-kcwash .mp-fine{color:#2a5670}
 @media (max-width:700px){.mk-kcwash .mo-item{padding:22px 18px}.mk-kcwash .mp-cover::before,.mk-kcwash .mp-cover::after{display:none}}
+/* ===== Marketing: Bloom Tattoo theme ===== */
+.mk-bloom{font-family:'Work Sans',system-ui,sans-serif;background:#0a0a0a;color:#fff;font-weight:500}
+.mk-bloom .mp-bar{background:#000;border-bottom:3px solid #fff}
+.mk-bloom .mp-brand{color:#fff;font-family:'Bebas Neue','Arial Narrow',Impact,sans-serif;font-weight:400;font-size:1.4rem;letter-spacing:.06em;text-transform:uppercase}
+.mk-bloom .mp-back{color:#FF4B1F;font-weight:700}
+.mk-bloom .mp-cover{background:#000;border-bottom:6px solid #FF4B1F}
+.mk-bloom h1,.mk-bloom h3,.mk-bloom .mp-label,.mk-bloom .mo-price b{font-family:'Bebas Neue','Arial Narrow',Impact,sans-serif;font-weight:400;letter-spacing:.03em;text-transform:uppercase}
+.mk-bloom .mp-cover h1{color:#fff;line-height:1}
+.mk-bloom .mp-eyebrow{color:#FF4B1F;font-family:'Work Sans',system-ui,sans-serif;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.mk-bloom .mp-cover p{color:#d8d8d8}
+.mk-bloom .mp-meta dt{color:#9b9b9b}
+.mk-bloom .mp-label{border-top:3px solid #fff;color:#fff;font-size:1.9rem}
+.mk-bloom .mp-label span,.mk-bloom .mo-num{color:#FF4B1F;font-weight:700}
+.mk-bloom .mp-sub{color:#9b9b9b}
+.mk-bloom .mo-list{border-top:0;display:grid;gap:16px;margin-top:14px}
+.mk-bloom .mo-item{background:#151515;border:3px solid #2b2b2b;border-radius:0;padding:26px 28px;border-left:8px solid #FF4B1F}
+.mk-bloom .mo-body h3{color:#fff;font-size:clamp(2rem,4vw,3rem);line-height:1}
+.mk-bloom .mo-what,.mk-bloom .mo-more li{color:#d8d8d8}
+.mk-bloom .mo-more li::before{background:#FF4B1F;border-radius:0}
+.mk-bloom .mo-price b{color:#FF4B1F;font-size:3rem}
+.mk-bloom .mo-price span{color:#e8e8e8}
+.mk-bloom .mo-alt{background:#000;border:3px solid #fff;border-radius:0}
+.mk-bloom .mo-alt em{color:#FF4B1F}
+.mk-bloom .mo-alt strong{color:#fff}
+.mk-bloom .mo-ex{background:#000;border-left:5px solid #FF4B1F;border-radius:0}
+.mk-bloom .mo-ex span{color:#FF4B1F}
+.mk-bloom .mo-ex p{color:#e8e8e8}
+.mk-bloom .mp-fine{color:#9b9b9b}
+@media (max-width:700px){.mk-bloom .mo-item{padding:22px 18px}.mk-bloom .mp-brand{font-size:1.1rem;white-space:nowrap}.mk-bloom .mp-back{white-space:nowrap;font-size:.9rem}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
@@ -10580,12 +10609,16 @@ function bbMkArt(){
 }
 /* Service businesses (cleaning, tree care, auto, real estate...) get service wording instead of bar/restaurant wording */
 function mkIsService(C){ if(document.body.classList.contains('t-trade')) return true;
-  if(['realty','zephyr','mutual','homy','shadetree','abauto','cloud','kcwash'].indexOf(C.variant)>=0) return true;
+  if(['realty','zephyr','mutual','homy','shadetree','abauto','cloud','kcwash','bloom'].indexOf(C.variant)>=0) return true;
   return /clean|maid|tree|lawn|landscap|auto|motor|repair|mechanic|tire|realt|real estate|stone|granite|counter|window|door|glass|wheel|truck|salon|barber|plumb|electric|roof|hvac|heating|construct|contract|paint|pest|pool|moving|storage|vape|smoke|insur|law|dental|clinic|fitness|gym/i.test((C.name||'')+' '+(C.cat||'')); }
 function mkServiceItem(m,C){ const t={
   club:{name:'Email or text list for reminders and deals',what:'Customers sign up on your site, and we send your seasonal reminders, deals and news to them for you.',more:['A sign-up form on your website, plus a QR code for your counter, truck or invoices','We write and send your reminders, deals and news to everyone on the list','Text or email, whichever your customers prefer','Opt-in only, with an easy way to unsubscribe','A monthly count of how many people have joined'],idea:'A reminder text before your busy season, with a link to book or call.'},
   qr:{name:'QR yard signs and review cards',what:'Yard signs, cards or truck magnets with a QR code that opens your website, estimate request or Google reviews.',more:['Yard signs for job sites, so neighbors can scan and ask for an estimate','Small cards or stickers to leave with customers so they can scan and leave a Google review','Designed to match your logo and colors','The QR code opens your live website, so changes never mean reprinting','Print-ready files you can take to any printer'],idea:'Put a sign in the yard while you work. Neighbors scan it and ask for an estimate.'},
   order:{name:'Online booking or quote requests setup',what:'We connect online booking, appointment requests or a quote form to your website. One-time $150 setup fee.',more:['A booking or quote request form on your website, sent to you by email or text','Or we connect the scheduling app you already use','Customers can send photos of the job with their request','We set it up, test it and walk you through it'],idea:'Customers can request an estimate or book a time right from your website, any time of day.'}}[m.id];
+  if(C.variant==='bloom'){ const bl={
+    club:{name:'Text list for flash days and openings',what:'Clients sign up on your site, and we text them your flash days, last-minute openings and news for you.',more:['A sign-up form on your website, plus a QR code for your counter and cards','We write and send your flash days, openings and news to everyone on the list','Text or email, whichever your clients prefer','Opt-in only, with an easy way to unsubscribe','A monthly count of how many people have joined'],idea:'A text when a spot opens up this week, with a link to book.'},
+    qr:{name:'QR aftercare cards',what:'Small cards you hand out after every tattoo. The QR code opens an aftercare page on your website with your own instructions, and can link to your Google reviews.',more:['An aftercare page on your website, written with your instructions','Cards designed to match your shop, with a QR code on each one','The QR code opens your live page, so changes never mean reprinting','Add a second QR code or link for leaving a Google review','Print-ready files you can take to any printer'],idea:'Hand one to every client after their session. They scan it for aftercare and leave a review when they are happy.'}}[m.id];
+    if(bl) return Object.assign({},m,{name:bl.name,what:bl.what,more:bl.more,idea:()=>bl.idea}); }
   if(!t) return m; return Object.assign({},m,{name:t.name,what:t.what,more:t.more,idea:()=>t.idea}); }
 function marketing(C){
   const money=n=>'$'+n.toLocaleString('en-US');

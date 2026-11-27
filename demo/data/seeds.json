@@ -7608,5 +7608,15 @@
         "order"
       ]
     }
+  },
+  {
+    "key": "bloom-layout-2",
+    "slug": "bloom-tattoo-74aa0",
+    "patch": true,
+    "data": {
+      "mkHide": [
+        "order"
+      ]
+    }
   }
 ]
