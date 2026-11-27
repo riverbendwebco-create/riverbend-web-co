@@ -2839,7 +2839,7 @@ function elawn(C){
   /* nav */
   const nav=h('header',{class:'el-nav'},h('div',{class:'el-navin'},
     h('a',{class:'el-brand',href:'#',onclick:e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}); }},mark('el-logo'),h('b',null,name)),
-    h('nav',{class:'el-links'},[['Seasons','el-stage'],['Services','el-svc'],['Quote','el-quote'],['Contact','el-visit']].map(([t,id])=>h('button',{type:'button',onclick:go(id)},t))),
+    h('nav',{class:'el-links'},[['Seasons','el-stage'],['Services','el-svc'],['Get a bid','el-quote'],['Contact','el-visit']].map(([t,id])=>h('button',{type:'button',onclick:go(id)},t))),
     callBtn('hot sm','Call now')));
 
   /* scene: rounded illustrated window */
@@ -2878,8 +2878,31 @@ function elawn(C){
       h('span',{class:'el-eye'},'Lawn care, trees and snow removal'),
       h('h1',null,heads[0],heads[1]?[h('br'),h('span',null,heads[1])]:null),
       h('p',null,'Owner-operated in Dubuque. Fertilizing, weed control and mowing when it is green. Snow and ice management when it is not.'),
-      h('div',{class:'el-cta'},callBtn('hot'),h('button',{type:'button',class:'el-btn soft',onclick:go('el-quote')},'Get a quote'))),
+      h('div',{class:'el-cta'},callBtn('hot'),h('button',{type:'button',class:'el-btn soft',onclick:go('el-quote')},'Get a bid'))),
     frame)));
+
+  /* weather: National Weather Service forecast for Dubuque */
+  const WI={sun:'M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5',cloud:'M7 18a4 4 0 010-8 5 5 0 019.6 1.2A3.5 3.5 0 0117 18z',part:'M7 18a4 4 0 010-8 5 5 0 019.6 1.2A3.5 3.5 0 0117 18zM6 7L5 5M3 10H1',snow:'M12 2v20M3 7l18 10M21 7L3 17',rain:'M7 15a4 4 0 010-7 5 5 0 019.6 1A3.5 3.5 0 0117 15zM8 18l-1 3M12 18l-1 3M16 18l-1 3',storm:'M7 15a4 4 0 010-7 5 5 0 019.6 1A3.5 3.5 0 0117 15zM12 14l-3 4h4l-2 4'};
+  const wxCond=t=>{ t=(t||'').toLowerCase(); if(/snow|flurr|blizzard|wintry|sleet|freezing|ice pellet/.test(t)) return 'snow'; if(/thunder/.test(t)) return 'storm'; if(/rain|shower|drizzle/.test(t)) return 'rain'; if(/partly|mostly sunny|mostly clear/.test(t)) return 'part'; if(/cloud|overcast|fog/.test(t)) return 'cloud'; return 'sun'; };
+  const wxTitle=h('h3',{class:'el-wxt'},'Be ready for the next storm'), wxSub=h('p',{class:'el-wxs'},'Call now and be prepared. '+name+' handles snow and ice management for parking lots and sidewalks.'), wxDays=h('div',{class:'el-wxd'}), wxSrc=h('p',{class:'el-fine el-wxf'},'');
+  const wxBar=h('div',{class:'el-wxwrap'},wrap(h('div',{class:'el-wx'},h('div',{class:'el-wxl'},h('span',{class:'el-eye'},'Dubuque weather this week'),wxTitle,wxSub,h('div',{class:'el-cta'},callBtn('hot','Call now'))),h('div',{class:'el-wxr'},wxDays,wxSrc))));
+  function wxLoad(){ if(typeof fetch!=='function') return;
+    fetch('https://api.weather.gov/points/42.5006,-90.6646').then(r=>r.ok?r.json():Promise.reject()).then(j=>fetch(j.properties.forecast)).then(r=>r.ok?r.json():Promise.reject()).then(j=>{
+      const per=(j.properties&&j.properties.periods)||[]; const days=[], idx={};
+      per.forEach(p=>{ const k=String(p.startTime).slice(0,10); let d=idx[k]; if(!d){ if(days.length>=7) return; d=idx[k]={k,hi:null,lo:null,text:'',cond:''}; days.push(d); }
+        if(p.isDaytime){ d.hi=p.temperature; d.text=p.shortForecast; d.cond=wxCond(p.shortForecast); } else { d.lo=p.temperature; if(!d.text){ d.text=p.shortForecast; d.cond=wxCond(p.shortForecast); } } });
+      if(!days.length) return;
+      const today=new Date().toISOString().slice(0,10), dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const lab=(d,i)=>i===0?'Today':dn[new Date(d.k+'T12:00:00').getDay()];
+      wxDays.replaceChildren(...days.map((d,i)=>h('div',{class:'el-wd'+(d.cond==='snow'?' sn':''),title:d.text},h('b',null,lab(d,i)),svgI(WI[d.cond]||WI.sun,26),h('span',null,(d.hi!=null?d.hi+'°':'--')+(d.lo!=null?' / '+d.lo+'°':'')))));
+      const sd=days.findIndex(d=>d.cond==='snow'), cold=days.some(d=>d.lo!=null&&d.lo<=32), warm=new Date().getMonth()>=3&&new Date().getMonth()<=9;
+      if(sd>=0){ const w=sd===0?'today':sd===1?'tomorrow':'on '+['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date(days[sd].k+'T12:00:00').getDay()]; wxTitle.textContent='Snow or ice in the forecast '+w; wxSub.textContent='Call now and be prepared. '+name+' clears parking lots and sidewalks so your property stays open and safe.'; }
+      else if(cold&&!warm){ wxTitle.textContent='Freezing nights this week'; wxSub.textContent='Ice can form on lots and walkways. Call now and be prepared with '+name+'.'; }
+      else if(warm){ wxTitle.textContent='A good week for your lawn'; wxSub.textContent='Call now to get your lawn and trees on the schedule with '+name+'.'; }
+      else { wxTitle.textContent='No snow in the forecast this week'; wxSub.textContent='Call now to line up service before the next storm.'; }
+      wxSrc.textContent='Forecast for Dubuque, Iowa from the National Weather Service. It updates automatically.';
+    }).catch(()=>{}); }
+  wxLoad();
 
   /* month slider */
   let cur=new Date().getMonth(), timer=0, playing=false;
@@ -2902,23 +2925,31 @@ function elawn(C){
   const panel=h('div',{class:'el-panel'},wrap(h('div',{class:'el-pin'},
     h('div',{class:'el-pl'},h('span',{class:'el-eye'},'Drag through the year'),monthTitle,monthSay,chips,h('p',{class:'el-fine'},'Typical Iowa timing. The crew sets the real schedule with you.')),
     h('div',{class:'el-pr'},range,ticks,playBtn))));
-  stage.append(hero,panel);
+  stage.append(wxBar,hero,panel);
 
   /* services: floating bubbles */
   const blobs=h('div',{class:'el-blobs'},SV.map((v,i)=>{ const c=h('div',{class:'el-bl rv b'+(i%4),style:'--d:'+((i%4)*.08)+'s'},h('span',{class:'el-ib'},svgI(v.p,30)),h('h3',null,v.t),h('p',null,v.d),h('span',{class:'el-tag'},v.s)); cards.push(c); return c; }));
   const svc=h('section',{class:'el-sec el-svcsec',id:'el-svc'},wrap(head('Services','Everything the property needs, all year.','The bubbles light up for the month you pick above.'),blobs));
 
-  /* quote: chat style */
-  const PR=['A business','An HOA or community','A home'], picked=new Set(); let prop='';
-  const prRow=h('div',{class:'el-opts'},PR.map(p=>h('button',{type:'button',class:'el-opt',onclick:()=>{ prop=prop===p?'':p; prRow.childNodes.forEach(b=>b.classList.toggle('on',b.textContent===prop)); upd(); }},p)));
+  /* how it works */
+  const HW=[['Tell us about the property','Use the form below or just call. Say what you manage and what you need.'],['Get a bid','Expert Lawns comes back with a bid for the property.'],['Relax all year','Lawn care when it is green, snow and ice management when it is not.']];
+  const how=h('section',{class:'el-sec el-how',id:'el-how'},wrap(head('How it works','Three easy steps.'),
+    h('div',{class:'el-steps'},HW.map(([t,p],i)=>h('div',{class:'el-step rv',style:'--d:'+(i*.12)+'s'},h('span',{class:'el-sn'},String(i+1)),h('b',null,t),h('p',null,p))))));
+
+  /* quote: chat style bid request */
+  const PR=['A business','An HOA or community','A home'], SZ=['Small','Medium','Large','Not sure'], TM=['Season contract','One-time job'], picked=new Set(); let prop='', size='', term='';
+  const single=(arr,get,setv)=>{ const row=h('div',{class:'el-opts'},arr.map(p=>h('button',{type:'button',class:'el-opt',onclick:()=>{ setv(get()===p?'':p); row.childNodes.forEach(b=>b.classList.toggle('on',b.textContent===get())); upd(); }},p))); return row; };
+  const prRow=single(PR,()=>prop,v=>{prop=v;}), szRow=single(SZ,()=>size,v=>{size=v;}), tmRow=single(TM,()=>term,v=>{term=v;});
   const svRow=h('div',{class:'el-opts'},SV.map(v=>h('button',{type:'button',class:'el-opt',onclick:e=>{ const b=e.currentTarget; picked.has(v.t)?picked.delete(v.t):picked.add(v.t); b.classList.toggle('on'); upd(); }},v.t)));
+  const note=h('input',{type:'text',class:'el-in',placeholder:'Address or anything else we should know (optional)',maxlength:'120','aria-label':'Address or notes',oninput:()=>upd()});
   const msgEl=h('p',{class:'el-msg'});
   const smsBtn=h('a',{class:'el-btn hot big',href:smsHref('x')||'#'},'Text my request');
-  const msg=()=>{ const l=[...picked]; const what=l.length?l.join(', ').replace(/, ([^,]*)$/,l.length>1?' and $1':', $1'):'lawn care and snow removal'; return 'Hi '+name+', I manage '+(prop?prop.toLowerCase():'a property')+' in Dubuque and would like a quote for '+what+'. Thank you!'; };
+  const msg=()=>{ const l=[...picked]; const what=l.length?l.join(', ').replace(/, ([^,]*)$/,l.length>1?' and $1':', $1'):'lawn care and snow removal'; const bits=[term?term.toLowerCase():'',size&&size!=='Not sure'?size.toLowerCase()+' property':''].filter(Boolean); const n=(note.value||'').trim();
+    return 'Hi '+name+', I manage '+(prop?prop.toLowerCase():'a property')+' in Dubuque and would like a bid for '+what+(bits.length?' ('+bits.join(', ')+')':'')+'.'+(n?' '+n+'.':'')+' Thank you!'; };
   function upd(){ msgEl.textContent=msg(); smsBtn.href=smsHref(msg())||'#'; }
-  const quote=h('section',{class:'el-quotesec',id:'el-quote'},wave('#0F4A2B'),h('div',{class:'el-qin'},wrap(head('Quote','Tell us what you manage.','Pick what fits and send it as a text. Nothing is sent until you tap the button.'),
+  const quote=h('section',{class:'el-quotesec',id:'el-quote'},wave('#0F4A2B'),h('div',{class:'el-qin'},wrap(head('Request a bid','Tell us what you manage.','Pick what fits and send it as a text. Nothing is sent until you tap the button.'),
     h('div',{class:'el-q rv'},
-      h('div',{class:'el-chat'},h('p',{class:'el-say'},'What kind of property do you look after?'),prRow,h('p',{class:'el-say'},'And what do you need?'),svRow),
+      h('div',{class:'el-chat'},h('p',{class:'el-say'},'What kind of property do you look after?'),prRow,h('p',{class:'el-say'},'What do you need?'),svRow,h('p',{class:'el-say'},'Season contract or a one-time job?'),tmRow,h('p',{class:'el-say'},'About how big is the property?'),szRow,h('p',{class:'el-say'},'Anything else?'),note),
       h('div',{class:'el-phonewrap'},h('div',{class:'el-phone'},h('div',{class:'el-ph-h'},mark('el-logo sm'),h('b',null,name)),h('div',{class:'el-ph-b'},msgEl)),smsBtn,callBtn('soft','Or call '+(C.phoneTxt||'')))))));
   upd();
 
@@ -2935,7 +2966,7 @@ function elawn(C){
       C.hasHours?h('div',{class:'el-box el-hrs rv'},h('span',{class:'el-lbl'},'Hours'),hoursRows(C),h('p',{class:'el-fine'},'Hours are as listed online. Call to confirm.')):null)));
   const foot=h('footer',{class:'el-foot'},wrap(mark('el-logo sm'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
   set(cur);
-  return h('div',{class:'demo el on'},nav,stage,wave('#F3FBF1',false),svc,quote,about,visit,foot);
+  return h('div',{class:'demo el on'},nav,stage,wave('#F3FBF1',false),svc,how,quote,about,visit,foot);
 }
 
 function bloomTattoo(C){
