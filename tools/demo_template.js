@@ -2697,18 +2697,29 @@ function kcWash(C){
   const meter=h('div',{class:'kc-meter',role:'progressbar','aria-label':'Clean','aria-valuemin':'0','aria-valuemax':'100','aria-valuenow':'0'},fill);
   const stage=h('div',{class:'kc-stage'},clean,dirty,spray,h('span',{class:'kc-hint'},'Press and drag'));
   const MSGS=[[0,'Press and drag to blast the grime away.'],[1,'That is the stuff. Keep going!'],[30,'Look at that clean line!'],[60,'Over halfway. Satisfying, right?'],[85,'Almost sparkling...'],[100,'Squeaky clean! Added to your estimate list.']];
-  const planT=h('p',{class:'kc-plan-t'}), planB=h('button',{type:'button',class:'kc-btn line sm'});
-  const listEl=h('div',{class:'kc-list'}), estHint=h('p',{class:'kc-hint2'},'When your text opens, add photos and measurements if you have them. They help the crew quote faster, but they are not required.'), estText=h('a',{class:'kc-btn solid',href:'#',onclick:e=>{ if(!sel.length&&!extras.length){ e.preventDefault(); estHint.textContent='Pick at least one thing above first.'; estHint.classList.add('warn'); } }},'Done: text my request'), estCall=callBtn('line','Or call '+C.phoneTxt);
-  const estMsg=()=>{ const a=sel.map(id=>KC_SURF.find(s=>s.id===id).noun), e=extras.map(id=>KC_EXTRA.find(z=>z[0]===id)[1].toLowerCase()); let m='Hi Key City Powerwash, I would like a free estimate'; if(a.length) m+=' for my '+a.join(', ')+(e.length?', plus '+e.join(', '):''); else if(e.length) m+=' for '+e.join(', '); return m+'. (Add photos and measurements here if you have them.) Thank you!'; };
-  const picks=KC_SURF.map((s,i)=>h('button',{type:'button',class:'kc-pick'+(i===0?' on':''),'aria-pressed':i===0?'true':'false',onclick:()=>{ if(auto) return; cur=i; reset(); sync(); }},h('span',{class:'kc-pi'},kcIcon(s.ic)),h('b',null,s.label),h('i',{class:'kc-ck','aria-hidden':'true'},'✓')));
-  const xBoxes=KC_EXTRA.map(([id,l])=>h('label',{class:'kc-xt'},h('input',{type:'checkbox',onchange:e=>{ extras=e.target.checked?extras.concat(id):extras.filter(v=>v!==id); sync(); }}),h('span',null,l)));
+  const KC_DESC={driveway:'Driveways, sidewalks, patios',deck:'Cleaning, staining, sealing',siding:'Soft wash for mold and algae',roof:'Moss, algae and streaks',gutter:'Cleaned out and flowing',barn:'Barns and farm buildings',leaf:'Fall yard cleanup',seal:'Walks, patios and decks',repair:'Small fixes and upkeep'};
+  const KC_XI={leaf:'M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19L14 10',seal:'M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z',repair:'M14 7a4 4 0 00-5 5L3 18l3 3 6-6a4 4 0 005-5l-3 3-3-3z'};
+  const OPT=[...KC_SURF.map(s=>({id:s.id,label:s.label,noun:s.noun,ic:s.ic,surf:1})),...KC_EXTRA.map(([id,l])=>({id,label:l,noun:l.toLowerCase(),ic:KC_XI[id]}))];
+  const O=id=>OPT.find(o=>o.id===id);
+  const TIP='Have photos or measurements? Add them when your text opens. They help the crew quote faster, but they are totally optional.';
+  const cnt=h('b',{class:'kc-cnt'},'0'), listEl=h('div',{class:'kc-list'}), tipT=h('span',null,TIP);
+  const tip=h('p',{class:'kc-tip'},h('span',{class:'kc-cam'},kcIcon('M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 100-7 3.5 3.5 0 000 7z')),tipT);
+  let optsEl;
+  const estText=h('a',{class:'kc-go',href:'#',onclick:e=>{ if(!sel.length){ e.preventDefault(); tipT.textContent='Tap at least one thing you need washed first.'; tip.classList.add('warn'); optsEl.classList.remove('shake'); void optsEl.offsetWidth; optsEl.classList.add('shake'); } }},'Done: text my request',ico('arrow',20,'')), estCall=callBtn('kc-callw','Or call '+C.phoneTxt);
+  const estMsg=()=>{ const a=sel.filter(id=>O(id).surf).map(id=>O(id).noun), e=sel.filter(id=>!O(id).surf).map(id=>O(id).noun); let m='Hi Key City Powerwash, I would like a free estimate'; if(a.length) m+=' for my '+a.join(', ')+(e.length?', plus '+e.join(', '):''); else if(e.length) m+=' for '+e.join(', '); return m+'. (Add photos and measurements here if you have them.) Thank you!'; };
+  const opts=OPT.map(o=>h('button',{type:'button',class:'kc-opt','aria-pressed':'false',onclick:()=>{ if(auto) return; toggle(o.id); }},h('span',{class:'kc-oi'},kcIcon(o.ic)),h('span',{class:'kc-ot'},h('b',null,o.label),h('i',null,KC_DESC[o.id])),h('span',{class:'kc-oc','aria-hidden':'true'},kcSvg('0 0 24 24','<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>','kc-ckm'))));
+  optsEl=h('div',{class:'kc-opts'},opts);
+  const gLabel=h('b',{class:'kc-gl'}), gSvc=h('p',{class:'kc-plan-t'});
+  const req=h('aside',{class:'kc-req'},h('div',{class:'kc-req-h'},h('span',null,'Your request'),cnt),listEl,estText,estCall,tip);
+  function toggle(id){ const on=sel.includes(id); sel=on?sel.filter(v=>v!==id):sel.concat(id); const i=KC_SURF.findIndex(s=>s.id===id); if(!on&&i>=0&&i!==cur){ cur=i; reset(); } sync(); }
   function sync(){
-    picks.forEach((b,i)=>{ b.classList.toggle('on',i===cur); b.setAttribute('aria-pressed',i===cur?'true':'false'); b.classList.toggle('in',sel.includes(KC_SURF[i].id)); });
-    planT.textContent=S().plan; const inList=sel.includes(S().id); planB.textContent=inList?'Added to estimate. Remove':'Add '+S().label.toLowerCase()+' to my estimate'; planB.classList.toggle('added',inList);
-    listEl.replaceChildren(...(sel.length||extras.length?[...sel.map(id=>h('span',{class:'kc-tag'},KC_SURF.find(s=>s.id===id).label,h('button',{type:'button','aria-label':'Remove',onclick:()=>{ sel=sel.filter(v=>v!==id); sync(); }},'×'))),...extras.map(id=>h('span',{class:'kc-tag x'},KC_EXTRA.find(z=>z[0]===id)[1],h('button',{type:'button','aria-label':'Remove',onclick:()=>{ extras=extras.filter(v=>v!==id); xBoxes.forEach((l,k)=>{ l.firstChild.checked=extras.includes(KC_EXTRA[k][0]); }); sync(); }},'×')))]:[h('p',{class:'kc-empty'},'Nothing yet. Pick something above to get started.')]));
-    const hr=smsHref(estMsg()); if(hr) estText.setAttribute('href',hr); if(sel.length||extras.length){ estHint.classList.remove('warn'); estHint.textContent='When your text opens, add photos and measurements if you have them. They help the crew quote faster, but they are not required.'; }
+    opts.forEach((b,i)=>{ const on=sel.includes(OPT[i].id); b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); });
+    cnt.textContent=sel.length; cnt.classList.remove('bump'); void cnt.offsetWidth; cnt.classList.add('bump'); req.classList.toggle('has',sel.length>0);
+    listEl.replaceChildren(...(sel.length?sel.map(id=>h('span',{class:'kc-tag'},O(id).label,h('button',{type:'button','aria-label':'Remove '+O(id).label,onclick:()=>toggle(id)},'\u00D7'))):[h('p',{class:'kc-empty'},'Tap what needs washing and it lands here.')]));
+    const hr=smsHref(estMsg()); if(hr) estText.setAttribute('href',hr);
+    if(sel.length){ tip.classList.remove('warn'); tipT.textContent=TIP; }
+    gLabel.textContent=S().label; gSvc.textContent=S().plan;
   }
-  planB.addEventListener('click',()=>{ const id=S().id; sel=sel.includes(id)?sel.filter(v=>v!==id):sel.concat(id); sync(); });
   function paint(){ kcPaintClean(S().id,cc,W,H); kcPaintDirty(S().id,dirty,dc,W,H,clean); }
   function setPct(p){ const v=Math.min(100,Math.round(p/92*100)); pctT.textContent=v+'%'; fill.style.width=v+'%'; meter.setAttribute('aria-valuenow',v); let m=MSGS[0][1]; MSGS.forEach(([t,s])=>{ if(v>=t&&t>0) m=s; }); msg.textContent=m;
     if(v>=100&&!done){ done=true; stage.classList.add('done'); dirty.style.opacity='0'; if(!sel.includes(S().id)) sel.push(S().id); sync(); } }
@@ -2728,18 +2739,14 @@ function kcWash(C){
   spray.addEventListener('pointerup',stop); spray.addEventListener('pointercancel',stop); spray.addEventListener('pointerleave',()=>{ stop(); pos=null; kick(); });
   const autoBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:()=>{ if(auto) return; auto=true; stage.classList.add('used'); pressing=true; const pts=[]; for(let r=0,y=40;y<H+30;y+=62,r++){ for(let xx=0;xx<=W;xx+=30) pts.push({x:r%2?W-xx:xx,y:y+Math.sin(xx/70)*10}); } let i=0; const step=()=>{ for(let k=0;k<3&&i<pts.length;k++,i++){ pos=pts[i]; washTo(pos.x,pos.y); } if(i<pts.length) requestAnimationFrame(step); else { pressing=false; last=null; pos=null; auto=false; calc(); } }; step(); }},'Auto-wash for me');
   const resetBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:reset},'Get it dirty again');
+  const step=d=>()=>{ if(auto) return; cur=(cur+d+KC_SURF.length)%KC_SURF.length; reset(); sync(); };
+  const mini=h('div',{class:'kc-mini rv'},h('div',{class:'kc-mini-s'},stage),h('div',{class:'kc-mini-i'},h('span',{class:'kc-lbl2'},'Just for fun'),h('h3',null,'Try the power washer'),h('p',{class:'kc-plan-t'},'Wash the surface clean. Finish it and we add it to your request.'),
+    h('div',{class:'kc-sw'},h('button',{type:'button',class:'kc-nb','aria-label':'Previous surface',onclick:step(-1)},ico('arrow',16,'')),gLabel,h('button',{type:'button',class:'kc-nb nxt','aria-label':'Next surface',onclick:step(1)},ico('arrow',16,''))),gSvc,
+    h('div',{class:'kc-bar'},h('div',{class:'kc-bar-l'},h('span',null,'Clean'),pctT),meter,msg),h('div',{class:'kc-game-b'},autoBtn,resetBtn)));
   paint(); sync();
   const washSec=h('section',{class:'kc-sec kc-washsec',id:'kc-wash'},wrap(
-    head('Build your request','What needs washing?','Pick what you need cleaned, give it a power wash to see the difference, and your estimate request writes itself.'),
-    h('div',{class:'kc-bld rv'},
-      h('div',{class:'kc-bld-l'},
-        h('div',{class:'kc-picks'},picks),
-        stage,
-        h('div',{class:'kc-bar'},h('div',{class:'kc-bar-l'},h('span',null,'Clean'),pctT),meter,msg),
-        h('div',{class:'kc-game-b'},autoBtn,resetBtn)),
-      h('aside',{class:'kc-bld-r'},
-        h('div',{class:'kc-plan'},h('span',{class:'kc-lbl2'},'Our plan for this'),planT,planB),
-        h('div',{class:'kc-est'},h('span',{class:'kc-lbl2'},'Your estimate request'),listEl,h('span',{class:'kc-lbl2 sm'},'Extras'),h('div',{class:'kc-xts'},xBoxes),h('div',{class:'kc-cta col'},estText,estCall),estHint)))),
+    head('Build your request','What needs washing?','Tap everything you need cleaned. Your text to the crew writes itself.'),
+    h('div',{class:'kc-pickrow rv'},optsEl,req),mini),
     wave('#fff'));
 
   /* work gallery: real photos */
