@@ -8716,7 +8716,7 @@ function elawn(C){
   /* nav */
   const nav=h('header',{class:'el-nav'},h('div',{class:'el-navin'},
     h('a',{class:'el-brand',href:'#',onclick:e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}); }},mark('el-logo'),h('b',null,name)),
-    h('nav',{class:'el-links'},[['Seasons','el-stage'],['Services','el-svc'],['Get a bid','el-quote'],['Contact','el-visit']].map(([t,id])=>h('button',{type:'button',onclick:go(id)},t))),
+    h('nav',{class:'el-links'},[['Seasons','el-stage'],['Get a bid','el-quote'],['Services','el-svc'],['Contact','el-visit']].map(([t,id])=>h('button',{type:'button',onclick:go(id)},t))),
     callBtn('hot sm','Call now')));
 
   /* scene: rounded illustrated window */
@@ -8843,7 +8843,7 @@ function elawn(C){
       C.hasHours?h('div',{class:'el-box el-hrs rv'},h('span',{class:'el-lbl'},'Hours'),hoursRows(C),h('p',{class:'el-fine'},'Hours are as listed online. Call to confirm.')):null)));
   const foot=h('footer',{class:'el-foot'},wrap(mark('el-logo sm'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
   set(cur);
-  return h('div',{class:'demo el on'},nav,stage,wave('#F3FBF1',false),svc,how,quote,about,visit,foot);
+  return h('div',{class:'demo el on'},nav,stage,wave('#F3FBF1',false),quote,svc,how,about,visit,foot);
 }
 
 function bloomTattoo(C){
