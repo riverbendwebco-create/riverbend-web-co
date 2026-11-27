@@ -1065,7 +1065,7 @@ body.t-bl{background:#0a0a0a}
 .el-q{display:grid;grid-template-columns:1.2fr .8fr;gap:34px;align-items:start}
 .el-say{display:inline-block;background:rgba(255,255,255,.14);border-radius:26px 26px 26px 6px;padding:14px 20px;font-weight:700;margin:0 0 14px}.el-chat .el-opts+.el-say{margin-top:26px}
 .el-opts{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}.el-opt{background:transparent;border:2px solid rgba(255,255,255,.4);color:#fff;font:700 .95rem var(--bf);padding:12px 18px;border-radius:999px;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .15s}.el-opt:hover{border-color:var(--lime);transform:translateY(-2px)}.el-opt.on{background:var(--lime);border-color:var(--lime);color:var(--gd)}
-.el-phonewrap{display:flex;flex-direction:column;gap:16px;max-width:360px;margin:0 auto;width:100%}
+.el-phonewrap{display:flex;flex-direction:column;gap:16px;max-width:360px;margin:0 auto;width:100%;position:sticky;top:96px}
 .el-phone{background:#fff;border:10px solid #0A3520;border-radius:46px;overflow:hidden;box-shadow:0 22px 44px rgba(0,0,0,.3)}.el-ph-h{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#EEF7EA;color:var(--gd)}.el-ph-h b{font:800 1rem var(--hf)}
 .el-ph-b{padding:22px 16px;min-height:220px;display:flex;align-items:flex-end;justify-content:flex-end;background:#fff}
 .el-msg{margin:0;background:linear-gradient(135deg,#2F8F46,#1E7A46);color:#fff;font-weight:600;padding:16px 18px;border-radius:26px 26px 6px 26px;max-width:92%}
@@ -1083,6 +1083,17 @@ body.t-bl{background:#0a0a0a}
 @media (max-width:900px){.el-hgrid,.el-pin,.el-q,.el-2c{grid-template-columns:1fr}.el-links{display:none}.el-nav .el-btn{margin-left:auto}.el-pin{padding:26px 22px;border-radius:36px}.el-ticks{grid-template-columns:repeat(6,1fr)}.el-frame{max-width:430px}.el-fb{width:70px;height:70px;font-size:.66rem}.el-fb.b1{left:-6px}.el-fb.b2{right:-6px}.el-hero{padding-top:20px}.el-bl.b1,.el-bl.b3,.el-ab.b1,.el-ab.b3{margin-top:0}.el-box{padding:26px 22px;border-radius:38px}.el-qin{border-radius:0 0 44px 44px}}
 @media (max-width:480px){.el-brand b{font-size:1.02rem}.el-btn.sm{padding:10px 14px}.el-bl,.el-ab{width:100%}}
 @media (prefers-reduced-motion:reduce){.el-scene .mower,.el-scene .plow,.el-fx i,.cloud,.rays,.spin,.bob,.tree,.el-blob,.el-fb,.el-bl.hot::after,.clip circle,.spray circle,.beacon{animation:none!important}.el-scene .mower{transform:translate(240px,522px)}.el-scene .plow{transform:translate(220px,536px)}}
+.el-wxwrap{padding-top:18px;position:relative;z-index:3}.el-wx{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:center;background:#fff;border-radius:40px;padding:26px 32px;box-shadow:0 18px 44px rgba(15,74,43,.16)}
+.el-wxt{font-size:clamp(1.5rem,3vw,2.1rem)}.el-wxs{margin:8px 0 0;color:#3a5646}.el-wx .el-cta{margin-top:16px}
+.el-wxd{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;min-height:104px}.el-wd{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:#EEF7EA;border-radius:999px;color:var(--gd);text-align:center}
+.el-wd b{font:700 .8rem var(--bf)}.el-wd span{font:700 .72rem var(--bf);color:#3a5646}.el-wd.sn{background:#CFE8F7;box-shadow:inset 0 0 0 3px #8FC6E6}
+.el-wxf{text-align:center;margin-top:12px}
+.el-how{padding-bottom:30px}.el-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:24px}.el-step{width:280px;text-align:center;padding:10px 20px}
+.el-sn{display:grid;place-items:center;width:78px;height:78px;margin:0 auto 16px;border-radius:50%;background:var(--lime);color:var(--gd);font:800 2rem var(--hf);box-shadow:0 8px 0 #8FBF3A}
+.el-step b{display:block;font:800 1.3rem var(--hf);color:var(--gd);margin-bottom:8px}.el-step p{margin:0;color:#3a5646}
+.el-in{width:100%;max-width:560px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.4);border-radius:999px;color:#fff;font:600 1rem var(--bf);padding:14px 20px}.el-in::placeholder{color:#B9D6C2}.el-in:focus{outline:0;border-color:var(--lime)}
+.el-chat .el-opts+.el-say{margin-top:22px}
+@media (max-width:900px){.el-wx{grid-template-columns:1fr;padding:22px 20px;border-radius:32px}.el-wxd{grid-template-columns:repeat(4,1fr)}.el-wd{border-radius:28px}}
 /* marketing theme */
 .mk-elawn{font-family:'DM Sans',system-ui,sans-serif;background:#F3FBF1;color:#12281C}
 .mk-elawn .mp-bar{background:#fff;border-bottom:0;box-shadow:0 6px 20px rgba(15,74,43,.1)}.mk-elawn .mp-brand{color:#0F4A2B;font-family:'Fraunces',Georgia,serif;font-weight:800}.mk-elawn .mp-back{color:#1E7A46;font-weight:800}
@@ -5571,7 +5582,7 @@ html = f'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'; media-src https://assets.mixkit.co; frame-src https://www.google.com https://maps.google.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://api.weather.gov; form-action 'none'; base-uri 'none'; object-src 'none'; media-src https://assets.mixkit.co; frame-src https://www.google.com https://maps.google.com">
 <title>Website Preview | Riverbend Web Co.</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
