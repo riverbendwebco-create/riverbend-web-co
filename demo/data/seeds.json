@@ -7598,5 +7598,15 @@
     "data": {
       "tagline": "Family-owned pressure washing in Dubuque since 1996. We clean homes, businesses and farms."
     }
+  },
+  {
+    "key": "keycity-layout-3",
+    "slug": "hey-city-power-wash-and-maintenance-d6d5f",
+    "patch": true,
+    "data": {
+      "mkHide": [
+        "order"
+      ]
+    }
   }
 ]

@@ -914,6 +914,41 @@ body.t-bl{background:#0a0a0a}
 .kc-req .kc-cam{width:50px;height:50px;border-radius:15px;background:var(--deep);color:#fff}.kc-req .kc-cam .kc-ic{width:28px;height:28px}
 .kc-req .kc-tip.warn{background:#FFE3E0;border-color:#E5584C}.kc-req .kc-tip.warn span:not(.kc-cam){color:#8A1C14}
 .kc-req .kc-go{margin-top:14px}
+/* ===== Marketing: upfront price callout + Key City theme ===== */
+.mo-alt{margin-top:12px;padding:10px 14px;border:2px solid #0F172A;border-radius:6px;background:#F1F5F9;text-align:left;white-space:normal;max-width:290px;margin-left:auto}
+.mo-alt em{display:block;font-style:normal;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#475569}
+.mo-alt strong{display:block;font-size:1.15rem;font-weight:800;color:#0F172A;line-height:1.3;margin-top:3px}
+.mo-price span{font-size:1rem;font-weight:600;color:#334155}
+@media (max-width:700px){.mo-alt{margin-left:0;max-width:none}}
+.mk-kcwash{font-family:'Nunito',system-ui,sans-serif;background:#F3FBFF;color:#12384F;font-weight:600}
+.mk-kcwash .mp-bar{background:#fff;border-bottom:2px solid #A9DDF5}
+.mk-kcwash .mp-brand,.mk-kcwash h1,.mk-kcwash h3,.mk-kcwash .mp-label,.mk-kcwash .mo-price b{font-family:'Fredoka','Nunito',system-ui,sans-serif}
+.mk-kcwash .mp-brand{color:#0B3A57}
+.mk-kcwash .mp-back{color:#0E6BA8;font-weight:800}
+.mk-kcwash .mp-cover{background:linear-gradient(160deg,#0E6BA8 0%,#1C8FCB 55%,#3EB6EA 100%);border-bottom:6px solid #A9DDF5;position:relative;overflow:hidden}
+.mk-kcwash .mp-cover::before,.mk-kcwash .mp-cover::after{content:"";position:absolute;border-radius:50%;border:3px solid rgba(255,255,255,.35);pointer-events:none}
+.mk-kcwash .mp-cover::before{width:90px;height:90px;right:8%;top:22%}
+.mk-kcwash .mp-cover::after{width:46px;height:46px;right:18%;bottom:14%}
+.mk-kcwash .mp-cover .mp-in{position:relative;z-index:1}
+.mk-kcwash .mp-eyebrow{color:#CDEBFA;font-family:'Nunito',system-ui,sans-serif;font-weight:800}
+.mk-kcwash .mp-cover p{color:#EAF7FE}
+.mk-kcwash .mp-meta dt{color:#CDEBFA}
+.mk-kcwash .mp-label{border-top:3px solid #0E6BA8;color:#0B3A57}
+.mk-kcwash .mp-label span,.mk-kcwash .mo-num{color:#0E6BA8;font-weight:800}
+.mk-kcwash .mo-list{border-top:0;display:grid;gap:16px;margin-top:14px}
+.mk-kcwash .mo-item{background:#fff;border:3px solid #A9DDF5;border-radius:22px;padding:26px 28px;box-shadow:0 8px 0 #CDEBFA}
+.mk-kcwash .mo-body h3{color:#0B3A57}
+.mk-kcwash .mo-what,.mk-kcwash .mo-more li{color:#2a5670}
+.mk-kcwash .mo-more li::before{background:#3EB6EA;border-radius:50%}
+.mk-kcwash .mo-price b{color:#0E6BA8}
+.mk-kcwash .mo-price span{color:#2a5670}
+.mk-kcwash .mo-alt{background:#EAF7FE;border:3px solid #3EB6EA;border-radius:14px}
+.mk-kcwash .mo-alt em{color:#0E6BA8}
+.mk-kcwash .mo-alt strong{color:#0B3A57}
+.mk-kcwash .mo-ex{background:#EAF7FE;border-left:5px solid #3EB6EA;border-radius:0 14px 14px 0}
+.mk-kcwash .mo-ex span{color:#0E6BA8}
+.mk-kcwash .mp-fine{color:#2a5670}
+@media (max-width:700px){.mk-kcwash .mo-item{padding:22px 18px}.mk-kcwash .mp-cover::before,.mk-kcwash .mp-cover::after{display:none}}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}
