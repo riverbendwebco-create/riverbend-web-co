@@ -880,6 +880,8 @@ body.t-bl{background:#0a0a0a}
 .kc-foam circle{animation:kcfm 2.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}.kc-foam circle:nth-child(even){animation-delay:-1.1s}@keyframes kcfm{to{transform:scale(1.25) translateY(-3px)}}
 @media (max-width:900px){.kc-bld{grid-template-columns:1fr}.kc-picks{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){.kc-bld-l{padding:12px;border-radius:20px}.kc-tg{font-size:.85rem}.kc-gs figcaption{padding:26px 12px 10px;font-size:.85rem}.kc-gs figcaption b{font-size:1.2rem}.kc-nb{width:40px;height:40px}.kc-dot2{width:22px}}
+.kc-gs .bg{position:absolute;inset:-24px;width:calc(100% + 48px);height:calc(100% + 48px);object-fit:cover;filter:blur(24px) brightness(.92)}.kc-gs .fg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.kc-gs figcaption{padding:46px 20px 16px}
+.kc-hint2{font-size:.9rem;color:#2a5670;margin-top:12px}.kc-hint2.warn{color:#B3261E;font-weight:800}
 /* ===== Zephyr (windows & doors) ===== */
 body.t-zp{background:#fff}
 .zp{--cu:#A52C49;--cu2:#86223A;--cul:#D63A5C;--navy:#130F84;--navy2:#0D0A5E;--ink:#12112A;--char:#0E0C3D;--mut:#5D5F73;--line:#E3E4EE;--soft:#F4F5FA;--f:'Outfit',Inter,sans-serif;font-family:var(--f);color:var(--ink);background:#fff}

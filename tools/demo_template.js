@@ -2665,11 +2665,11 @@ function kcWash(C){
   function burst(e,host){ if(reduce) return; const r=host.getBoundingClientRect(); for(let i=0;i<9;i++){ const s=8+Math.random()*18, b=h('i',{class:'kc-pop',style:'left:'+(e.clientX-r.left)+'px;top:'+(e.clientY-r.top)+'px;width:'+s.toFixed(0)+'px;height:'+s.toFixed(0)+'px;--dx:'+((Math.random()-.5)*140).toFixed(0)+'px;--dy:'+(-60-Math.random()*140).toFixed(0)+'px'}); host.append(b); setTimeout(()=>b.remove(),1100); } }
 
   /* top + nav */
-  const top=h('div',{class:'kc-top'},wrap(st?h('span',{class:'kc-st'},h('i',{class:'kc-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):h('span',null),h('span',{class:'kc-free'},'Free estimates')));
+  const top=h('div',{class:'kc-top'},wrap(st?h('span',{class:'kc-st'},h('i',{class:'kc-dot'+(st.open?' on':'')}),h('b',null,st.text),' '+st.sub):null));
   const nav=h('header',{class:'kc-nav'},h('div',{class:'kc-wrap kc-nav-in'},
     h('a',{class:'kc-brand',href:'#',onclick:e=>{ e.preventDefault(); scrollTo('kc-top'); }},kcDrop('kc-logo'),h('span',null,h('b',null,'Key City'),h('i',null,'Powerwash & Maintenance'))),
     h('nav',{class:'kc-links'},[['kc-wash','Get an estimate'],['kc-work','Our work'],['kc-svc','Services'],['kc-why','Why us'],['kc-visit','Contact']].map(([id,l])=>h('button',{type:'button',onclick:go(id)},l))),
-    h('div',{class:'kc-nav-r'},callBtn('line sm','Call'),textBtn('solid sm','Free estimate'))));
+    h('div',{class:'kc-nav-r'},callBtn('solid sm','Call us'))));
 
   /* hero */
   const R=kcRnd(5), bubs=[]; for(let i=0;i<18;i++){ const s=8+R()*26; bubs.push(h('i',{class:'kc-bub',style:'left:'+(R()*100).toFixed(1)+'%;width:'+s.toFixed(0)+'px;height:'+s.toFixed(0)+'px;animation-duration:'+(9+R()*10).toFixed(1)+'s;animation-delay:-'+(R()*16).toFixed(1)+'s'})); }
@@ -2698,15 +2698,15 @@ function kcWash(C){
   const stage=h('div',{class:'kc-stage'},clean,dirty,spray,h('span',{class:'kc-hint'},'Press and drag'));
   const MSGS=[[0,'Press and drag to blast the grime away.'],[1,'That is the stuff. Keep going!'],[30,'Look at that clean line!'],[60,'Over halfway. Satisfying, right?'],[85,'Almost sparkling...'],[100,'Squeaky clean! Added to your estimate list.']];
   const planT=h('p',{class:'kc-plan-t'}), planB=h('button',{type:'button',class:'kc-btn line sm'});
-  const listEl=h('div',{class:'kc-list'}), estText=h('a',{class:'kc-btn line',href:'#'},'Text my request'), estCall=callBtn('solid','Call to book');
-  const estMsg=()=>{ const a=sel.map(id=>KC_SURF.find(s=>s.id===id).noun), e=extras.map(id=>KC_EXTRA.find(z=>z[0]===id)[1].toLowerCase()); let m='Hi Key City Powerwash, I would like a free estimate'; if(a.length) m+=' for my '+a.join(', ')+(e.length?', plus '+e.join(', '):''); else if(e.length) m+=' for '+e.join(', '); return m+'. Thank you!'; };
+  const listEl=h('div',{class:'kc-list'}), estHint=h('p',{class:'kc-hint2'},'When your text opens, add photos and measurements if you have them. They help the crew quote faster, but they are not required.'), estText=h('a',{class:'kc-btn solid',href:'#',onclick:e=>{ if(!sel.length&&!extras.length){ e.preventDefault(); estHint.textContent='Pick at least one thing above first.'; estHint.classList.add('warn'); } }},'Done: text my request'), estCall=callBtn('line','Or call '+C.phoneTxt);
+  const estMsg=()=>{ const a=sel.map(id=>KC_SURF.find(s=>s.id===id).noun), e=extras.map(id=>KC_EXTRA.find(z=>z[0]===id)[1].toLowerCase()); let m='Hi Key City Powerwash, I would like a free estimate'; if(a.length) m+=' for my '+a.join(', ')+(e.length?', plus '+e.join(', '):''); else if(e.length) m+=' for '+e.join(', '); return m+'. (Add photos and measurements here if you have them.) Thank you!'; };
   const picks=KC_SURF.map((s,i)=>h('button',{type:'button',class:'kc-pick'+(i===0?' on':''),'aria-pressed':i===0?'true':'false',onclick:()=>{ if(auto) return; cur=i; reset(); sync(); }},h('span',{class:'kc-pi'},kcIcon(s.ic)),h('b',null,s.label),h('i',{class:'kc-ck','aria-hidden':'true'},'✓')));
   const xBoxes=KC_EXTRA.map(([id,l])=>h('label',{class:'kc-xt'},h('input',{type:'checkbox',onchange:e=>{ extras=e.target.checked?extras.concat(id):extras.filter(v=>v!==id); sync(); }}),h('span',null,l)));
   function sync(){
     picks.forEach((b,i)=>{ b.classList.toggle('on',i===cur); b.setAttribute('aria-pressed',i===cur?'true':'false'); b.classList.toggle('in',sel.includes(KC_SURF[i].id)); });
     planT.textContent=S().plan; const inList=sel.includes(S().id); planB.textContent=inList?'Added to estimate. Remove':'Add '+S().label.toLowerCase()+' to my estimate'; planB.classList.toggle('added',inList);
     listEl.replaceChildren(...(sel.length||extras.length?[...sel.map(id=>h('span',{class:'kc-tag'},KC_SURF.find(s=>s.id===id).label,h('button',{type:'button','aria-label':'Remove',onclick:()=>{ sel=sel.filter(v=>v!==id); sync(); }},'×'))),...extras.map(id=>h('span',{class:'kc-tag x'},KC_EXTRA.find(z=>z[0]===id)[1],h('button',{type:'button','aria-label':'Remove',onclick:()=>{ extras=extras.filter(v=>v!==id); xBoxes.forEach((l,k)=>{ l.firstChild.checked=extras.includes(KC_EXTRA[k][0]); }); sync(); }},'×')))]:[h('p',{class:'kc-empty'},'Nothing yet. Pick something above to get started.')]));
-    const hr=smsHref(estMsg()); if(hr) estText.setAttribute('href',hr);
+    const hr=smsHref(estMsg()); if(hr) estText.setAttribute('href',hr); if(sel.length||extras.length){ estHint.classList.remove('warn'); estHint.textContent='When your text opens, add photos and measurements if you have them. They help the crew quote faster, but they are not required.'; }
   }
   planB.addEventListener('click',()=>{ const id=S().id; sel=sel.includes(id)?sel.filter(v=>v!==id):sel.concat(id); sync(); });
   function paint(){ kcPaintClean(S().id,cc,W,H); kcPaintDirty(S().id,dirty,dc,W,H,clean); }
@@ -2730,7 +2730,7 @@ function kcWash(C){
   const resetBtn=h('button',{type:'button',class:'kc-btn line sm',onclick:reset},'Get it dirty again');
   paint(); sync();
   const washSec=h('section',{class:'kc-sec kc-washsec',id:'kc-wash'},wrap(
-    head('Free estimate builder','What needs washing?','Pick what you need cleaned, give it a power wash to see the difference, and your estimate request writes itself.'),
+    head('Build your request','What needs washing?','Pick what you need cleaned, give it a power wash to see the difference, and your estimate request writes itself.'),
     h('div',{class:'kc-bld rv'},
       h('div',{class:'kc-bld-l'},
         h('div',{class:'kc-picks'},picks),
@@ -2739,29 +2739,26 @@ function kcWash(C){
         h('div',{class:'kc-game-b'},autoBtn,resetBtn)),
       h('aside',{class:'kc-bld-r'},
         h('div',{class:'kc-plan'},h('span',{class:'kc-lbl2'},'Our plan for this'),planT,planB),
-        h('div',{class:'kc-est'},h('span',{class:'kc-lbl2'},'Your estimate request'),listEl,h('span',{class:'kc-lbl2 sm'},'Extras'),h('div',{class:'kc-xts'},xBoxes),h('div',{class:'kc-cta col'},estCall,estText),h('p',{class:'kc-note'},'Free estimates. No pressure, just water pressure.'))))),
+        h('div',{class:'kc-est'},h('span',{class:'kc-lbl2'},'Your estimate request'),listEl,h('span',{class:'kc-lbl2 sm'},'Extras'),h('div',{class:'kc-xts'},xBoxes),h('div',{class:'kc-cta col'},estText,estCall),estHint)))),
     wave('#fff'));
 
-  /* work gallery: before and after */
-  const realG=(Array.isArray(x.gallery)?x.gallery:[]).filter(u=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
-  const SM=['driveway','deck','siding','roof','gutter','barn'].map(id=>KC_SURF.find(s=>s.id===id));
-  const gcv=SM.map(()=>null);
-  const gSlides=realG.length?realG.map((u,i)=>h('figure',{class:'kc-gs'+(i===0?' on':'')},h('img',{src:u,alt:'Job photo '+(i+1)+' by '+name,loading:i?'lazy':'eager'}))):SM.map((s,i)=>h('figure',{class:'kc-gs'+(i===0?' on':'')},h('div',{class:'kc-ba'},h('canvas',{width:640,height:360,'aria-hidden':'true'}),h('canvas',{class:'kc-wipe',width:640,height:360,'aria-hidden':'true'}),h('i',{class:'kc-wbar','aria-hidden':'true'}),h('span',{class:'kc-tg b'},'Before'),h('span',{class:'kc-tg a'},'After')),h('figcaption',null,h('b',null,s.label),s.plan.split('. ')[0].replace(/\.$/,'')+'.')));
-  const gp=i=>{ if(realG.length||gcv[i]) return; gcv[i]=1; const cs=gSlides[i].querySelectorAll('canvas'), id=SM[i].id, cl=cs[1].getContext('2d'); kcPaintClean(id,cl,640,360); const dd=cs[0].getContext('2d'); kcPaintDirty(id,cs[0],dd,640,360,cs[1]); };
+  /* work gallery: real photos */
+  const KC_IMG='https://riverbendwebco.com/demo/img/kcpw/';
+  const KC_PH=[['photo-3.jpg','A gray deck turning golden mid-wash'],['photo-2.jpg','Before and after: weathered deck boards'],['photo-1.jpg','Cedar steps and railings'],['photo-6.jpg','Staining the deck by hand'],['photo-4.jpg','A clean concrete driveway'],['photo-5.jpg','Driveway and exterior'],['photo-7.jpg','Overlook deck']];
+  const gList=((Array.isArray(x.gallery)&&x.gallery.length)?x.gallery.map(u=>[u,'']):KC_PH.map(([f,c])=>[KC_IMG+f,c])).filter(([u])=>typeof u==='string'&&/^https:\/\/[^\s"'<>]+$/.test(u)).slice(0,12);
+  const gSlides=gList.map(([u,cap],i)=>h('figure',{class:'kc-gs'+(i===0?' on':'')},h('img',{class:'bg',src:u,alt:'','aria-hidden':'true'}),h('img',{class:'fg',src:u,alt:cap||'Job photo '+(i+1)+' by '+name,loading:i?'lazy':'eager'}),cap?h('figcaption',null,cap):null));
   let gc=0, gPaused=false, gT=null, gIn=true;
   const gDots=gSlides.map((_,i)=>h('button',{type:'button',class:'kc-dot2'+(i===0?' on':''),'aria-label':'Show photo '+(i+1),onclick:()=>{ gShow(i); gRestart(); }}));
   const gBar=h('i',{class:'kc-bar2'});
-  function gShow(i){ gc=(i+gSlides.length)%gSlides.length; gp(gc); gSlides.forEach((e,k)=>e.classList.toggle('on',k===gc)); gDots.forEach((d,k)=>d.classList.toggle('on',k===gc)); }
-  function gRestart(){ gBar.style.animation='none'; void gBar.offsetWidth; gBar.style.animation=''; clearTimeout(gT); if(!gPaused&&!reduce&&gIn) gT=setTimeout(()=>{ if(!gBox.isConnected) return; gShow(gc+1); gRestart(); },6000); }
-  const gBox=h('div',{class:'kc-gal rv',tabindex:'0','aria-roledescription':'carousel','aria-label':'Before and after gallery'},h('div',{class:'kc-gstage'},gSlides),
+  function gShow(i){ gc=(i+gSlides.length)%gSlides.length; gSlides.forEach((e,k)=>e.classList.toggle('on',k===gc)); gDots.forEach((d,k)=>d.classList.toggle('on',k===gc)); }
+  function gRestart(){ gBar.style.animation='none'; void gBar.offsetWidth; gBar.style.animation=''; clearTimeout(gT); if(!gPaused&&!reduce&&gIn) gT=setTimeout(()=>{ if(!gBox.isConnected) return; gShow(gc+1); gRestart(); },5500); }
+  const gBox=h('div',{class:'kc-gal rv',tabindex:'0','aria-roledescription':'carousel','aria-label':'Photo gallery'},h('div',{class:'kc-gstage'},gSlides),
     h('div',{class:'kc-gbar'},h('button',{type:'button',class:'kc-nb','aria-label':'Previous',onclick:()=>{ gShow(gc-1); gRestart(); }},ico('arrow',18,'')),h('div',{class:'kc-dots'},gDots),h('button',{type:'button',class:'kc-nb nxt','aria-label':'Next',onclick:()=>{ gShow(gc+1); gRestart(); }},ico('arrow',18,''))),h('span',{class:'kc-track'},gBar));
   const gPause=v=>{ gPaused=v; if(v) clearTimeout(gT); else gRestart(); };
   gBox.addEventListener('mouseenter',()=>gPause(true)); gBox.addEventListener('mouseleave',()=>gPause(false)); gBox.addEventListener('focusin',()=>gPause(true)); gBox.addEventListener('focusout',()=>gPause(false));
   let gx=null; gBox.addEventListener('touchstart',e=>{ gx=e.touches[0].clientX; },{passive:true}); gBox.addEventListener('touchend',e=>{ if(gx==null) return; const dx=e.changedTouches[0].clientX-gx; if(Math.abs(dx)>40){ gShow(gc+(dx<0?1:-1)); gRestart(); } gx=null; },{passive:true});
-  setTimeout(()=>{ gp(0); gp(1); if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ gIn=e.isIntersecting; if(gIn) gRestart(); else clearTimeout(gT); })).observe(gBox); } gRestart(); },200);
-  const work=h('section',{class:'kc-sec kc-worksec',id:'kc-work'},wrap(
-    head('Our work','See the difference.',realG.length?'Photos of recent jobs.':'Real job photos are on the way. These sample illustrations show the kind of difference a wash makes.'),gBox,
-    realG.length?null:h('p',{class:'kc-note'},'Sample illustrations, not Key City Powerwash & Maintenance’s own jobs.')));
+  setTimeout(()=>{ if('IntersectionObserver' in window){ new IntersectionObserver(es=>es.forEach(e=>{ gIn=e.isIntersecting; if(gIn) gRestart(); else clearTimeout(gT); })).observe(gBox); } gRestart(); },200);
+  const work=h('section',{class:'kc-sec kc-worksec',id:'kc-work'},wrap(head('Our work','See the difference.','Decks, stairs and driveways.'),gBox));
 
   /* services: fun, bubbly */
   const SV=[['House washing','Soft wash cleaning that lifts mold, mildew and algae from siding.','M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6'],
@@ -2779,7 +2776,7 @@ function kcWash(C){
 
   /* why */
   const TH=[['On time','Reviewers say the crew shows up when they said they would.'],['The whole job','House, foundation, chimney, deck, walks and walls all get done.'],['Friendly crew','Customers call the crew professional, polite and easy to work with.'],['Clean finish','They tidy up afterward and put the patio furniture back.']];
-  const stats=[[String(yrs),'years washing Dubuque since '+since,yrs],['3','kinds of property: homes, businesses, farms',3],[String(x.rating||'4.6'),'stars on Google',parseFloat(x.rating||'4.6')],['Free','estimates',0]];
+  const stats=[[String(yrs),'years washing Dubuque since '+since,yrs],['3','kinds of property: homes, businesses, farms',3],[String(x.rating||'4.6'),'stars on Google',parseFloat(x.rating||'4.6')],['Family','owned and operated',0]];
   const why=h('section',{class:'kc-sec kc-whysec',id:'kc-why'},suds(),kcBubs(14,8),wrap(
     head('Why Key City','Local, family-owned, and not new at this.'),
     h('div',{class:'kc-stats'},stats.map(([n,l,v],i)=>h('div',{class:'kc-stat rv',style:'--d:'+(i*.1)+'s'},h('b',{'data-to':v||''},n),h('span',null,l)))),
@@ -2793,11 +2790,11 @@ function kcWash(C){
 
   /* visit */
   const visit=h('section',{class:'kc-sec kc-visitsec',id:'kc-visit'},wrap(
-    head('Contact','Ready for a clean place?','Call or text for a free estimate.'),
+    head('Contact','Ready for a clean place?','Call or text to get started.'),
     h('div',{class:'kc-2c'},
       h('div',{class:'kc-box rv'},h('span',{class:'kc-lbl'},name),addrTxt?h('p',{class:'kc-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'kc-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
         h('p',{class:'kc-area'},'Serving Dubuque and the tri-state area: counties in Iowa, Illinois and Wisconsin.'),
-        h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line'),C.maps?h('a',{class:'kc-btn line',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
+        h('div',{class:'kc-cta'},callBtn('solid'),textBtn('line','Text us'),C.maps?h('a',{class:'kc-btn line',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
       h('div',{class:'kc-box kc-hrs rv'},h('span',{class:'kc-lbl'},'Hours'),hoursRows(C),h('p',{class:'kc-note'},'Hours are as listed on Google. Call to confirm.')))));
   const foot=h('footer',{class:'kc-foot'},wrap(kcDrop('kc-logo'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
   return h('div',{class:'demo kc on'},top,nav,hero,washSec,work,svc,why,visit,foot);
