@@ -2808,7 +2808,7 @@ function kcWash(C){
   return h('div',{class:'demo kc on'},top,nav,hero,washSec,work,svc,why,visit,foot);
 }
 
-/* ===================== EXPERT LAWNS (season slider + services) ===================== */
+/* ===================== EXPERT LAWNS (bubble look, season scene) ===================== */
 function elawn(C){
   const x=C.x||{}, name=C.name||'Expert Lawns', addrTxt=[C.addr,C.city].filter(Boolean).join(', ');
   const digits=(C.phone||'').replace(/\D/g,'').slice(-10);
@@ -2829,55 +2829,72 @@ function elawn(C){
     {id:'tree',t:'Tree care and removal',d:'Advice on caring for your trees, and removal when one has to go.',m:[0,1,2,3,4,5,6,7,8,9,10,11],s:'When needed',p:'M12 3l6 8h-3l4 6H5l4-6H6l6-8zM12 17v4'},
     {id:'snow',t:'Snow removal',d:'Parking lots and sidewalks cleared with the company’s own equipment.',m:[10,11,0,1,2],s:'Winter',p:'M12 2v20M3 7l18 10M21 7L3 17'},
     {id:'ice',t:'Ice management',d:'Keeping lots and walkways safe when the temperature drops.',m:[10,11,0,1,2],s:'Winter',p:'M12 3l4 4-4 4-4-4 4-4zM12 13l4 4-4 4-4-4 4-4z'}];
-  const svgI=(p,sz)=>{ const d=document.createElement('div'); d.innerHTML='<svg viewBox="0 0 24 24" width="'+(sz||28)+'" height="'+(sz||28)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="'+p+'"/></svg>'; return d.firstChild; };
-  const mark=cls=>{ const d=document.createElement('div'); d.innerHTML='<svg class="'+(cls||'')+'" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#C8F169"/><path d="M8 32C8 18 16 9 32 8c0 15-8 23-24 24z" fill="#123524"/><path d="M9 31L24 16" stroke="#C8F169" stroke-width="2.4"/></svg>'; return d.firstChild; };
+  const svgI=(p,sz)=>{ const d=document.createElement('div'); d.innerHTML='<svg viewBox="0 0 24 24" width="'+(sz||28)+'" height="'+(sz||28)+'" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>'; return d.firstChild; };
+  const raw=(html)=>{ const d=document.createElement('div'); d.innerHTML=html; return d.firstChild; };
+  const mark=cls=>raw('<svg class="'+(cls||'')+'" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#B8E85B"/><path d="M10 29C10 17 17 11 30 10c0 12-6 19-20 19z" fill="#0F4A2B"/><path d="M11 28L23 17" stroke="#B8E85B" stroke-width="2.4" stroke-linecap="round"/></svg>');
+  const wave=(fill,flip)=>raw('<svg class="el-wave'+(flip?' flip':'')+'" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40C180 0 360 0 540 28S900 76 1080 52 1320 8 1440 24V80H0z" fill="'+fill+'"/></svg>');
   const wrap=(...k)=>h('div',{class:'el-wrap'},k);
   const head=(eyebrow,title,sub)=>h('div',{class:'el-head rv'},h('span',{class:'el-eye'},eyebrow),h('h2',null,title),sub?h('p',null,sub):null);
 
-  /* top + nav */
-  const top=h('div',{class:'el-top'},wrap(h('span',null,'Commercial lawn care and snow removal in Dubuque, Iowa'),C.tel?h('a',{href:C.tel},C.phoneTxt):null));
-  const nav=h('header',{class:'el-nav'},wrap(h('a',{class:'el-brand',href:'#',onclick:e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}); }},mark('el-logo'),h('b',null,name)),
+  /* nav */
+  const nav=h('header',{class:'el-nav'},h('div',{class:'el-navin'},
+    h('a',{class:'el-brand',href:'#',onclick:e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}); }},mark('el-logo'),h('b',null,name)),
     h('nav',{class:'el-links'},[['Seasons','el-stage'],['Services','el-svc'],['Quote','el-quote'],['Contact','el-visit']].map(([t,id])=>h('button',{type:'button',onclick:go(id)},t))),
     callBtn('hot sm','Call now')));
 
-  /* scene */
-  const SCENE='<svg class="el-scene" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMax slice" aria-hidden="true">'
+  /* scene: rounded illustrated window */
+  const cloud=(cls,x0,y0,s)=>'<g transform="translate('+x0+' '+y0+') scale('+s+')"><g class="cloud '+cls+'"><ellipse cx="40" cy="30" rx="44" ry="16"/><circle cx="26" cy="20" r="16"/><circle cx="52" cy="14" r="20"/></g></g>';
+  const tree=(tx,ty,s,cls)=>'<g transform="translate('+tx+' '+ty+') scale('+s+')"><g class="tree '+cls+'"><rect class="trunk" x="-7" y="-6" width="14" height="52" rx="7"/><circle class="can" cx="0" cy="-34" r="36"/><circle class="can" cx="-26" cy="-12" r="25"/><circle class="can" cx="26" cy="-12" r="25"/></g></g>';
+  const wheel=(cx,cy,r)=>'<g transform="translate('+cx+' '+cy+')"><circle r="'+r+'" fill="#1b2c23"/><g class="spin"><circle r="'+(r*.55)+'" fill="#d9e5dc"/><path d="M0 -'+(r*.55)+'V'+(r*.55)+'M-'+(r*.55)+' 0H'+(r*.55)+'" stroke="#1b2c23" stroke-width="3" stroke-linecap="round"/></g></g>';
+  const SCENE='<svg class="el-scene" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'
    +'<defs><linearGradient id="elsky" x1="0" y1="0" x2="0" y2="1"><stop class="g1" offset="0"/><stop class="g2" offset="1"/></linearGradient></defs>'
-   +'<rect class="sky" width="1200" height="460" fill="url(#elsky)"/>'
-   +'<g class="sun"><circle r="46" cx="0" cy="0"/><circle class="halo" r="78" cx="0" cy="0"/></g>'
-   +'<path class="hill1" d="M0 300C140 240 280 230 420 270S700 300 860 250 1100 220 1200 260V460H0z"/>'
-   +'<path class="hill2" d="M0 350C180 300 330 310 520 340S860 350 1010 310 1150 300 1200 320V460H0z"/>'
-   +'<g class="trees"><g transform="translate(120 300)"><rect class="trunk" x="-6" y="-10" width="12" height="60"/><circle class="can" cx="0" cy="-34" r="42"/><circle class="can" cx="-26" cy="-12" r="28"/><circle class="can" cx="26" cy="-12" r="28"/></g>'
-   +'<g transform="translate(1040 292) scale(.85)"><rect class="trunk" x="-6" y="-10" width="12" height="60"/><circle class="can" cx="0" cy="-34" r="42"/><circle class="can" cx="-26" cy="-12" r="28"/><circle class="can" cx="26" cy="-12" r="28"/></g>'
-   +'<g transform="translate(940 312) scale(.6)"><rect class="trunk" x="-6" y="-10" width="12" height="60"/><circle class="can" cx="0" cy="-30" r="38"/></g></g>'
-   +'<path class="turf" d="M0 390C200 360 420 372 640 384S1040 372 1200 360V460H0z"/>'
-   +'<g class="stripes"><path d="M0 410C200 380 420 392 640 404S1040 392 1200 380V392C1040 404 860 416 640 416S200 404 0 422z"/><path d="M0 436C200 410 420 420 640 430S1040 420 1200 410V420C1040 430 860 440 640 440S200 432 0 446z"/></g>'
-   +'<path class="snow" d="M0 380C200 350 420 362 640 374S1040 362 1200 350V460H0z"/>'
-   +'<g class="mower"><g transform="translate(0 0)"><rect x="-8" y="-34" width="62" height="10" fill="#0C1F16"/><rect x="-22" y="-24" width="92" height="22" fill="#C8F169"/><rect x="2" y="-52" width="26" height="22" fill="#2F8F46"/><circle cx="2" cy="-2" r="13" fill="#0C1F16"/><circle cx="58" cy="-4" r="9" fill="#0C1F16"/><circle cx="2" cy="-2" r="5" fill="#9aa9a0"/><rect x="-4" y="-40" width="3" height="14" fill="#0C1F16"/></g></g>'
-   +'<g class="plow"><g><rect x="-70" y="-46" width="70" height="30" fill="#0C1F16"/><rect x="-96" y="-30" width="30" height="14" fill="#C8F169"/><rect x="-70" y="-46" width="40" height="30" fill="#2F8F46"/><rect x="-62" y="-42" width="22" height="14" fill="#BFE3F5"/><rect x="-2" y="-30" width="64" height="16" fill="#C8F169"/><path d="M62 -52L100 -20L100 -2L62 -2z" fill="#F5B800"/><circle cx="-64" cy="-14" r="12" fill="#0C1F16"/><circle cx="26" cy="-14" r="12" fill="#0C1F16"/><circle cx="-64" cy="-14" r="5" fill="#9aa9a0"/><circle cx="26" cy="-14" r="5" fill="#9aa9a0"/><circle class="beacon" cx="-50" cy="-52" r="5" fill="#FF7A1A"/></g></g>'
+   +'<rect width="600" height="600" fill="url(#elsky)"/>'
+   +'<g class="sun"><g class="rays"><circle r="64" class="halo"/><path d="M0-64V-86M0 64V86M-64 0H-86M64 0H86M-45-45L-61-61M45 45L61 61M45-45L61-61M-45 45L-61 61" stroke-linecap="round" stroke-width="6"/></g><circle r="40" class="disc"/></g>'
+   +cloud('c1',40,90,1)+cloud('c2',330,60,.8)+cloud('c3',180,170,.6)
+   +'<path class="hill1" d="M0 392C90 330 210 322 310 362S510 376 600 330V600H0z"/>'
+   +'<path class="hill2" d="M0 448C120 404 250 414 370 442S540 430 600 414V600H0z"/>'
+   +tree(92,438,1,'t1')+tree(512,428,.82,'t2')+tree(402,446,.52,'t3')
+   +'<path class="turf" d="M0 486C140 458 300 474 450 482S560 474 600 466V600H0z"/>'
+   +'<g class="stripes"><path d="M0 512C150 490 320 504 600 492V516C330 530 170 518 0 538z"/><path d="M0 560C160 540 330 552 600 542V572C340 584 170 572 0 596z"/></g>'
+   +'<path class="snow" d="M0 486C140 458 300 474 450 482S560 474 600 466V600H0z"/>'
+   +'<g class="snowdrift"><ellipse cx="70" cy="560" rx="70" ry="22"/><ellipse cx="540" cy="552" rx="80" ry="24"/></g>'
+   +'<g class="mower"><g class="bob">'
+   +wheel(22,-28,28)+'<rect x="6" y="-70" width="92" height="34" rx="16" fill="#B8E85B" stroke="#0F4A2B" stroke-width="3"/><rect x="0" y="-98" width="30" height="34" rx="12" fill="#1E7A46"/><circle cx="16" cy="-112" r="13" fill="#F2C9A0"/><path d="M3-114a13 13 0 0126 0z" fill="#0F4A2B"/><rect x="64" y="-62" width="46" height="24" rx="11" fill="#1E7A46"/><rect x="92" y="-26" width="58" height="20" rx="10" fill="#0F4A2B"/><circle cx="128" cy="-12" r="11" fill="#1b2c23"/><path d="M34-70L52-96" stroke="#0F4A2B" stroke-width="5" stroke-linecap="round"/>'
+   +'<g class="clip"><circle cx="160" cy="-18" r="4"/><circle cx="170" cy="-30" r="3"/><circle cx="154" cy="-34" r="3.5"/></g></g></g>'
+   +'<g class="plow"><g class="bob">'
+   +'<rect x="0" y="-66" width="76" height="34" rx="10" fill="#1E7A46"/><path d="M76-32V-74Q76-90 92-90H116Q128-90 134-76L148-50V-32z" fill="#B8E85B" stroke="#0F4A2B" stroke-width="3"/><path d="M92-80H114Q120-80 124-72L132-56H92z" fill="#BEE6F7"/><rect x="124" y="-58" width="38" height="26" rx="10" fill="#B8E85B" stroke="#0F4A2B" stroke-width="3"/>'
+   +'<path d="M168-70Q200-56 192-4L162-4Z" fill="#FFC933" stroke="#0F4A2B" stroke-width="3" stroke-linejoin="round"/><path d="M158-40L170-40" stroke="#0F4A2B" stroke-width="5" stroke-linecap="round"/><circle class="beacon" cx="100" cy="-98" r="7" fill="#FF7A1A"/><circle cx="160" cy="-44" r="4" fill="#fff"/>'
+   +wheel(36,-24,24)+wheel(134,-24,24)
+   +'<g class="spray"><circle cx="196" cy="-30" r="5"/><circle cx="206" cy="-44" r="4"/><circle cx="200" cy="-18" r="3.5"/></g></g></g>'
    +'</svg>';
-  const stage=h('section',{class:'el-stage s-win',id:'el-stage'});
-  const sceneBox=h('div',{class:'el-scenebox'}); sceneBox.innerHTML=SCENE;
-  const fx=h('div',{class:'el-fx','aria-hidden':'true'}); for(let i=0;i<34;i++){ fx.append(h('i',{style:'left:'+(Math.random()*100).toFixed(1)+'%;--s:'+(6+Math.random()*9).toFixed(1)+'px;--t:'+(5+Math.random()*7).toFixed(1)+'s;--dl:-'+(Math.random()*10).toFixed(1)+'s;--dx:'+((Math.random()*80)-40).toFixed(0)+'px'})); }
-  const sun=sceneBox.querySelector('.sun'), mower=sceneBox.querySelector('.mower'), plow=sceneBox.querySelector('.plow');
-  const hero=h('div',{class:'el-hero'},wrap(h('div',{class:'el-hl'},
-    h('span',{class:'el-eye lt'},'Lawn care, trees and snow removal'),
-    h('h1',null,heads[0],heads[1]?[h('br'),h('span',null,heads[1])]:null),
-    h('p',null,'Owner-operated in Dubuque. Fertilizing, weed control and mowing when it is green. Snow and ice management when it is not.'),
-    h('div',{class:'el-cta'},callBtn('hot'),h('button',{type:'button',class:'el-btn ghost',onclick:go('el-quote')},'Get a quote')))));
+  const sceneBox=h('div',{class:'el-blob'}); sceneBox.innerHTML=SCENE;
+  const fx=h('div',{class:'el-fx','aria-hidden':'true'}); for(let i=0;i<30;i++){ fx.append(h('i',{style:'left:'+(Math.random()*100).toFixed(1)+'%;--s:'+(6+Math.random()*9).toFixed(1)+'px;--t:'+(6+Math.random()*7).toFixed(1)+'s;--dl:-'+(Math.random()*12).toFixed(1)+'s;--dx:'+((Math.random()*60)-30).toFixed(0)+'px'})); }
+  sceneBox.append(fx);
+  const sun=sceneBox.querySelector('.sun');
+  const bub=(cls,p,txt)=>h('span',{class:'el-fb '+cls,'aria-hidden':'true'},svgI(p,22),h('em',null,txt));
+  const frame=h('div',{class:'el-frame'},sceneBox,bub('b1',SV[2].p,'Lawns'),bub('b2',SV[4].p,'Trees'),bub('b3',SV[5].p,'Snow'));
+  const hero=h('div',{class:'el-hero'},wrap(h('div',{class:'el-hgrid'},
+    h('div',{class:'el-hl'},
+      h('span',{class:'el-eye'},'Lawn care, trees and snow removal'),
+      h('h1',null,heads[0],heads[1]?[h('br'),h('span',null,heads[1])]:null),
+      h('p',null,'Owner-operated in Dubuque. Fertilizing, weed control and mowing when it is green. Snow and ice management when it is not.'),
+      h('div',{class:'el-cta'},callBtn('hot'),h('button',{type:'button',class:'el-btn soft',onclick:go('el-quote')},'Get a quote'))),
+    frame)));
 
   /* month slider */
   let cur=new Date().getMonth(), timer=0, playing=false;
+  const stage=h('section',{class:'el-stage s-win',id:'el-stage'});
   const range=h('input',{type:'range',min:'0',max:'11',step:'1',value:String(cur),class:'el-range','aria-label':'Month of the year'});
   const ticks=h('div',{class:'el-ticks'},MN.map((m,i)=>h('button',{type:'button','aria-label':m,onclick:()=>{ set(i); stop(); }},m.slice(0,3))));
   const monthTitle=h('h3',{class:'el-mt'}), monthSay=h('p',{class:'el-ms'}), chips=h('div',{class:'el-chips'});
-  const playBtn=h('button',{type:'button',class:'el-btn ghost sm el-play',onclick:()=>{ playing?stop():start(); }},'Play the year');
+  const playBtn=h('button',{type:'button',class:'el-btn soft sm el-play',onclick:()=>{ playing?stop():start(); }},'Play the year');
   function stop(){ playing=false; clearInterval(timer); playBtn.textContent='Play the year'; }
-  function start(){ playing=true; playBtn.textContent='Pause'; clearInterval(timer); timer=setInterval(()=>set((cur+1)%12),1100); }
+  function start(){ playing=true; playBtn.textContent='Pause'; clearInterval(timer); timer=setInterval(()=>set((cur+1)%12),1200); }
   const cards=[];
   function set(m){ cur=m; range.value=String(m); const s=seasonOf(m);
     stage.className='el-stage s-'+s; ticks.childNodes.forEach((b,i)=>b.classList.toggle('on',i===m));
-    const f=m/11; sun.style.transform='translate('+(180+f*840).toFixed(0)+'px,'+(118-Math.sin(f*Math.PI)*58).toFixed(0)+'px)';
+    const f=m/11; sun.style.transform='translate('+(120+f*360).toFixed(0)+'px,'+(150-Math.sin(f*Math.PI)*46).toFixed(0)+'px)';
+    range.style.setProperty('--pos',(f*100).toFixed(1)+'%');
     monthTitle.textContent='In '+MN[m]+': '+SN[s]; monthSay.textContent=SAY[s];
     const act=SV.filter(v=>v.m.indexOf(m)>=0); chips.replaceChildren(...act.map(v=>h('span',{class:'el-chip'},svgI(v.p,16),v.t)));
     cards.forEach((c,i)=>c.classList.toggle('hot',SV[i].m.indexOf(m)>=0&&SV[i].id!=='tree')); }
@@ -2885,39 +2902,40 @@ function elawn(C){
   const panel=h('div',{class:'el-panel'},wrap(h('div',{class:'el-pin'},
     h('div',{class:'el-pl'},h('span',{class:'el-eye'},'Drag through the year'),monthTitle,monthSay,chips,h('p',{class:'el-fine'},'Typical Iowa timing. The crew sets the real schedule with you.')),
     h('div',{class:'el-pr'},range,ticks,playBtn))));
-  stage.append(sceneBox,fx,hero,panel);
+  stage.append(hero,panel);
 
-  /* services */
-  const grid=h('div',{class:'el-cards'},SV.map((v,i)=>{ const c=h('div',{class:'el-card rv',style:'--d:'+((i%4)*.08)+'s'},h('span',{class:'el-num'},String(i+1).padStart(2,'0')),h('span',{class:'el-ib'},svgI(v.p,30)),h('h3',null,v.t),h('p',null,v.d),h('span',{class:'el-tag'},v.s)); cards.push(c); return c; }));
-  const svc=h('section',{class:'el-sec',id:'el-svc'},wrap(head('Services','Everything the property needs, all year.','Cards light up for the month you pick above.'),grid));
+  /* services: floating bubbles */
+  const blobs=h('div',{class:'el-blobs'},SV.map((v,i)=>{ const c=h('div',{class:'el-bl rv b'+(i%4),style:'--d:'+((i%4)*.08)+'s'},h('span',{class:'el-ib'},svgI(v.p,30)),h('h3',null,v.t),h('p',null,v.d),h('span',{class:'el-tag'},v.s)); cards.push(c); return c; }));
+  const svc=h('section',{class:'el-sec el-svcsec',id:'el-svc'},wrap(head('Services','Everything the property needs, all year.','The bubbles light up for the month you pick above.'),blobs));
 
-  /* quote builder */
+  /* quote: chat style */
   const PR=['A business','An HOA or community','A home'], picked=new Set(); let prop='';
-  const prRow=h('div',{class:'el-opts'},PR.map(p=>h('button',{type:'button',class:'el-opt',onclick:e=>{ prop=prop===p?'':p; prRow.childNodes.forEach(b=>b.classList.toggle('on',b.textContent===prop)); upd(); }},p)));
+  const prRow=h('div',{class:'el-opts'},PR.map(p=>h('button',{type:'button',class:'el-opt',onclick:()=>{ prop=prop===p?'':p; prRow.childNodes.forEach(b=>b.classList.toggle('on',b.textContent===prop)); upd(); }},p)));
   const svRow=h('div',{class:'el-opts'},SV.map(v=>h('button',{type:'button',class:'el-opt',onclick:e=>{ const b=e.currentTarget; picked.has(v.t)?picked.delete(v.t):picked.add(v.t); b.classList.toggle('on'); upd(); }},v.t)));
   const msgEl=h('p',{class:'el-msg'});
   const smsBtn=h('a',{class:'el-btn hot big',href:smsHref('x')||'#'},'Text my request');
   const msg=()=>{ const l=[...picked]; const what=l.length?l.join(', ').replace(/, ([^,]*)$/,l.length>1?' and $1':', $1'):'lawn care and snow removal'; return 'Hi '+name+', I manage '+(prop?prop.toLowerCase():'a property')+' in Dubuque and would like a quote for '+what+'. Thank you!'; };
-  function upd(){ msgEl.textContent='“'+msg()+'”'; smsBtn.href=smsHref(msg())||'#'; }
-  const quote=h('section',{class:'el-sec el-quotesec',id:'el-quote'},wrap(head('Quote','Tell us what you manage.','Pick what fits and send it as a text. Nothing is sent until you tap the button.'),
-    h('div',{class:'el-q rv'},h('div',{class:'el-qc'},h('span',{class:'el-lbl'},'1. The property'),prRow,h('span',{class:'el-lbl'},'2. What you need'),svRow),
-      h('div',{class:'el-qc el-qr'},h('span',{class:'el-lbl'},'Your text'),msgEl,smsBtn,callBtn('ghost','Or call '+(C.phoneTxt||''))))));
+  function upd(){ msgEl.textContent=msg(); smsBtn.href=smsHref(msg())||'#'; }
+  const quote=h('section',{class:'el-quotesec',id:'el-quote'},wave('#0F4A2B'),h('div',{class:'el-qin'},wrap(head('Quote','Tell us what you manage.','Pick what fits and send it as a text. Nothing is sent until you tap the button.'),
+    h('div',{class:'el-q rv'},
+      h('div',{class:'el-chat'},h('p',{class:'el-say'},'What kind of property do you look after?'),prRow,h('p',{class:'el-say'},'And what do you need?'),svRow),
+      h('div',{class:'el-phonewrap'},h('div',{class:'el-phone'},h('div',{class:'el-ph-h'},mark('el-logo sm'),h('b',null,name)),h('div',{class:'el-ph-b'},msgEl)),smsBtn,callBtn('soft','Or call '+(C.phoneTxt||'')))))));
   upd();
 
   /* about */
   const AB=[['Owner-operated','A local company run by its owner.'],['Turf specialists','Experienced lawn specialists handle the fertilizing and weed control.'],['Its own snow equipment','Snow removal is done with the company’s own fleet.'],['Built for commercial','Businesses and HOAs are the focus, with residential properties served too.']];
   const about=h('section',{class:'el-sec el-about',id:'el-about'},wrap(head('Why '+name,'One local company, spring through snow.'),
-    h('div',{class:'el-abg'},AB.map(([t,p],i)=>h('div',{class:'el-ab rv',style:'--d:'+(i*.08)+'s'},h('b',null,t),h('p',null,p)))),
+    h('div',{class:'el-abg'},AB.map(([t,p],i)=>h('div',{class:'el-ab rv b'+i,style:'--d:'+(i*.08)+'s'},h('b',null,t),h('p',null,p)))),
     h('p',{class:'el-fine dk'},'Details come from public business listings. Hours, service area and pricing are to be confirmed with '+name+'.')));
 
   /* contact */
   const visit=h('section',{class:'el-sec el-visitsec',id:'el-visit'},wrap(head('Contact','Let’s keep your property in shape.'),
     h('div',{class:'el-2c'},h('div',{class:'el-box rv'},h('span',{class:'el-lbl'},name),addrTxt?h('p',{class:'el-addr'},ico('pin',18,''),addrTxt):null,C.tel?h('p',{class:'el-addr'},ico('phone',18,''),h('a',{href:C.tel},C.phoneTxt)):null,
-      h('p',{class:'el-area'},'Based in Dubuque, Iowa.'),h('div',{class:'el-cta'},callBtn('hot'),C.maps?h('a',{class:'el-btn ghost',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
-      C.hasHours?h('div',{class:'el-box el-hrs rv'},h('span',{class:'el-lbl'},'Hours'),hoursRows(C),h('p',{class:'el-fine dk'},'Hours are as listed online. Call to confirm.')):null)));
+      h('p',{class:'el-area'},'Based in Dubuque, Iowa.'),h('div',{class:'el-cta'},callBtn('hot'),C.maps?h('a',{class:'el-btn soft',href:C.maps,target:'_blank',rel:'noopener'},'Directions'):null)),
+      C.hasHours?h('div',{class:'el-box el-hrs rv'},h('span',{class:'el-lbl'},'Hours'),hoursRows(C),h('p',{class:'el-fine'},'Hours are as listed online. Call to confirm.')):null)));
   const foot=h('footer',{class:'el-foot'},wrap(mark('el-logo sm'),h('b',null,name),addrTxt?h('span',null,addrTxt):null,C.tel?h('a',{href:C.tel},C.phoneTxt):null,h('em',null,'© '+new Date().getFullYear()+' '+name)));
   set(cur);
-  return h('div',{class:'demo el on'},top,nav,stage,svc,quote,about,visit,foot);
+  return h('div',{class:'demo el on'},nav,stage,wave('#F3FBF1',false),svc,quote,about,visit,foot);
 }
 
 function bloomTattoo(C){
